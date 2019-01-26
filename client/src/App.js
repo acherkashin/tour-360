@@ -24,22 +24,18 @@ class App extends Component {
   }
 
   getAllPlaces = () => {
-    client.get("/api/place/get")
-      .then(res => this.setState({ places: res.data.data }));
+    client.get("/api/place")
+      .then(res => this.setState({ places: res.data.places }));
   };
 
   create = name => {
-    client.post("/api/place/create", {
+    client.post("/api/place", {
       name
     }).then(this.getAllPlaces);
   };
 
   deleteFromDB = id => {
-    client.delete("/api/place/delete", {
-      data: {
-        id
-      }
-    }).then(this.getAllPlaces);
+    client.delete(`/api/place/delete${id}`).then(this.getAllPlaces);
   };
 
   handleChange(event) {
