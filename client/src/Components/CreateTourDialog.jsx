@@ -15,17 +15,13 @@ class CreateTourDialog extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            name: props.predefinedName,
-        };
-
         this.handleCreateClick = this.handleCreateClick.bind(this);
         this.handleNameChanged = this.handleNameChanged.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
 
     handleCreateClick() {
-        this.props.onCreateClick && this.props.onCreateClick({ origin: this });
+        this.props.onCreateClick && this.props.onCreateClick({ origin: this, name: this.props.name });
     }
 
     handleNameChanged(event) {
@@ -45,7 +41,7 @@ class CreateTourDialog extends React.Component {
                 <DialogContent>
                     <TextField
                         label="Tour Name"
-                        value={this.state.name}
+                        value={this.props.name}
                         onChange={this.handleNameChanged}
                         margin="normal"
                         variant="filled"
@@ -66,7 +62,7 @@ CreateTourDialog.propTypes = {
     onNameChanged: PropTypes.func,
     onCreateClick: PropTypes.func,
     onClose: PropTypes.func,
-    predefinedName: PropTypes.string,
+    name: PropTypes.string,
     classes: PropTypes.object.isRequired,
 };
 

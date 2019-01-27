@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TourService } from '../api';
-import { Header, CreateTourDialog } from '../Components';
-import { Fab } from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+import { Header, CreateTourDialog, Tours } from '../Components';
+import { Fab } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 
 const styles = theme => ({
     absolute: {
@@ -24,13 +24,16 @@ class ToursPage extends React.Component {
 
         this.state = {
             isOpenedCreateDialog: false,
-            tours: []
+            tours: [],
+            newTourName: '',
         };
 
         this.handleOnAddClick = this.handleOnAddClick.bind(this);
+        this.handleOnCreateClick = this.handleOnCreateClick.bind(this);
+        this.loadAllServices = this.loadAllServices.bind(this);
     }
 
-    componentDidMount() {
+    loadAllServices() {
         TourService.getAll().then(resp => {
             this.setState({
                 tours: resp.data.tours,
@@ -38,21 +41,40 @@ class ToursPage extends React.Component {
         });
     }
 
+    componentDidMount() {
+        this.loadAllServices();
+    }
+
     handleOnAddClick() {
-        this.setState({ isOpenedCreateDialog: true });
+        this.setState({
+            isOpenedCreateDialog: true,
+            newTourName: `New Tour ${this.state.tours.length + 1}`,
+        });
+    }
+
+    handleOnCreateClick(event) {
+        this.setState({ isOpenedCreateDialog: false });
+        TourService.create(event.name).then(this.loadAllServices);
     }
 
     render() {
         const { classes } = this.props;
         const { isOpenedCreateDialog } = this.state;
+        const tours = this.state.tours.map(tour => ({
+            id: tour._id,
+            img: tour.image,
+            name: tour.name,
+        }))
 
         return (<div className={classes.page}>
             <Header />
             <CreateTourDialog
+                name={this.state.newTourName}
                 isOpened={isOpenedCreateDialog}
-                onCreateClick={() => { this.setState({ isOpenedCreateDialog: false }) }}
+                onCreateClick={this.handleOnCreateClick}
                 onClose={() => { this.setState({ isOpenedCreateDialog: false }) }}
             />
+            <Tours tours={tours} />
             <Fab color="secondary" className={classes.absolute}>
                 <Add onClick={this.handleOnAddClick} />
             </Fab>
