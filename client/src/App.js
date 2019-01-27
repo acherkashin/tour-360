@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ToursPage from './Pages/ToursPage';
+import withRoot from './withRoot';
 
 class App extends Component {
   constructor(props) {
@@ -13,4 +14,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRoot(App);
