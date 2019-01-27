@@ -1,7 +1,5 @@
-// Initialize express router
-let router = require('express').Router();
+const router = require('express').Router();
 
-// Set default API response
 router.get('/', function (req, res) {
     res.json({
         status: 'API Its Working',
@@ -9,15 +7,15 @@ router.get('/', function (req, res) {
     });
 });
 
-const controller = require("./../controllers/place-controller");
+const { PlaceContoller } = require("./../controllers");
 
 router.route('/place')
-    .get(controller.index)
-    .post(controller.new);
+    .get(PlaceContoller.getAll)
+    .post(PlaceContoller.create);
 
 router.route('/place/:id')
-    // .get(controller.getById)
-    .put(controller.update)
-    .delete(controller.delete);
+    // .get(PlaceContoller.getById)
+    .put(PlaceContoller.update)
+    .delete(PlaceContoller.delete);
 
 module.exports = router;

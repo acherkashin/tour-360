@@ -1,14 +1,15 @@
 const { Place } = require('./../models');
 
 // "/place/get"
-exports.index = (req, res) => {
+exports.getAll = (req, res) => {
     Place.find((err, places) => {
-        if (err) return res.json({ success: false, error: err });
+        if (err) {
+            return res.json({ success: false, error: err });
+        }
         return res.json({ success: true, places });
     });
 };
 
-// "/place/update"
 exports.update = (req, res) => {
     const { id, update } = req.body;
     Place.findOneAndUpdate(id, update, err => {
@@ -27,7 +28,7 @@ exports.delete = (req, res) => {
 };
 
 // "/place/create"
-exports.new = (req, res) => {
+exports.create = (req, res) => {
     const { name } = req.body;
 
     if (!name) {

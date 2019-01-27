@@ -1,3 +1,7 @@
-const Place = require("./place.js");
+const Place = require("./place");
+const Tour = require('./tour');
 
-module.exports = { Place };
+module.exports = {
+    Place,
+    Tour,
+};
