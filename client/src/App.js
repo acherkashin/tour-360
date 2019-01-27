@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Index from './Pages/index';
+import ToursPage from './Pages/ToursPage';
 
 class App extends Component {
   constructor(props) {
@@ -8,7 +8,7 @@ class App extends Component {
 
   render() {
     return (
-      <Index />
+      <ToursPage />
     );
   }
 }

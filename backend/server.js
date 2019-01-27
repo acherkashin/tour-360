@@ -7,7 +7,7 @@ const { Place } = require("./models");
 
 const API_PORT = 3001;
 const app = express();
-let placeRouter = require("./routers/place-router");
+let { PlaceRouter, TourRouter } = require("./routers");
 
 // this is our MongoDB database
 const dbRoute = "mongodb://localhost:27017/test";
@@ -26,8 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 
-
 // append /api for our http requests
-app.use("/api", placeRouter);
+app.use("/api", TourRouter, PlaceRouter);
 
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
