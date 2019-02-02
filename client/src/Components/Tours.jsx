@@ -6,6 +6,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import { withStyles } from '@material-ui/core/styles';
+import grey from '@material-ui/core/colors/grey';
 
 const styles = theme => ({
     root: {
@@ -25,6 +26,16 @@ const styles = theme => ({
         height: '300px',
         listStyle: 'none',
         backgroundColor: 'white',
+        border: `1px solid ${grey[300]}`,
+        '&:hover': {
+            borderColor: theme.palette.primary.light,
+            '& $tileItemBar': {
+                backgroundColor: theme.palette.primary.light,
+            }
+        }
+    },
+    tileItemBar: {
+        borderColor: theme.palette.primary.light,
     }
 });
 
@@ -41,6 +52,7 @@ class Tours extends React.Component {
                                 {tile.img && <img src={tile.img} alt={tile.name} />}
                                 {!tile.img && <img className={classes.noImage} src={'/src/no-image.png'} alt={tile.name} />}
                                 <GridListTileBar
+                                    className={classes.tileItemBar}
                                     title={tile.name}
                                     actionIcon={
                                         <IconButton className={classes.icon}>
@@ -59,11 +71,11 @@ class Tours extends React.Component {
 
 Tours.propTypes = {
     classes: PropTypes.object.isRequired,
-    tours: PropTypes.arrayOf(PropTypes.objectOf({
+    tours: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
         img: PropTypes.string,
         name: PropTypes.string,
-    }))
+    })),
 };
 
 export default withStyles(styles)(Tours);
