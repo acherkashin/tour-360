@@ -1,14 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { Dialog, DialogTitle as MuiDialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
     createDialog: {
 
     }
+});
+
+const DialogTitle = withStyles(theme => ({
+    root: {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        margin: 0,
+        padding: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 6,
+    },
+    closeButton: {
+        position: 'absolute',
+        right: theme.spacing.unit,
+        top: theme.spacing.unit,
+        color: theme.palette.grey[500],
+    },
+}))(props => {
+    const { children, classes, onClose } = props;
+    return (
+        <MuiDialogTitle disableTypography className={classes.root}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            ) : null}
+        </MuiDialogTitle>
+    );
 });
 
 class CreateTourDialog extends React.Component {
@@ -25,7 +55,7 @@ class CreateTourDialog extends React.Component {
     }
 
     handleNameChanged(event) {
-        this.props.handleNameChanged && this.props.onNameChanged({ origin: this, name: event.target.value });
+        this.props.onNameChanged && this.props.onNameChanged({ origin: this, name: event.target.value });
     }
 
     handleClose() {
@@ -36,8 +66,12 @@ class CreateTourDialog extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Dialog className={classes.createDialog} onClose={this.handleClose} open={this.props.isOpened}>
-                <DialogTitle>Create Virtual Tour</DialogTitle>
+            <Dialog className={classes.createDialog}
+                onClose={this.handleClose}
+                open={this.props.isOpened}
+                maxWidth={'sm'}
+                fullWidth>
+                <DialogTitle onClose={this.handleClose}>Create Virtual Tour</DialogTitle>
                 <DialogContent>
                     <TextField
                         label="Tour Name"
@@ -45,6 +79,7 @@ class CreateTourDialog extends React.Component {
                         onChange={this.handleNameChanged}
                         margin="normal"
                         variant="filled"
+                        fullWidth={true}
                         autoFocus
                     />
                 </DialogContent>
