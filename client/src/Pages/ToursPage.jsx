@@ -91,8 +91,8 @@ class ToursPage extends React.Component {
             <div className={classes.toursContainer}>
                 <Tours tours={tours} />
             </div>
-            <Fab color="secondary" className={classes.absolute}>
-                <Add onClick={this.handleOnAddClick} />
+            <Fab color="secondary" className={classes.absolute} onClick={this.handleOnAddClick} >
+                <Add/>
             </Fab>
         </div>);
     }
