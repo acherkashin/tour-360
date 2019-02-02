@@ -25,7 +25,6 @@ const styles = theme => ({
         cursor: 'pointer',
         width: '300px',
         height: '300px',
-        listStyle: 'none',
         backgroundColor: 'white',
         border: `1px solid ${grey[300]}`,
         '&:hover': {
@@ -59,7 +58,11 @@ class Tours extends React.Component {
                 <Grid container spacing={24}>
                     {(tours || []).map(tour => (
                         <Grid key={tour.id} item>
-                            <GridListTile key={tour.id} className={classes.tileItem} onClick={() => this._handleItemClick(tour)}>
+                            <GridListTile
+                                key={tour.id} className={classes.tileItem}
+                                component='div'
+                                onClick={() => this._handleItemClick(tour)}
+                            >
                                 {tour.img && <img src={tour.img} alt={tour.name} />}
                                 {!tour.img && <img className={classes.noImage} src={'/src/no-image.png'} alt={tour.name} />}
                                 <GridListTileBar

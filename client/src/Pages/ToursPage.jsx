@@ -46,7 +46,7 @@ class ToursPage extends React.Component {
             isOpenedCreateDialog: false,
             tours: [],
             newTourName: '',
-            selectedTourId: null,
+            selectedTour: null,
         };
 
         this.loadAllServices = this.loadAllServices.bind(this);
@@ -70,9 +70,9 @@ class ToursPage extends React.Component {
     }
 
     _handleTourItemClick(e) {
-        TourService.getById(e.tour.id).then(() => {
-            this.setState({ selectedTourId: e.tour.id });
-        })
+        TourService.getById(e.tour.id).then((resp) => {
+            this.setState({ selectedTour: resp.data.result });
+        });
     }
 
     _handleOnAddClick() {
@@ -91,9 +91,13 @@ class ToursPage extends React.Component {
         this.setState({ newTourName: event.name });
     }
 
+    _handleImageChangeClick(event) {
+        console.log(event);
+    }
+
     render() {
         const { classes } = this.props;
-        const { isOpenedCreateDialog, selectedTourId } = this.state;
+        const { isOpenedCreateDialog, selectedTour } = this.state;
         const tours = this.state.tours.map(tour => ({
             id: tour._id,
             img: tour.image,
@@ -121,7 +125,10 @@ class ToursPage extends React.Component {
                                 <Add />
                             </Fab>
                         </div>
-                        <ViewTourPanel isOpen={selectedTourId != null} width={`${window.innerWidth * 0.25}px`} />
+                        {selectedTour && <ViewTourPanel
+                            width={`${window.innerWidth * 0.25}px`}
+                            tour={selectedTour}
+                            onImageChangeClick={this._handleImageChangeClick} />}
                     </div>
                 </div>
             </div>
