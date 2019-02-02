@@ -15,6 +15,14 @@ const styles = theme => ({
     page: {
         width: '100%',
         height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1, 
+    },
+    toursContainer: {
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        padding: '12px',
     }
 });
 
@@ -80,7 +88,9 @@ class ToursPage extends React.Component {
                 onNameChanged={this.handleTextChanged}
                 onClose={() => { this.setState({ isOpenedCreateDialog: false }) }}
             />
-            <Tours tours={tours} />
+            <div className={classes.toursContainer}>
+                <Tours tours={tours} />
+            </div>
             <Fab color="secondary" className={classes.absolute}>
                 <Add onClick={this.handleOnAddClick} />
             </Fab>
