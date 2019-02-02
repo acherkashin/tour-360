@@ -36,24 +36,34 @@ const styles = theme => ({
     },
     tileItemBar: {
         borderColor: theme.palette.primary.light,
-    }
+    },
 });
 
 class Tours extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this._handleItemClick = this._handleItemClick.bind(this);
+    }
+
+    _handleItemClick(tour) {
+        this.props.onItemClick && this.props.onItemClick({ origin: this, tour });
+    }
+
     render() {
-        const { tours, classes } = this.props;
+        const { tours, classes, onItemClick } = this.props;
 
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
-                    {(tours || []).map(tile => (
-                        <Grid key={tile.id} item>
-                            <GridListTile key={tile.id} className={classes.tileItem}>
-                                {tile.img && <img src={tile.img} alt={tile.name} />}
-                                {!tile.img && <img className={classes.noImage} src={'/src/no-image.png'} alt={tile.name} />}
+                    {(tours || []).map(tour => (
+                        <Grid key={tour.id} item>
+                            <GridListTile key={tour.id} className={classes.tileItem} onClick={() => this._handleItemClick(tour)}>
+                                {tour.img && <img src={tour.img} alt={tour.name} />}
+                                {!tour.img && <img className={classes.noImage} src={'/src/no-image.png'} alt={tour.name} />}
                                 <GridListTileBar
                                     className={classes.tileItemBar}
-                                    title={tile.name}
+                                    title={tour.name}
                                     actionIcon={
                                         <IconButton className={classes.icon}>
                                             <InfoIcon />
@@ -76,6 +86,7 @@ Tours.propTypes = {
         img: PropTypes.string,
         name: PropTypes.string,
     })),
+    onItemClick: PropTypes.func,
 };
 
 export default withStyles(styles)(Tours);

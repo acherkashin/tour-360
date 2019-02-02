@@ -3,10 +3,6 @@ import ToursPage from './Pages/ToursPage';
 import withRoot from './withRoot';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <ToursPage />

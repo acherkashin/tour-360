@@ -91,7 +91,6 @@ class CreateTourDialog extends React.Component {
     }
 }
 
-
 CreateTourDialog.propTypes = {
     isOpened: PropTypes.bool,
     onNameChanged: PropTypes.func,
