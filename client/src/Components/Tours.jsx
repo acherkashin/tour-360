@@ -22,6 +22,7 @@ const styles = theme => ({
         padding: theme.spacing.unit * 6,
     },
     tileItem: {
+        cursor: 'pointer',
         width: '300px',
         height: '300px',
         listStyle: 'none',
@@ -51,7 +52,7 @@ class Tours extends React.Component {
     }
 
     render() {
-        const { tours, classes, onItemClick } = this.props;
+        const { tours, classes } = this.props;
 
         return (
             <div className={classes.root}>

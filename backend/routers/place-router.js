@@ -6,7 +6,7 @@ router.route('/place')
     .post(PlaceContoller.create);
 
 router.route('/place/:id')
-    // .get(PlaceContoller.getById)
+    .get(PlaceContoller.getById)
     .put(PlaceContoller.update)
     .delete(PlaceContoller.delete);
 

@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TourService } from '../api';
-import { Header, CreateTourDialog, Tours, EditTourPanel } from '../Components';
+import { Header, CreateTourDialog, Tours, ViewTourPanel } from '../Components';
 import { Fab } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 
 const styles = theme => ({
-    absolute: {
+    addTour: {
         position: 'absolute',
         bottom: theme.spacing.unit * 2,
         right: theme.spacing.unit * 3,
@@ -30,6 +30,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     toursWrapper: {
+        position: 'relative',
         overflowX: 'hidden',
         overflowY: 'auto',
         padding: '12px',
@@ -59,7 +60,7 @@ class ToursPage extends React.Component {
     loadAllServices() {
         TourService.getAll().then(resp => {
             this.setState({
-                tours: resp.data.tours,
+                tours: resp.data.result,
             });
         });
     }
@@ -69,7 +70,9 @@ class ToursPage extends React.Component {
     }
 
     _handleTourItemClick(e) {
-        this.setState({ selectedTourId: e.tour.id });
+        TourService.getById(e.tour.id).then(() => {
+            this.setState({ selectedTourId: e.tour.id });
+        })
     }
 
     _handleOnAddClick() {
@@ -114,14 +117,13 @@ class ToursPage extends React.Component {
                                 tours={tours}
                                 onItemClick={this._handleTourItemClick}
                             />
+                            <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
+                                <Add />
+                            </Fab>
                         </div>
-                        <EditTourPanel isOpen={selectedTourId != null} width={`${window.innerWidth * 0.25}px`} />
+                        <ViewTourPanel isOpen={selectedTourId != null} width={`${window.innerWidth * 0.25}px`} />
                     </div>
                 </div>
-
-                <Fab color="secondary" className={classes.absolute} onClick={this._handleOnAddClick} >
-                    <Add />
-                </Fab>
             </div>
         );
     }

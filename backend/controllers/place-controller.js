@@ -1,13 +1,24 @@
 const { Place } = require('./../models');
 
-// "/place/get"
 exports.getAll = (req, res) => {
     Place.find((err, places) => {
         if (err) {
             return res.json({ success: false, error: err });
         }
-        return res.json({ success: true, places });
+        return res.json({ success: true, result: places });
     });
+};
+
+exports.getById = (req, res) => {
+    const { id } = req.params;
+
+    if (id == null) {
+        res.json({ success: false, error: "id should be provided" });
+    }
+
+    Place.findById(id)
+        .then(result => res.json({ success: true, result }))
+        .catch(error => res.json({ success: false, error }));
 };
 
 exports.update = (req, res) => {

@@ -11,22 +11,21 @@ const styles = theme => ({
     }
 });
 
-class EditTourPanel extends React.Component {
+class ViewTourPanel extends React.Component {
     render() {
         const { classes, isOpen, width } = this.props;
         const resultWidth = isOpen ? (width || '250px') : '0px';
 
         return (
-            <div className={classes.root} style={{ width: resultWidth }}>
-            </div>
+            <div className={classes.root} style={{ width: resultWidth }}></div>
         );
     }
 }
 
-EditTourPanel.propTypes = {
+ViewTourPanel.propTypes = {
     classes: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
     width: PropTypes.string,
 };
 
-export default withStyles(styles)(EditTourPanel);
+export default withStyles(styles)(ViewTourPanel);

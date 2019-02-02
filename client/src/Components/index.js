@@ -1,6 +1,6 @@
 import Header from './Header';
 import CreateTourDialog from './CreateTourDialog';
-import EditTourPanel from './EditTourPanel';
+import ViewTourPanel from './ViewTourPanel';
 import Tours from './Tours'
 
-export { Header, CreateTourDialog, Tours, EditTourPanel };
+export { Header, CreateTourDialog, Tours, ViewTourPanel };
