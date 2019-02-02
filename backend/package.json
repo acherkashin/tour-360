@@ -13,5 +13,8 @@
     "express": "^4.16.4",
     "mongoose": "^5.4.5",
     "morgan": "^1.9.1"
+  },
+  "nodemonConfig": {
+    "delay": "2500"
   }
 }
