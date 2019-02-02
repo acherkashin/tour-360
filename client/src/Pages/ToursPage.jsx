@@ -31,6 +31,7 @@ class ToursPage extends React.Component {
         this.handleOnAddClick = this.handleOnAddClick.bind(this);
         this.handleOnCreateClick = this.handleOnCreateClick.bind(this);
         this.loadAllServices = this.loadAllServices.bind(this);
+        this.handleTextChanged = this.handleTextChanged.bind(this);
     }
 
     loadAllServices() {
@@ -57,6 +58,10 @@ class ToursPage extends React.Component {
         TourService.create(event.name).then(this.loadAllServices);
     }
 
+    handleTextChanged(event) {
+        this.setState({ newTourName: event.name });
+    }
+
     render() {
         const { classes } = this.props;
         const { isOpenedCreateDialog } = this.state;
@@ -72,6 +77,7 @@ class ToursPage extends React.Component {
                 name={this.state.newTourName}
                 isOpened={isOpenedCreateDialog}
                 onCreateClick={this.handleOnCreateClick}
+                onNameChanged={this.handleTextChanged}
                 onClose={() => { this.setState({ isOpenedCreateDialog: false }) }}
             />
             <Tours tours={tours} />
