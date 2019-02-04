@@ -8,4 +8,7 @@ router.route('/tour')
 router.route('/tour/:id')
     .get(TourController.getById);
 
+router.route('/tour/:id/cover')
+    .post(TourController.uploadCover);
+
 module.exports = router;

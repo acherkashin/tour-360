@@ -44,3 +44,9 @@ exports.create = (req, res) => {
         return res.json({ success: false, error: err });
     });
 };
+
+exports.uploadCover = (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    console.log(req);
+};

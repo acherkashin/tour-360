@@ -58,6 +58,7 @@ class ToursPage extends React.Component {
         this._handleTextChanged = this._handleTextChanged.bind(this);
         this._handleTourItemClick = this._handleTourItemClick.bind(this);
         this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
+        this._handleFileSelected = this._handleFileSelected.bind(this);
     }
 
     loadAllServices() {
@@ -70,6 +71,11 @@ class ToursPage extends React.Component {
 
     componentDidMount() {
         this.loadAllServices();
+    }
+
+    _handleFileSelected(e) {
+        //TODO: _id -> id
+        TourService.uploadCover(this.state.selectedTour._id, e.file);
     }
 
     _handleTourItemClick(e) {
@@ -120,6 +126,7 @@ class ToursPage extends React.Component {
                 />
                 <UploadImageDialog
                     isOpened={isOpenedUploadImageDialog}
+                    onFileSelected={this._handleFileSelected}
                     onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
                 />
                 <div className={classes.contentWrapper}>
