@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import GridListTile from '@material-ui/core/GridListTile';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';

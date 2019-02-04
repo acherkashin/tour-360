@@ -1,45 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import { Dialog, DialogTitle as MuiDialogTitle, DialogContent, DialogActions } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Dialog, DialogContent, DialogActions } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
-
-const styles = theme => ({
-    createDialog: {
-
-    }
-});
-
-const DialogTitle = withStyles(theme => ({
-    root: {
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        margin: 0,
-        padding: theme.spacing.unit * 2,
-        paddingRight: theme.spacing.unit * 6,
-    },
-    closeButton: {
-        position: 'absolute',
-        right: theme.spacing.unit,
-        top: theme.spacing.unit,
-        color: theme.palette.grey[500],
-    },
-}))(props => {
-    const { children, classes, onClose } = props;
-    return (
-        <MuiDialogTitle disableTypography className={classes.root}>
-            <Typography variant="h6">{children}</Typography>
-            {onClose ? (
-                <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-                    <CloseIcon />
-                </IconButton>
-            ) : null}
-        </MuiDialogTitle>
-    );
-});
+import DialogTitleWithClose from './DialogTItleWithClose';
 
 class CreateTourDialog extends React.Component {
     constructor(props) {
@@ -63,15 +27,13 @@ class CreateTourDialog extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-
         return (
-            <Dialog className={classes.createDialog}
+            <Dialog
                 onClose={this.handleClose}
                 open={this.props.isOpened}
                 maxWidth={'sm'}
                 fullWidth>
-                <DialogTitle onClose={this.handleClose}>Create Virtual Tour</DialogTitle>
+                <DialogTitleWithClose onClose={this.handleClose}>Create Virtual Tour</DialogTitleWithClose>
                 <DialogContent>
                     <TextField
                         label="Tour Name"
@@ -97,7 +59,6 @@ CreateTourDialog.propTypes = {
     onCreateClick: PropTypes.func,
     onClose: PropTypes.func,
     name: PropTypes.string,
-    classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CreateTourDialog);
+export default CreateTourDialog;

@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TourService } from '../api';
-import { Header, CreateTourDialog, Tours, ViewTourPanel } from '../Components';
+import { Header, Tours, ViewTourPanel } from '../Components';
+import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 
@@ -44,6 +45,7 @@ class ToursPage extends React.Component {
 
         this.state = {
             isOpenedCreateDialog: false,
+            isOpenedUploadImageDialog: false,
             tours: [],
             newTourName: '',
             selectedTour: null,
@@ -55,6 +57,7 @@ class ToursPage extends React.Component {
         this._handleOnCreateClick = this._handleOnCreateClick.bind(this);
         this._handleTextChanged = this._handleTextChanged.bind(this);
         this._handleTourItemClick = this._handleTourItemClick.bind(this);
+        this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
     }
 
     loadAllServices() {
@@ -92,12 +95,13 @@ class ToursPage extends React.Component {
     }
 
     _handleImageChangeClick(event) {
+        this.setState({ isOpenedUploadImageDialog: true });
         console.log(event);
     }
 
     render() {
         const { classes } = this.props;
-        const { isOpenedCreateDialog, selectedTour } = this.state;
+        const { isOpenedCreateDialog, isOpenedUploadImageDialog, selectedTour } = this.state;
         const tours = this.state.tours.map(tour => ({
             id: tour._id,
             img: tour.image,
@@ -112,7 +116,11 @@ class ToursPage extends React.Component {
                     isOpened={isOpenedCreateDialog}
                     onCreateClick={this._handleOnCreateClick}
                     onNameChanged={this._handleTextChanged}
-                    onClose={() => { this.setState({ isOpenedCreateDialog: false, }) }}
+                    onClose={() => this.setState({ isOpenedCreateDialog: false })}
+                />
+                <UploadImageDialog
+                    isOpened={isOpenedUploadImageDialog}
+                    onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
                 />
                 <div className={classes.contentWrapper}>
                     <div className={classes.content}>
