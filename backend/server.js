@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
-const { Place } = require("./models");
+const fileUpload = require('express-fileupload');
 
 const API_PORT = 3001;
 const app = express();
@@ -25,6 +25,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
+app.use(fileUpload());
 
 // append /api for our http requests
 app.use("/api", TourRouter, PlaceRouter);

@@ -47,6 +47,25 @@ exports.create = (req, res) => {
 
 exports.uploadCover = (req, res) => {
     const { id } = req.params;
-    console.log(id);
-    console.log(req);
+    if (id == null) {
+        res.json({ success: false, error: "id should be provided" });
+    }
+
+    if (Object.keys(req.files).length == 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    const cover = req.files.cover;
+    Tour.update({ _id: id }, {
+        $set: {
+            image: {
+                data: cover.data,
+                contentType: cover.mimetype,
+            }
+        }
+    }).then(() => {
+        return res.json({ success: true });
+    }).catch((err) => {
+        return res.json({ success: false, error: err });
+    });
 };
