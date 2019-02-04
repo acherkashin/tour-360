@@ -69,3 +69,19 @@ exports.uploadCover = (req, res) => {
         return res.json({ success: false, error: err });
     });
 };
+
+exports.getCoverById = (req, res) => {
+    const { id } = req.params;
+
+    if (id == null) {
+        res.json({ success: false, error: "id should be provided" });
+    }
+
+    Tour.findById(id)
+        .then(tour => {
+            return res.end(tour.image.data, 'binary');
+        })
+        .catch(error => {
+            return res.json({ success: false, error });
+        });
+};
