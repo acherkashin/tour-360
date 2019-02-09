@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
+import { TourCover } from './';
 
 const styles = theme => ({
     root: {
@@ -19,6 +20,8 @@ const styles = theme => ({
         color: 'rgba(255, 255, 255, 0.54)',
     },
     tile: {
+        width: '80%',
+        background: 'white',
         position: 'relative',
         border: `1px solid ${grey[300]}`,
         '&:hover': {
@@ -72,7 +75,8 @@ class ViewTourPanel extends React.Component {
                 <Typography variant="h4" gutterBottom align='center'>{tour.name}</Typography>
 
                 <div className={classes.tile}>
-                    <img src={tour.img || '/src/no-image.png'} alt={tour.name} />
+                    <TourCover tour={tour} />
+                    {/* <img src={tour.img || '/src/no-image.png'} alt={tour.name} /> */}
                     <div className={classes.titleBar} onClick={this._handleImageChangeClick}>
                         <Typography variant="subtitle1" align='center' inline={true} noWrap={true} className={classes.changeImageLabel}>Change image</Typography>
                         <CloudUpload className={classes.changeImageIcon} />

@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
+import { TourCover } from './';
 
 const styles = theme => ({
     root: {
@@ -18,7 +19,11 @@ const styles = theme => ({
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
     },
-    noImage: {
+    cover: {
+        maxWidth: '100%',
+        maxHeight: '100%',
+    },
+    noCover: {
         padding: theme.spacing.unit * 6,
     },
     tileItem: {
@@ -63,8 +68,7 @@ class Tours extends React.Component {
                                 component='div'
                                 onClick={() => this._handleItemClick(tour)}
                             >
-                                {tour.img && <img src={tour.img} alt={tour.name} />}
-                                {!tour.img && <img className={classes.noImage} src={'/src/no-image.png'} alt={tour.name} />}
+                                <TourCover tour={tour} />
                                 <GridListTileBar
                                     className={classes.tileItemBar}
                                     title={tour.name}

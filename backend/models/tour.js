@@ -13,7 +13,7 @@ Tour.methods.toClient = function () {
     return {
         id: this.id,
         name: this.name,
-        hasImage: this.image != null,
+        hasImage: this.image.data != null,
     };
 };
 
