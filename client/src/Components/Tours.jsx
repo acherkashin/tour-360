@@ -1,13 +1,8 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
 import { withStyles } from '@material-ui/core/styles';
-import grey from '@material-ui/core/colors/grey';
-import { TourCover } from './';
+import { TourItem } from './';
 import { observer } from 'mobx-react';
 
 const styles = theme => ({
@@ -16,32 +11,6 @@ const styles = theme => ({
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         overflow: 'hidden',
-    },
-    icon: {
-        color: 'rgba(255, 255, 255, 0.54)',
-    },
-    cover: {
-        maxWidth: '100%',
-        maxHeight: '100%',
-    },
-    noCover: {
-        padding: theme.spacing.unit * 6,
-    },
-    tileItem: {
-        cursor: 'pointer',
-        width: '300px',
-        height: '300px',
-        backgroundColor: 'white',
-        border: `1px solid ${grey[300]}`,
-        '&:hover': {
-            borderColor: theme.palette.primary.light,
-            '& $tileItemBar': {
-                backgroundColor: theme.palette.primary.light,
-            }
-        }
-    },
-    tileItemBar: {
-        borderColor: theme.palette.primary.light,
     },
 });
 
@@ -57,29 +26,14 @@ const Tours = observer(class Tours extends React.Component {
     }
 
     render() {
-        const { tours, classes } = this.props;
+        const { tours, classes, actions } = this.props;
 
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     {(tours || []).map(tour => (
                         <Grid key={tour.id} item>
-                            <GridListTile
-                                key={tour.id} className={classes.tileItem}
-                                component='div'
-                                onClick={() => this._handleItemClick(tour)}
-                            >
-                                <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />
-                                <GridListTileBar
-                                    className={classes.tileItemBar}
-                                    title={tour.name}
-                                    actionIcon={
-                                        <IconButton className={classes.icon}>
-                                            <InfoIcon />
-                                        </IconButton>
-                                    }
-                                />
-                            </GridListTile>
+                            <TourItem key={tour.id} tour={tour} actions={actions}/>
                         </Grid>
                     ))}
                 </Grid>
@@ -96,6 +50,7 @@ Tours.propTypes = {
         name: PropTypes.string,
     })),
     onItemClick: PropTypes.func,
+    actions: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles)(Tours);

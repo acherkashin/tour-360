@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Header, Tours, ViewTourPanel } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add, Edit, Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react';
 import TourStore from './../Stores/TourStore';
 
@@ -130,6 +130,19 @@ const ToursPage = observer(class ToursPage extends React.Component {
                             <Tours
                                 tours={tours}
                                 onItemClick={this._handleTourItemClick}
+                                actions={[{
+                                    icon: <Edit />,
+                                    text: 'Edit',
+                                    action: (e) => {
+                                        console.log(e);
+                                    }
+                                }, {
+                                    icon: <Delete />,
+                                    text: 'Delete',
+                                    action: (e) => {
+                                        console.log(e);
+                                    }
+                                }]}
                             />
                             <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
                                 <Add />
