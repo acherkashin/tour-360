@@ -74,8 +74,7 @@ class ToursPage extends React.Component {
     }
 
     _handleFileSelected(e) {
-        //TODO: _id -> id
-        TourService.uploadCover(this.state.selectedTour._id, e.file);
+        TourService.uploadCover(this.state.selectedTour.id, e.file);
     }
 
     _handleTourItemClick(e) {
@@ -108,11 +107,7 @@ class ToursPage extends React.Component {
     render() {
         const { classes } = this.props;
         const { isOpenedCreateDialog, isOpenedUploadImageDialog, selectedTour } = this.state;
-        const tours = this.state.tours.map(tour => ({
-            id: tour._id,
-            img: tour.image,
-            name: tour.name,
-        }))
+        const tours = this.state.tours;
 
         return (
             <div className={classes.root}>

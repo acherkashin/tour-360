@@ -2,7 +2,8 @@ const { Tour } = require('./../models');
 
 exports.getAll = (req, res) => {
     Tour.find().then((tours) => {
-        return res.json({ success: true, result: tours });
+        const result = tours.map(tour => tour.toClient());
+        return res.json({ success: true, result });
     }).catch(err => {
         return res.json({ success: false, error: err });
     })
@@ -16,7 +17,8 @@ exports.getById = (req, res) => {
     }
 
     Tour.findById(id)
-        .then(result => {
+        .then(tour => {
+            const result = tour.toClient()
             return res.json({ success: true, result });
         })
         .catch(error => {

@@ -4,19 +4,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const fileUpload = require('express-fileupload');
-
-const API_PORT = 3001;
+const config = require('./config');
 const app = express();
 let { PlaceRouter, TourRouter } = require("./routers");
 
-// this is our MongoDB database
-const dbRoute = "mongodb://localhost:27017/test";
-
-// connects our back end code with the database
-mongoose.connect(dbRoute, { useNewUrlParser: true });
-
+mongoose.connect(config.MONGO_URL, { useNewUrlParser: true });
 let db = mongoose.connection;
-
 db.once("open", () => console.log("connected to the database"));
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
@@ -30,4 +23,4 @@ app.use(fileUpload());
 // append /api for our http requests
 app.use("/api", TourRouter, PlaceRouter);
 
-app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
+app.listen(config.API_PORT, () => console.log(`LISTENING ON PORT ${config.API_PORT}`));

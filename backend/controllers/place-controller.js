@@ -29,7 +29,6 @@ exports.update = (req, res) => {
     });
 };
 
-// "/place/delete"
 exports.delete = (req, res) => {
     const { id } = req.body;
     Place.findOneAndDelete(id, err => {
@@ -38,7 +37,6 @@ exports.delete = (req, res) => {
     });
 };
 
-// "/place/create"
 exports.create = (req, res) => {
     const { name } = req.body;
 
