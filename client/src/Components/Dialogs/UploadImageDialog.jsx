@@ -10,12 +10,20 @@ const styles = theme => ({
     prompt: {
         paddingTop: theme.spacing.unit * 3,
     },
-    button: {
+    selectImage: {
         margin: theme.spacing.unit,
     },
     rightIcon: {
         marginLeft: theme.spacing.unit,
     },
+    previewContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    imagePreview: {
+        maxHeight: '400px',
+        maxWidth: '400px',
+    }
 });
 
 class UploadImageDialog extends React.Component {
@@ -25,11 +33,26 @@ class UploadImageDialog extends React.Component {
         this._handleUploadClick = this._handleUploadClick.bind(this);
         this._handleClose = this._handleClose.bind(this);
         this._handleFileSelected = this._handleFileSelected.bind(this);
+        this._handleFileUpload = this._handleFileUpload.bind(this);
     }
+
+    state = {
+        selectedFile: null,
+        selectedFileUrl: null,
+    };
 
     _handleFileSelected(e) {
         const file = e.target.files[0];
-        this.props.onFileSelected && this.props.onFileSelected({ origin: this, file });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.setState({ selectedFileUrl: e.target.result, selectedFile: file })
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    _handleFileUpload(e) {
+        this.props.onFileSelected && this.props.onFileSelected({ origin: this, file: this.state.selectedFile });
     }
 
     _handleUploadClick() {
@@ -42,6 +65,7 @@ class UploadImageDialog extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const { selectedFileUrl } = this.state;
 
         return (
             <Dialog
@@ -50,15 +74,19 @@ class UploadImageDialog extends React.Component {
                 maxWidth={'sm'}
                 fullWidth>
                 <DialogTitleWithClose onClose={this._handleClose}>Upload a new photo</DialogTitleWithClose>
-                <DialogContent>
-                    <Typography align="center" variant="body1" className={classes.prompt}>Upload cover of your virtual tour</Typography>
+                <DialogContent className={classes.previewContainer}>
+                    {!selectedFileUrl && <Typography align="center" variant="body1" className={classes.prompt}>Upload cover of your virtual tour</Typography>}
+                    {selectedFileUrl && <img className={classes.imagePreview} src={selectedFileUrl} />}
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" component="label" color="primary" className={classes.button} onClick={this._handleUploadClick}>
+                    <Button variant="contained" component="label" color="primary" className={classes.selectImage} onClick={this._handleUploadClick}>
                         Select File
                         <input type="file" style={{ display: "none" }} onChange={this._handleFileSelected} />
-                        {/* <CloudUploadIcon className={classes.rightIcon} /> */}
                     </Button>
+                    {selectedFileUrl != null && <Button variant="contained" color="primary" onClick={this._handleFileUpload} >
+                        Upload
+                        <CloudUploadIcon className={classes.rightIcon} />
+                    </Button>}
                 </DialogActions>
             </Dialog>
         );
