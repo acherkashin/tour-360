@@ -6,6 +6,8 @@ import { Header, Tours, ViewTourPanel } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
+import { observer } from 'mobx-react';
+import TourStore from './../Stores/TourStore';
 
 const styles = theme => ({
     addTour: {
@@ -39,19 +41,20 @@ const styles = theme => ({
     }
 });
 
-class ToursPage extends React.Component {
+const ToursPage = observer(class ToursPage extends React.Component {
     constructor(props) {
         super(props);
+
+        this.store = new TourStore();
 
         this.state = {
             isOpenedCreateDialog: false,
             isOpenedUploadImageDialog: false,
-            tours: [],
             newTourName: '',
             selectedTour: null,
         };
 
-        this.loadAllServices = this.loadAllServices.bind(this);
+        this.loadAllServices = this.loadAllTours.bind(this);
 
         this._handleOnAddClick = this._handleOnAddClick.bind(this);
         this._handleOnCreateClick = this._handleOnCreateClick.bind(this);
@@ -61,25 +64,23 @@ class ToursPage extends React.Component {
         this._handleFileSelected = this._handleFileSelected.bind(this);
     }
 
-    loadAllServices() {
-        TourService.getAll().then(resp => {
-            this.setState({
-                tours: resp.data.result,
-            });
-        });
+    loadAllTours() {
+        this.store.loadTours();
     }
 
     componentDidMount() {
-        this.loadAllServices();
+        this.loadAllTours();
     }
 
     _handleFileSelected(e) {
-        TourService.uploadCover(this.state.selectedTour.id, e.file);
+        this.store.updateCover(this.state.selectedTour.id, e.file).then(() => {
+            this.setState({ isOpenedUploadImageDialog: false });
+        });
     }
 
     _handleTourItemClick(e) {
-        TourService.getById(e.tour.id).then((resp) => {
-            this.setState({ selectedTour: resp.data.result });
+        this.store.getById(e.tour.id).then((tour) => {
+            this.setState({ selectedTour: tour });
         });
     }
 
@@ -92,7 +93,7 @@ class ToursPage extends React.Component {
 
     _handleOnCreateClick(event) {
         this.setState({ isOpenedCreateDialog: false });
-        TourService.create(event.name).then(this.loadAllServices);
+        TourService.create(event.name).then(this.loadAllTours);
     }
 
     _handleTextChanged(event) {
@@ -107,7 +108,7 @@ class ToursPage extends React.Component {
     render() {
         const { classes } = this.props;
         const { isOpenedCreateDialog, isOpenedUploadImageDialog, selectedTour } = this.state;
-        const tours = this.state.tours;
+        const tours = this.store.tours;
 
         return (
             <div className={classes.root}>
@@ -144,7 +145,7 @@ class ToursPage extends React.Component {
             </div>
         );
     }
-}
+});
 
 ToursPage.propTypes = {
     classes: PropTypes.object.isRequired,

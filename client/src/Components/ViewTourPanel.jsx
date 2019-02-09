@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
+import { observer } from 'mobx-react';
 import { TourCover } from './';
 
 const styles = theme => ({
@@ -56,7 +57,7 @@ const styles = theme => ({
     }
 });
 
-class ViewTourPanel extends React.Component {
+const ViewTourPanel = observer(class ViewTourPanel extends React.Component {
     constructor(props) {
         super(props);
 
@@ -75,8 +76,7 @@ class ViewTourPanel extends React.Component {
                 <Typography variant="h4" gutterBottom align='center'>{tour.name}</Typography>
 
                 <div className={classes.tile}>
-                    <TourCover tour={tour} />
-                    {/* <img src={tour.img || '/src/no-image.png'} alt={tour.name} /> */}
+                    <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />
                     <div className={classes.titleBar} onClick={this._handleImageChangeClick}>
                         <Typography variant="subtitle1" align='center' inline={true} noWrap={true} className={classes.changeImageLabel}>Change image</Typography>
                         <CloudUpload className={classes.changeImageIcon} />
@@ -85,7 +85,7 @@ class ViewTourPanel extends React.Component {
             </div>
         );
     }
-}
+});
 
 ViewTourPanel.propTypes = {
     classes: PropTypes.object.isRequired,

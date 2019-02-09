@@ -60,6 +60,7 @@ class UploadImageDialog extends React.Component {
     }
 
     _handleClose() {
+        this.setState({ selectedFile: null, selectedFileUrl: null });
         this.props.onClose && this.props.onClose({ origin: this });
     }
 

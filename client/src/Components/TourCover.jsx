@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -14,18 +14,20 @@ const styles = (theme) => ({
     },
 });
 
-export class TourCover extends React.Component {
+export class TourCover extends PureComponent {
     render() {
-        const { classes, tour } = this.props;
-        const url = tour.hasImage ? `/api/tour/${tour.id}/cover` : '/src/no-image.png';
-        const className = tour.hasImage ? classes.cover : classes.noCover;
+        const { classes, imageUrl, hasImage, name } = this.props;
+        const className = hasImage ? classes.cover : classes.noCover;
 
-        return (<img className={className} src={url} alt={tour.name} />);
+        return (<img className={className} src={imageUrl} alt={name} />);
     }
 }
 
 TourCover.propTypes = {
     classes: PropTypes.object.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    hasImage: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(TourCover);

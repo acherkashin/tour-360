@@ -68,7 +68,7 @@ class Tours extends React.Component {
                                 component='div'
                                 onClick={() => this._handleItemClick(tour)}
                             >
-                                <TourCover tour={tour} />
+                                <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />
                                 <GridListTileBar
                                     className={classes.tileItemBar}
                                     title={tour.name}
