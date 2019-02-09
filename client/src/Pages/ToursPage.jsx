@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { TourService } from '../api';
 import { Header, Tours, ViewTourPanel } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
@@ -87,13 +86,13 @@ const ToursPage = observer(class ToursPage extends React.Component {
     _handleOnAddClick() {
         this.setState({
             isOpenedCreateDialog: true,
-            newTourName: `New Tour ${this.state.tours.length + 1}`,
+            newTourName: `New Tour ${this.store.tours.length + 1}`,
         });
     }
 
     _handleOnCreateClick(event) {
         this.setState({ isOpenedCreateDialog: false });
-        TourService.create(event.name).then(this.loadAllTours);
+        this.store.create(event.name);
     }
 
     _handleTextChanged(event) {

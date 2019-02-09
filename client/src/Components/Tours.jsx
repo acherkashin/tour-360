@@ -8,6 +8,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TourCover } from './';
+import { observer } from 'mobx-react';
 
 const styles = theme => ({
     root: {
@@ -44,7 +45,7 @@ const styles = theme => ({
     },
 });
 
-class Tours extends React.Component {
+const Tours = observer(class Tours extends React.Component {
     constructor(props) {
         super(props);
 
@@ -85,7 +86,7 @@ class Tours extends React.Component {
             </div>
         );
     }
-}
+});
 
 Tours.propTypes = {
     classes: PropTypes.object.isRequired,

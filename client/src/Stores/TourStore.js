@@ -17,7 +17,7 @@ export default class TourStore {
 
     loadTours = action(() => {
         TourService.getAll().then(action((resp) => {
-            this.tours = (resp.data.result || []).map(tour => this.updateTourFromServer(tour));
+            (resp.data.result || []).map(tour => this.updateTourFromServer(tour));
         }));
     });
 
@@ -33,10 +33,14 @@ export default class TourStore {
         return tour;
     });
 
+    create(name) {
+        return TourService.create(name).then(() => this.loadTours());
+    }
+
     updateCover = action((id, file) => {
-        return TourService.uploadCover(id, file).then(() => {
+        return TourService.uploadCover(id, file).then(action(() => {
             const tour = this.tours.find(tour => tour.id === id);
             tour.refreshCover();
-        });
+        }));
     });
 }

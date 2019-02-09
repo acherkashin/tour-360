@@ -60,8 +60,11 @@ class UploadImageDialog extends React.Component {
     }
 
     _handleClose() {
-        this.setState({ selectedFile: null, selectedFileUrl: null });
         this.props.onClose && this.props.onClose({ origin: this });
+    }
+
+    resetSelection() {
+        this.setState({ selectedFile: null, selectedFileUrl: null });
     }
 
     render() {
@@ -70,6 +73,7 @@ class UploadImageDialog extends React.Component {
 
         return (
             <Dialog
+                onExited={() => this.resetSelection()}
                 onClose={this._handleClose}
                 open={this.props.isOpened}
                 maxWidth={'sm'}
