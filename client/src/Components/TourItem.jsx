@@ -14,8 +14,8 @@ import { TourCover } from '.';
 import { observer } from 'mobx-react';
 
 const styles = theme => ({
-    icon: {
-        color: 'rgba(255, 255, 255, 0.54)',
+    moreIcon: {
+        color: 'white',
     },
     cover: {
         maxWidth: '100%',
@@ -82,7 +82,7 @@ const Tour = observer(class Tour extends React.Component {
                     className={classes.tileItemBar}
                     title={tour.name}
                     actionIcon={
-                        <IconButton className={classes.icon} onClick={this.handleMoreClick}>
+                        <IconButton className={classes.moreIcon} onClick={this.handleMoreClick}>
                             <MoreVertIcon />
                         </IconButton>
                     }
@@ -96,7 +96,7 @@ const Tour = observer(class Tour extends React.Component {
                 >
                     {actions.map(action => (
                         <MenuItem key={action.text} className={classes.menuItem} onClick={() => action.action({ origin: this, tour })}>
-                            <ListItemIcon className={classes.icon}>
+                            <ListItemIcon>
                                 {action.icon}
                             </ListItemIcon>
                             <ListItemText primary={action.text} />
