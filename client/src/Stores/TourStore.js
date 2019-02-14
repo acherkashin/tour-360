@@ -38,6 +38,10 @@ export default class TourStore {
         return TourService.create(name).then(() => this.loadTours());
     }
 
+    delete = action((id) => {
+        return TourService.deleteById(id).then(() => this.loadTours());
+    });
+
     updateCover = action((id, file) => {
         return TourService.uploadCover(id, file).then(action(() => {
             const tour = this.tours.find(tour => tour.id === id);

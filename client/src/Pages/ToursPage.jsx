@@ -140,7 +140,7 @@ const ToursPage = observer(class ToursPage extends React.Component {
                                     icon: <Delete />,
                                     text: 'Delete',
                                     action: (e) => {
-                                        console.log(e);
+                                        this.store.delete(e.tour.id);
                                     }
                                 }]}
                             />

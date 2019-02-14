@@ -10,7 +10,7 @@ export function create(name) {
     return client.post('/api/tour', { name });
 }
 export function deleteById(id) {
-    return client.delete(`/api/tour/delete/${id}`);
+    return client.delete(`/api/tour/${id}`);
 }
 export function uploadCover(id, file) {
     const formData = new FormData();

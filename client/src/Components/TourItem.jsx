@@ -70,7 +70,7 @@ const Tour = observer(class Tour extends React.Component {
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
-        return (
+        return (<>
             <GridListTile
                 component='div'
                 key={tour.id}
@@ -87,24 +87,24 @@ const Tour = observer(class Tour extends React.Component {
                         </IconButton>
                     }
                 />
-                <Menu
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={this.handleMenuClose}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                >
-                    {actions.map(action => (
-                        <MenuItem key={action.text} className={classes.menuItem} onClick={() => action.action({ origin: this, tour })}>
-                            <ListItemIcon>
-                                {action.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={action.text} />
-                        </MenuItem>
-                    ))}
-                </Menu>
             </GridListTile>
-        );
+            <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={this.handleMenuClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                {actions.map(action => (
+                    <MenuItem key={action.text} className={classes.menuItem} onClick={() => action.action({ origin: this, tour })}>
+                        <ListItemIcon>
+                            {action.icon}
+                        </ListItemIcon>
+                        <ListItemText primary={action.text} />
+                    </MenuItem>
+                ))}
+            </Menu>
+        </>);
     }
 });
 

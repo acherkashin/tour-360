@@ -87,3 +87,14 @@ exports.getCoverById = (req, res) => {
             return res.json({ success: false, error });
         });
 };
+
+exports.delete = (req, res) => {
+    const { id } = req.params;
+    Tour.findOneAndDelete(id, error => {
+        if (error) {
+            return res.send({ success: false, error });
+        } else {
+            return res.json({ success: true });
+        }
+    });
+};
