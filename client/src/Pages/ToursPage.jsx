@@ -50,7 +50,6 @@ const ToursPage = observer(class ToursPage extends React.Component {
             isOpenedCreateDialog: false,
             isOpenedUploadImageDialog: false,
             newTourName: '',
-            selectedTour: null,
         };
 
         this.loadAllServices = this.loadAllTours.bind(this);
@@ -72,14 +71,14 @@ const ToursPage = observer(class ToursPage extends React.Component {
     }
 
     _handleFileSelected(e) {
-        this.store.updateCover(this.state.selectedTour.id, e.file).then(() => {
+        this.store.updateCover(this.store.selectedTour.id, e.file).then(() => {
             this.setState({ isOpenedUploadImageDialog: false });
         });
     }
 
     _handleTourItemClick(e) {
         this.store.getById(e.tour.id).then((tour) => {
-            this.setState({ selectedTour: tour });
+            this.store.selectedTour = tour;
         });
     }
 
@@ -106,7 +105,8 @@ const ToursPage = observer(class ToursPage extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { isOpenedCreateDialog, isOpenedUploadImageDialog, selectedTour } = this.state;
+        const { isOpenedCreateDialog, isOpenedUploadImageDialog } = this.state;
+        const selectedTour = this.store.selectedTour;
         const tours = this.store.tours;
 
         return (

@@ -6,6 +6,7 @@ export default class TourStore {
     constructor() {
         extendObservable(this, {
             tours: observable.array([]),
+            selectedTour: null
         });
     }
 
