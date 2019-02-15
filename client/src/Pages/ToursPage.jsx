@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Header, Tours, ViewTourPanel } from '../Components';
+import { Header, Tours, ViewTourPanel, Placeholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
@@ -108,6 +108,7 @@ const ToursPage = observer(class ToursPage extends React.Component {
         const { isOpenedCreateDialog, isOpenedUploadImageDialog } = this.state;
         const selectedTour = this.store.selectedTour;
         const tours = this.store.tours;
+        const hasTours = (tours || []).length > 0;
 
         return (
             <div className={classes.root}>
@@ -127,7 +128,7 @@ const ToursPage = observer(class ToursPage extends React.Component {
                 <div className={classes.contentWrapper}>
                     <div className={classes.content}>
                         <div className={classes.toursWrapper}>
-                            <Tours
+                            {hasTours && <Tours
                                 tours={tours}
                                 onItemClick={this._handleTourItemClick}
                                 actions={[{
@@ -143,7 +144,8 @@ const ToursPage = observer(class ToursPage extends React.Component {
                                         this.store.delete(e.tour.id);
                                     }
                                 }]}
-                            />
+                            />}
+                            {!hasTours && <Placeholder onAddClick={this._handleOnAddClick} />}
                             <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
                                 <Add />
                             </Fab>
