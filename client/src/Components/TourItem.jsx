@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
+import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
+import Popover from '@material-ui/core/Popover';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -53,17 +54,21 @@ const Tour = observer(class Tour extends React.Component {
         anchorEl: null,
     };
 
+    handleClick = event => {
+        this.setState({
+            anchorEl: event.currentTarget,
+        });
+    };
+
+    handleClose = () => {
+        this.setState({
+            anchorEl: null,
+        });
+    };
+
     _handleItemClick(e) {
         this.props.onItemClick && this.props.onItemClick({ origin: this, tour: this.props.tour });
     }
-
-    handleMoreClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    };
-
-    handleMenuClose = () => {
-        this.setState({ anchorEl: null });
-    };
 
     render() {
         const { tour, classes, actions } = this.props;
@@ -82,28 +87,41 @@ const Tour = observer(class Tour extends React.Component {
                     className={classes.tileItemBar}
                     title={tour.name}
                     actionIcon={
-                        <IconButton className={classes.moreIcon} onClick={this.handleMoreClick}>
+                        <IconButton className={classes.moreIcon}
+                            aria-owns={open ? 'simple-popper' : undefined}
+                            aria-haspopup="true"
+                            variant="contained"
+                            onClick={this.handleClick}>
                             <MoreVertIcon />
                         </IconButton>
                     }
                 />
             </GridListTile>
-            <Menu
-                anchorEl={anchorEl}
+            <Popover
+                id="simple-popper"
                 open={open}
-                onClose={this.handleMenuClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                anchorEl={anchorEl}
+                onClose={this.handleClose}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
             >
-                {actions.map(action => (
-                    <MenuItem key={action.text} className={classes.menuItem} onClick={() => action.action({ origin: this, tour })}>
-                        <ListItemIcon>
-                            {action.icon}
-                        </ListItemIcon>
-                        <ListItemText primary={action.text} />
-                    </MenuItem>
-                ))}
-            </Menu>
+                <MenuList>
+                    {actions.map(action => (
+                        <MenuItem key={action.text} className={classes.menuItem} onClick={() => action.action({ origin: this, tour })}>
+                            <ListItemIcon>
+                                {action.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={action.text} />
+                        </MenuItem>
+                    ))}
+                </MenuList>
+            </Popover>
         </>);
     }
 });
