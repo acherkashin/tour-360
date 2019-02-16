@@ -6,8 +6,24 @@ export default class TourStore {
     constructor() {
         extendObservable(this, {
             tours: observable.array([]),
-            selectedTour: null
+            selectedTour: null,
+            editingTour: null,
         });
+    }
+
+    editTour(id) {
+        const tour = this._getById(id)
+        this.editingTour = tour;
+    }
+
+    cancelEditing(id) {
+        //TODO: not implemented
+        this.editingTour = null;
+    }
+
+    saveEditing(id) {
+        //TODO: not implemented
+        this.editingTour = null;
     }
 
     getById(id) {

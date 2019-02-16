@@ -7,6 +7,7 @@ import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react';
 import TourStore from './../Stores/TourStore';
+import TourDesigner from './../Components/Dialogs/TourDesigner';
 
 const styles = theme => ({
     addTour: {
@@ -60,6 +61,8 @@ const ToursPage = observer(class ToursPage extends React.Component {
         this._handleTourItemClick = this._handleTourItemClick.bind(this);
         this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
         this._handleFileSelected = this._handleFileSelected.bind(this);
+        this._handleCloseDesigner = this._handleCloseDesigner.bind(this);
+        this._handleSaveChanges = this._handleSaveChanges.bind(this);
     }
 
     loadAllTours() {
@@ -103,11 +106,20 @@ const ToursPage = observer(class ToursPage extends React.Component {
         console.log(event);
     }
 
+    _handleCloseDesigner(e) {
+        this.store.cancelEditing();
+    }
+
+    _handleSaveChanges() {
+        this.store.saveEditing();
+    }
+
     render() {
         const { classes } = this.props;
         const { isOpenedCreateDialog, isOpenedUploadImageDialog } = this.state;
         const selectedTour = this.store.selectedTour;
         const tours = this.store.tours;
+        const designerIsOpened = this.store.editingTour != null;
         const hasTours = (tours || []).length > 0;
 
         return (
@@ -135,7 +147,7 @@ const ToursPage = observer(class ToursPage extends React.Component {
                                     icon: <Edit />,
                                     text: 'Edit',
                                     action: (e) => {
-                                        console.log(e);
+                                        this.store.editTour(e.tour.id);
                                     }
                                 }, {
                                     icon: <Delete />,
@@ -154,6 +166,10 @@ const ToursPage = observer(class ToursPage extends React.Component {
                             width={`${window.innerWidth * 0.25}px`}
                             tour={selectedTour}
                             onImageChangeClick={this._handleImageChangeClick} />}
+                        <TourDesigner
+                            open={designerIsOpened}
+                            onClose={this._handleCloseDesigner}
+                            onSave={this._handleSaveChanges} />
                     </div>
                 </div>
             </div>
