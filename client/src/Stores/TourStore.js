@@ -38,14 +38,26 @@ export default class TourStore {
         return TourService.create(name).then(() => this.loadTours());
     }
 
-    delete = action((id) => {
-        return TourService.deleteById(id).then(() => this.loadTours());
-    });
+    delete(id) {
+        return TourService.deleteById(id).then(() => {
+            this._deleteById(id);
+        });
+    }
 
     updateCover = action((id, file) => {
         return TourService.uploadCover(id, file).then(action(() => {
             const tour = this.tours.find(tour => tour.id === id);
             tour.refreshCover();
         }));
+    });
+
+    _getById(id) {
+        const tour = this.tours.find(t => t.id === id);
+        return tour;
+    }
+
+    _deleteById = action((id) => {
+        const tour = this._getById(id);
+        this.tours.splice(this.tours.indexOf(tour), 1);
     });
 }

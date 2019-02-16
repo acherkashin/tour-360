@@ -48,19 +48,23 @@ const Tour = observer(class Tour extends React.Component {
         super(props);
 
         this._handleItemClick = this._handleItemClick.bind(this);
+        this._handleClose = this._handleClose.bind(this);
+        this._handleClick = this._handleClick.bind(this);
+        this._handleActionClick = this._handleActionClick.bind(this);
     }
 
     state = {
         anchorEl: null,
     };
 
-    handleClick = event => {
+    _handleClick(event) {
+        event.stopPropagation();
         this.setState({
             anchorEl: event.currentTarget,
         });
     };
 
-    handleClose = () => {
+    _handleClose() {
         this.setState({
             anchorEl: null,
         });
@@ -68,6 +72,14 @@ const Tour = observer(class Tour extends React.Component {
 
     _handleItemClick(e) {
         this.props.onItemClick && this.props.onItemClick({ origin: this, tour: this.props.tour });
+    }
+
+    _handleActionClick(action) {
+        action.action({
+            origin: this,
+            tour: this.props.tour,
+        });
+        this._handleClose();
     }
 
     render() {
@@ -80,8 +92,7 @@ const Tour = observer(class Tour extends React.Component {
                 component='div'
                 key={tour.id}
                 className={classes.tileItem}
-                onClick={this._handleItemClick}
-            >
+                onClick={this._handleItemClick}>
                 <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />
                 <GridListTileBar
                     className={classes.tileItemBar}
@@ -91,7 +102,7 @@ const Tour = observer(class Tour extends React.Component {
                             aria-owns={open ? 'simple-popper' : undefined}
                             aria-haspopup="true"
                             variant="contained"
-                            onClick={this.handleClick}>
+                            onClick={this._handleClick}>
                             <MoreVertIcon />
                         </IconButton>
                     }
@@ -101,7 +112,7 @@ const Tour = observer(class Tour extends React.Component {
                 id="simple-popper"
                 open={open}
                 anchorEl={anchorEl}
-                onClose={this.handleClose}
+                onClose={this._handleClose}
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
@@ -113,7 +124,7 @@ const Tour = observer(class Tour extends React.Component {
             >
                 <MenuList>
                     {actions.map(action => (
-                        <MenuItem key={action.text} className={classes.menuItem} onClick={() => action.action({ origin: this, tour })}>
+                        <MenuItem key={action.text} className={classes.menuItem} onClick={() => this._handleActionClick(action)}>
                             <ListItemIcon>
                                 {action.icon}
                             </ListItemIcon>

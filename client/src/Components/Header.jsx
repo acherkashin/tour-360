@@ -12,7 +12,7 @@ export default class Header extends React.Component {
                 <IconButton color="inherit" aria-label="Menu">
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" color="inherit">News</Typography>
+                <Typography variant="h6" color="inherit">Your virtual tours</Typography>
             </Toolbar>
         </AppBar>);
     }
