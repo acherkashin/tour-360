@@ -50,18 +50,27 @@ const ToursPage = inject("tourStore")(observer(
                 isOpenedCreateDialog: false,
                 isOpenedUploadImageDialog: false,
                 newTourName: '',
+                newTourMapType: 1,
+                mapTypes: [{
+                    value: 1,
+                    name: 'Earth',
+                }, {
+                    value: 2,
+                    name: 'Image',
+                }],
             };
 
             this.loadAllServices = this.loadAllTours.bind(this);
 
             this._handleOnAddClick = this._handleOnAddClick.bind(this);
             this._handleOnCreateClick = this._handleOnCreateClick.bind(this);
-            this._handleTextChanged = this._handleTextChanged.bind(this);
+            this._handleTextChanged = this._handleNameChanged.bind(this);
             this._handleTourItemClick = this._handleTourItemClick.bind(this);
             this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
             this._handleFileSelected = this._handleFileSelected.bind(this);
             this._handleCloseDesigner = this._handleCloseDesigner.bind(this);
             this._handleSaveChanges = this._handleSaveChanges.bind(this);
+            this._handleMapTypeChanged = this._handleMapTypeChanged.bind(this);
         }
 
         get store() {
@@ -100,8 +109,12 @@ const ToursPage = inject("tourStore")(observer(
             this.store.create(event.name);
         }
 
-        _handleTextChanged(event) {
+        _handleNameChanged(event) {
             this.setState({ newTourName: event.name });
+        }
+
+        _handleMapTypeChanged(event) {
+            this.setState({ newTourMapType: event.mapType.value });
         }
 
         _handleImageChangeClick(event) {
@@ -119,7 +132,7 @@ const ToursPage = inject("tourStore")(observer(
 
         render() {
             const { classes } = this.props;
-            const { isOpenedCreateDialog, isOpenedUploadImageDialog } = this.state;
+            const { isOpenedCreateDialog, isOpenedUploadImageDialog, mapTypes, newTourMapType } = this.state;
             const { selectedTour, tours, editingTour } = this.store;
             const designerIsOpened = editingTour != null;
             const hasTours = (tours || []).length > 0;
@@ -129,9 +142,12 @@ const ToursPage = inject("tourStore")(observer(
                     <Header />
                     <CreateTourDialog
                         name={this.state.newTourName}
+                        mapTypes={mapTypes}
+                        mapTypeValue={newTourMapType}
                         isOpened={isOpenedCreateDialog}
                         onCreateClick={this._handleOnCreateClick}
-                        onNameChanged={this._handleTextChanged}
+                        onNameChanged={this._handleNameChanged}
+                        onMapTypeChanged={this._handleMapTypeChanged}
                         onClose={() => this.setState({ isOpenedCreateDialog: false })}
                     />
                     <UploadImageDialog
