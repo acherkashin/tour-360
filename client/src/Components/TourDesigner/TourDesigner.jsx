@@ -9,17 +9,28 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Popup, Circle } from 'react-leaflet';
+import EditTourPanel from './EditTourPanel';
+import { observer } from 'mobx-react';
 
 const styles = {
     appBar: {
         position: 'relative',
     },
-    flex: {
+    tourName: {
         flex: 1,
     },
     map: {
+        flex: 1,
+    },
+    content: {
         height: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+    },
+    rightPanel: {
+        flexBasis: 400,
     }
 };
 
@@ -27,7 +38,7 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
-class TourDesigner extends React.Component {
+const TourDesigner = observer(class TourDesigner extends React.Component {
     constructor(props) {
         super(props);
 
@@ -64,23 +75,27 @@ class TourDesigner extends React.Component {
                         <IconButton color="inherit" onClick={this._handleClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.flex}>{tour.name}</Typography>
+                        <Typography variant="h6" color="inherit" className={classes.tourName}>{tour.name}</Typography>
                         <Button color="inherit" onClick={this._handleSave}>save</Button>
                     </Toolbar>
                 </AppBar>
-                <Map center={position} zoom={this.state.zoom} className={classes.map}>
-                    <TileLayer
-                        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={position}>
-                        <Popup>A pretty CSS3 popup. <br /> Easily customizable.</Popup>
-                    </Marker>
-                </Map>
+                <div className={classes.content}>
+                    <Map center={position} zoom={this.state.zoom} className={classes.map}>
+                        <TileLayer
+                            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Circle center={position} radius={30} fill={true}>
+                            <Popup>A pretty CSS3 popup. <br /> Easily customizable.</Popup>
+                        </Circle>
+                    </Map>
+                    <EditTourPanel tour={tour}/>
+                </div>
+
             </Dialog>
         );
     }
-}
+});
 
 TourDesigner.propTypes = {
     tour: PropTypes.shape({

@@ -7,7 +7,7 @@ import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react';
-import TourDesigner from './../Components/Dialogs/TourDesigner';
+import TourDesigner from '../Components/TourDesigner/TourDesigner';
 
 const styles = theme => ({
     addTour: {

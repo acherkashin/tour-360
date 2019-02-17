@@ -1,7 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import { Dialog, DialogContent, DialogActions, TextField, Select, FormControl, MenuItem, FormHelperText, InputLabel, Input } from '@material-ui/core';
+import {
+    Dialog,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Select,
+    FormControl,
+    MenuItem,
+    InputLabel,
+    Input
+} from '@material-ui/core';
 import DialogTitleWithClose from './DialogTItleWithClose';
 
 class CreateTourDialog extends React.Component {
@@ -56,8 +66,7 @@ class CreateTourDialog extends React.Component {
                             fullWidth={true}
                             onChange={this._handleMapTypeChanged}
                             input={<Input name="name" id="name-disabled" />}
-                            value={mapTypeValue}
-                        >
+                            value={mapTypeValue}>
                             {mapTypes.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                         </Select>
                     </FormControl>
