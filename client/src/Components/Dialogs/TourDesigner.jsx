@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 
 const styles = {
     appBar: {
@@ -21,6 +18,9 @@ const styles = {
     flex: {
         flex: 1,
     },
+    map: {
+        height: '100%',
+    }
 };
 
 function Transition(props) {
@@ -35,6 +35,12 @@ class TourDesigner extends React.Component {
         this._handleClose = this._handleClose.bind(this);
     }
 
+    state = {
+        lat: 51.505,
+        lng: -0.09,
+        zoom: 13,
+    };
+
     _handleClose() {
         this.props.onClose && this.props.onClose({ origin: this });
     }
@@ -45,6 +51,8 @@ class TourDesigner extends React.Component {
 
     render() {
         const { classes, open } = this.props;
+        const position = [this.state.lat, this.state.lng]
+
         return (
             <Dialog
                 fullScreen
@@ -60,15 +68,15 @@ class TourDesigner extends React.Component {
                         <Button color="inherit" onClick={this._handleSave}>save</Button>
                     </Toolbar>
                 </AppBar>
-                <List>
-                    <ListItem button>
-                        <ListItemText primary="Phone ringtone" secondary="Titania" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button>
-                        <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-                    </ListItem>
-                </List>
+                <Map center={position} zoom={this.state.zoom} className={classes.map}>
+                    <TileLayer
+                        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={position}>
+                        <Popup>A pretty CSS3 popup. <br /> Easily customizable.</Popup>
+                    </Marker>
+                </Map>
             </Dialog>
         );
     }
