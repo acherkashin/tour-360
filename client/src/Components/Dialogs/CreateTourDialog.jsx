@@ -8,21 +8,21 @@ class CreateTourDialog extends React.Component {
     constructor(props) {
         super(props);
 
-        this.handleCreateClick = this.handleCreateClick.bind(this);
-        this.handleNameChanged = this.handleNameChanged.bind(this);
+        this._handleCreateClick = this._handleCreateClick.bind(this);
+        this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handleMapTypeChanged = this._handleMapTypeChanged.bind(this);
-        this.handleClose = this.handleClose.bind(this);
+        this._handleClose = this._handleClose.bind(this);
     }
 
-    handleCreateClick() {
-        this.props.onCreateClick && this.props.onCreateClick({ origin: this, name: this.props.name });
+    _handleCreateClick() {
+        this.props.onCreateClick && this.props.onCreateClick({ origin: this });
     }
 
-    handleNameChanged(event) {
-        this.props.onNameChanged && this.props.onNameChanged({ origin: this, name: event.target.value });
+    _handleNameChanged(event) {
+        this.props.onNameChanged && this.props.onNameChanged({ origin: this, name: event.target });
     }
 
-    handleClose() {
+    _handleClose() {
         this.props.onClose && this.props.onClose({ origin: this });
     }
 
@@ -35,16 +35,16 @@ class CreateTourDialog extends React.Component {
 
         return (
             <Dialog
-                onClose={this.handleClose}
+                onClose={this._handleClose}
                 open={this.props.isOpened}
                 maxWidth={'sm'}
                 fullWidth>
-                <DialogTitleWithClose onClose={this.handleClose}>Create Virtual Tour</DialogTitleWithClose>
+                <DialogTitleWithClose onClose={this._handleClose}>Create Virtual Tour</DialogTitleWithClose>
                 <DialogContent>
                     <TextField
                         label="Tour Name"
                         value={this.props.name}
-                        onChange={this.handleNameChanged}
+                        onChange={this._handleNameChanged}
                         margin="normal"
                         fullWidth={true}
                         autoFocus
@@ -58,12 +58,12 @@ class CreateTourDialog extends React.Component {
                             input={<Input name="name" id="name-disabled" />}
                             value={mapTypeValue}
                         >
-                            {mapTypes.map(type => <MenuItem key={type.value} value={type.value}>{type.name}</MenuItem>)}
+                            {mapTypes.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleCreateClick} color="primary">Create</Button>
+                    <Button onClick={this._handleCreateClick} color="primary">Create</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -77,11 +77,8 @@ CreateTourDialog.propTypes = {
     onMapTypeChanged: PropTypes.func.isRequired,
     onClose: PropTypes.func,
     name: PropTypes.string,
-    mapTypeValue: PropTypes.number.isRequired,
-    mapTypes: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-    })).isRequired,
+    mapTypeValue: PropTypes.string.isRequired,
+    mapTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default CreateTourDialog;

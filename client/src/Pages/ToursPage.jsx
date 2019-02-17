@@ -50,14 +50,8 @@ const ToursPage = inject("tourStore")(observer(
                 isOpenedCreateDialog: false,
                 isOpenedUploadImageDialog: false,
                 newTourName: '',
-                newTourMapType: 1,
-                mapTypes: [{
-                    value: 1,
-                    name: 'Earth',
-                }, {
-                    value: 2,
-                    name: 'Image',
-                }],
+                newTourMapType: 'Image',
+                mapTypes: ['Earth', 'Image'],
             };
 
             this.loadAllServices = this.loadAllTours.bind(this);
@@ -106,7 +100,7 @@ const ToursPage = inject("tourStore")(observer(
 
         _handleOnCreateClick(event) {
             this.setState({ isOpenedCreateDialog: false });
-            this.store.create(event.name);
+            this.store.create(this.state.newTourName, this.state.newTourMapType);
         }
 
         _handleNameChanged(event) {

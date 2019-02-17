@@ -54,8 +54,8 @@ export default class TourStore {
         return tour;
     });
 
-    create(name) {
-        return TourService.create(name).then(() => this.loadTours());
+    create(name, mapType) {
+        return TourService.create(name, mapType).then(() => this.loadTours());
     }
 
     delete(id) {

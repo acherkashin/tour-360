@@ -27,7 +27,7 @@ exports.getById = (req, res) => {
 };
 
 exports.create = (req, res) => {
-    const { name } = req.body;
+    const { name, mapType } = req.body;
 
     if (!name) {
         return res.json({
@@ -37,7 +37,8 @@ exports.create = (req, res) => {
     }
 
     const tour = new Tour({
-        name
+        name,
+        mapType
     });
 
     tour.save().then(() => {

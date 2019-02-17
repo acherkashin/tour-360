@@ -6,8 +6,8 @@ export function getAll() {
 export function getById(id) {
     return client.get(`/api/tour/${id}`);
 }
-export function create(name) {
-    return client.post('/api/tour', { name });
+export function create(name, mapType) {
+    return client.post('/api/tour', { name, mapType });
 }
 export function deleteById(id) {
     return client.delete(`/api/tour/${id}`);
