@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import { Header, Tours, ViewTourPanel, Placeholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react';
-import TourStore from './../Stores/TourStore';
 import TourDesigner from './../Components/Dialogs/TourDesigner';
 
 const styles = theme => ({
@@ -41,141 +41,145 @@ const styles = theme => ({
     }
 });
 
-const ToursPage = observer(class ToursPage extends React.Component {
-    constructor(props) {
-        super(props);
+const ToursPage = inject("tourStore")(observer(
+    class ToursPage extends React.Component {
+        constructor(props) {
+            super(props);
 
-        this.store = new TourStore();
+            this.state = {
+                isOpenedCreateDialog: false,
+                isOpenedUploadImageDialog: false,
+                newTourName: '',
+            };
 
-        this.state = {
-            isOpenedCreateDialog: false,
-            isOpenedUploadImageDialog: false,
-            newTourName: '',
-        };
+            this.loadAllServices = this.loadAllTours.bind(this);
 
-        this.loadAllServices = this.loadAllTours.bind(this);
+            this._handleOnAddClick = this._handleOnAddClick.bind(this);
+            this._handleOnCreateClick = this._handleOnCreateClick.bind(this);
+            this._handleTextChanged = this._handleTextChanged.bind(this);
+            this._handleTourItemClick = this._handleTourItemClick.bind(this);
+            this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
+            this._handleFileSelected = this._handleFileSelected.bind(this);
+            this._handleCloseDesigner = this._handleCloseDesigner.bind(this);
+            this._handleSaveChanges = this._handleSaveChanges.bind(this);
+        }
 
-        this._handleOnAddClick = this._handleOnAddClick.bind(this);
-        this._handleOnCreateClick = this._handleOnCreateClick.bind(this);
-        this._handleTextChanged = this._handleTextChanged.bind(this);
-        this._handleTourItemClick = this._handleTourItemClick.bind(this);
-        this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
-        this._handleFileSelected = this._handleFileSelected.bind(this);
-        this._handleCloseDesigner = this._handleCloseDesigner.bind(this);
-        this._handleSaveChanges = this._handleSaveChanges.bind(this);
-    }
+        get store() {
+            return this.props.tourStore;
+        }
 
-    loadAllTours() {
-        this.store.loadTours();
-    }
+        loadAllTours() {
+            this.store.loadTours();
+        }
 
-    componentDidMount() {
-        this.loadAllTours();
-    }
+        componentDidMount() {
+            this.loadAllTours();
+        }
 
-    _handleFileSelected(e) {
-        this.store.updateCover(this.store.selectedTour.id, e.file).then(() => {
-            this.setState({ isOpenedUploadImageDialog: false });
-        });
-    }
+        _handleFileSelected(e) {
+            this.store.updateCover(this.store.selectedTour.id, e.file).then(() => {
+                this.setState({ isOpenedUploadImageDialog: false });
+            });
+        }
 
-    _handleTourItemClick(e) {
-        this.store.getById(e.tour.id).then((tour) => {
-            this.store.selectedTour = tour;
-        });
-    }
+        _handleTourItemClick(e) {
+            this.store.getById(e.tour.id).then((tour) => {
+                this.store.selectedTour = tour;
+            });
+        }
 
-    _handleOnAddClick() {
-        this.setState({
-            isOpenedCreateDialog: true,
-            newTourName: `New Tour ${this.store.tours.length + 1}`,
-        });
-    }
+        _handleOnAddClick() {
+            this.setState({
+                isOpenedCreateDialog: true,
+                newTourName: `New Tour ${this.store.tours.length + 1}`,
+            });
+        }
 
-    _handleOnCreateClick(event) {
-        this.setState({ isOpenedCreateDialog: false });
-        this.store.create(event.name);
-    }
+        _handleOnCreateClick(event) {
+            this.setState({ isOpenedCreateDialog: false });
+            this.store.create(event.name);
+        }
 
-    _handleTextChanged(event) {
-        this.setState({ newTourName: event.name });
-    }
+        _handleTextChanged(event) {
+            this.setState({ newTourName: event.name });
+        }
 
-    _handleImageChangeClick(event) {
-        this.setState({ isOpenedUploadImageDialog: true });
-        console.log(event);
-    }
+        _handleImageChangeClick(event) {
+            this.setState({ isOpenedUploadImageDialog: true });
+            console.log(event);
+        }
 
-    _handleCloseDesigner(e) {
-        this.store.cancelEditing();
-    }
+        _handleCloseDesigner(e) {
+            this.store.cancelEditing();
+        }
 
-    _handleSaveChanges() {
-        this.store.saveEditing();
-    }
+        _handleSaveChanges() {
+            this.store.saveEditing();
+        }
 
-    render() {
-        const { classes } = this.props;
-        const { isOpenedCreateDialog, isOpenedUploadImageDialog } = this.state;
-        const selectedTour = this.store.selectedTour;
-        const tours = this.store.tours;
-        const designerIsOpened = this.store.editingTour != null;
-        const hasTours = (tours || []).length > 0;
+        render() {
+            const { classes } = this.props;
+            const { isOpenedCreateDialog, isOpenedUploadImageDialog } = this.state;
+            const selectedTour = this.store.selectedTour;
+            const tours = this.store.tours;
+            const designerIsOpened = this.store.editingTour != null;
+            const hasTours = (tours || []).length > 0;
 
-        return (
-            <div className={classes.root}>
-                <Header />
-                <CreateTourDialog
-                    name={this.state.newTourName}
-                    isOpened={isOpenedCreateDialog}
-                    onCreateClick={this._handleOnCreateClick}
-                    onNameChanged={this._handleTextChanged}
-                    onClose={() => this.setState({ isOpenedCreateDialog: false })}
-                />
-                <UploadImageDialog
-                    isOpened={isOpenedUploadImageDialog}
-                    onFileSelected={this._handleFileSelected}
-                    onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
-                />
-                <div className={classes.contentWrapper}>
-                    <div className={classes.content}>
-                        <div className={classes.toursWrapper}>
-                            {hasTours && <Tours
-                                tours={tours}
-                                onItemClick={this._handleTourItemClick}
-                                actions={[{
-                                    icon: <Edit />,
-                                    text: 'Edit',
-                                    action: (e) => {
-                                        this.store.editTour(e.tour.id);
-                                    }
-                                }, {
-                                    icon: <Delete />,
-                                    text: 'Delete',
-                                    action: (e) => {
-                                        this.store.delete(e.tour.id);
-                                    }
-                                }]}
-                            />}
-                            {!hasTours && <Placeholder onAddClick={this._handleOnAddClick} />}
-                            <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
-                                <Add />
-                            </Fab>
+            return (
+                <div className={classes.root}>
+                    <Header />
+                    <CreateTourDialog
+                        name={this.state.newTourName}
+                        isOpened={isOpenedCreateDialog}
+                        onCreateClick={this._handleOnCreateClick}
+                        onNameChanged={this._handleTextChanged}
+                        onClose={() => this.setState({ isOpenedCreateDialog: false })}
+                    />
+                    <UploadImageDialog
+                        isOpened={isOpenedUploadImageDialog}
+                        onFileSelected={this._handleFileSelected}
+                        onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
+                    />
+                    <div className={classes.contentWrapper}>
+                        <div className={classes.content}>
+                            <div className={classes.toursWrapper}>
+                                {hasTours && <Tours
+                                    tours={tours}
+                                    onItemClick={this._handleTourItemClick}
+                                    actions={[{
+                                        icon: <Edit />,
+                                        text: 'Edit',
+                                        action: (e) => {
+                                            this.store.editTour(e.tour.id);
+                                        }
+                                    }, {
+                                        icon: <Delete />,
+                                        text: 'Delete',
+                                        action: (e) => {
+                                            this.store.delete(e.tour.id);
+                                        }
+                                    }]}
+                                />}
+                                {!hasTours && <Placeholder onAddClick={this._handleOnAddClick} />}
+                                <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
+                                    <Add />
+                                </Fab>
+                            </div>
+                            {selectedTour && <ViewTourPanel
+                                width={`${window.innerWidth * 0.25}px`}
+                                tour={selectedTour}
+                                onImageChangeClick={this._handleImageChangeClick} />}
+                            <TourDesigner
+                                open={designerIsOpened}
+                                onClose={this._handleCloseDesigner}
+                                onSave={this._handleSaveChanges} />
                         </div>
-                        {selectedTour && <ViewTourPanel
-                            width={`${window.innerWidth * 0.25}px`}
-                            tour={selectedTour}
-                            onImageChangeClick={this._handleImageChangeClick} />}
-                        <TourDesigner
-                            open={designerIsOpened}
-                            onClose={this._handleCloseDesigner}
-                            onSave={this._handleSaveChanges} />
                     </div>
                 </div>
-            </div>
-        );
-    }
-});
+            );
+        }
+    })
+);
 
 ToursPage.propTypes = {
     classes: PropTypes.object.isRequired,

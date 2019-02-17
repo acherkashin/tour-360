@@ -6,7 +6,7 @@ const logger = require("morgan");
 const fileUpload = require('express-fileupload');
 const config = require('./config');
 const app = express();
-let { PlaceRouter, TourRouter } = require("./routers");
+const { PlaceRouter, TourRouter, TourEditRouter } = require("./routers");
 
 mongoose.connect(config.MONGO_URL, { useNewUrlParser: true });
 let db = mongoose.connection;
@@ -21,6 +21,6 @@ app.use(logger("dev"));
 app.use(fileUpload());
 
 // append /api for our http requests
-app.use("/api", TourRouter, PlaceRouter);
+app.use("/api", TourRouter, PlaceRouter, TourEditRouter);
 
 app.listen(config.API_PORT, () => console.log(`LISTENING ON PORT ${config.API_PORT}`));

@@ -1,5 +1,5 @@
 import { extendObservable, action, observable } from 'mobx';
-import { TourService } from './../api';
+import { TourService, TourEditService } from './../api';
 import Tour from './Tour';
 
 export default class TourStore {
@@ -8,22 +8,26 @@ export default class TourStore {
             tours: observable.array([]),
             selectedTour: null,
             editingTour: null,
+            sessionId: null,
         });
     }
 
-    editTour(id) {
-        const tour = this._getById(id)
-        this.editingTour = tour;
+    editTour(tourId) {
+        TourEditService.beginEditing(tourId).then(action((resp) => {
+            this.editingTour = resp.data.result.tour;
+            this.sessionId = resp.data.result.sessionId;
+        }));
     }
 
-    cancelEditing(id) {
-        //TODO: not implemented
-        this.editingTour = null;
+    cancelEditing(sessionId) {
+        TourEditService.cancelChanges(sessionId).then(action(() => {
+            this.editingTour = null;
+        }))
     }
 
-    saveEditing(id) {
-        //TODO: not implemented
-        this.editingTour = null;
+    saveEditing(sessionId) {
+        TourEditService.cancelChanges(sessionId).then(action(() => {
+        }))
     }
 
     getById(id) {

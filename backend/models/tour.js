@@ -17,4 +17,12 @@ Tour.methods.toClient = function () {
     };
 };
 
+Tour.methods.toDesignerDto = function() {
+    return {
+        id: this.id,
+        name: this.name,
+        places: this.places,
+    };
+};
+
 module.exports = mongoose.model("Tour", Tour);
