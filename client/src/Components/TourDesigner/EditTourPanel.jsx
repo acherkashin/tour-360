@@ -17,11 +17,17 @@ const styles = theme => ({
 const EditTourPanel = observer(class EditTourPanel extends React.Component {
     constructor(props) {
         super(props);
+
+        this._handleNameChanged = this._handleNameChanged.bind(this);
+    }
+
+    _handleNameChanged(e) {
+        this.props.onNameChanged({ origin: this, name: e.target.value });
     }
 
     render() {
         const { classes, tour } = this.props;
-        
+
         return (<div className={classes.root}>
             <TextField
                 label="Tour Name"
@@ -40,6 +46,7 @@ EditTourPanel.propTypes = {
     tour: PropTypes.shape({
         name: PropTypes.string.isRequired,
     }).isRequired,
+    onNameChanged: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(EditTourPanel);

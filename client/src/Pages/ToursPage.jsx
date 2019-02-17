@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import { Header, Tours, ViewTourPanel, Placeholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
-import { observer } from 'mobx-react';
+import { observer,inject } from 'mobx-react';
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
 
 const styles = theme => ({
@@ -58,7 +57,7 @@ const ToursPage = inject("tourStore")(observer(
 
             this._handleOnAddClick = this._handleOnAddClick.bind(this);
             this._handleOnCreateClick = this._handleOnCreateClick.bind(this);
-            this._handleTextChanged = this._handleNameChanged.bind(this);
+            this._handleNameChanged = this._handleNameChanged.bind(this);
             this._handleTourItemClick = this._handleTourItemClick.bind(this);
             this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
             this._handleFileSelected = this._handleFileSelected.bind(this);
@@ -127,9 +126,7 @@ const ToursPage = inject("tourStore")(observer(
         render() {
             const { classes } = this.props;
             const { isOpenedCreateDialog, isOpenedUploadImageDialog, mapTypes, newTourMapType } = this.state;
-            const { selectedTour, tours, editingTour } = this.store;
-            const designerIsOpened = editingTour != null;
-            const hasTours = (tours || []).length > 0;
+            const { selectedTour, tours, editingTour, designerIsOpened, hasTours } = this.store;
 
             return (
                 <div className={classes.root}>
@@ -159,7 +156,7 @@ const ToursPage = inject("tourStore")(observer(
                                         icon: <Edit />,
                                         text: 'Edit',
                                         action: (e) => {
-                                            this.store.editTour(e.tour.id);
+                                            this.store.beginEditing(e.tour.id);
                                         }
                                     }, {
                                         icon: <Delete />,

@@ -9,10 +9,16 @@ export default class TourStore {
             selectedTour: null,
             editingTour: null,
             sessionId: null,
+            get designerIsOpened() {
+                return this.editingTour != null
+            },
+            get hasTours() {
+                return (this.tours || []).length > 0;
+            }
         });
     }
 
-    editTour(tourId) {
+    beginEditing(tourId) {
         TourEditService.beginEditing(tourId).then(action((resp) => {
             this.editingTour = resp.data.result.tour;
             this.sessionId = resp.data.result.sessionId;

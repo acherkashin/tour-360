@@ -29,7 +29,7 @@ class CreateTourDialog extends React.Component {
     }
 
     _handleNameChanged(event) {
-        this.props.onNameChanged && this.props.onNameChanged({ origin: this, name: event.target });
+        this.props.onNameChanged && this.props.onNameChanged({ origin: this, name: event.target.value });
     }
 
     _handleClose() {
