@@ -50,13 +50,13 @@ class TourDesigner extends React.Component {
     }
 
     render() {
-        const { classes, open } = this.props;
+        const { classes, tour } = this.props;
         const position = [this.state.lat, this.state.lng]
 
         return (
             <Dialog
+                open={true}
                 fullScreen
-                open={open}
                 onClose={this._handleClose}
                 TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
@@ -64,7 +64,7 @@ class TourDesigner extends React.Component {
                         <IconButton color="inherit" onClick={this._handleClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.flex}>Sound</Typography>
+                        <Typography variant="h6" color="inherit" className={classes.flex}>{tour.name}</Typography>
                         <Button color="inherit" onClick={this._handleSave}>save</Button>
                     </Toolbar>
                 </AppBar>
@@ -83,8 +83,10 @@ class TourDesigner extends React.Component {
 }
 
 TourDesigner.propTypes = {
+    tour: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+    }).isRequired,
     classes: PropTypes.object.isRequired,
-    open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
 };

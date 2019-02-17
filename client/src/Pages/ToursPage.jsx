@@ -120,9 +120,8 @@ const ToursPage = inject("tourStore")(observer(
         render() {
             const { classes } = this.props;
             const { isOpenedCreateDialog, isOpenedUploadImageDialog } = this.state;
-            const selectedTour = this.store.selectedTour;
-            const tours = this.store.tours;
-            const designerIsOpened = this.store.editingTour != null;
+            const { selectedTour, tours, editingTour } = this.store;
+            const designerIsOpened = editingTour != null;
             const hasTours = (tours || []).length > 0;
 
             return (
@@ -169,10 +168,10 @@ const ToursPage = inject("tourStore")(observer(
                                 width={`${window.innerWidth * 0.25}px`}
                                 tour={selectedTour}
                                 onImageChangeClick={this._handleImageChangeClick} />}
-                            <TourDesigner
-                                open={designerIsOpened}
+                            {designerIsOpened && <TourDesigner
+                                tour={editingTour}
                                 onClose={this._handleCloseDesigner}
-                                onSave={this._handleSaveChanges} />
+                                onSave={this._handleSaveChanges} />}
                         </div>
                     </div>
                 </div>
