@@ -22,7 +22,8 @@ exports.startEditing = (req, res) => {
 exports.saveChanges = (req, res) => {
     const { sessionId } = req.params;
     cache[sessionId].save().then(() => {
-        res.json({ success: true });
+        const tour = cache[sessionId];
+        res.json({ success: true, tour: tour });
     }).catch((err) => {
         res.json({ success: false, error: err });
     });
@@ -33,4 +34,21 @@ exports.cancelChanges = (req, res) => {
     delete cache[sessionId];
 
     res.json({ success: true });
+};
+
+exports.uploadMapImage = (req, res) => {
+    const { sessionId } = req.params;
+
+    const mapImage = req.files.mapImage;
+    cache[sessionId].image.data = mapImage.data;
+    cache[sessionId].image.contentType = mapImage.mimetype;
+
+    res.json({ success: true, tour: cache[sessionId] });
+};
+
+exports.getMapImage = (req, res) => {
+    const { sessionId } = req.params;
+
+    const tour = cache[sessionId];
+    res.end(tour.image.data, 'binary');
 };

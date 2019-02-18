@@ -25,6 +25,7 @@ Tour.methods.toDesignerDto = function () {
         name: this.name,
         places: this.places,
         mapType: this.mapType,
+        hasMapImage: this.image && this.image.data != null,
     };
 };
 

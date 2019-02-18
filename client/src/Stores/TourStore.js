@@ -1,6 +1,6 @@
 import { extendObservable, action, observable } from 'mobx';
 import { TourService, TourEditService } from './../api';
-import Tour from './Tour';
+import { Tour, EditTour } from './';
 
 export default class TourStore {
     constructor() {
@@ -19,21 +19,24 @@ export default class TourStore {
     }
 
     beginEditing(tourId) {
-        TourEditService.beginEditing(tourId).then(action((resp) => {
-            this.editingTour = resp.data.result.tour;
+        return TourEditService.beginEditing(tourId).then(action((resp) => {
+            const { tour, sessionId } = resp.data.result;
+            this.editingTour = new EditTour(this, sessionId, tour);
+
             this.sessionId = resp.data.result.sessionId;
         }));
     }
 
-    cancelEditing(sessionId) {
-        TourEditService.cancelChanges(sessionId).then(action(() => {
+    cancelEditing() {
+        return TourEditService.cancelChanges(this.sessionId).then(action(() => {
             this.editingTour = null;
         }))
     }
 
-    saveEditing(sessionId) {
-        TourEditService.cancelChanges(sessionId).then(action(() => {
-        }))
+    saveEditing() {
+        return TourEditService.saveChanges(this.sessionId).then(action((result) => {
+            this.editingTour.updateFromJson(result.data.tour);
+        }));
     }
 
     getById(id) {
@@ -45,6 +48,8 @@ export default class TourStore {
     loadTours = action(() => {
         TourService.getAll().then(action((resp) => {
             (resp.data.result || []).map(tour => this.updateTourFromServer(tour));
+            //TODO: remove
+            this.beginEditing(this.tours[0].id);
         }));
     });
 
@@ -76,6 +81,12 @@ export default class TourStore {
             tour.refreshCover();
         }));
     });
+
+    updateImageMap = action((file) => {
+        return TourEditService.uploadMapImage(this.sessionId, file).then(action(() => {
+            this.editingTour.refreshCover();
+        }));
+    })
 
     _getById(id) {
         const tour = this.tours.find(t => t.id === id);

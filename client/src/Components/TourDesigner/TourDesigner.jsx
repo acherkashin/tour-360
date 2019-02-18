@@ -50,17 +50,28 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleMapImageUploaded = this._handleMapImageUploaded.bind(this);
     }
 
-    state = {
-        position: [0, 0],
-        zoom: 13,
-    };
+    get tourStore() {
+        return this.props.tourStore;
+    }
+
+    get editingTour() {
+        return this.props.tourStore.editingTour;
+    }
+
+    get sessionId() {
+        return this.props.tourStore.sessionId;
+    }
 
     _handleClose() {
-        this.props.onClose && this.props.onClose({ origin: this });
+        this.tourStore.cancelEditing();
+        // this.props.onClose && this.props.onClose({ origin: this });
     }
 
     _handleSave() {
-        this.props.onSave && this.props.onSave({ origin: this });
+        this.tourStore.saveEditing();
+        // .then(() => {
+        //     this.props.onSave && this.props.onSave({ origin: this });
+        // });
     }
 
     _handleNameChanged(e) {
@@ -72,27 +83,32 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         console.log(e);
     }
 
-    get editingTour() {
-        return this.props.tourStore.editingTour;
-    }
-
     _renderImageMap() {
         const { classes } = this.props;
         const bounds = [[0, 0], [757, 1024]];
+
         return (
             <Map crs={L.CRS.Simple} bounds={bounds} className={classes.map}>
-                <ImageOverlay url='https://st3.depositphotos.com/1000434/13699/v/1600/depositphotos_136991736-stock-illustration-abstract-vector-plan-of-office.jpg' bounds={bounds} />
+                <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
             </Map>
         );
     }
 
+    _handleMapImageUploaded(e) {
+        this.tourStore.updateImageMap(e.file);
+    }
+
     _renderEarthMap() {
         const { classes } = this.props;
+        const state = {
+            position: [0, 0],
+            zoom: 13,
+        };
 
         return (
             <Map
-                center={this.state.position}
-                zoom={this.state.zoom}
+                center={state.position}
+                zoom={state.zoom}
                 className={classes.map}
                 onclick={this._handleMapClick}>
                 <TileLayer
@@ -104,10 +120,6 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 </Circle> */}
             </Map>
         );
-    }
-
-    _handleMapImageUploaded(e) {
-        console.log(e);
     }
 
     render() {
@@ -131,6 +143,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 <div className={classes.content}>
                     {this.editingTour.mapType === 'Earth' && this._renderEarthMap()}
                     {this.editingTour.mapType === 'Image' && this._renderImageMap()}
+                    {!this.editingTour.mapType && <Typography className={classes.map}>Map type is not defined</Typography>}
                     <EditTourPanel
                         tour={this.editingTour}
                         onNameChanged={this._handleNameChanged}
