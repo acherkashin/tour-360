@@ -47,6 +47,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleClose = this._handleClose.bind(this);
         this._handleMapClick = this._handleMapClick.bind(this);
         this._handleNameChanged = this._handleNameChanged.bind(this);
+        this._handleMapImageUploaded = this._handleMapImageUploaded.bind(this);
     }
 
     state = {
@@ -76,18 +77,11 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _renderImageMap() {
-        debugger;
         const { classes } = this.props;
-        const bounds = [[0, 0], [1000, 1000]];
-
+        const bounds = [[0, 0], [757, 1024]];
         return (
-            <Map сrs={L.CRS.Simple} bounds={bounds}
-                className={classes.map}
-            >
-                <ImageOverlay
-                    url='https://st3.depositphotos.com/1000434/13699/v/1600/depositphotos_136991736-stock-illustration-abstract-vector-plan-of-office.jpg'
-                    bounds={bounds}
-                />
+            <Map crs={L.CRS.Simple} bounds={bounds} className={classes.map}>
+                <ImageOverlay url='https://st3.depositphotos.com/1000434/13699/v/1600/depositphotos_136991736-stock-illustration-abstract-vector-plan-of-office.jpg' bounds={bounds} />
             </Map>
         );
     }
@@ -112,6 +106,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         );
     }
 
+    _handleMapImageUploaded(e) {
+        console.log(e);
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -133,7 +131,11 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 <div className={classes.content}>
                     {this.editingTour.mapType === 'Earth' && this._renderEarthMap()}
                     {this.editingTour.mapType === 'Image' && this._renderImageMap()}
-                    <EditTourPanel tour={this.editingTour} onNameChanged={this._handleNameChanged} />
+                    <EditTourPanel
+                        tour={this.editingTour}
+                        onNameChanged={this._handleNameChanged}
+                        onMapImageUploaded={this._handleMapImageUploaded}
+                    />
                 </div>
 
             </Dialog>

@@ -5,7 +5,7 @@ import { Header, Tours, ViewTourPanel, Placeholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
-import { observer,inject } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
 
 const styles = theme => ({
@@ -142,6 +142,8 @@ const ToursPage = inject("tourStore")(observer(
                         onClose={() => this.setState({ isOpenedCreateDialog: false })}
                     />
                     <UploadImageDialog
+                        title="Upload new photo"
+                        prompt="Upload cover of your virtual tour"
                         isOpened={isOpenedUploadImageDialog}
                         onFileSelected={this._handleFileSelected}
                         onClose={() => this.setState({ isOpenedUploadImageDialog: false })}

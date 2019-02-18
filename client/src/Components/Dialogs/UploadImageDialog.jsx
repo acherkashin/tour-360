@@ -43,12 +43,15 @@ class UploadImageDialog extends React.Component {
 
     _handleFileSelected(e) {
         const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.setState({ selectedFileUrl: e.target.result, selectedFile: file })
-        };
 
-        reader.readAsDataURL(file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.setState({ selectedFileUrl: e.target.result, selectedFile: file })
+            };
+
+            reader.readAsDataURL(file);
+        }
     }
 
     _handleFileUpload(e) {
@@ -63,32 +66,33 @@ class UploadImageDialog extends React.Component {
         this.props.onClose && this.props.onClose({ origin: this });
     }
 
-    resetSelection() {
+    _resetSelection() {
         this.setState({ selectedFile: null, selectedFileUrl: null });
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, title, prompt } = this.props;
         const { selectedFileUrl } = this.state;
+        const selectButtonColor = selectedFileUrl != null ? "default" :  "primary";
 
         return (
             <Dialog
-                onExited={() => this.resetSelection()}
+                onExited={() => this._resetSelection()}
                 onClose={this._handleClose}
                 open={this.props.isOpened}
                 maxWidth={'sm'}
                 fullWidth>
-                <DialogTitleWithClose onClose={this._handleClose}>Upload a new photo</DialogTitleWithClose>
+                <DialogTitleWithClose onClose={this._handleClose}>{title}</DialogTitleWithClose>
                 <DialogContent className={classes.previewContainer}>
-                    {!selectedFileUrl && <Typography align="center" variant="body1" className={classes.prompt}>Upload cover of your virtual tour</Typography>}
+                    {!selectedFileUrl && <Typography align="center" variant="body1" className={classes.prompt}>{prompt}</Typography>}
                     {selectedFileUrl && <img className={classes.imagePreview} src={selectedFileUrl} />}
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" component="label" color="primary" className={classes.selectImage} onClick={this._handleUploadClick}>
+                    <Button variant="contained" component="label" color={selectButtonColor} className={classes.selectImage} onClick={this._handleUploadClick} autoFocus>
                         Select File
                         <input type="file" style={{ display: "none" }} onChange={this._handleFileSelected} />
                     </Button>
-                    {selectedFileUrl != null && <Button variant="contained" color="primary" onClick={this._handleFileUpload} >
+                    {selectedFileUrl != null && <Button variant="contained" color="primary" onClick={this._handleFileUpload} autoFocus>
                         Upload
                         <CloudUploadIcon className={classes.rightIcon} />
                     </Button>}
@@ -99,11 +103,13 @@ class UploadImageDialog extends React.Component {
 }
 
 UploadImageDialog.propTypes = {
+    title: PropTypes.string.isRequired,
+    prompt: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired,
     isOpened: PropTypes.bool,
     onUploadClick: PropTypes.func,
     onClose: PropTypes.func,
-    onFileSelected: PropTypes.func,
+    onFileSelected: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(UploadImageDialog);
