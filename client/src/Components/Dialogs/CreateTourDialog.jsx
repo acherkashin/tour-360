@@ -41,19 +41,19 @@ class CreateTourDialog extends React.Component {
     }
 
     render() {
-        const { name, mapTypes, mapTypeValue } = this.props;
+        const { name, mapTypes, mapTypeValue, isOpened } = this.props;
 
         return (
             <Dialog
                 onClose={this._handleClose}
-                open={this.props.isOpened}
+                open={isOpened}
                 maxWidth={'sm'}
                 fullWidth>
                 <DialogTitleWithClose onClose={this._handleClose}>Create Virtual Tour</DialogTitleWithClose>
                 <DialogContent>
                     <TextField
                         label="Tour Name"
-                        value={this.props.name}
+                        value={name}
                         onChange={this._handleNameChanged}
                         margin="normal"
                         fullWidth={true}

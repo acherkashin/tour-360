@@ -73,7 +73,7 @@ class UploadImageDialog extends React.Component {
     render() {
         const { classes, title, prompt } = this.props;
         const { selectedFileUrl } = this.state;
-        const selectButtonColor = selectedFileUrl != null ? "default" :  "primary";
+        const selectButtonColor = selectedFileUrl != null ? "default" : "primary";
 
         return (
             <Dialog
@@ -85,7 +85,7 @@ class UploadImageDialog extends React.Component {
                 <DialogTitleWithClose onClose={this._handleClose}>{title}</DialogTitleWithClose>
                 <DialogContent className={classes.previewContainer}>
                     {!selectedFileUrl && <Typography align="center" variant="body1" className={classes.prompt}>{prompt}</Typography>}
-                    {selectedFileUrl && <img className={classes.imagePreview} src={selectedFileUrl} />}
+                    {selectedFileUrl && <img className={classes.imagePreview} src={selectedFileUrl} alt="Selected image preview" />}
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" component="label" color={selectButtonColor} className={classes.selectImage} onClick={this._handleUploadClick} autoFocus>

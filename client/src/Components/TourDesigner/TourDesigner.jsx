@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Map, TileLayer, Popup, Circle, ImageOverlay } from 'react-leaflet';
+import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import EditTourPanel from './EditTourPanel';
 import { observer, inject } from 'mobx-react';
