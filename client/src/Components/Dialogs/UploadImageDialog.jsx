@@ -16,13 +16,27 @@ const styles = theme => ({
     rightIcon: {
         marginLeft: theme.spacing.unit,
     },
+    imagePreview: {
+        maxHeight: '600px',
+        maxWidth: '600px',
+        alignSelf: 'center',
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+    },
     previewContainer: {
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
     },
-    imagePreview: {
-        maxHeight: '400px',
-        maxWidth: '400px',
+    width: {
+        marginRight: theme.spacing.unit / 2,
+    },
+    dialogActions: {
+        borderTop: `1px solid ${theme.palette.divider}`,
+        margin: 0,
+        padding: theme.spacing.unit,
+    },
+    dialogContent: {
+        paddingBottom: theme.spacing.unit * 2,
     }
 });
 
@@ -39,15 +53,41 @@ class UploadImageDialog extends React.Component {
     state = {
         selectedFile: null,
         selectedFileUrl: null,
+        fileWidth: null,
+        fileHeight: null,
     };
+
+    componentDidMount() {
+        if (this.selectedFileUrl) {
+            window.URL.revokeObjectURL(this.state.selectedFileUrl);
+        }
+    }
 
     _handleFileSelected(e) {
         const file = e.target.files[0];
 
         if (file) {
+            if (this.state.selectedFileUrl) {
+                window.URL.revokeObjectURL(this.state.selectedFileUrl);
+            }
+
             const reader = new FileReader();
             reader.onload = (e) => {
-                this.setState({ selectedFileUrl: e.target.result, selectedFile: file })
+                const selectedFileUrl = e.target.result;
+                const img = new Image();
+                img.src = selectedFileUrl;
+
+                img.onload = () => {
+                    window.URL.revokeObjectURL(img.src);
+
+                    this.setState({
+                        selectedFileUrl,
+                        selectedFile: file,
+                        fileWidth: img.naturalWidth,
+                        fileHeight: img.naturalHeight,
+                    })
+                };
+
             };
 
             reader.readAsDataURL(file);
@@ -72,7 +112,7 @@ class UploadImageDialog extends React.Component {
 
     render() {
         const { classes, title, prompt } = this.props;
-        const { selectedFileUrl } = this.state;
+        const { selectedFileUrl, fileWidth, fileHeight } = this.state;
         const selectButtonColor = selectedFileUrl != null ? "default" : "primary";
 
         return (
@@ -83,11 +123,31 @@ class UploadImageDialog extends React.Component {
                 maxWidth={'sm'}
                 fullWidth>
                 <DialogTitleWithClose onClose={this._handleClose}>{title}</DialogTitleWithClose>
-                <DialogContent className={classes.previewContainer}>
+                <DialogContent className={classes.dialogContent}>
                     {!selectedFileUrl && <Typography align="center" variant="body1" className={classes.prompt}>{prompt}</Typography>}
-                    {selectedFileUrl && <img className={classes.imagePreview} src={selectedFileUrl} alt="Selected image preview" />}
+                    {selectedFileUrl && (<div className={classes.previewContainer}>
+                        <img className={classes.imagePreview} src={selectedFileUrl} alt="Selected image preview" />
+                        <div>
+                            <Typography inline className={classes.width}>
+                                <Typography inline variant="subtitle2">
+                                    Width:
+                                </Typography>
+                                <Typography inline>
+                                    {fileWidth},
+                                </Typography>
+                            </Typography>
+                            <Typography inline>
+                                <Typography inline variant="subtitle2">
+                                    Height:
+                                </Typography>
+                                <Typography inline>
+                                    {fileHeight}
+                                </Typography>
+                            </Typography>
+                        </div>
+                    </div>)}
                 </DialogContent>
-                <DialogActions>
+                <DialogActions className={classes.dialogActions}>
                     <Button variant="contained" component="label" color={selectButtonColor} className={classes.selectImage} onClick={this._handleUploadClick} autoFocus>
                         Select File
                         <input type="file" style={{ display: "none" }} onChange={this._handleFileSelected} />
