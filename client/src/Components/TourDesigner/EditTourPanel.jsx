@@ -38,7 +38,10 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
     }
 
     _handleFileSelected(e) {
-        this.props.onMapImageUploaded && this.props.onMapImageUploaded({ origin: this, file: e.file, width: e.width, height: e.height });
+        this.props.onMapImageUploadClick({ origin: this, file: e.file, width: e.width, height: e.height })
+            .then(() => {
+                this.setState({ isOpenedUploadImageDialog: false });
+            })
     }
 
     render() {
@@ -75,7 +78,7 @@ EditTourPanel.propTypes = {
         name: PropTypes.string.isRequired,
     }).isRequired,
     onNameChanged: PropTypes.func.isRequired,
-    onMapImageUploaded: PropTypes.func.isRequired,
+    onMapImageUploadClick: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(EditTourPanel);

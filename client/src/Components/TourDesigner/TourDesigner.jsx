@@ -24,6 +24,12 @@ const styles = {
     map: {
         flex: 1,
     },
+    noImageMap: {
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     content: {
         height: '100%',
         display: 'flex',
@@ -85,17 +91,24 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     _renderImageMap() {
         const { classes } = this.props;
-        const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
 
-        return (
-            <Map crs={L.CRS.Simple} bounds={bounds} className={classes.map}>
-                <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-            </Map>
-        );
+        if (this.editingTour.mapImageUrl) {
+            const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
+
+            return (
+                <Map crs={L.CRS.Simple} bounds={bounds} className={classes.map}>
+                    <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
+                </Map>
+            );
+        } else {
+            return (<div className={classes.noImageMap}>
+                <Typography>Image for map is not selected</Typography>
+            </div>);
+        }
     }
 
     _handleMapImageUploaded(e) {
-        this.tourStore.updateImageMap(e.file, e.width, e.height);
+        return this.tourStore.updateImageMap(e.file, e.width, e.height);
     }
 
     _renderEarthMap() {
@@ -147,7 +160,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     <EditTourPanel
                         tour={this.editingTour}
                         onNameChanged={this._handleNameChanged}
-                        onMapImageUploaded={this._handleMapImageUploaded}
+                        onMapImageUploadClick={this._handleMapImageUploaded}
                     />
                 </div>
 
