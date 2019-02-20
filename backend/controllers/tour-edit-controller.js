@@ -38,11 +38,14 @@ exports.cancelChanges = (req, res) => {
 
 exports.uploadMapImage = (req, res) => {
     const { sessionId } = req.params;
-
+    const { width, height } = req.body;
     const mapImage = req.files.mapImage;
+    
     const tour = cache[sessionId];
     tour.image.data = mapImage.data;
     tour.image.contentType = mapImage.mimetype;
+    tour.image.height = parseInt(height);
+    tour.image.width = parseInt(width);
 
     res.json({ success: true, tour: tour.toDesignerDto() });
 };

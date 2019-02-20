@@ -85,7 +85,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     _renderImageMap() {
         const { classes } = this.props;
-        const bounds = [[0, 0], [757, 1024]];
+        const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
 
         return (
             <Map crs={L.CRS.Simple} bounds={bounds} className={classes.map}>
@@ -95,7 +95,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleMapImageUploaded(e) {
-        this.tourStore.updateImageMap(e.file);
+        this.tourStore.updateImageMap(e.file, e.width, e.height);
     }
 
     _renderEarthMap() {

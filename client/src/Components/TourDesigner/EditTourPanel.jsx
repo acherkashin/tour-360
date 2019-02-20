@@ -38,7 +38,7 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
     }
 
     _handleFileSelected(e) {
-        this.props.onMapImageUploaded && this.props.onMapImageUploaded({ origin: this, file: e.file });
+        this.props.onMapImageUploaded && this.props.onMapImageUploaded({ origin: this, file: e.file, width: e.width, height: e.height });
     }
 
     render() {

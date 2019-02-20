@@ -11,6 +11,8 @@ export default class EditTour {
             mapType: '',
             hasMapImage: false,
             imageHash: Date.now(),
+            imageWidth: 0,
+            imageHeight: 0,
             get mapImageUrl() {
                 return this.hasMapImage ? `/api/tour-edit/${this.sessionId}/mapImage?${this.imageHash}` : `/src/no-image.png`;
             }
@@ -23,6 +25,8 @@ export default class EditTour {
         this.name = json.name;
         this.mapType = json.mapType;
         this.hasMapImage = json.hasMapImage;
+        this.imageWidth = json.imageWidth || 0;
+        this.imageHeight = json.imageHeight || 0;
     }
 
     refreshCover() {

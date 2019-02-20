@@ -95,7 +95,8 @@ class UploadImageDialog extends React.Component {
     }
 
     _handleFileUpload(e) {
-        this.props.onFileSelected && this.props.onFileSelected({ origin: this, file: this.state.selectedFile });
+        const { selectedFile: file, fileWidth: width, fileHeight: height } = this.state;
+        this.props.onFileSelected && this.props.onFileSelected({ origin: this, file, width, height });
     }
 
     _handleUploadClick() {
