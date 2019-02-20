@@ -49,7 +49,9 @@ export default class TourStore {
         TourService.getAll().then(action((resp) => {
             (resp.data.result || []).map(tour => this.updateTourFromServer(tour));
             //TODO: remove
-            this.beginEditing(this.tours[0].id);
+            if (this.tours && this.tours.length) {
+                this.beginEditing(this.tours[0].id);
+            }
         }));
     });
 
@@ -95,6 +97,9 @@ export default class TourStore {
     }
 
     _deleteById = action((id) => {
+        if (this.selectedTour && this.selectedTour.id === id) {
+            this.selectedTour = null;
+        }
         const tour = this._getById(id);
         this.tours.splice(this.tours.indexOf(tour), 1);
     });
