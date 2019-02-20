@@ -13,6 +13,7 @@ import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import EditTourPanel from './EditTourPanel';
 import { observer, inject } from 'mobx-react';
+import grey from '@material-ui/core/colors/grey';
 
 const styles = {
     appBar: {
@@ -36,8 +37,28 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'stretch',
     },
+    mapWrapper: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'stretch',
+    },
     rightPanel: {
         flexBasis: 400,
+    },
+    statusBar: {
+        borderTop: `1px solid ${grey[300]}`,
+        padding: 3,
+    },
+    field: {
+        marginLeft: 5,
+    },
+    lable: {
+        fontWeight: 700,
+        marginRight: 5,
+    },
+    value: {
+
     }
 };
 
@@ -54,7 +75,15 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleMapClick = this._handleMapClick.bind(this);
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handleMapImageUploaded = this._handleMapImageUploaded.bind(this);
+        this._handleMouseMoveOnMap = this._handleMouseMoveOnMap.bind(this);
+        this._handleZoomChanged = this._handleZoomChanged.bind(this);
     }
+
+    state = {
+        currentLat: 0,
+        currentLng: 0,
+        currentZoom: 0,
+    };
 
     get tourStore() {
         return this.props.tourStore;
@@ -66,6 +95,14 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     get sessionId() {
         return this.props.tourStore.sessionId;
+    }
+
+    _handleMouseMoveOnMap(e) {
+        this.setState({ currentLat: e.latlng.lat, currentLng: e.latlng.lng });
+    }
+
+    _handleZoomChanged(e) {
+        this.setState({ currentZoom: e.target._zoom });
     }
 
     _handleClose() {
@@ -95,16 +132,43 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         if (this.editingTour.mapImageUrl) {
             const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
 
-            return (
-                <Map crs={L.CRS.Simple} bounds={bounds} className={classes.map}>
+            return (<div className={classes.mapWrapper}>
+                <Map crs={L.CRS.Simple}
+                    bounds={bounds}
+                    className={classes.map}
+                    onmousemove={this._handleMouseMoveOnMap}
+                    onzoomend={this._handleZoomChanged}>
                     <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
                 </Map>
-            );
+                {this._renderStatusBar()}
+            </div>);
         } else {
             return (<div className={classes.noImageMap}>
                 <Typography>Image for map is not selected</Typography>
             </div>);
         }
+    }
+
+    _renderStatusBar() {
+        const { classes } = this.props;
+        const { currentLng, currentLat, currentZoom } = this.state;
+
+        return (
+            <div className={classes.statusBar}>
+                <span className={classes.field}>
+                    <span className={classes.lable}>X:</span>
+                    <span className={classes.value}>{parseInt(currentLng)}</span>
+                </span>
+                <span className={classes.field}>
+                    <span className={classes.lable}>Y:</span>
+                    <span className={classes.value}>{parseInt(currentLat)}</span>
+                </span>
+                <span className={classes.field}>
+                    <span className={classes.lable}>Z:</span>
+                    <span className={classes.value}>{parseInt(currentZoom)}</span>
+                </span>
+            </div>
+        )
     }
 
     _handleMapImageUploaded(e) {
