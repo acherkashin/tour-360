@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { observer } from 'mobx-react';
-import { UploadImageDialog } from './../Dialogs';
 
 const styles = theme => ({
     root: {
@@ -20,33 +19,20 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            isOpenedUploadImageDialog: false,
-        };
-
         this._handleNameChanged = this._handleNameChanged.bind(this);
-        this._handleUploadClick = this._handleUploadClick.bind(this);
-        this._handleFileSelected = this._handleFileSelected.bind(this);
+        this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
     }
 
     _handleNameChanged(e) {
         this.props.onNameChanged({ origin: this, name: e.target.value });
     }
 
-    _handleUploadClick(e) {
-        this.setState({ isOpenedUploadImageDialog: true });
-    }
-
-    _handleFileSelected(e) {
-        this.props.onMapImageUploadClick({ origin: this, file: e.file, width: e.width, height: e.height })
-            .then(() => {
-                this.setState({ isOpenedUploadImageDialog: false });
-            })
+    _handleChangeImageMapClick(e) {
+        this.props.onChangeImageMapClick({ origin: this });
     }
 
     render() {
         const { classes, tour } = this.props;
-        const { isOpenedUploadImageDialog } = this.state;
 
         return (<div className={classes.root}>
             <TextField
@@ -57,17 +43,9 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
                 fullWidth={true}
                 autoFocus
             />
-            <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleUploadClick} >
+            <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImageMapClick} >
                 Change Image
             </Button>
-
-            <UploadImageDialog
-                title="Upload new map"
-                prompt="Upload map of your virtual tour. E.g.: floor plan, street plan..."
-                isOpened={isOpenedUploadImageDialog}
-                onFileSelected={this._handleFileSelected}
-                onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
-            />
         </div>);
     }
 });
@@ -78,7 +56,7 @@ EditTourPanel.propTypes = {
         name: PropTypes.string.isRequired,
     }).isRequired,
     onNameChanged: PropTypes.func.isRequired,
-    onMapImageUploadClick: PropTypes.func.isRequired,
+    onChangeImageMapClick: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(EditTourPanel);

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,9 +12,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
-import EditTourPanel from './EditTourPanel';
-import { observer, inject } from 'mobx-react';
 import grey from '@material-ui/core/colors/grey';
+import EditTourPanel from './EditTourPanel';
+import { UploadImageDialog } from './../Dialogs';
 
 const styles = {
     appBar: {
@@ -74,15 +75,17 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleClose = this._handleClose.bind(this);
         this._handleMapClick = this._handleMapClick.bind(this);
         this._handleNameChanged = this._handleNameChanged.bind(this);
-        this._handleMapImageUploaded = this._handleMapImageUploaded.bind(this);
         this._handleMouseMoveOnMap = this._handleMouseMoveOnMap.bind(this);
         this._handleZoomChanged = this._handleZoomChanged.bind(this);
+        this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
+        this._handleFileSelected = this._handleFileSelected.bind(this);
     }
 
     state = {
         currentLat: 0,
         currentLng: 0,
         currentZoom: 0,
+        isOpenedUploadImageDialog: false,
     };
 
     get tourStore() {
@@ -95,6 +98,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     get sessionId() {
         return this.props.tourStore.sessionId;
+    }
+
+    _handleChangeImageMapClick(e) {
+        this.setState({ isOpenedUploadImageDialog: true });
     }
 
     _handleMouseMoveOnMap(e) {
@@ -128,7 +135,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     _renderMap() {
         const { classes } = this.props;
-        
+
         if (this.editingTour.hasMapImage) {
             if (this.editingTour.mapType === 'Earth') {
                 return this._renderEarthMap()
@@ -181,10 +188,6 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         )
     }
 
-    _handleMapImageUploaded(e) {
-        return this.tourStore.updateImageMap(e.file, e.width, e.height);
-    }
-
     _renderEarthMap() {
         const { classes } = this.props;
         const state = {
@@ -209,8 +212,15 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         );
     }
 
+    _handleFileSelected(e) {
+        return this.tourStore.updateImageMap(e.file, e.width, e.height).then(() => {
+            this.setState({ isOpenedUploadImageDialog: false });
+        });
+    }
+
     render() {
         const { classes } = this.props;
+        const { isOpenedUploadImageDialog } = this.state;
 
         return (
             <Dialog
@@ -233,10 +243,16 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     <EditTourPanel
                         tour={this.editingTour}
                         onNameChanged={this._handleNameChanged}
-                        onMapImageUploadClick={this._handleMapImageUploaded}
+                        onChangeImageMapClick={this._handleChangeImageMapClick}
                     />
                 </div>
-
+                <UploadImageDialog
+                    title="Upload new map"
+                    prompt="Upload map of your virtual tour. E.g.: floor plan, street plan..."
+                    isOpened={isOpenedUploadImageDialog}
+                    onFileSelected={this._handleFileSelected}
+                    onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
+                />
             </Dialog>
         );
     }
