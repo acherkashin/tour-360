@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Header, Tours, ViewTourPanel, Placeholder } from '../Components';
+import { Header, Tours, ViewTourPanel, NoToursPlaceholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
@@ -168,7 +168,7 @@ const ToursPage = inject("tourStore")(observer(
                                         }
                                     }]}
                                 />}
-                                {!hasTours && <Placeholder onAddClick={this._handleOnAddClick} />}
+                                {!hasTours && <NoToursPlaceholder onAddClick={this._handleOnAddClick} />}
                                 <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
                                     <Add />
                                 </Fab>

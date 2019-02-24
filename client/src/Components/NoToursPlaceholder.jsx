@@ -28,7 +28,7 @@ const styles = (theme) => ({
     },
 });
 
-export class Placeholder extends PureComponent {
+export class NoToursPlaceholder extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -48,9 +48,9 @@ export class Placeholder extends PureComponent {
     }
 }
 
-Placeholder.propTypes = {
+NoToursPlaceholder.propTypes = {
     classes: PropTypes.object.isRequired,
     onAddClick: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Placeholder);
+export default withStyles(styles)(NoToursPlaceholder);
