@@ -6,6 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import AddLocation from '@material-ui/icons/AddLocation';
 import LocationOff from '@material-ui/icons/LocationOff';
 import CallMade from '@material-ui/icons/CallMade';
+import PanTool from '@material-ui/icons/PanTool';
 
 const styles = (theme) => ({
     root: {
@@ -14,16 +15,31 @@ const styles = (theme) => ({
     },
     indicator: {
         display: 'none'
+    },
+    tab: {
+        flexShrink: 1,
+        minWidth: 80,
     }
 });
 
-class MapEditMode extends React.Component {
-    state = {
-        value: 0,
-    };
+const tabs = [{
+    text: 'DRAG MAP',
+    icon: <PanTool />,
+}, {
+    text: 'ADD PLACE',
+    icon: <AddLocation />,
+}, {
+    text: 'REMOVE PLACE',
+    icon: <LocationOff />,
+}, {
+    text: 'ADD CONNECTION',
+    icon: <CallMade />,
+}];
 
+class MapEditMode extends React.Component {
     handleChange = (event, value) => {
         this.setState({ value });
+        this.props.onModeChanged && this.props.onModeChanged({ origin: this, mode: value })
     };
 
     render() {
@@ -31,23 +47,22 @@ class MapEditMode extends React.Component {
 
         return (
             <Tabs
-                value={this.state.value}
+                value={this.props.value || 0}
                 onChange={this.handleChange}
                 variant="fullWidth"
-                indicatorColor="secondary"
                 textColor="secondary"
                 classes={{ root: classes.root, indicator: classes.indicator }}
             >
-                <Tab icon={<AddLocation />} label="ADD PLACE" />
-                <Tab icon={<LocationOff />} label="REMOVE PLACE" />
-                <Tab icon={<CallMade />} label="ADD CONNECTION" />
+                {tabs.map((tab, index) => <Tab key={index} className={classes.tab} icon={tab.icon} label={tab.text} />)}
             </Tabs>
         );
     }
 }
 
 MapEditMode.propTypes = {
+    value: PropTypes.number,
     classes: PropTypes.object.isRequired,
+    onModeChanged: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(MapEditMode);

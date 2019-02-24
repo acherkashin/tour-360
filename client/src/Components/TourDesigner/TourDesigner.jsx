@@ -53,6 +53,7 @@ const styles = {
     rightPanel: {
         display: 'flex',
         flexDirection: 'column',
+        maxWidth: 500,
     },
     statusBar: {
         borderTop: `1px solid ${grey[300]}`,
@@ -88,6 +89,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleFileSelected = this._handleFileSelected.bind(this);
         this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
         this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
+        this._handleModeChanged = this._handleModeChanged.bind(this);
     }
 
     state = {
@@ -96,6 +98,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         currentZoom: 0,
         isOpenedUploadImageDialog: false,
         isOpenedConfirmDialog: false,
+        mapEditMode: 0,
     };
 
     get tourStore() {
@@ -120,6 +123,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     _handleZoomChanged(e) {
         this.setState({ currentZoom: e.target._zoom });
+    }
+
+    _handleModeChanged(e) {
+        this.setState({ mapEditMode: e.mode });
     }
 
     _handleClose() {
@@ -178,11 +185,13 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     _renderImageMap() {
         const { classes } = this.props;
         const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
+        const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
 
         return (<div className={classes.mapWrapper}>
             <Map crs={L.CRS.Simple}
                 bounds={bounds}
                 className={classes.map}
+                style={mapStyle}
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
@@ -245,7 +254,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     render() {
         const { classes } = this.props;
-        const { isOpenedUploadImageDialog, isOpenedConfirmDialog } = this.state;
+        const { isOpenedUploadImageDialog, isOpenedConfirmDialog, mapEditMode } = this.state;
 
         return (
             <Dialog
@@ -271,7 +280,9 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                             onNameChanged={this._handleNameChanged}
                             onChangeImageMapClick={this._handleChangeImageMapClick}
                         />
-                        <MapEditMode />
+                        <MapEditMode
+                            value={mapEditMode}
+                            onModeChanged={this._handleModeChanged} />
                     </div>
                 </div>
                 <UploadImageDialog
