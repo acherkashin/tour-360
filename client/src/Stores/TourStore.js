@@ -1,9 +1,12 @@
 import { extendObservable, action, observable } from 'mobx';
 import { TourService, TourEditService } from './../api';
 import { Tour, EditTour } from './';
+import { deepObserve } from 'mobx-utils';
 
 export default class TourStore {
     constructor() {
+        this.editingTourDisposer = null;
+
         extendObservable(this, {
             tours: observable.array([]),
             selectedTour: null,
@@ -14,7 +17,8 @@ export default class TourStore {
             },
             get hasTours() {
                 return (this.tours || []).length > 0;
-            }
+            },
+            isDirty: false,
         });
     }
 
@@ -22,6 +26,10 @@ export default class TourStore {
         return TourEditService.beginEditing(tourId).then(action((resp) => {
             const { tour, sessionId } = resp.data.result;
             this.editingTour = new EditTour(this, sessionId, tour);
+            this.isDirty = false;
+            this.editingTourDisposer = deepObserve(this.editingTour, (change, path, root) => {
+                this.isDirty = true;
+            });
 
             this.sessionId = resp.data.result.sessionId;
         }));
@@ -30,6 +38,8 @@ export default class TourStore {
     cancelEditing() {
         return TourEditService.cancelChanges(this.sessionId).then(action(() => {
             this.editingTour = null;
+            this.isDirty = false;
+            this.editingTourDisposer && this.editingTourDisposer();
         }))
     }
 

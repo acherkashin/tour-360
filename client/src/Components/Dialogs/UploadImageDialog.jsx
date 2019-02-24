@@ -104,7 +104,7 @@ class UploadImageDialog extends React.Component {
     }
 
     _handleClose() {
-        this.props.onClose && this.props.onClose({ origin: this });
+        this.props.onClose({ origin: this });
     }
 
     _resetSelection() {
@@ -114,7 +114,7 @@ class UploadImageDialog extends React.Component {
     render() {
         const { classes, title, prompt } = this.props;
         const { selectedFileUrl, fileWidth, fileHeight } = this.state;
-        const selectButtonColor = selectedFileUrl != null ? "default" : "primary";
+        const selectButtonVariant = selectedFileUrl != null ? "text" : "contained";
 
         return (
             <Dialog
@@ -139,7 +139,7 @@ class UploadImageDialog extends React.Component {
                     </div>)}
                 </DialogContent>
                 <DialogActions className={classes.dialogActions}>
-                    <Button variant="contained" component="label" color={selectButtonColor} className={classes.selectImage} onClick={this._handleUploadClick} autoFocus>
+                    <Button variant={selectButtonVariant} component="label" color="primary" className={classes.selectImage} onClick={this._handleUploadClick} autoFocus>
                         Select File
                         <input type="file" style={{ display: "none" }} onChange={this._handleFileSelected} />
                     </Button>

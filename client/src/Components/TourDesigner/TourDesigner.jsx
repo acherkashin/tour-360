@@ -15,7 +15,7 @@ import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
 import { PlaceholderButton } from './../';
-import { UploadImageDialog } from './../Dialogs';
+import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
 
 const styles = {
     appBar: {
@@ -84,6 +84,8 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleZoomChanged = this._handleZoomChanged.bind(this);
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
         this._handleFileSelected = this._handleFileSelected.bind(this);
+        this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
+        this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
     }
 
     state = {
@@ -91,6 +93,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         currentLng: 0,
         currentZoom: 0,
         isOpenedUploadImageDialog: false,
+        isOpenedConfirmDialog: false,
     };
 
     get tourStore() {
@@ -118,7 +121,11 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleClose() {
-        this.tourStore.cancelEditing();
+        if (this.tourStore.isDirty) {
+            this.setState({ isOpenedConfirmDialog: true });
+        } else {
+            this.tourStore.cancelEditing();
+        }
         // this.props.onClose && this.props.onClose({ origin: this });
     }
 
@@ -127,6 +134,16 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         // .then(() => {
         //     this.props.onSave && this.props.onSave({ origin: this });
         // });
+    }
+
+    _handleOkConfirmClick() {
+        this.tourStore.saveEditing().then(() => {
+            this.tourStore.cancelEditing();
+        });
+    }
+
+    _handleCancelConfigrmClick() {
+        this.tourStore.cancelEditing();
     }
 
     _handleNameChanged(e) {
@@ -226,7 +243,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     render() {
         const { classes } = this.props;
-        const { isOpenedUploadImageDialog } = this.state;
+        const { isOpenedUploadImageDialog, isOpenedConfirmDialog } = this.state;
 
         return (
             <Dialog
@@ -258,6 +275,16 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     isOpened={isOpenedUploadImageDialog}
                     onFileSelected={this._handleFileSelected}
                     onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
+                />
+                <ConfirmDialog
+                    title='Save Virtual Tour'
+                    okButtonText='Save'
+                    cancelButtonText="Don't save"
+                    contentText="You are about to close the designer. Do you want to save your changes?"
+                    onOkClick={this._handleOkConfirmClick}
+                    onCancelClick={this._handleCancelConfigrmClick}
+                    isOpened={isOpenedConfirmDialog}
+                    onClose={() => this.setState({ isOpenedConfirmDialog: false })}
                 />
             </Dialog>
         );

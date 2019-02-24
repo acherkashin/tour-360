@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 
 const DialogTitleWithClose = withStyles(theme => ({
     root: {
-        borderBottom: `1px solid ${theme.palette.divider}`,
         margin: 0,
         padding: theme.spacing.unit * 2,
         paddingRight: theme.spacing.unit * 6,
@@ -19,9 +18,13 @@ const DialogTitleWithClose = withStyles(theme => ({
         color: theme.palette.grey[500],
     },
 }))(props => {
-    const { children, classes, onClose } = props;
+    const { children, classes, onClose, borderBottom, theme } = props;
+    const style = {};
+    if (borderBottom) {
+        style['borderBottom'] = `1px solid ${theme.palette.divider}`;
+    }
     return (
-        <MuiDialogTitle disableTypography className={classes.root}>
+        <MuiDialogTitle disableTypography className={classes.root} style={style}>
             <Typography variant="h6">{children}</Typography>
             {onClose ? (
                 <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
