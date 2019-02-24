@@ -14,6 +14,7 @@ import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
+import { PlaceholderButton } from './../';
 import { UploadImageDialog } from './../Dialogs';
 
 const styles = {
@@ -31,6 +32,10 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    noImageMapPlaceholder: {
+        color: grey[700],
+        fontSize: '24px',
     },
     content: {
         height: '100%',
@@ -134,20 +139,21 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _renderMap() {
+        if (this.editingTour.hasMapImage && this.editingTour.mapType === 'Image') {
+            return this._renderImageMap()
+        } else if (this.editingTour.mapType === 'Earth') {
+            return this._renderEarthMap()
+        } else {
+            return this._renderNoMapPlaceholder();
+        }
+    }
+
+    _renderNoMapPlaceholder() {
         const { classes } = this.props;
 
-        if (this.editingTour.hasMapImage) {
-            if (this.editingTour.mapType === 'Earth') {
-                return this._renderEarthMap()
-            }
-            if (this.editingTour.mapType === 'Image') {
-                return this._renderImageMap()
-            }
-        } else {
-            return (<div className={classes.noImageMap}>
-                <Typography>Image for map is not selected</Typography>
-            </div>);
-        }
+        return (<div className={classes.noImageMap}>
+            <Typography className={classes.noImageMapPlaceholder}>Image for map is not selected. Click <PlaceholderButton onClick={this._handleChangeImageMapClick} text={'here'} /> to select image</Typography>
+        </div>);
     }
 
     _renderImageMap() {
