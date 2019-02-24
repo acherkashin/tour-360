@@ -126,27 +126,37 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         console.log(e);
     }
 
-    _renderImageMap() {
+    _renderMap() {
         const { classes } = this.props;
-
-        if (this.editingTour.mapImageUrl) {
-            const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
-
-            return (<div className={classes.mapWrapper}>
-                <Map crs={L.CRS.Simple}
-                    bounds={bounds}
-                    className={classes.map}
-                    onmousemove={this._handleMouseMoveOnMap}
-                    onzoomend={this._handleZoomChanged}>
-                    <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-                </Map>
-                {this._renderStatusBar()}
-            </div>);
+        
+        if (this.editingTour.hasMapImage) {
+            if (this.editingTour.mapType === 'Earth') {
+                return this._renderEarthMap()
+            }
+            if (this.editingTour.mapType === 'Image') {
+                return this._renderImageMap()
+            }
         } else {
             return (<div className={classes.noImageMap}>
                 <Typography>Image for map is not selected</Typography>
             </div>);
         }
+    }
+
+    _renderImageMap() {
+        const { classes } = this.props;
+        const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
+
+        return (<div className={classes.mapWrapper}>
+            <Map crs={L.CRS.Simple}
+                bounds={bounds}
+                className={classes.map}
+                onmousemove={this._handleMouseMoveOnMap}
+                onzoomend={this._handleZoomChanged}>
+                <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
+            </Map>
+            {this._renderStatusBar()}
+        </div>);
     }
 
     _renderStatusBar() {
@@ -218,8 +228,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
-                    {this.editingTour.mapType === 'Earth' && this._renderEarthMap()}
-                    {this.editingTour.mapType === 'Image' && this._renderImageMap()}
+                    {this._renderMap()}
                     {!this.editingTour.mapType && <Typography className={classes.map}>Map type is not defined</Typography>}
                     <EditTourPanel
                         tour={this.editingTour}
