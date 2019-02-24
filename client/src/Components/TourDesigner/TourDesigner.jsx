@@ -14,6 +14,7 @@ import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
+import MapEditMode from './MapEditMode';
 import { PlaceholderButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
 
@@ -50,7 +51,8 @@ const styles = {
         justifyContent: 'stretch',
     },
     rightPanel: {
-        flexBasis: 400,
+        display: 'flex',
+        flexDirection: 'column',
     },
     statusBar: {
         borderTop: `1px solid ${grey[300]}`,
@@ -263,11 +265,14 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 <div className={classes.content}>
                     {this._renderMap()}
                     {!this.editingTour.mapType && <Typography className={classes.map}>Map type is not defined</Typography>}
-                    <EditTourPanel
-                        tour={this.editingTour}
-                        onNameChanged={this._handleNameChanged}
-                        onChangeImageMapClick={this._handleChangeImageMapClick}
-                    />
+                    <div className={classes.rightPanel}>
+                        <EditTourPanel
+                            tour={this.editingTour}
+                            onNameChanged={this._handleNameChanged}
+                            onChangeImageMapClick={this._handleChangeImageMapClick}
+                        />
+                        <MapEditMode />
+                    </div>
                 </div>
                 <UploadImageDialog
                     title="Upload new map"

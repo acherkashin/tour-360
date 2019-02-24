@@ -8,9 +8,10 @@ import { observer } from 'mobx-react';
 
 const styles = theme => ({
     root: {
+        flex: 1,
         flexBasis: 400,
         backgroundColor: grey[100],
-        borderLeft: `1px solid ${grey[300]}`,
+        borderLeft: `1px solid ${theme.palette.divider}`,
         padding: theme.spacing.unit * 2,
     }
 });
