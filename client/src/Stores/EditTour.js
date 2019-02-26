@@ -9,6 +9,7 @@ export default class EditTour {
         extendObservable(this, {
             name: '',
             mapType: '',
+            places: [],
             hasMapImage: false,
             imageHash: Date.now(),
             imageWidth: 0,
@@ -27,6 +28,7 @@ export default class EditTour {
         this.hasMapImage = json.hasMapImage;
         this.imageWidth = json.imageWidth || 0;
         this.imageHeight = json.imageHeight || 0;
+        this.places = json.places || [];
     }
 
     refreshCover() {

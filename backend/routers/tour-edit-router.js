@@ -8,4 +8,6 @@ router.route('/tour-edit/:sessionId/save').post(TourEditController.saveChanges);
 router.route('/tour-edit/:sessionId/cancel').post(TourEditController.cancelChanges);
 router.route('/tour-edit/:sessionId/uploadMapImage').post(TourEditController.uploadMapImage);
 router.route('/tour-edit/:sessionId/mapImage').get(TourEditController.getMapImage);
+router.route('/tour-edit/:sessionId/addPlace').post(TourEditController.addPlace);
+
 module.exports = router;

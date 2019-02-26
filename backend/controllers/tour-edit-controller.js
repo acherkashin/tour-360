@@ -1,6 +1,5 @@
 const uuidv1 = require('uuidv1')
 const { Tour } = require('./../models');
-
 const cache = {};
 
 exports.startEditing = (req, res) => {
@@ -40,7 +39,7 @@ exports.uploadMapImage = (req, res) => {
     const { sessionId } = req.params;
     const { width, height } = req.body;
     const mapImage = req.files.mapImage;
-    
+
     const tour = cache[sessionId];
     tour.image.data = mapImage.data;
     tour.image.contentType = mapImage.mimetype;
@@ -55,4 +54,23 @@ exports.getMapImage = (req, res) => {
 
     const tour = cache[sessionId];
     res.end(tour.image.data, 'binary');
+};
+
+exports.addPlace = (req, res) => {
+    const { sessionId } = req.params;
+    const { name, longitude, latitude } = req.body;
+    const tour = cache[sessionId];
+
+    const place = {
+        name,
+        longitude,
+        latitude,
+        sound: null,
+        image: null,
+    };
+
+    tour.places.push(place);
+
+    const dto = tour.toDesignerDto();
+    res.json({ success: true, tour: dto });
 };

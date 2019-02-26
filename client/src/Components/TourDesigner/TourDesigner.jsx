@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
+import { Map, TileLayer, ImageOverlay, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
@@ -161,7 +161,15 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleMapClick(e) {
-        console.log(e);
+        if (this.state.mapEditMode) {
+            this.tourStore.addPlace({
+                name: "Name 1",
+                latitude: e.latlng.lat,
+                longitude: e.latlng.lng,
+            });
+        } else {
+
+        }
     }
 
     _renderMap() {
@@ -187,14 +195,18 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
         const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
 
+        const places = this.editingTour.places || [];
+
         return (<div className={classes.mapWrapper}>
             <Map crs={L.CRS.Simple}
                 bounds={bounds}
                 className={classes.map}
                 style={mapStyle}
+                onclick={this._handleMapClick}
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
+                {places.map(place => <CircleMarker key={place.id} center={[place.latitude, place.longitude]} radius={20} fillColor={'blue'} fillOpacity={1} />)}
             </Map>
             {this._renderStatusBar()}
         </div>);
@@ -230,8 +242,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         };
 
         return (
-            <Map
-                center={state.position}
+            <Map center={state.position}
                 zoom={state.zoom}
                 className={classes.map}
                 onclick={this._handleMapClick}>

@@ -94,6 +94,12 @@ export default class TourStore {
         }));
     });
 
+    addPlace(place) {
+        return TourEditService.addPlace(this.sessionId, place).then(action((resp) => {
+            this.editingTour.updateFromJson(resp.data.tour);
+        }));
+    }
+
     updateImageMap = action((file, width, height) => {
         return TourEditService.uploadMapImage(this.sessionId, file, width, height).then(action((resp) => {
             this.editingTour.updateFromJson(resp.data.tour);

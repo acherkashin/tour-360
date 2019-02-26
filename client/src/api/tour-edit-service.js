@@ -9,6 +9,9 @@ export function saveChanges(sessionId) {
 export function cancelChanges(sessionId) {
     return client.post(`/api/tour-edit/${sessionId}/cancel`);
 }
+export function addPlace(sessionId, place) {
+    return client.post(`/api/tour-edit/${sessionId}/addPlace`, place);
+}
 export function uploadMapImage(sessionId, file, width, height) {
     const formData = new FormData();
     formData.append('mapImage', file);
