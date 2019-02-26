@@ -1,5 +1,6 @@
 const uuidv1 = require('uuidv1')
 const { Tour } = require('./../models');
+const { addFile, removeFile } = require('./../utils/fileutils');
 const cache = {};
 
 exports.startEditing = (req, res) => {
@@ -41,19 +42,20 @@ exports.uploadMapImage = (req, res) => {
     const mapImage = req.files.mapImage;
 
     const tour = cache[sessionId];
-    tour.image.data = mapImage.data;
-    tour.image.contentType = mapImage.mimetype;
-    tour.image.height = parseInt(height);
-    tour.image.width = parseInt(width);
 
-    res.json({ success: true, tour: tour.toDesignerDto() });
-};
+    const extension = path.extname(cover.name);
+    const newFileName = `${tour.id}-${uuidv1()}-map${extension}`;
 
-exports.getMapImage = (req, res) => {
-    const { sessionId } = req.params;
+    addFile(newFileName, cover).then(() => {
+        tour.mapImage.filename = newFileName;
+        tour.mapImage.contentType = mapImage.mimetype;
+        tour.mapImage.height = parseInt(height);
+        tour.mapImage.width = parseInt(width);
 
-    const tour = cache[sessionId];
-    res.end(tour.image.data, 'binary');
+        res.json({ success: true, tour: tour.toDesignerDto() });
+    }).catch(error => {
+        res.json({ success: false, });
+    });
 };
 
 exports.addPlace = (req, res) => {

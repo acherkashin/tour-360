@@ -8,9 +8,10 @@ export default class Tour {
         extendObservable(this, {
             name: '',
             hasImage: false,
+            filename: '',
             imageHash: Date.now(),
             get imageUrl() {
-                return this.hasImage ? `/api/tour/${this.id}/cover?${this.imageHash}` : `/src/no-image.png`;
+                return this.hasImage ? `/${this.filename}?${this.imageHash}` : `/src/no-image.png`;
             }
         });
     }
@@ -18,6 +19,7 @@ export default class Tour {
     updateFromJson(json) {
         this.name = json.name;
         this.hasImage = json.hasImage;
+        this.filename = json.filename;
     }
 
     refreshCover() {

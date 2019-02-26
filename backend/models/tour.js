@@ -21,8 +21,14 @@ Place.methods.toClient = function () {
 
 const Tour = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
-    image: {
-        data: Buffer,
+    cover: {
+        filename: String,
+        contentType: String,
+        width: { type: Number, default: 0 },
+        height: { type: Number, default: 0 },
+    },
+    mapImage: {
+        filename: String,
         contentType: String,
         width: { type: Number, default: 0 },
         height: { type: Number, default: 0 },
@@ -36,7 +42,8 @@ Tour.methods.toClient = function () {
         id: this.id,
         name: this.name,
         mapType: this.mapType,
-        hasImage: this.image.data != null,
+        hasImage: this.cover && this.cover.filename != null,
+        filename: this.cover && this.cover.filename,
     };
 };
 
@@ -46,9 +53,10 @@ Tour.methods.toDesignerDto = function () {
         name: this.name,
         places: (this.places || []).map(place => place.toClient()),
         mapType: this.mapType,
-        hasMapImage: this.image && this.image.data != null,
-        imageWidth: this.image && this.image.width,
-        imageHeight: this.image && this.image.height,
+        hasMapImage: this.mapImage && this.mapImage.filename != null,
+        imageWidth: this.mapImage && this.mapImage.width,
+        imageHeight: this.mapImage && this.mapImage.height,
+        filename: this.mapImage && this.mapImage.filename,
     };
 
     return dto;

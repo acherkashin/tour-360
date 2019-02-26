@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 app.use(fileUpload());
+app.use(express.static(__dirname + '/public'));
 
 // append /api for our http requests
 app.use("/api", TourRouter, PlaceRouter, TourEditRouter);

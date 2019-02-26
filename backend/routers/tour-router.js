@@ -10,7 +10,6 @@ router.route('/tour/:id')
     .delete(TourController.delete);
 
 router.route('/tour/:id/cover')
-    .post(TourController.uploadCover)
-    .get(TourController.getCoverById);
+    .post(TourController.uploadCover);
 
 module.exports = router;

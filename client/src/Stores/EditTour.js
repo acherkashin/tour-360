@@ -15,7 +15,7 @@ export default class EditTour {
             imageWidth: 0,
             imageHeight: 0,
             get mapImageUrl() {
-                return this.hasMapImage ? `/api/tour-edit/${this.sessionId}/mapImage?${this.imageHash}` : null;
+                return this.hasMapImage ? `/${this.mapImageUrl}?${this.imageHash}` : null;
             }
         });
 
