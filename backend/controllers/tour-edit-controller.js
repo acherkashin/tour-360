@@ -77,3 +77,13 @@ exports.addPlace = (req, res) => {
     const dto = tour.toDesignerDto();
     res.json({ success: true, tour: dto });
 };
+
+exports.removePlace = (req, res) => {
+    const { sessionId, placeId } = req.params;
+    
+    const tour = cache[sessionId];
+    tour.places = tour.places.filter(item => item.id !== placeId);
+
+    const dto = tour.toDesignerDto();
+    res.json({ success: true, tour: dto });
+};

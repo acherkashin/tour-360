@@ -10,13 +10,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Map, TileLayer, ImageOverlay, CircleMarker } from 'react-leaflet';
+import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
 import MapEditMode from './MapEditMode';
 import { PlaceholderButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
+import Place from './Place';
+
 
 const styles = {
     appBar: {
@@ -90,6 +92,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
         this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
         this._handleModeChanged = this._handleModeChanged.bind(this);
+        this._handlePlaceClick = this._handlePlaceClick.bind(this);
     }
 
     state = {
@@ -161,14 +164,19 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleMapClick(e) {
-        if (this.state.mapEditMode) {
+        if (this.state.mapEditMode === 1) {
             this.tourStore.addPlace({
                 name: "Name 1",
                 latitude: e.latlng.lat,
                 longitude: e.latlng.lng,
             });
-        } else {
+        }
+    }
 
+
+    _handlePlaceClick(e) {
+        if (this.state.mapEditMode === 2) {
+            this.tourStore.removePlace(e.place.id);
         }
     }
 
@@ -206,7 +214,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-                {places.map(place => <CircleMarker key={place.id} center={[place.latitude, place.longitude]} radius={20} fillColor={'blue'} fillOpacity={1} />)}
+                {places.map(place => <Place key={place.id} place={place} onClick={this._handlePlaceClick} />)}
             </Map>
             {this._renderStatusBar()}
         </div>);

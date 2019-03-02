@@ -12,6 +12,9 @@ export function cancelChanges(sessionId) {
 export function addPlace(sessionId, place) {
     return client.post(`/api/tour-edit/${sessionId}/addPlace`, place);
 }
+export function removePlace(sessionId, placeId) {
+    return client.delete(`/api/tour-edit/${sessionId}/removePlace/${placeId}`);
+}
 export function uploadMapImage(sessionId, file, width, height) {
     const formData = new FormData();
     formData.append('mapImage', file);
