@@ -1,5 +1,8 @@
 import client from './client';
 
+export function get(sessionId) {
+    return client.get(`/api/tour-edit/${sessionId}/get`);
+}
 export function beginEditing(tourId) {
     return client.post(`/api/tour-edit/${tourId}`);
 }

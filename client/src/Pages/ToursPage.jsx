@@ -6,6 +6,7 @@ import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
 import { observer, inject } from 'mobx-react';
+import { Route } from "react-router-dom";
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
 
 const styles = theme => ({
@@ -126,7 +127,7 @@ const ToursPage = inject("tourStore")(observer(
         render() {
             const { classes } = this.props;
             const { isOpenedCreateDialog, isOpenedUploadImageDialog, mapTypes, newTourMapType } = this.state;
-            const { selectedTour, tours, editingTour, designerIsOpened, hasTours } = this.store;
+            const { selectedTour, tours, hasTours } = this.store;
 
             return (
                 <div className={classes.root}>
@@ -151,23 +152,26 @@ const ToursPage = inject("tourStore")(observer(
                     <div className={classes.contentWrapper}>
                         <div className={classes.content}>
                             <div className={classes.toursWrapper}>
-                                {hasTours && <Tours
-                                    tours={tours}
-                                    onItemClick={this._handleTourItemClick}
-                                    actions={[{
-                                        icon: <Edit />,
-                                        text: 'Edit',
-                                        action: (e) => {
-                                            this.store.beginEditing(e.tour.id);
-                                        }
-                                    }, {
-                                        icon: <Delete />,
-                                        text: 'Delete',
-                                        action: (e) => {
-                                            this.store.delete(e.tour.id);
-                                        }
-                                    }]}
-                                />}
+                                {hasTours && <Route render={({ history }) => (
+                                    <Tours
+                                        tours={tours}
+                                        onItemClick={this._handleTourItemClick}
+                                        actions={[{
+                                            icon: <Edit />,
+                                            text: 'Edit',
+                                            action: (e) => {
+                                                this.store.beginEditing(e.tour.id).then((sessionId) => {
+                                                    history.push(`/edit/${sessionId}`);
+                                                });
+                                            }
+                                        }, {
+                                            icon: <Delete />,
+                                            text: 'Delete',
+                                            action: (e) => {
+                                                this.store.delete(e.tour.id);
+                                            }
+                                        }]}
+                                    />)} />}
                                 {!hasTours && <NoToursPlaceholder onAddClick={this._handleOnAddClick} />}
                                 <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
                                     <Add />
@@ -177,10 +181,7 @@ const ToursPage = inject("tourStore")(observer(
                                 width={`${window.innerWidth * 0.25}px`}
                                 tour={selectedTour}
                                 onImageChangeClick={this._handleImageChangeClick} />}
-                            {designerIsOpened && <TourDesigner
-                                tour={editingTour}
-                                onClose={this._handleCloseDesigner}
-                                onSave={this._handleSaveChanges} />}
+                            <Route path="/edit/:sessionId" component={TourDesigner} />
                         </div>
                     </div>
                 </div>

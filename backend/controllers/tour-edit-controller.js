@@ -4,6 +4,12 @@ const { Tour } = require('./../models');
 const { addFile, removeFile } = require('./../utils/fileutils');
 const cache = {};
 
+exports.get = (req, res) => {
+    const { sessionId } = req.params;
+    const tour = cache[sessionId].toDesignerDto();
+    res.json({ success: true, tour });
+};
+
 exports.startEditing = (req, res) => {
     const { id } = req.params;
 
@@ -80,7 +86,7 @@ exports.addPlace = (req, res) => {
 
 exports.removePlace = (req, res) => {
     const { sessionId, placeId } = req.params;
-    
+
     const tour = cache[sessionId];
     tour.places = tour.places.filter(item => item.id !== placeId);
 

@@ -104,6 +104,13 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         mapEditMode: 0,
     };
 
+    componentDidMount() {
+        if (!this.editingTour) {
+            const sessionId = this.props.match.params.sessionId;
+            this.tourStore.getFromSession(sessionId);
+        }
+    }
+
     get tourStore() {
         return this.props.tourStore;
     }
@@ -138,14 +145,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         } else {
             this.tourStore.cancelEditing();
         }
-        // this.props.onClose && this.props.onClose({ origin: this });
     }
 
     _handleSave() {
         this.tourStore.saveEditing();
-        // .then(() => {
-        //     this.props.onSave && this.props.onSave({ origin: this });
-        // });
     }
 
     _handleOkConfirmClick() {
@@ -272,9 +275,13 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     render() {
+        const isOpened = this.editingTour != null;
+        if (!isOpened) {
+            return null;
+        }
+
         const { classes } = this.props;
         const { isOpenedUploadImageDialog, isOpenedConfirmDialog, mapEditMode } = this.state;
-
         return (
             <Dialog
                 open={true}
@@ -328,8 +335,6 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
 TourDesigner.propTypes = {
     classes: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(TourDesigner);

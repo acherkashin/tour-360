@@ -22,16 +22,20 @@ export default class TourStore {
         });
     }
 
+    getFromSession(sessionId) {
+        return TourEditService.get(sessionId).then(action((resp) => {
+            const { tour } = resp.data;
+            this._updateEditingTour(sessionId, tour);
+
+            return this.editingTour;
+        }));
+    }
+
     beginEditing(tourId) {
         return TourEditService.beginEditing(tourId).then(action((resp) => {
             const { tour, sessionId } = resp.data.result;
-            this.editingTour = new EditTour(this, sessionId, tour);
-            this.isDirty = false;
-            this.editingTourDisposer = deepObserve(this.editingTour, (change, path, root) => {
-                this.isDirty = true;
-            });
-
-            this.sessionId = resp.data.result.sessionId;
+            this._updateEditingTour(sessionId, tour);
+            return sessionId;
         }));
     }
 
@@ -125,5 +129,15 @@ export default class TourStore {
         }
         const tour = this._getById(id);
         this.tours.splice(this.tours.indexOf(tour), 1);
+    });
+
+    _updateEditingTour = action((sessionId, tour) => {
+        this.editingTour = new EditTour(this, sessionId, tour);
+        this.isDirty = false;
+        this.editingTourDisposer = deepObserve(this.editingTour, (change, path, root) => {
+            this.isDirty = true;
+        });
+
+        this.sessionId = sessionId;
     });
 }

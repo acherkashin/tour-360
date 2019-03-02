@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
 import ToursPage from './Pages/ToursPage';
 import TourStore from './Stores/TourStore';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 
 class App extends Component {
@@ -11,7 +12,9 @@ class App extends Component {
     return (
       //TODO: replace with rootStore
       <Provider tourStore={new TourStore()}>
-        <ToursPage />
+        <Router>
+          <Route path="/" component={ToursPage}/>
+        </Router>
       </Provider>
     );
   }
