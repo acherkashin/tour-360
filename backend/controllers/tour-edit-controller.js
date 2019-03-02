@@ -1,4 +1,5 @@
 const uuidv1 = require('uuidv1')
+const path = require('path');
 const { Tour } = require('./../models');
 const { addFile, removeFile } = require('./../utils/fileutils');
 const cache = {};
@@ -43,10 +44,10 @@ exports.uploadMapImage = (req, res) => {
 
     const tour = cache[sessionId];
 
-    const extension = path.extname(cover.name);
+    const extension = path.extname(mapImage.name);
     const newFileName = `${tour.id}-${uuidv1()}-map${extension}`;
 
-    addFile(newFileName, cover).then(() => {
+    addFile(newFileName, mapImage).then(() => {
         tour.mapImage.filename = newFileName;
         tour.mapImage.contentType = mapImage.mimetype;
         tour.mapImage.height = parseInt(height);

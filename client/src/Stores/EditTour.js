@@ -9,13 +9,14 @@ export default class EditTour {
         extendObservable(this, {
             name: '',
             mapType: '',
+            filename: '',
             places: [],
             hasMapImage: false,
             imageHash: Date.now(),
             imageWidth: 0,
             imageHeight: 0,
             get mapImageUrl() {
-                return this.hasMapImage ? `/${this.mapImageUrl}?${this.imageHash}` : null;
+                return this.hasMapImage ? `/${this.filename}?${this.imageHash}` : null;
             }
         });
 
@@ -24,6 +25,7 @@ export default class EditTour {
 
     updateFromJson(json) {
         this.name = json.name;
+        this.filename = json.filename;
         this.mapType = json.mapType;
         this.hasMapImage = json.hasMapImage;
         this.imageWidth = json.imageWidth || 0;
