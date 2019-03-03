@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import AddLocation from '@material-ui/icons/AddLocation';
-import LocationOff from '@material-ui/icons/LocationOff';
-import CallMade from '@material-ui/icons/CallMade';
-import PanTool from '@material-ui/icons/PanTool';
+import { Tabs, Tab } from '@material-ui/core';
+import { AddLocation, LocationOff, CallMade, PanTool } from '@material-ui/icons'
+import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 
 const styles = (theme) => ({
     root: {
@@ -23,15 +20,19 @@ const styles = (theme) => ({
 });
 
 const tabs = [{
+    id: DRAG_MAP,
     text: 'DRAG MAP',
     icon: <PanTool />,
 }, {
+    id: ADD_PLACE,
     text: 'ADD PLACE',
     icon: <AddLocation />,
 }, {
+    id: REMOVE_PLACE,
     text: 'REMOVE PLACE',
     icon: <LocationOff />,
 }, {
+    id: ADD_CONNECTION,
     text: 'ADD CONNECTION',
     icon: <CallMade />,
 }];

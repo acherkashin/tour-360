@@ -23,6 +23,18 @@ export default class EditTour {
         this.updateFromJson(json);
     }
 
+    updatePlaceFromJson(placeId, json) {
+        const place = (this.places || []).find(place => place.id === placeId);
+
+        if (place) {
+            place.longitude = json.longitude;
+            place.latitude = json.latitude;
+            place.name = json.name;
+        }
+
+        return place;
+    }
+
     updateFromJson(json) {
         this.name = json.name;
         this.filename = json.filename;

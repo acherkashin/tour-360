@@ -18,7 +18,7 @@ import MapEditMode from './MapEditMode';
 import { PlaceholderButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
 import Place from './Place';
-
+import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 
 const styles = {
     appBar: {
@@ -167,7 +167,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleMapClick(e) {
-        if (this.state.mapEditMode === 1) {
+        if (this.state.mapEditMode === ADD_PLACE) {
             this.tourStore.addPlace({
                 name: "Name 1",
                 latitude: e.latlng.lat,
@@ -178,7 +178,9 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
 
     _handlePlaceClick(e) {
-        if (this.state.mapEditMode === 2) {
+        if(this.state.mapEditMode === DRAG_MAP) {
+            this.tourStore.editPlace(e.place.id);
+        } else if (this.state.mapEditMode === REMOVE_PLACE) {
             this.tourStore.removePlace(e.place.id);
         }
     }

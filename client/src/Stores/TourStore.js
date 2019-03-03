@@ -11,6 +11,7 @@ export default class TourStore {
             tours: observable.array([]),
             selectedTour: null,
             editingTour: null,
+            editingPlace: null,
             sessionId: null,
             get designerIsOpened() {
                 return this.editingTour != null
@@ -39,9 +40,17 @@ export default class TourStore {
         }));
     }
 
+    editPlace(placeId) {
+        TourEditService.getPlace(this.sessionId, placeId).then(action((resp) => {
+            const { place } = resp.data;
+            this.editingPlace = this.editingTour.updatePlaceFromJson(placeId, place);
+        }));
+    }
+
     cancelEditing() {
         return TourEditService.cancelChanges(this.sessionId).then(action(() => {
             this.editingTour = null;
+            this.editingPlace = null;
             this.isDirty = false;
             this.editingTourDisposer && this.editingTourDisposer();
         }))
@@ -62,10 +71,6 @@ export default class TourStore {
     loadTours = action(() => {
         TourService.getAll().then(action((resp) => {
             (resp.data.result || []).map(tour => this.updateTourFromServer(tour));
-            //TODO: remove
-            // if (this.tours && this.tours.length) {
-            //     this.beginEditing(this.tours[0].id);
-            // }
         }));
     });
 
@@ -134,6 +139,7 @@ export default class TourStore {
     _updateEditingTour = action((sessionId, tour) => {
         this.editingTour = new EditTour(this, sessionId, tour);
         this.isDirty = false;
+
         this.editingTourDisposer = deepObserve(this.editingTour, (change, path, root) => {
             this.isDirty = true;
         });
