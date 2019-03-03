@@ -1,4 +1,4 @@
-import { extendObservable } from "mobx";
+import { extendObservable, toJS } from "mobx";
 
 export default class EditPlace {
     constructor(store, sessionId, json) {
@@ -11,6 +11,8 @@ export default class EditPlace {
             latitude: null,
             name: '',
         });
+
+        this.updateFromJson(json);
     }
 
     updateFromJson(json) {
@@ -19,5 +21,14 @@ export default class EditPlace {
         this.name = json.name;
 
         return this;
+    }
+
+    get asJson() {
+        return {
+            id: this.id,
+            longitude: this.longitude,
+            latitude: this.latitude,
+            name: this.name,
+        };
     }
 }

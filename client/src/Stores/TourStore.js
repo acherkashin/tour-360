@@ -47,6 +47,17 @@ export default class TourStore {
         }));
     }
 
+    saveEditingPlace(cancel = false) {
+        TourEditService.updatePlace(this.sessionId, this.editingPlace.asJson).then(action((resp) => {
+            if (cancel) {
+                this.editingPlace = null;
+            } else {
+                const { place } = resp.data;
+                this.editingPlace.updateFromJson(place);
+            }
+        }));
+    }
+
     cancelEditing() {
         return TourEditService.cancelChanges(this.sessionId).then(action(() => {
             this.editingTour = null;

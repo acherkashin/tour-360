@@ -21,6 +21,9 @@ export function removePlace(sessionId, placeId) {
 export function getPlace(sessionId, placeId) {
     return client.get(`/api/tour-edit/${sessionId}/place/${placeId}`);
 }
+export function updatePlace(sessionId, place) {
+    return client.put(`/api/tour-edit/${sessionId}/place`, place);
+}
 export function uploadMapImage(sessionId, file, width, height) {
     const formData = new FormData();
     formData.append('mapImage', file);

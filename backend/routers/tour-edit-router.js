@@ -13,4 +13,7 @@ router.route('/tour-edit/:sessionId/place/:placeId')
     .get(TourEditController.getPlace)
     .delete(TourEditController.removePlace);
 
+router.route('/tour-edit/:sessionId/place')
+    .put(TourEditController.updatePlace);
+
 module.exports = router;

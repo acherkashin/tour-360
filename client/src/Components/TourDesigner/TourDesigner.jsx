@@ -184,7 +184,11 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleMapClick(e) {
-        if (this.state.mapEditMode === ADD_PLACE) {
+        if (this.state.mapEditMode === DRAG_MAP) {
+            if (this.editingPlace) {
+                this.tourStore.saveEditingPlace(true);
+            }
+        } else if (this.state.mapEditMode === ADD_PLACE) {
             this.tourStore.addPlace({
                 name: "Name 1",
                 latitude: e.latlng.lat,
@@ -199,6 +203,9 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         } else if (this.state.mapEditMode === REMOVE_PLACE) {
             this.tourStore.removePlace(e.place.id);
         }
+
+        // prevent map click event
+        L.DomEvent.stopPropagation(e.lEvent);
     }
 
     _renderMap() {
