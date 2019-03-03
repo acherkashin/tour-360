@@ -33,6 +33,18 @@ export default class EditTour {
         this.places = json.places || [];
     }
 
+    updatePlaceFromJson(json) {
+        const place = (this.places || []).find(place => place.id === json.id);
+
+        if (place) {
+            place.longitude = json.longitude;
+            place.latitude = json.latitude;
+            place.name = json.name;
+        }
+
+        return place;
+    }
+
     refreshCover() {
         this.imageHash = Date.now();
     }

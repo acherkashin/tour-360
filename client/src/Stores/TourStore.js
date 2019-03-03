@@ -49,10 +49,12 @@ export default class TourStore {
 
     saveEditingPlace(cancel = false) {
         TourEditService.updatePlace(this.sessionId, this.editingPlace.asJson).then(action((resp) => {
+            const { place } = resp.data;
+            this.editingTour.updatePlaceFromJson(place);
+            
             if (cancel) {
                 this.editingPlace = null;
             } else {
-                const { place } = resp.data;
                 this.editingPlace.updateFromJson(place);
             }
         }));
