@@ -105,11 +105,15 @@ exports.getPlace = (req, res) => {
 
 exports.updatePlace = (req, res) => {
     const { sessionId } = req.params;
-    const place = req.body;
+    const placeUpdate = req.body;
 
     const tour = cache[sessionId];
-    const index = tour.places.findIndex((value) => value.id === place.id);
-    tour.places[index] = place;
+    const index = tour.places.findIndex((value) => value.id === placeUpdate.id);
+    const place = tour.places[index];
 
-    res.json({ success: true, place });
+    place.name = placeUpdate.name;
+    place.longitude = placeUpdate.longitude;
+    place.latitude = placeUpdate.latitude;
+
+    res.json({ success: true, place: place.toClient() });
 };
