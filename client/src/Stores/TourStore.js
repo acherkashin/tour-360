@@ -1,6 +1,6 @@
 import { extendObservable, action, observable } from 'mobx';
 import { TourService, TourEditService } from './../api';
-import { Tour, EditTour } from './';
+import { Tour, EditTour, EditPlace } from './';
 import { deepObserve } from 'mobx-utils';
 
 export default class TourStore {
@@ -43,7 +43,7 @@ export default class TourStore {
     editPlace(placeId) {
         TourEditService.getPlace(this.sessionId, placeId).then(action((resp) => {
             const { place } = resp.data;
-            this.editingPlace = this.editingTour.updatePlaceFromJson(placeId, place);
+            this.editingPlace = new EditPlace(this, this.sessionId, place);
         }));
     }
 

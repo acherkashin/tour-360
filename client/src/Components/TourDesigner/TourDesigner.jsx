@@ -19,8 +19,9 @@ import { PlaceholderButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
 import Place from './Place';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
+import EditPlacePanel from './EditPlacePanel';
 
-const styles = {
+const styles = (theme) => ({
     appBar: {
         position: 'relative',
     },
@@ -56,6 +57,10 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         maxWidth: 500,
+        minWidth: 400,
+        flexBasis: 400,
+        backgroundColor: grey[100],
+        borderLeft: `1px solid ${theme.palette.divider}`,
     },
     statusBar: {
         borderTop: `1px solid ${grey[300]}`,
@@ -68,10 +73,8 @@ const styles = {
         fontWeight: 700,
         marginRight: 5,
     },
-    value: {
-
-    }
-};
+    value: {}
+});
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -85,6 +88,8 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleClose = this._handleClose.bind(this);
         this._handleMapClick = this._handleMapClick.bind(this);
         this._handleNameChanged = this._handleNameChanged.bind(this);
+        this._handlePlaceNameChanged = this._handlePlaceNameChanged.bind(this);
+        this._handleChangePlaceImage360Click = this._handleChangePlaceImage360Click.bind(this);
         this._handleMouseMoveOnMap = this._handleMouseMoveOnMap.bind(this);
         this._handleZoomChanged = this._handleZoomChanged.bind(this);
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
@@ -113,6 +118,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     get tourStore() {
         return this.props.tourStore;
+    }
+
+    get editingPlace() {
+        return this.props.tourStore.editingPlace;
     }
 
     get editingTour() {
@@ -166,6 +175,14 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this.editingTour.name = e.name;
     }
 
+    _handlePlaceNameChanged(e) {
+        this.editingPlace.name = e.name;
+    }
+
+    _handleChangePlaceImage360Click(e) {
+        console.log(e);
+    }
+
     _handleMapClick(e) {
         if (this.state.mapEditMode === ADD_PLACE) {
             this.tourStore.addPlace({
@@ -176,9 +193,8 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         }
     }
 
-
     _handlePlaceClick(e) {
-        if(this.state.mapEditMode === DRAG_MAP) {
+        if (this.state.mapEditMode === DRAG_MAP) {
             this.tourStore.editPlace(e.place.id);
         } else if (this.state.mapEditMode === REMOVE_PLACE) {
             this.tourStore.removePlace(e.place.id);
@@ -284,6 +300,8 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
         const { classes } = this.props;
         const { isOpenedUploadImageDialog, isOpenedConfirmDialog, mapEditMode } = this.state;
+        const isPlaceEditing = this.tourStore.editingPlace;
+
         return (
             <Dialog
                 open={true}
@@ -302,7 +320,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 <div className={classes.content}>
                     {this._renderMap()}
                     {!this.editingTour.mapType && <Typography className={classes.map}>Map type is not defined</Typography>}
-                    <div className={classes.rightPanel}>
+                    {!isPlaceEditing && <div className={classes.rightPanel}>
                         <EditTourPanel
                             tour={this.editingTour}
                             onNameChanged={this._handleNameChanged}
@@ -311,7 +329,13 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                         <MapEditMode
                             value={mapEditMode}
                             onModeChanged={this._handleModeChanged} />
-                    </div>
+                    </div>}
+                    {isPlaceEditing && <div className={classes.rightPanel}>
+                        <EditPlacePanel
+                            place={this.editingPlace}
+                            onNameChanged={this._handlePlaceNameChanged}
+                            onChangeImage360Click={this._handleChangePlaceImage360Click} />
+                    </div>}
                 </div>
                 <UploadImageDialog
                     title="Upload new map"
