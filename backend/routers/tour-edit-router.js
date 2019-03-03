@@ -16,4 +16,6 @@ router.route('/tour-edit/:sessionId/place/:placeId')
 router.route('/tour-edit/:sessionId/place')
     .put(TourEditController.updatePlace);
 
+router.route('/tour-edit/:sessionId/place/:placeId/uploadImage360')
+    .post(TourEditController.uploadImage360);
 module.exports = router;

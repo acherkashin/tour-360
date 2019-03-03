@@ -80,6 +80,10 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
+const CLOSED = 0;
+const TOUR_MAP = 1;
+const PLACE_360 = 2;
+
 const TourDesigner = inject("tourStore")(observer(class TourDesigner extends React.Component {
     constructor(props) {
         super(props);
@@ -104,7 +108,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         currentLat: 0,
         currentLng: 0,
         currentZoom: 0,
-        isOpenedUploadImageDialog: false,
+        uploadImageDialogState: 0,
         isOpenedConfirmDialog: false,
         mapEditMode: 0,
     };
@@ -133,7 +137,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleChangeImageMapClick(e) {
-        this.setState({ isOpenedUploadImageDialog: true });
+        this.setState({ uploadImageDialogState: TOUR_MAP });
     }
 
     _handleMouseMoveOnMap(e) {
@@ -180,7 +184,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleChangePlaceImage360Click(e) {
-        console.log(e);
+        this.setState({ uploadImageDialogState: PLACE_360 });
     }
 
     _handleMapClick(e) {
@@ -293,9 +297,16 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleFileSelected(e) {
-        return this.tourStore.updateImageMap(e.file, e.width, e.height).then(() => {
-            this.setState({ isOpenedUploadImageDialog: false });
-        });
+        const { uploadImageDialogState } = this.state;
+        if (uploadImageDialogState === TOUR_MAP) {
+            return this.tourStore.updateImageMap(e.file, e.width, e.height).then(() => {
+                this.setState({ uploadImageDialogState: CLOSED });
+            });
+        } else if (uploadImageDialogState === PLACE_360) {
+            return this.tourStore.updateImage360(e.file).then(() => {
+                this.setState({ uploadImageDialogState: CLOSED });
+            });
+        }
     }
 
     render() {
@@ -305,7 +316,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         }
 
         const { classes } = this.props;
-        const { isOpenedUploadImageDialog, isOpenedConfirmDialog, mapEditMode } = this.state;
+        const { uploadImageDialogState, isOpenedConfirmDialog, mapEditMode } = this.state;
         const isPlaceEditing = this.tourStore.editingPlace;
 
         return (
@@ -346,9 +357,9 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 <UploadImageDialog
                     title="Upload new map"
                     prompt="Upload map of your virtual tour. E.g.: floor plan, street plan..."
-                    isOpened={isOpenedUploadImageDialog}
+                    isOpened={uploadImageDialogState !== CLOSED}
                     onFileSelected={this._handleFileSelected}
-                    onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
+                    onClose={() => this.setState({ uploadImageDialogState: CLOSED })}
                 />
                 <ConfirmDialog
                     title='Save Virtual Tour'

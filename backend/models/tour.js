@@ -5,7 +5,7 @@ const Place = new mongoose.Schema({
     longitude: { type: Number, required: true, default: 0 },
     latitude: { type: Number, required: true, default: 0 },
     sound: { data: Buffer, contentType: String },
-    image360: { data: Buffer, contentType: String },
+    image360: { filename: String, contentType: String },
 });
 
 Place.methods.toClient = function () {

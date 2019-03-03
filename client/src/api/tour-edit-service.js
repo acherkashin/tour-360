@@ -36,3 +36,14 @@ export function uploadMapImage(sessionId, file, width, height) {
         }
     });
 }
+
+export function updateImage360(sessionId, placeId, file) {
+    const formData = new FormData();
+    formData.append('mapImage', file);
+
+    return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadImage360`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}

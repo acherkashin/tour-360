@@ -51,7 +51,7 @@ export default class TourStore {
         TourEditService.updatePlace(this.sessionId, this.editingPlace.asJson).then(action((resp) => {
             const { place } = resp.data;
             this.editingTour.updatePlaceFromJson(place);
-            
+
             if (cancel) {
                 this.editingPlace = null;
             } else {
@@ -135,6 +135,10 @@ export default class TourStore {
             this.editingTour.refreshCover();
         }));
     })
+
+    updateImage360(file) {
+        return TourEditService.updateImage360(this.sessionId, this.editingPlace.id, file);
+    }
 
     _getById(id) {
         const tour = this.tours.find(t => t.id === id);

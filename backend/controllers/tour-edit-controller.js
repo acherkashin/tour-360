@@ -118,6 +118,10 @@ exports.updatePlace = (req, res) => {
     res.json({ success: true, place: place.toClient() });
 };
 
+exports.uploadImage360 = (req, res) => {
+    res.json({ success: true });
+};
+
 function findFreeNameForPlace(tour) {
     const length = tour.places.length;
     for (let i = 1; i <= length; i++) {
