@@ -67,8 +67,8 @@ exports.uploadMapImage = (req, res) => {
 
 exports.addPlace = (req, res) => {
     const { sessionId } = req.params;
-    const { name, longitude, latitude } = req.body;
     const tour = cache[sessionId];
+    const { name = findFreeNameForPlace(tour), longitude, latitude } = req.body;
 
     const place = {
         name,
@@ -117,3 +117,23 @@ exports.updatePlace = (req, res) => {
 
     res.json({ success: true, place: place.toClient() });
 };
+
+function findFreeNameForPlace(tour) {
+    const length = tour.places.length;
+    for (let i = 1; i <= length; i++) {
+        const name = `New Place ${i}`;
+        let isFree = true;
+        for (let j = 0; j < length; j++) {
+            if (tour.places[j].name == name) {
+                isFree = false;
+                break;
+            }
+        }
+
+        if (isFree) {
+            return name;
+        }
+    }
+
+    throw Error("No free name");
+}

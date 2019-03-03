@@ -190,7 +190,6 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
             }
         } else if (this.state.mapEditMode === ADD_PLACE) {
             this.tourStore.addPlace({
-                name: "Name 1",
                 latitude: e.latlng.lat,
                 longitude: e.latlng.lng,
             });
