@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { CircleMarker } from 'react-leaflet';
+import { CircleMarker, Tooltip } from 'react-leaflet';
 
 export default class Place extends Component {
     render() {
         const { place, onClick } = this.props;
+        const radius = 20;
 
         return (<CircleMarker
             key={place.id}
             center={[place.latitude, place.longitude]}
-            radius={20}
+            radius={radius}
             fillColor={'blue'}
             fillOpacity={1}
             onClick={(e) => {
@@ -19,7 +20,11 @@ export default class Place extends Component {
                     lEvent: e,
                 });
             }}
-        />);
+        >
+            <Tooltip permanent direction='bottom' offset={[0, radius]}>
+                <span>{place.name}</span>
+            </Tooltip>
+        </CircleMarker>);
     }
 }
 
