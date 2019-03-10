@@ -10,6 +10,16 @@ export default class EditPlace {
             longitude: null,
             latitude: null,
             name: '',
+
+            hasImage360: false,
+            image360Hash: Date.now(),
+            image360Width: 0,
+            image360Height: 0,
+            image360Name: '',
+
+            get mapImage360Url() {
+                return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
+            }
         });
 
         this.updateFromJson(json);

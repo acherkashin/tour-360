@@ -136,8 +136,10 @@ export default class TourStore {
         }));
     })
 
-    updateImage360(file) {
-        return TourEditService.updateImage360(this.sessionId, this.editingPlace.id, file);
+    updateImage360(file, width, height) {
+        return TourEditService.updateImage360(this.sessionId, this.editingPlace.id, file, width, height).then(action((resp) => {
+            this.editingTour.updatePlaceFromJson(resp.data.place);
+        }));
     }
 
     _getById(id) {

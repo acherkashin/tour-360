@@ -31,8 +31,8 @@ exports.saveChanges = (req, res) => {
     cache[sessionId].save().then(() => {
         const tour = cache[sessionId].toDesignerDto();
         res.json({ success: true, tour });
-    }).catch((err) => {
-        res.json({ success: false, error: err });
+    }).catch((error) => {
+        res.json({ success: false, error });
     });
 };
 
@@ -59,7 +59,7 @@ exports.uploadMapImage = (req, res) => {
 
         res.json({ success: true, tour: tour.toDesignerDto() });
     }).catch(error => {
-        res.json({ success: false, });
+        res.json({ success: false, error });
     });
 };
 
@@ -114,7 +114,23 @@ exports.updatePlace = (req, res) => {
 };
 
 exports.uploadImage360 = (req, res) => {
-    res.json({ success: true });
+    const { sessionId, placeId } = req.params;
+    const { width, height } = req.body;
+    const mapImage = req.files.mapImage;
+
+    const place = getPlace(sessionId, placeId);
+    const image360Name = generatePlaceImage360Name(place, mapImage);
+
+    addFile(image360Name, mapImage).then(() => {
+        place.image360.filename = image360Name;
+        place.image360.contentType = mapImage.mimetype;
+        place.image360.height = parseInt(height);
+        place.image360.width = parseInt(width);
+
+        res.json({ success: true, place: place.toClient() });
+    }).catch(error => {
+        res.json({ success: false, error});
+    });
 };
 
 function getPlace(sessionId, placeId) {
@@ -123,6 +139,13 @@ function getPlace(sessionId, placeId) {
     const place = tour.places[index];
 
     return place;
+}
+
+function generatePlaceImage360Name(place, mapImage) {
+    const extension = path.extname(mapImage.name);
+    const newFileName = `${place.id}-${uuidv1()}-place-360${extension}`;
+
+    return newFileName;
 }
 
 function generateTourImageName(tour, mapImage) {

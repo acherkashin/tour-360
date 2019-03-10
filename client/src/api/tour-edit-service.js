@@ -37,9 +37,11 @@ export function uploadMapImage(sessionId, file, width, height) {
     });
 }
 
-export function updateImage360(sessionId, placeId, file) {
+export function updateImage360(sessionId, placeId, file, width, height) {
     const formData = new FormData();
     formData.append('mapImage', file);
+    formData.append('width', width);
+    formData.append('height', height);
 
     return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadImage360`, formData, {
         headers: {

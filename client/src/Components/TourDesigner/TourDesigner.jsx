@@ -303,7 +303,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 this.setState({ uploadImageDialogState: CLOSED });
             });
         } else if (uploadImageDialogState === PLACE_360) {
-            return this.tourStore.updateImage360(e.file).then(() => {
+            return this.tourStore.updateImage360(e.file, e.width, e.height).then(() => {
                 this.setState({ uploadImageDialogState: CLOSED });
             });
         }
