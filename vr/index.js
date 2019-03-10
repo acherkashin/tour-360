@@ -2,26 +2,15 @@ import React from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
-  View,
-  VrButton,
-  Environment,
-  asset,
+  NativeModules,
 } from 'react-360';
 import Place from './components/Place';
+import { getUrlParams } from './utils';
 
 export default class Hello360 extends React.Component {
-  // Our component will keep track of this state
-  state = {
-    count: 0,
-  };
-
-  // This method increments our count, triggering a re-render
-  _incrementCount = () => {
-    this.setState({ count: this.state.count + 1 });
-  };
-  
   render() {
+    const urlParams = getUrlParams();
+    console.log(urlParams);
     // return (<Place imageUrl={asset("360-roof.png")} />);
     return (<Place />);
   }
