@@ -17,6 +17,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
         super(props);
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handleChangeImage360Click = this._handleChangeImage360Click.bind(this);
+        this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
     }
 
     _handleNameChanged(e) {
@@ -24,7 +25,11 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     }
 
     _handleChangeImage360Click(e) {
-        this.props.onChangeImage360Click({ origin: this });
+        this.props.onChangeImage360Click({ origin: this, place: this.props.place });
+    }
+
+    _handleViewImage360Click(e) {
+        this.props.onViewImage360Click({ origin: this, place: this.props.place });
     }
 
     render() {
@@ -39,9 +44,12 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 fullWidth={true}
                 autoFocus
             />
-            <EditImage hasImage={place.hasImage} imageUrl={place.mapImage360Url} name={place.name} onImageChangeClick={this._handleChangeImage360Click}/>
+            <EditImage hasImage={place.hasImage} imageUrl={place.mapImage360Url} name={place.name} onImageChangeClick={this._handleChangeImage360Click} />
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImage360Click} >
                 Change Image 360
+            </Button>
+            <Button fullWidth variant="text" color="primary" onClick={this._handleViewImage360Click}>
+                Open
             </Button>
         </div>;
     }
@@ -54,6 +62,7 @@ EditPlacePanel.propTypes = {
     }).isRequired,
     onNameChanged: PropTypes.func.isRequired,
     onChangeImage360Click: PropTypes.func.isRequired,
+    onViewImage360Click: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(EditPlacePanel);

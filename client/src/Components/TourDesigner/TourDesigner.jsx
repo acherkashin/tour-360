@@ -103,6 +103,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleModeChanged = this._handleModeChanged.bind(this);
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
         this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
+        this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
     }
 
     state = {
@@ -135,6 +136,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     get sessionId() {
         return this.props.tourStore.sessionId;
+    }
+
+    _handleViewImage360Click() {
+        window.open(`http://localhost:8081/index.html?sessionId=${this.sessionId}&placeId=${this.editingPlace.id}`);
     }
 
     _closeConfirmDialog() {
@@ -360,7 +365,9 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                         <EditPlacePanel
                             place={this.editingPlace}
                             onNameChanged={this._handlePlaceNameChanged}
-                            onChangeImage360Click={this._handleChangePlaceImage360Click} />
+                            onChangeImage360Click={this._handleChangePlaceImage360Click}
+                            onViewImage360Click={this._handleViewImage360Click}
+                        />
                     </div>}
                 </div>
                 <UploadImageDialog
