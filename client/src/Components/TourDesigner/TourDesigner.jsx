@@ -102,6 +102,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
         this._handleModeChanged = this._handleModeChanged.bind(this);
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
+        this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
     }
 
     state = {
@@ -136,6 +137,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         return this.props.tourStore.sessionId;
     }
 
+    _closeConfirmDialog() {
+        this.setState({ isOpenedConfirmDialog: false });
+    }
+
     _handleChangeImageMapClick(e) {
         this.setState({ uploadImageDialogState: TOUR_MAP });
     }
@@ -167,11 +172,15 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     _handleOkConfirmClick() {
         this.tourStore.saveEditing().then(() => {
             this.tourStore.cancelEditing();
+        }).finally(() => {
+            this._closeConfirmDialog();
         });
     }
 
     _handleCancelConfigrmClick() {
-        this.tourStore.cancelEditing();
+        this.tourStore.cancelEditing().finally(() => {
+            this._closeConfirmDialog();
+        });
     }
 
     _handleNameChanged(e) {
@@ -369,7 +378,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     onOkClick={this._handleOkConfirmClick}
                     onCancelClick={this._handleCancelConfigrmClick}
                     isOpened={isOpenedConfirmDialog}
-                    onClose={() => this.setState({ isOpenedConfirmDialog: false })}
+                    onClose={this._closeConfirmDialog}
                 />
             </Dialog>
         );

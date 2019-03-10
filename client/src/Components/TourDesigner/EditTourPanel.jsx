@@ -41,7 +41,7 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
                 autoFocus
             />
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImageMapClick} >
-                Change Image
+                Change Map Image
             </Button>
         </div>);
     }
