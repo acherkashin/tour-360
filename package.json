@@ -11,5 +11,16 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^4.0.1"
+  },
+  "devDependencies": {
+    "cz-customizable": "^5.4.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "config/git/commitizen.js"
+    }
   }
 }
