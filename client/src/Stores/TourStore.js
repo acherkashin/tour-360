@@ -138,7 +138,9 @@ export default class TourStore {
 
     updateImage360(file, width, height) {
         return TourEditService.updateImage360(this.sessionId, this.editingPlace.id, file, width, height).then(action((resp) => {
-            this.editingTour.updatePlaceFromJson(resp.data.place);
+            const place = resp.data.place;
+            this.editingTour.updatePlaceFromJson(place);
+            this.editingPlace && this.editingPlace.updateFromJson(place);
         }));
     }
 

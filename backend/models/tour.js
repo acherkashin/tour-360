@@ -19,10 +19,10 @@ Place.methods.toClient = function () {
         name: this.name,
         latitude: this.latitude,
         longitude: this.longitude,
-        hasImage360: this.mapImage && this.mapImage.filename != null,
-        image360Width: this.mapImage && this.mapImage.width,
-        image360Height: this.mapImage && this.mapImage.height,
-        image360Name: this.mapImage && this.mapImage.filename,
+        hasImage360: this.image360 && this.image360.filename != null,
+        image360Width: this.image360 && this.image360.width,
+        image360Height: this.image360 && this.image360.height,
+        image360Name: this.image360 && this.image360.filename,
     };
 
     return dto;

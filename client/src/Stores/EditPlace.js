@@ -26,9 +26,13 @@ export default class EditPlace {
     }
 
     updateFromJson(json) {
+        this.name = json.name;
         this.longitude = json.longitude;
         this.latitude = json.latitude;
-        this.name = json.name;
+        this.hasImage360 = json.hasImage360;
+        this.image360Width = json.image360Width;
+        this.image360Height = json.image360Height;
+        this.image360Name = json.image360Name;
 
         return this;
     }
