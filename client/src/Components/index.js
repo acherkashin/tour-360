@@ -5,6 +5,7 @@ import TourItem from './TourItem';
 import TourCover from './TourCover';
 import NoToursPlaceholder from './NoToursPlaceholder';
 import PlaceholderButton from './PlaceholderButton';
+import EditImage from './EditImage';
 
 export {
     Header,
@@ -14,4 +15,5 @@ export {
     TourItem,
     NoToursPlaceholder,
     PlaceholderButton,
+    EditImage,
 };

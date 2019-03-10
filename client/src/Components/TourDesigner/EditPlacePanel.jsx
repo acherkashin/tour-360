@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TourCover } from './../';
+import { EditImage } from './../';
 import { TextField, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
@@ -39,7 +39,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 fullWidth={true}
                 autoFocus
             />
-            <TourCover hasImage={place.hasImage360} imageUrl={place.mapImage360Url || `/src/no-image.png`} name={place.name} />
+            <EditImage hasImage={place.hasImage} imageUrl={place.mapImage360Url} name={place.name} onImageChangeClick={this._handleChangeImage360Click}/>
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImage360Click} >
                 Change Image 360
             </Button>

@@ -1,4 +1,4 @@
-import { extendObservable, toJS } from "mobx";
+import { extendObservable } from "mobx";
 
 export default class EditPlace {
     constructor(store, sessionId, json) {
