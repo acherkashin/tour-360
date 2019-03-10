@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View, Text, Environment, StyleSheet } from 'react-360';
 import Background from './Background';
 import { CoordinateSystem } from "./../index";
@@ -22,13 +23,14 @@ export default class Place extends React.Component {
     render() {
         //https://stackoverflow.com/questions/43437907/vr-view-360-photo-sphere-images-possible-cors-issue?rq=1
 
+        const url = `http://localhost:3001/${this.props.place.image360Name}`;
         return (
             <View style={styles.place}>
                 <Background
-                    url={this.state.currentPlace.url}
+                    url={url}
                     sound={this.state.currentPlace.sound}
                 />
-                <CoordinateSystem width={WIDTH} height={HEIGHT} stepX={200} stepY={100}/>
+                {/* <CoordinateSystem width={WIDTH} height={HEIGHT} stepX={200} stepY={100}/> */}
                 {/* <Label
                     heading={' Курский Государственный Университет '}
                     onEyeClick={() => {
@@ -51,3 +53,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     }
 });
+
+Place.propTypes = {
+    place: PropTypes.shape({
+        image360Name: PropTypes.string,
+    }).isRequired,
+};
