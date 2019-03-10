@@ -1,11 +1,13 @@
 
 const mongoose = require("mongoose");
 const express = require("express");
+const cors = require('cors');
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const fileUpload = require('express-fileupload');
 const config = require('./config');
 const app = express();
+app.use(cors());
 const { PlaceRouter, TourRouter, TourEditRouter } = require("./routers");
 
 mongoose.connect(config.MONGO_URL, { useNewUrlParser: true });
