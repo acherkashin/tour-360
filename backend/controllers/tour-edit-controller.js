@@ -49,9 +49,7 @@ exports.uploadMapImage = (req, res) => {
     const mapImage = req.files.mapImage;
 
     const tour = cache[sessionId];
-
-    const extension = path.extname(mapImage.name);
-    const newFileName = `${tour.id}-${uuidv1()}-map${extension}`;
+    const newFileName = generateTourImageName(tour, mapImage);
 
     addFile(newFileName, mapImage).then(() => {
         tour.mapImage.filename = newFileName;
@@ -106,10 +104,7 @@ exports.getPlace = (req, res) => {
 exports.updatePlace = (req, res) => {
     const { sessionId } = req.params;
     const placeUpdate = req.body;
-
-    const tour = cache[sessionId];
-    const index = tour.places.findIndex((value) => value.id === placeUpdate.id);
-    const place = tour.places[index];
+    const place = getPlace(sessionId, placeUpdate.id);
 
     place.name = placeUpdate.name;
     place.longitude = placeUpdate.longitude;
@@ -121,6 +116,21 @@ exports.updatePlace = (req, res) => {
 exports.uploadImage360 = (req, res) => {
     res.json({ success: true });
 };
+
+function getPlace(sessionId, placeId) {
+    const tour = cache[sessionId];
+    const index = tour.places.findIndex((value) => value.id === placeId);
+    const place = tour.places[index];
+
+    return place;
+}
+
+function generateTourImageName(tour, mapImage) {
+    const extension = path.extname(mapImage.name);
+    const newFileName = `${tour.id}-${uuidv1()}-map${extension}`;
+
+    return newFileName;
+}
 
 function findFreeNameForPlace(tour) {
     const length = tour.places.length;
