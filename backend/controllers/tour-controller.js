@@ -29,6 +29,24 @@ exports.getById = (req, res) => {
         });
 };
 
+exports.getPlace = (req, res) => {
+    const { id, placeId } = req.params;
+
+    if (id == null) {
+        req.status(400).send("id should be provided");
+    } else if (placeId == null) {
+        req.status(400).send("placeId should be provided");
+    }
+
+    Tour.findById(id)
+        .then(tour => {
+            const index = tour.places.findIndex((value) => value.id === placeId);
+            const place = tour.places[index].toClient();
+            
+            return res.json({ place })
+        });
+};
+
 exports.create = (req, res) => {
     const { name, mapType } = req.body;
 

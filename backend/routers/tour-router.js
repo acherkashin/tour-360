@@ -12,4 +12,7 @@ router.route('/tour/:id')
 router.route('/tour/:id/cover')
     .post(TourController.uploadCover);
 
+router.route('/tour/:id/place/:placeId')
+    .get(TourController.getPlace);
+
 module.exports = router;

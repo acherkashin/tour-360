@@ -15,18 +15,16 @@ export default class Hello360 extends React.Component {
 
     componentDidMount() {
         const urlParams = getUrlParams();
-        console.log(urlParams);
 
         if (urlParams.sessionId) {
             axios.get(`http://localhost:3001/api/tour-edit/${urlParams.sessionId}/place/${urlParams.placeId}`)
                 .then((item) => {
-                    this.setState({ currentPlace: item.data.place })
-                    console.log(item);
+                    this.setState({ currentPlace: item.data.place });
                 });
         } else if (urlParams.tourId) {
-            axios.get(`http://localhost:3001/api/tour-edit/${urlParams.sessionId}/place/${urlParams.placeId}`)
+            axios.get(`http://localhost:3001/api/tour/${urlParams.tourId}/place/${urlParams.placeId}`)
                 .then((item) => {
-                    console.log(item);
+                    this.setState({ currentPlace: item.data.place });
                 });
         }
     }
