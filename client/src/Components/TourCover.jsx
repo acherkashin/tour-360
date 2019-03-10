@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = (theme) => ({
     cover: {
-        maxWidth: '100%',
-        maxHeight: '100%',
+        width: '100%',
+        height: '100%',
     },
     noCover: {
         maxWidth: '100%',
