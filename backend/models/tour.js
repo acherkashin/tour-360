@@ -28,6 +28,23 @@ Place.methods.toClient = function () {
     return dto;
 };
 
+const Connection = new mongoose.Schema({
+    startPlaceId: { type: String, required: true },
+    endPlaceId: { type: String, required: true },
+    // how many degrees you need to rotate the scene when moving
+    rotatationScene: { type: Number },
+});
+
+Connection.methods.toClient = function () {
+    const dto = {
+        startPlaceId: this.startPlaceId,
+        endPlaceId: this.endPlaceId,
+        rotationScene: this.rotationScene,
+    };
+
+    return dto;
+};
+
 const Tour = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
     cover: {
@@ -44,6 +61,7 @@ const Tour = new mongoose.Schema({
     },
     mapType: { type: String, enum: ['Earth', 'Image'], required: true },
     places: [Place],
+    connections: [Connection],
 });
 
 Tour.methods.toClient = function () {
@@ -61,6 +79,7 @@ Tour.methods.toDesignerDto = function () {
         id: this.id,
         name: this.name,
         places: (this.places || []).map(place => place.toClient()),
+        connections: (this.connections || []).map(connection => connection.toClient()),
         mapType: this.mapType,
         hasMapImage: this.mapImage && this.mapImage.filename != null,
         imageWidth: this.mapImage && this.mapImage.width,

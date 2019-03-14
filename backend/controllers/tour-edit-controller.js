@@ -129,8 +129,23 @@ exports.uploadImage360 = (req, res) => {
 
         res.json({ success: true, place: place.toClient() });
     }).catch(error => {
-        res.json({ success: false, error});
+        res.json({ success: false, error });
     });
+};
+
+exports.addConnection = (req, res) => {
+    const { sessionId } = req.params;
+    const { startPlaceId, endPlaceId } = req.body;
+    const tour = cache[sessionId];
+
+    const connection = {
+        startPlaceId,
+        endPlaceId,
+    };
+
+    tour.connections.push(connection);
+
+    res.status(200).json({ tour: tour.toDesignerDto() })
 };
 
 function getPlace(sessionId, placeId) {
