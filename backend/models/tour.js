@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { getPlace } = require('./../utils/tour-utils');
 
 const Place = new mongoose.Schema({
     name: { type: String, required: true },
@@ -35,11 +36,18 @@ const Connection = new mongoose.Schema({
     rotatationScene: { type: Number },
 });
 
-Connection.methods.toClient = function () {
+Connection.methods.toClient = function (tour) {
+    const startPlace = getPlace(tour, this.startPlaceId);
+    const endPlace = getPlace(tour, this.endPlaceId);
+
     const dto = {
         startPlaceId: this.startPlaceId,
         endPlaceId: this.endPlaceId,
         rotationScene: this.rotationScene,
+        startLatitude: startPlace.latitude,
+        startLongitude: startPlace.longitude,
+        endLatitude: endPlace.latitude,
+        endLongitude: endPlace.longitude,
     };
 
     return dto;
@@ -79,7 +87,7 @@ Tour.methods.toDesignerDto = function () {
         id: this.id,
         name: this.name,
         places: (this.places || []).map(place => place.toClient()),
-        connections: (this.connections || []).map(connection => connection.toClient()),
+        connections: (this.connections || []).map(connection => connection.toClient(this)),
         mapType: this.mapType,
         hasMapImage: this.mapImage && this.mapImage.filename != null,
         imageWidth: this.mapImage && this.mapImage.width,

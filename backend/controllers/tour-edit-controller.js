@@ -2,6 +2,7 @@ const uuidv1 = require('uuidv1')
 const path = require('path');
 const { Tour } = require('./../models');
 const { addFile, removeFile } = require('./../utils/fileutils');
+const { getPlace } = require('./../utils/tour-utils');
 const cache = {};
 
 exports.get = (req, res) => {
@@ -104,7 +105,7 @@ exports.getPlace = (req, res) => {
 exports.updatePlace = (req, res) => {
     const { sessionId } = req.params;
     const placeUpdate = req.body;
-    const place = getPlace(sessionId, placeUpdate.id);
+    const place = getPlace(caches[sessionId], placeUpdate.id);
 
     place.name = placeUpdate.name;
     place.longitude = placeUpdate.longitude;
@@ -118,7 +119,7 @@ exports.uploadImage360 = (req, res) => {
     const { width, height } = req.body;
     const mapImage = req.files.mapImage;
 
-    const place = getPlace(sessionId, placeId);
+    const place = getPlace(caches[sessionId], placeId);
     const image360Name = generatePlaceImage360Name(place, mapImage);
 
     addFile(image360Name, mapImage).then(() => {
@@ -147,14 +148,6 @@ exports.addConnection = (req, res) => {
 
     res.status(200).json({ tour: tour.toDesignerDto() })
 };
-
-function getPlace(sessionId, placeId) {
-    const tour = cache[sessionId];
-    const index = tour.places.findIndex((value) => value.id === placeId);
-    const place = tour.places[index];
-
-    return place;
-}
 
 function generatePlaceImage360Name(place, mapImage) {
     const extension = path.extname(mapImage.name);

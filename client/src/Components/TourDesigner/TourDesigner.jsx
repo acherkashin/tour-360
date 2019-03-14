@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
+import { Map, TileLayer, ImageOverlay, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
@@ -251,6 +251,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
 
         const places = this.editingTour.places || [];
+        const connections = this.editingTour.connections || [];
         const firstPlace = this.tourStore.firstConnectionPlace;
 
         return (<div className={classes.mapWrapper}>
@@ -262,6 +263,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
+                {connections.map(c => <Polyline color="blue" positions={[[c.startLatitude, c.startLongitude], [c.endLatitude, c.endLongitude]]} />)}
                 {places.map(place =>
                     <Place key={place.id}
                         place={place}
