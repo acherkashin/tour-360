@@ -1,4 +1,4 @@
-import { extendObservable, action, observable } from 'mobx';
+import { extendObservable, action, observable, runInAction } from 'mobx';
 import { TourService, TourEditService } from './../api';
 import { Tour, EditTour, EditPlace } from './';
 import { deepObserve } from 'mobx-utils';
@@ -13,6 +13,7 @@ export default class TourStore {
             editingTour: null,
             editingPlace: null,
             sessionId: null,
+            firstConnectionPlace: null,
             get designerIsOpened() {
                 return this.editingTour != null
             },
@@ -45,6 +46,17 @@ export default class TourStore {
             const { place } = resp.data;
             this.editingPlace = new EditPlace(this, this.sessionId, place);
         }));
+    }
+
+    selectPlace(place) {
+        if (this.firstConnectionPlace) {
+            TourEditService.addConnection(this.sessionId, this.firstConnectionPlace.id, place.id).then(action((resp) => {
+                const { tour } = resp.data;
+                this.editingTour.updateFromJson(tour);
+            }));
+        } else {
+            runInAction(() => this.firstConnectionPlace = place);
+        }
     }
 
     saveEditingPlace(cancel = false) {

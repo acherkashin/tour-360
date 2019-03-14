@@ -11,6 +11,7 @@ export default class EditTour {
             mapType: '',
             filename: '',
             places: [],
+            connections: [],
             hasMapImage: false,
             imageHash: Date.now(),
             imageWidth: 0,
@@ -31,6 +32,7 @@ export default class EditTour {
         this.imageWidth = json.imageWidth || 0;
         this.imageHeight = json.imageHeight || 0;
         this.places = json.places || [];
+        this.connections = json.connections || [];
     }
 
     updatePlaceFromJson(json) {

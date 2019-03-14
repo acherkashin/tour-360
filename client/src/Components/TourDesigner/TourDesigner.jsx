@@ -219,6 +219,8 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
             this.tourStore.editPlace(e.place.id);
         } else if (this.state.mapEditMode === REMOVE_PLACE) {
             this.tourStore.removePlace(e.place.id);
+        } else if (this.state.mapEditMode === ADD_CONNECTION) {
+            this.tourStore.selectPlace(e.place);
         }
 
         // prevent map click event
@@ -249,6 +251,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
 
         const places = this.editingTour.places || [];
+        const firstPlace = this.tourStore.firstConnectionPlace;
 
         return (<div className={classes.mapWrapper}>
             <Map crs={L.CRS.Simple}
@@ -259,7 +262,12 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-                {places.map(place => <Place key={place.id} place={place} onClick={this._handlePlaceClick} />)}
+                {places.map(place =>
+                    <Place key={place.id}
+                        place={place}
+                        onClick={this._handlePlaceClick}
+                        isSelected={Boolean(firstPlace && firstPlace.id === place.id)} />
+                )}
             </Map>
             {this._renderStatusBar()}
         </div>);

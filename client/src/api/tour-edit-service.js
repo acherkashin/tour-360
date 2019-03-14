@@ -24,6 +24,12 @@ export function getPlace(sessionId, placeId) {
 export function updatePlace(sessionId, place) {
     return client.put(`/api/tour-edit/${sessionId}/place`, place);
 }
+export function addConnection(sessionId, startPlaceId, endPlaceId) {
+    return client.post(`/api/tour-edit/${sessionId}/addConnnection`, {
+        startPlaceId,
+        endPlaceId,
+    });
+}
 export function uploadMapImage(sessionId, file, width, height) {
     const formData = new FormData();
     formData.append('mapImage', file);

@@ -4,14 +4,16 @@ import { CircleMarker, Tooltip } from 'react-leaflet';
 
 export default class Place extends Component {
     render() {
-        const { place, onClick } = this.props;
+        const { place, onClick, isSelected } = this.props;
         const radius = 20;
+
+        const fillColor = isSelected ? '#c62828' : '#283593';
 
         return (<CircleMarker
             key={place.id}
             center={[place.latitude, place.longitude]}
             radius={radius}
-            fillColor={'blue'}
+            fillColor={fillColor}
             fillOpacity={1}
             onClick={(e) => {
                 onClick && onClick({
@@ -35,4 +37,5 @@ Place.propTypes = {
         latitude: PropTypes.number.isRequired,
         longitude: PropTypes.number.isRequired,
     }),
+    isSelected: PropTypes.bool.isRequired,
 };

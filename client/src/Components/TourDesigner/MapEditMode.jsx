@@ -38,9 +38,15 @@ const tabs = [{
 }];
 
 class MapEditMode extends React.Component {
+    state = {
+        value: null,
+    };
+
     handleChange = (event, value) => {
-        this.setState({ value });
-        this.props.onModeChanged && this.props.onModeChanged({ origin: this, mode: value })
+        if (this.state.value !== value) {
+            this.setState({ value });
+            this.props.onModeChanged && this.props.onModeChanged({ origin: this, mode: value })
+        }
     };
 
     render() {
