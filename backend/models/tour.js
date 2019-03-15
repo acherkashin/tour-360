@@ -41,6 +41,7 @@ Connection.methods.toClient = function (tour) {
     const endPlace = getPlace(tour, this.endPlaceId);
 
     const dto = {
+        id: this.id,
         startPlaceId: this.startPlaceId,
         endPlaceId: this.endPlaceId,
         rotationScene: this.rotationScene,

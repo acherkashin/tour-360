@@ -105,7 +105,7 @@ exports.getPlace = (req, res) => {
 exports.updatePlace = (req, res) => {
     const { sessionId } = req.params;
     const placeUpdate = req.body;
-    const place = getPlace(caches[sessionId], placeUpdate.id);
+    const place = getPlace(cache[sessionId], placeUpdate.id);
 
     place.name = placeUpdate.name;
     place.longitude = placeUpdate.longitude;
@@ -119,7 +119,7 @@ exports.uploadImage360 = (req, res) => {
     const { width, height } = req.body;
     const mapImage = req.files.mapImage;
 
-    const place = getPlace(caches[sessionId], placeId);
+    const place = getPlace(cache[sessionId], placeId);
     const image360Name = generatePlaceImage360Name(place, mapImage);
 
     addFile(image360Name, mapImage).then(() => {
