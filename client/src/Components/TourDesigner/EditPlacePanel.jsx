@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { EditImage } from './../';
+import { observer } from 'mobx-react';
 import { TextField, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { observer } from 'mobx-react';
+import ConnectionList from './ConnectionList';
+import { EditImage } from './../';
 
 const styles = theme => ({
     root: {
@@ -51,6 +52,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
             <Button fullWidth variant="text" color="primary" onClick={this._handleViewImage360Click}>
                 Open
             </Button>
+            <ConnectionList connections={place.connections}/>
         </div>;
     }
 });

@@ -99,19 +99,20 @@ exports.getPlace = (req, res) => {
     const tour = cache[sessionId];
     const place = tour.places.find(item => item.id === placeId);
 
-    res.json({ place: place.toClient() })
+    res.json({ place: place.toDesignerDto(tour) })
 };
 
 exports.updatePlace = (req, res) => {
     const { sessionId } = req.params;
     const placeUpdate = req.body;
+    const tour = cache[sessionId];
     const place = getPlace(cache[sessionId], placeUpdate.id);
 
     place.name = placeUpdate.name;
     place.longitude = placeUpdate.longitude;
     place.latitude = placeUpdate.latitude;
 
-    res.json({ place: place.toClient() });
+    res.json({ place: place.toDesignerDto(tour) });
 };
 
 exports.uploadImage360 = (req, res) => {
@@ -119,6 +120,7 @@ exports.uploadImage360 = (req, res) => {
     const { width, height } = req.body;
     const mapImage = req.files.mapImage;
 
+    const tour = cache[sessionId];
     const place = getPlace(cache[sessionId], placeId);
     const image360Name = generatePlaceImage360Name(place, mapImage);
 
@@ -128,7 +130,7 @@ exports.uploadImage360 = (req, res) => {
         place.image360.height = parseInt(height);
         place.image360.width = parseInt(width);
 
-        res.json({ place: place.toClient() });
+        res.json({ place: place.toDesignerDto(tour) });
     }).catch(error => {
         res.status(500).json({ error });
     });

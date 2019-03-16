@@ -16,6 +16,7 @@ export default class EditPlace {
             image360Width: 0,
             image360Height: 0,
             image360Name: '',
+            connections: [],
 
             get mapImage360Url() {
                 return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
@@ -33,6 +34,7 @@ export default class EditPlace {
         this.image360Width = json.image360Width;
         this.image360Height = json.image360Height;
         this.image360Name = json.image360Name;
+        this.connections = json.connections;
 
         return this;
     }
