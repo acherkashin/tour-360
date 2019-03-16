@@ -162,6 +162,10 @@ export default class TourStore {
         }));
     }
 
+    viewPlaceImage360(placeId) {
+        window.open(`http://localhost:8081/index.html?sessionId=${this.sessionId}&placeId=${placeId}`);
+    }
+
     _getById(id) {
         const tour = this.tours.find(t => t.id === id);
         return tour;

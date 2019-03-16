@@ -139,7 +139,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleViewImage360Click() {
-        window.open(`http://localhost:8081/index.html?sessionId=${this.sessionId}&placeId=${this.editingPlace.id}`);
+        this.tourStore.viewPlaceImage360(this.editingPlace.id);
     }
 
     _closeConfirmDialog() {
@@ -381,13 +381,14 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}
                             onViewImage360Click={this._handleViewImage360Click}
-                            onConnectionClick={() => {
-                                console.log("Click");
+                            onConnectionClick={(e) => {
+                                this.tourStore.editPlace(e.connection.id);
                             }}
-                            onViewConnectionClick={() => {
-                                console.log("View");
+                            onViewConnectionClick={(e) => {
+                                this.tourStore.viewPlaceImage360(e.connection.id);
                             }}
-                            onRemoveConnectionClick={() => {
+                            onRemoveConnectionClick={(e) => {
+                                
                                 console.log("Remove");
                             }}
                         />
