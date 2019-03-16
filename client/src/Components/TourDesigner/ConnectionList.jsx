@@ -2,21 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import grey from '@material-ui/core/colors/grey';
 
 const styles = theme => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
     },
-    inline: {
-        display: 'inline',
+    coordinateItem: {
+        color: grey[700],
+        lineHeight: 1,
     },
 });
 
@@ -37,14 +36,12 @@ class ConnectionList extends React.Component {
                     primary={connection.name}
                     secondary={
                         <React.Fragment>
-                            <Typography component="span" className={classes.inline} color="textPrimary">
-                                Latitude:
+                            <Typography component="span" variant="caption" className={classes.coordinateItem}>
+                                Latitude: {connection.latitude}
                             </Typography>
-                            {connection.latitude}
-                            <Typography component="span" className={classes.inline} color="textPrimary">
-                                Longitude:
+                            <Typography component="span" variant="caption" className={classes.coordinateItem}>
+                                Longitude: {connection.longitude}
                             </Typography>
-                            {connection.longitude}
                         </React.Fragment>
                     }
                 />
