@@ -1,14 +1,14 @@
 const uuidv1 = require('uuidv1')
 const path = require('path');
 const { Tour } = require('./../models');
-const { addFile, removeFile } = require('./../utils/fileutils');
+const { addFile } = require('./../utils/fileutils');
 const { getPlace } = require('./../utils/tour-utils');
 const cache = {};
 
 exports.get = (req, res) => {
     const { sessionId } = req.params;
     const tour = cache[sessionId].toDesignerDto();
-    res.json({ success: true, tour });
+    res.json({ tour });
 };
 
 exports.startEditing = (req, res) => {
@@ -21,9 +21,9 @@ exports.startEditing = (req, res) => {
             const dto = tour.toDesignerDto();
 
             const result = { sessionId, tour: dto };
-            res.json({ success: true, result });
+            res.json({ result });
         }).catch(error => {
-            res.json({ success: false, error });
+            res.status(500).json({ error });
         });
 };
 
@@ -31,9 +31,9 @@ exports.saveChanges = (req, res) => {
     const { sessionId } = req.params;
     cache[sessionId].save().then(() => {
         const tour = cache[sessionId].toDesignerDto();
-        res.json({ success: true, tour });
+        res.json({ tour });
     }).catch((error) => {
-        res.json({ success: false, error });
+        res.status(500).json({ error });
     });
 };
 
@@ -41,7 +41,7 @@ exports.cancelChanges = (req, res) => {
     const { sessionId } = req.params;
     delete cache[sessionId];
 
-    res.json({ success: true });
+    res.json({});
 };
 
 exports.uploadMapImage = (req, res) => {
@@ -58,9 +58,9 @@ exports.uploadMapImage = (req, res) => {
         tour.mapImage.height = parseInt(height);
         tour.mapImage.width = parseInt(width);
 
-        res.json({ success: true, tour: tour.toDesignerDto() });
+        res.json({ tour: tour.toDesignerDto() });
     }).catch(error => {
-        res.json({ success: false, error });
+        res.status(500).json({ error });
     });
 };
 
@@ -80,7 +80,7 @@ exports.addPlace = (req, res) => {
     tour.places.push(place);
 
     const dto = tour.toDesignerDto();
-    res.json({ success: true, tour: dto });
+    res.json({ tour: dto });
 };
 
 exports.removePlace = (req, res) => {
@@ -90,7 +90,7 @@ exports.removePlace = (req, res) => {
     tour.places = tour.places.filter(item => item.id !== placeId);
 
     const dto = tour.toDesignerDto();
-    res.json({ success: true, tour: dto });
+    res.json({ tour: dto });
 };
 
 exports.getPlace = (req, res) => {
@@ -99,7 +99,7 @@ exports.getPlace = (req, res) => {
     const tour = cache[sessionId];
     const place = tour.places.find(item => item.id === placeId);
 
-    res.json({ success: true, place: place.toClient() })
+    res.json({ place: place.toClient() })
 };
 
 exports.updatePlace = (req, res) => {
@@ -111,7 +111,7 @@ exports.updatePlace = (req, res) => {
     place.longitude = placeUpdate.longitude;
     place.latitude = placeUpdate.latitude;
 
-    res.json({ success: true, place: place.toClient() });
+    res.json({ place: place.toClient() });
 };
 
 exports.uploadImage360 = (req, res) => {
@@ -128,9 +128,9 @@ exports.uploadImage360 = (req, res) => {
         place.image360.height = parseInt(height);
         place.image360.width = parseInt(width);
 
-        res.json({ success: true, place: place.toClient() });
+        res.json({ place: place.toClient() });
     }).catch(error => {
-        res.json({ success: false, error });
+        res.status(500).json({ error });
     });
 };
 

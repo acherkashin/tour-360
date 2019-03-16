@@ -6,9 +6,9 @@ const { addFile, removeFile } = require('./../utils/fileutils');
 exports.getAll = (req, res) => {
     Tour.find().then((tours) => {
         const result = tours.map(tour => tour.toClient());
-        return res.json({ success: true, result });
+        return res.json({ result });
     }).catch(err => {
-        return res.json({ success: false, error: err });
+        return res.json({ error: err });
     })
 };
 
@@ -16,16 +16,16 @@ exports.getById = (req, res) => {
     const { id } = req.params;
 
     if (id == null) {
-        res.json({ success: false, error: "id should be provided" });
+        res.status(400).json({ error: "id should be provided" });
     }
 
     Tour.findById(id)
         .then(tour => {
-            const result = tour.toClient()
-            return res.json({ success: true, result });
+            const result = tour.toClient();
+            return res.json({ result });
         })
         .catch(error => {
-            return res.json({ success: false, error });
+            return res.status(500).json({ error });
         });
 };
 
@@ -42,7 +42,7 @@ exports.getPlace = (req, res) => {
         .then(tour => {
             const index = tour.places.findIndex((value) => value.id === placeId);
             const place = tour.places[index].toClient();
-            
+
             return res.json({ place })
         });
 };
@@ -51,10 +51,7 @@ exports.create = (req, res) => {
     const { name, mapType } = req.body;
 
     if (!name) {
-        return res.json({
-            success: false,
-            error: "Name should be provided"
-        });
+        return res.json({ error: "Name should be provided" });
     }
 
     const tour = new Tour({
@@ -63,16 +60,16 @@ exports.create = (req, res) => {
     });
 
     tour.save().then(() => {
-        return res.json({ success: true });
-    }).catch((err) => {
-        return res.json({ success: false, error: err });
+        return res.json({});
+    }).catch((error) => {
+        return res.status(500).json({ error });
     });
 };
 
 exports.uploadCover = (req, res) => {
     const { id } = req.params;
     if (id == null) {
-        res.json({ success: false, error: "id should be provided" });
+        res.json({ error: "id should be provided" });
     }
 
     if (Object.keys(req.files).length == 0) {
@@ -103,9 +100,9 @@ exports.uploadCover = (req, res) => {
                 }
             }, { new: true });
         }).then((tour) => {
-            return res.json({ success: true, tour: tour.toClient() });
+            return res.json({ tour: tour.toClient() });
         }).catch((error) => {
-            return res.json({ success: false, error });
+            return res.json({ error });
         });
 };
 
@@ -113,9 +110,9 @@ exports.delete = (req, res) => {
     const { id } = req.params;
     Tour.findOneAndDelete(id, error => {
         if (error) {
-            return res.send({ success: false, error });
+            return res.status(500).send({ error });
         } else {
-            return res.json({ success: true });
+            return res.json({});
         }
     });
 };
