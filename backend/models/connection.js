@@ -38,6 +38,7 @@ Connection.methods.startAsDestination = function (tour) {
         latitude: start.latitude,
         longitude: start.longitude,
         image360Name: start.image360Name,
+        position: this.endPlacePosition,
     };
 };
 
@@ -50,6 +51,7 @@ Connection.methods.endAsDestination = function (tour) {
         latitude: end.latitude,
         longitude: end.longitude,
         image360Name: end.image360Name,
+        position: this.startPlacePosition,
     };
 };
 

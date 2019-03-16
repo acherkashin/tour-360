@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-360';
+import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';
 
 export default class CoordinateSystem extends React.Component {
     getPositionsX() {
         const {
-            width = 4680,
+            width = WIDTH,
             stepX = 100,
         } = this.props;
         const amountStepX = Math.ceil(width / stepX / 2);
@@ -20,7 +21,7 @@ export default class CoordinateSystem extends React.Component {
 
     getPositionsY() {
         const {
-            width = 4680,
+            width = WIDTH,
             stepY = 100,
         } = this.props;
         const amountStepY = Math.ceil(width / stepY / 2);
@@ -35,15 +36,9 @@ export default class CoordinateSystem extends React.Component {
     }
 
     render() {
-        const {
-            height = 600,
-            stepY = 100,
-        } = this.props;
-
-        const amountStepY = Math.ceil(height / stepY / 2);
-
         const positionsX = this.getPositionsX();
         const positionsY = this.getPositionsY();
+        
         return (
             <View style={styles.root}>
                 <View style={[styles.axis, styles.axisX]} />
