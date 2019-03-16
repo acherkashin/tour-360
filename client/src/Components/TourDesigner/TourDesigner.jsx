@@ -263,7 +263,11 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-                {connections.map(c => <Polyline key={c.id} color="blue" positions={[[c.startLatitude, c.startLongitude], [c.endLatitude, c.endLongitude]]} />)}
+                {connections.map(c => <Polyline
+                    key={c.id}
+                    color="blue"
+                    positions={[[c.startPlace.latitude, c.startPlace.longitude], [c.endPlace.latitude, c.endPlace.longitude]]}
+                />)}
                 {places.map(place =>
                     <Place key={place.id}
                         place={place}

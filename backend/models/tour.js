@@ -1,58 +1,6 @@
 const mongoose = require("mongoose");
-const { getPlace } = require('./../utils/tour-utils');
-
-const Place = new mongoose.Schema({
-    name: { type: String, required: true },
-    longitude: { type: Number, required: true, default: 0 },
-    latitude: { type: Number, required: true, default: 0 },
-    sound: { data: Buffer, contentType: String },
-    image360: {
-        filename: String,
-        contentType: String,
-        height: Number,
-        width: Number,
-    },
-});
-
-Place.methods.toClient = function () {
-    const dto = {
-        id: this.id,
-        name: this.name,
-        latitude: this.latitude,
-        longitude: this.longitude,
-        hasImage360: this.image360 && this.image360.filename != null,
-        image360Width: this.image360 && this.image360.width,
-        image360Height: this.image360 && this.image360.height,
-        image360Name: this.image360 && this.image360.filename,
-    };
-
-    return dto;
-};
-
-const Connection = new mongoose.Schema({
-    startPlaceId: { type: String, required: true },
-    endPlaceId: { type: String, required: true },
-    // how many degrees you need to rotate the scene when moving
-    rotatationScene: { type: Number },
-});
-
-Connection.methods.toClient = function (tour) {
-    const startPlace = getPlace(tour, this.startPlaceId);
-    const endPlace = getPlace(tour, this.endPlaceId);
-
-    const dto = {
-        id: this.id,
-        startPlaceId: this.startPlaceId,
-        endPlaceId: this.endPlaceId,
-        rotationScene: this.rotationScene,
-        startLatitude: startPlace.latitude,
-        startLongitude: startPlace.longitude,
-        endLatitude: endPlace.latitude,
-        endLongitude: endPlace.longitude,
-    };
-
-    return dto;
-};
+const Place = require('./place');
+const Connection = require('./connection');
 
 const Tour = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
@@ -87,7 +35,7 @@ Tour.methods.toDesignerDto = function () {
     const dto = {
         id: this.id,
         name: this.name,
-        places: (this.places || []).map(place => place.toClient()),
+        places: (this.places || []).map(place => place.toDesignerDto(this)),
         connections: (this.connections || []).map(connection => connection.toClient(this)),
         mapType: this.mapType,
         hasMapImage: this.mapImage && this.mapImage.filename != null,
