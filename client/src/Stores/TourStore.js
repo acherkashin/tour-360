@@ -50,9 +50,15 @@ export default class TourStore {
 
     selectPlace(place) {
         if (this.firstConnectionPlace) {
+            if (this.editingTour.hasConnection(this.firstConnectionPlace.id, place.id)) {
+                this.firstConnectionPlace = null;
+                return;
+            }
+
             TourEditService.addConnection(this.sessionId, this.firstConnectionPlace.id, place.id).then(action((resp) => {
                 const { tour } = resp.data;
                 this.editingTour.updateFromJson(tour);
+                this.firstConnectionPlace = null;
             }));
         } else {
             runInAction(() => this.firstConnectionPlace = place);

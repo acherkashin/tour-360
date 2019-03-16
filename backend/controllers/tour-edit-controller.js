@@ -141,6 +141,11 @@ exports.addConnection = (req, res) => {
     const { startPlaceId, endPlaceId } = req.body;
     const tour = cache[sessionId];
 
+    if (tour.hasConnection(startPlaceId, endPlaceId)) {
+        res.status(409).json({ message: "connection already exists" });
+        return;
+    }
+
     const connection = {
         startPlaceId,
         endPlaceId,

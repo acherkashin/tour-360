@@ -47,4 +47,13 @@ Tour.methods.toDesignerDto = function () {
     return dto;
 };
 
+Tour.methods.hasConnection = function (startPlaceId, endPlaceId) {
+    const connection = (this.connections || []).some(c =>
+        (c.startPlaceId === startPlaceId && c.endPlaceId === endPlaceId) ||
+        (c.startPlaceId === endPlaceId && c.endPlaceId === startPlaceId)
+    );
+
+    return connection;
+};
+
 module.exports = mongoose.model("Tour", Tour);

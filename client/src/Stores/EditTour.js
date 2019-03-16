@@ -47,6 +47,15 @@ export default class EditTour {
         return place;
     }
 
+    hasConnection(startPlaceId, endPlaceId) {
+        const connection = (this.connections || []).some(c =>
+            (c.startPlace.id === startPlaceId && c.endPlace.id === endPlaceId) ||
+            (c.startPlace.id === endPlaceId && c.endPlace.id === startPlaceId)
+        );
+
+        return connection;
+    }
+
     refreshCover() {
         this.imageHash = Date.now();
     }
