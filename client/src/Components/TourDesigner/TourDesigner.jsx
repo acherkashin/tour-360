@@ -388,8 +388,11 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                                 this.tourStore.viewPlaceImage360(e.connection.id);
                             }}
                             onRemoveConnectionClick={(e) => {
-                                
+                                this.tourStore.deleteConnection(this.editingPlace.id, e.connection.id)
                                 console.log("Remove");
+                            }}
+                            onEditConnectionClick={(e) => {
+                                console.log("Edit");
                             }}
                         />
                     </div>}

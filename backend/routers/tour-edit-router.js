@@ -9,6 +9,7 @@ router.route('/tour-edit/:sessionId/cancel').post(TourEditController.cancelChang
 router.route('/tour-edit/:sessionId/uploadMapImage').post(TourEditController.uploadMapImage);
 router.route('/tour-edit/:sessionId/addPlace').post(TourEditController.addPlace);
 router.route('/tour-edit/:sessionId/addConnnection').post(TourEditController.addConnection);
+router.route('/tour-edit/:sessionId/removeConnection/:place1Id/:place2Id').delete(TourEditController.deleteConnection);
 
 router.route('/tour-edit/:sessionId/place/:placeId')
     .get(TourEditController.getPlace)

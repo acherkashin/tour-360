@@ -156,6 +156,19 @@ exports.addConnection = (req, res) => {
     res.status(200).json({ tour: tour.toDesignerDto() })
 };
 
+exports.deleteConnection = (req, res) => {
+    const { sessionId, place1Id, place2Id } = req.params;
+    const tour = cache[sessionId];
+
+    if (!tour.hasConnection(place1Id, place2Id)) {
+        res.status(404).json({ message: "connection doesn't exist" });
+    }
+
+    tour.deleteConnection(place1Id, place2Id);
+
+    res.status(200).json({ tour: tour.toDesignerDto() })
+}
+
 function generatePlaceImage360Name(place, mapImage) {
     const extension = path.extname(mapImage.name);
     const newFileName = `${place.id}-${uuidv1()}-place-360${extension}`;

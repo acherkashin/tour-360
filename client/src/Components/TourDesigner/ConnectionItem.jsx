@@ -1,8 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { ListItem, ListItemText, ListItemIcon, IconButton } from '@material-ui/core';
-import { Delete as DeleteIcon, Visibility as VisibilityIcon, } from '@material-ui/icons';
+import { ListItem, ListItemText, IconButton } from '@material-ui/core';
+import {
+    Delete as DeleteIcon,
+    Visibility as VisibilityIcon,
+    Edit as EditIcon,
+} from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import grey from '@material-ui/core/colors/grey';
 
@@ -20,6 +24,7 @@ class ConnectionItem extends React.Component {
         this._handleClick = this._handleClick.bind(this);
         this._handleViewClick = this._handleViewClick.bind(this);
         this._handleRemoveClick = this._handleRemoveClick.bind(this);
+        this._handleEditClick = this._handleEditClick.bind(this);
     }
 
     _handleClick(e) {
@@ -28,13 +33,18 @@ class ConnectionItem extends React.Component {
     }
 
     _handleViewClick(e) {
-        e.stopPropagation();        
+        e.stopPropagation();
         this.props.onViewClick({ origin: this, connection: this.props.connection });
     }
 
     _handleRemoveClick(e) {
         e.stopPropagation();
         this.props.onRemoveClick({ origin: this, connection: this.props.connection });
+    }
+
+    _handleEditClick(e) {
+        e.stopPropagation();
+        this.props.onEditClick({ origin: this, connection: this.props.connection });
     }
 
     render() {
@@ -46,9 +56,9 @@ class ConnectionItem extends React.Component {
                 alignItems="flex-start"
                 onClick={this._handleClick}>
                 {/* <ListItemIcon> */}
-                    <IconButton onClick={this._handleViewClick}>
-                        <VisibilityIcon />
-                    </IconButton>
+                <IconButton onClick={this._handleViewClick}>
+                    <VisibilityIcon />
+                </IconButton>
                 {/* </ListItemIcon> */}
                 <ListItemText
                     primary={connection.name}
@@ -63,6 +73,9 @@ class ConnectionItem extends React.Component {
                         </React.Fragment>
                     }
                 />
+                <IconButton onClick={this._handleEditClick}>
+                    <EditIcon />
+                </IconButton>
                 <IconButton onClick={this._handleRemoveClick}>
                     <DeleteIcon />
                 </IconButton>
@@ -84,4 +97,5 @@ ConnectionItem.propTypes = {
     onClick: PropTypes.func.isRequired,
     onViewClick: PropTypes.func.isRequired,
     onRemoveClick: PropTypes.func.isRequired,
+    onEditClick: PropTypes.func.isRequired,
 };

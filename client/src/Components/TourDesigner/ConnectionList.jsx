@@ -14,7 +14,7 @@ const styles = theme => ({
 
 class ConnectionList extends React.Component {
     render() {
-        const { classes, connections, onClick, onViewClick, onRemoveClick } = this.props;
+        const { classes, connections, onClick, onViewClick, onRemoveClick, onEditClick } = this.props;
 
         return (
             <List className={classes.root} subheader={<ListSubheader>Connections</ListSubheader>} >
@@ -24,6 +24,7 @@ class ConnectionList extends React.Component {
                     onClick={onClick}
                     onViewClick={onViewClick}
                     onRemoveClick={onRemoveClick}
+                    onEditClick={onEditClick}
                 />)}
             </List>
         );
@@ -43,4 +44,5 @@ ConnectionList.propTypes = {
     onClick: PropTypes.func.isRequired,
     onViewClick: PropTypes.func.isRequired,
     onRemoveClick: PropTypes.func.isRequired,
+    onEditClick: PropTypes.func.isRequired,
 };

@@ -8,9 +8,9 @@ const Connection = new mongoose.Schema({
     rotatationScene: { type: Number },
     // TODO: add restrictions from 0 to 359
     // in angles
-    startPlacePosition: { type: Number, default: 0 },
+    startPlacePosition: { type: Number, default: 0, min: 0, max: 359 },
     // in angles
-    endPlacePosition: { type: Number, default: 0 }
+    endPlacePosition: { type: Number, default: 0, min: 0, max: 359 }
 });
 
 Connection.methods.toClient = function (tour) {

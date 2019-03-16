@@ -30,6 +30,9 @@ export function addConnection(sessionId, startPlaceId, endPlaceId) {
         endPlaceId,
     });
 }
+export function deleteConnection(sessionId, place1Id, place2Id) {
+    return client.delete(`/api/tour-edit/${sessionId}/removeConnection/${place1Id}/${place2Id}`);
+}
 export function uploadMapImage(sessionId, file, width, height) {
     const formData = new FormData();
     formData.append('mapImage', file);
