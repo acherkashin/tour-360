@@ -2,59 +2,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
-import grey from '@material-ui/core/colors/grey';
+import ConnectionItem from './ConnectionItem';
+import { List, ListSubheader, ListItem, ListItemText, ListItemIcon, IconButton } from '@material-ui/core';
 
 const styles = theme => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
     },
-    coordinateItem: {
-        color: grey[700],
-        lineHeight: 1,
-    },
 });
 
 class ConnectionList extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    _renderItem(connection) {
-        const { classes } = this.props;
-
-        return (
-            <ListItem key={connection.id} alignItems="flex-start">
-                {/* <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                </ListItemAvatar> */}
-                <ListItemText
-                    primary={connection.name}
-                    secondary={
-                        <React.Fragment>
-                            <Typography component="span" variant="caption" className={classes.coordinateItem}>
-                                Latitude: {connection.latitude}
-                            </Typography>
-                            <Typography component="span" variant="caption" className={classes.coordinateItem}>
-                                Longitude: {connection.longitude}
-                            </Typography>
-                        </React.Fragment>
-                    }
-                />
-            </ListItem>
-        );
-    }
-
     render() {
-        const { classes, connections } = this.props;
+        const { classes, connections, onClick, onViewClick, onRemoveClick } = this.props;
 
         return (
-            <List className={classes.root}>
-                {(connections || []).map(connection => this._renderItem(connection))}
+            <List className={classes.root} subheader={<ListSubheader>Connections</ListSubheader>} >
+                {(connections || []).map(connection => <ConnectionItem
+                    key={connection.id}
+                    connection={connection}
+                    onClick={onClick}
+                    onViewClick={onViewClick}
+                    onRemoveClick={onRemoveClick}
+                />)}
             </List>
         );
     }
@@ -70,4 +40,7 @@ ConnectionList.propTypes = {
         latitude: PropTypes.number.isRequired,
         longitude: PropTypes.number.isRequired,
     })).isRequired,
+    onClick: PropTypes.func.isRequired,
+    onViewClick: PropTypes.func.isRequired,
+    onRemoveClick: PropTypes.func.isRequired,
 };

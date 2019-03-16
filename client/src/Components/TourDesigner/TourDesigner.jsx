@@ -381,6 +381,15 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}
                             onViewImage360Click={this._handleViewImage360Click}
+                            onConnectionClick={() => {
+                                console.log("Click");
+                            }}
+                            onViewConnectionClick={() => {
+                                console.log("View");
+                            }}
+                            onRemoveConnectionClick={() => {
+                                console.log("Remove");
+                            }}
                         />
                     </div>}
                 </div>
