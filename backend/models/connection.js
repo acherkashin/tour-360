@@ -3,8 +3,6 @@ const mongoose = require("mongoose");
 const Connection = new mongoose.Schema({
     startPlaceId: { type: String, required: true },
     endPlaceId: { type: String, required: true },
-    // how many degrees you need to rotate the scene when moving
-    rotatationScene: { type: Number },
     // TODO: add restrictions from 0 to 359
     // in angles
     startPlacePosition: { type: Number, default: 0, min: 0, max: 359 },
@@ -20,7 +18,6 @@ Connection.methods.toClient = function (tour) {
         id: this.id,
         startPlace,
         endPlace,
-        rotationScene: this.rotationScene,
         startPlacePosition: this.startPlacePosition,
         endPlacePosition: this.endPlacePosition,
     };
@@ -32,7 +29,8 @@ Connection.methods.startAsDestination = function (tour) {
     const start = tour.getPlace(this.startPlaceId).toClient();
 
     return {
-        id: start.id,
+        id: this.id,
+        placeId: start.id,
         name: start.name,
         latitude: start.latitude,
         longitude: start.longitude,
@@ -45,7 +43,8 @@ Connection.methods.endAsDestination = function (tour) {
     const end = tour.getPlace(this.endPlaceId).toClient();
 
     return {
-        id: end.id,
+        id: this.id,
+        placeId: end.id,
         name: end.name,
         latitude: end.latitude,
         longitude: end.longitude,

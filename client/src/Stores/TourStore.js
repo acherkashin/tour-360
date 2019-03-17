@@ -1,6 +1,6 @@
 import { extendObservable, action, observable, runInAction } from 'mobx';
 import { TourService, TourEditService } from './../api';
-import { Tour, EditTour, EditPlace } from './';
+import { Tour, EditTour, EditPlace, EditConnection } from './';
 import { deepObserve } from 'mobx-utils';
 
 export default class TourStore {
@@ -12,6 +12,7 @@ export default class TourStore {
             selectedTour: null,
             editingTour: null,
             editingPlace: null,
+            editingConnection: null,
             sessionId: null,
             firstConnectionPlace: null,
             get designerIsOpened() {
@@ -42,7 +43,8 @@ export default class TourStore {
     }
 
     editPlace(placeId) {
-        TourEditService.getPlace(this.sessionId, placeId).then(action((resp) => {
+        this.editingConnection = null;
+        return TourEditService.getPlace(this.sessionId, placeId).then(action((resp) => {
             const { place } = resp.data;
             this.editingPlace = new EditPlace(this, this.sessionId, place);
         }));
@@ -66,7 +68,7 @@ export default class TourStore {
     }
 
     deleteConnection(place1Id, place2Id) {
-        TourEditService.deleteConnection(this.sessionId, place1Id, place2Id).then(action((resp) => {
+        return TourEditService.deleteConnection(this.sessionId, place1Id, place2Id).then(action((resp) => {
             const { tour } = resp.data;
             this.editingTour.updateFromJson(tour);
 
@@ -80,13 +82,14 @@ export default class TourStore {
     }
 
     editConnection(connectionId) {
-        TourEditService.getConnection(this.sessionId, connectionId).then((action((resp) => {
-            console.log(resp.data.connection);
+        this.editingPlace = null;
+        return TourEditService.getConnection(this.sessionId, connectionId).then((action((resp) => {
+            this.editingConnection = new EditConnection(this, this.sessionId, resp.data.connection);
         })));
     }
 
     saveEditingPlace(cancel = false) {
-        TourEditService.updatePlace(this.sessionId, this.editingPlace.asJson).then(action((resp) => {
+        return TourEditService.updatePlace(this.sessionId, this.editingPlace.asJson).then(action((resp) => {
             const { place } = resp.data;
             this.editingTour.updatePlaceFromJson(place);
 
@@ -94,6 +97,17 @@ export default class TourStore {
                 this.editingPlace = null;
             } else {
                 this.editingPlace.updateFromJson(place);
+            }
+        }));
+    }
+
+    saveEditingConnection(cancel = false) {
+        return Promise.resolve().then(action((resp) => {
+
+            if (cancel) {
+                this.editingPlace = null;
+            } else {
+
             }
         }));
     }
@@ -107,6 +121,7 @@ export default class TourStore {
         }))
     }
 
+    // TODO: rename to saveChanges
     saveEditing() {
         return TourEditService.saveChanges(this.sessionId).then(action((result) => {
             this.editingTour.updateFromJson(result.data.tour);

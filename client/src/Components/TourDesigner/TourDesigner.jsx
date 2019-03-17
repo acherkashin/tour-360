@@ -10,10 +10,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Map, TileLayer, ImageOverlay, Polyline } from 'react-leaflet';
+import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
+import EditConnectionPanel from './EditConnectionPanel';
 import MapEditMode from './MapEditMode';
 import { PlaceholderButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
@@ -136,8 +137,24 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         return this.props.tourStore.editingTour;
     }
 
+    get editingConnection() {
+        return this.props.tourStore.editingConnection;
+    }
+
     get sessionId() {
         return this.props.tourStore.sessionId;
+    }
+
+    get showEditPlacePanel() {
+        return Boolean(this.editingPlace);
+    }
+
+    get showEditConnectionPanel() {
+        return Boolean(this.editingConnection);
+    }
+
+    get showEditTourPanel() {
+        return Boolean(this.editingTour) && !this.showEditPlacePanel && !this.showEditConnectionPanel;
     }
 
     _handleViewImage360Click() {
@@ -207,6 +224,9 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         if (this.state.mapEditMode === DRAG_MAP) {
             if (this.editingPlace) {
                 this.tourStore.saveEditingPlace(true);
+            }
+            if (this.editingConnection) {
+                this.tourStore.saveEditingConnection(true);
             }
         } else if (this.state.mapEditMode === ADD_PLACE) {
             this.tourStore.addPlace({
@@ -353,7 +373,6 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
         const { classes } = this.props;
         const { uploadImageDialogState, isOpenedConfirmDialog, mapEditMode } = this.state;
-        const isPlaceEditing = this.tourStore.editingPlace;
 
         return (
             <Dialog
@@ -373,7 +392,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 <div className={classes.content}>
                     {this._renderMap()}
                     {!this.editingTour.mapType && <Typography className={classes.map}>Map type is not defined</Typography>}
-                    {!isPlaceEditing && <div className={classes.rightPanel}>
+                    {this.showEditTourPanel && <div className={classes.rightPanel}>
                         <EditTourPanel
                             tour={this.editingTour}
                             onNameChanged={this._handleNameChanged}
@@ -383,26 +402,34 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                             value={mapEditMode}
                             onModeChanged={this._handleModeChanged} />
                     </div>}
-                    {isPlaceEditing && <div className={classes.rightPanel}>
+                    {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
                             place={this.editingPlace}
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}
                             onViewImage360Click={this._handleViewImage360Click}
                             onConnectionClick={(e) => {
-                                this.tourStore.editPlace(e.connection.id);
+                                this.tourStore.editPlace(e.connection.placeId);
                             }}
                             onViewConnectionClick={(e) => {
-                                this.tourStore.viewPlaceImage360(e.connection.id);
+                                this.tourStore.viewPlaceImage360(e.connection.placeId);
                             }}
                             onRemoveConnectionClick={(e) => {
-                                this.tourStore.deleteConnection(this.editingPlace.id, e.connection.id)
-                                console.log("Remove");
+                                this.tourStore.deleteConnection(this.editingPlace.id, e.connection.placeId)
                             }}
                             onEditConnectionClick={(e) => {
-                                console.log("Edit");
+                                this.tourStore.saveEditingPlace(true).then(() => {
+                                    this.tourStore.editConnection(e.connection.id);
+                                });
                             }}
                         />
+                    </div>}
+                    {this.showEditConnectionPanel && <div className={classes.rightPanel}>
+                        <EditConnectionPanel
+                            connection={this.editingConnection}
+                            onStartPlacePositionChanged={(e) => { }}
+                            onEndPlacePositionChanged={(e) => { }}
+                        ></EditConnectionPanel>
                     </div>}
                 </div>
                 <UploadImageDialog
