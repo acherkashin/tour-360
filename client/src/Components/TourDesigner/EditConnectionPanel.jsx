@@ -66,15 +66,16 @@ const EditConnectionPanel = observer(class EditConnectionPanel extends React.Com
         const { classes, connection } = this.props;
 
         return <div className={classes.root}>
+            <div></div>
             {this._renderPlacePosition({
                 id: "start-place-position",
-                label: "Start Place Position",
+                label: `${connection.startPlace.name} - Start Place Position`,
                 value: connection.startPlacePosition,
                 onChange: this._handleStartPlacePositionChanged,
             })}
             {this._renderPlacePosition({
                 id: "end-place-position",
-                label: "End Place Position",
+                label: `${connection.endPlace.name} - End Place Position`,
                 value: connection.endPlacePosition,
                 onChange: this._handleEndPlacePositionChanged,
             })}
@@ -88,6 +89,12 @@ EditConnectionPanel.propTypes = {
         id: PropTypes.string.isRequired,
         startPlacePosition: PropTypes.number.isRequired,
         endPlacePosition: PropTypes.number.isRequired,
+        startPlace: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+        }).isRequired,
+        endPlace: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+        }).isRequired,
     }).isRequired,
     onStartPlacePositionChanged: PropTypes.func.isRequired,
     onEndPlacePositionChanged: PropTypes.func.isRequired,
