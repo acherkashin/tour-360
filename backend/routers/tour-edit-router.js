@@ -13,6 +13,7 @@ router.route('/tour-edit/:sessionId/addPlace').post(TourEditController.addPlace)
 router.route('/tour-edit/:sessionId/addConnnection').post(TourEditController.addConnection);
 router.route('/tour-edit/:sessionId/removeConnection/:place1Id/:place2Id').delete(TourEditController.deleteConnection);
 router.route('/tour-edit/:sessionId/connection/:id').get(TourEditController.getConnection);
+router.route('/tour-edit/:sessionId/connection').put(TourEditController.updateConnection);
 
 router.route('/tour-edit/:sessionId/place/:placeId')
     .get(TourEditController.getPlace)

@@ -139,7 +139,7 @@ exports.getConnection = (req, res) => {
     const { sessionId, id } = req.params;
     const tour = cache[sessionId];
 
-    const connection = tour.getById(id);
+    const connection = tour.getConnectionById(id);
     if (!connection) {
         res.status(404).json({ message: "connection not found" });
     }
@@ -165,6 +165,18 @@ exports.addConnection = (req, res) => {
     tour.connections.push(connection);
 
     res.status(200).json({ tour: tour.toDesignerDto() });
+};
+
+exports.updateConnection = (req, res) => {
+    const { sessionId } = req.params;
+    const connectionUpdate = req.body;
+    const tour = cache[sessionId];
+    const connection = cache[sessionId].getConnectionById(connectionUpdate.id);
+
+    connection.startPlacePosition = connectionUpdate.startPlacePosition;
+    connection.endPlacePosition = connectionUpdate.endPlacePosition;
+
+    res.json({ connection: connection.toClient(tour) });
 };
 
 exports.deleteConnection = (req, res) => {

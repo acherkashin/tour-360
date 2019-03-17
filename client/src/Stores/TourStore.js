@@ -102,12 +102,15 @@ export default class TourStore {
     }
 
     saveEditingConnection(cancel = false) {
-        return Promise.resolve().then(action((resp) => {
+        return TourEditService.updateConnection(this.sessionId, this.editingConnection.asJson).then(action((resp) => {
+            const { connection } = resp.data;
+
+            this.editingTour.updateConnectionFromJson(connection);
 
             if (cancel) {
-                this.editingPlace = null;
+                this.editingConnection = null;
             } else {
-
+                this.editingConnection.updateFromJson(connection);
             }
         }));
     }

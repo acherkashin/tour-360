@@ -57,7 +57,7 @@ Tour.methods.deleteConnection = function (place1Id, place2Id) {
     this.connections = (this.connections || []).filter(c => !c.equals(place1Id, place2Id));
 };
 
-Tour.methods.getById = function (id) {
+Tour.methods.getConnectionById = function (id) {
     return this.connections.find(c => c.id === id);
 };
 

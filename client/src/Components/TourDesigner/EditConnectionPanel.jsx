@@ -20,16 +20,16 @@ const EditConnectionPanel = observer(class EditConnectionPanel extends React.Com
     }
 
     _handleStartPlacePositionChanged(e) {
-        console.log(e);
         this.props.onStartPlacePositionChanged({
             origin: this,
+            value: parseInt(e.target.value) || 0,
         })
     }
 
     _handleEndPlacePositionChanged(e) {
-        console.log(e);
         this.props.onEndPlacePositionChanged({
             origin: this,
+            value: parseInt(e.target.value) || 0,
         });
     }
 
@@ -44,6 +44,10 @@ const EditConnectionPanel = observer(class EditConnectionPanel extends React.Com
                 margin="normal"
                 fullWidth={true}
                 type={'number'}
+                inputProps={{
+                    min: 0,
+                    max: 359
+                }}
                 autoFocus
             />
             <TextField
@@ -53,6 +57,10 @@ const EditConnectionPanel = observer(class EditConnectionPanel extends React.Com
                 margin="normal"
                 fullWidth={true}
                 type={'number'}
+                inputProps={{
+                    min: 0,
+                    max: 359
+                }}
             />
 
         </div>;

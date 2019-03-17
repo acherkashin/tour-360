@@ -20,4 +20,12 @@ export default class EditConnection {
         this.startPlace = json.startPlace;
         this.endPlace = json.endPlace;
     }
+
+    get asJson() {
+        return {
+            id: this.id,
+            startPlacePosition: this.startPlacePosition,
+            endPlacePosition: this.endPlacePosition,
+        };
+    }
 }

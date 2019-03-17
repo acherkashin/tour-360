@@ -427,8 +427,12 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     {this.showEditConnectionPanel && <div className={classes.rightPanel}>
                         <EditConnectionPanel
                             connection={this.editingConnection}
-                            onStartPlacePositionChanged={(e) => { }}
-                            onEndPlacePositionChanged={(e) => { }}
+                            onStartPlacePositionChanged={(e) => {
+                                this.editingConnection.startPlacePosition = e.value;
+                            }}
+                            onEndPlacePositionChanged={(e) => {
+                                this.editingConnection.endPlacePosition = e.value;
+                            }}
                         ></EditConnectionPanel>
                     </div>}
                 </div>

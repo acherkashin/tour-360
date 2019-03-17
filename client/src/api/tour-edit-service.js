@@ -36,6 +36,9 @@ export function deleteConnection(sessionId, place1Id, place2Id) {
 export function getConnection(sessionId, connectionId) {
     return client.get(`/api/tour-edit/${sessionId}/connection/${connectionId}`);
 }
+export function updateConnection(sessionId, connection) {
+    return client.put(`/api/tour-edit/${sessionId}/connection`, connection);
+}
 export function uploadMapImage(sessionId, file, width, height) {
     const formData = new FormData();
     formData.append('mapImage', file);

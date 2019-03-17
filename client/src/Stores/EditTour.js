@@ -47,6 +47,17 @@ export default class EditTour {
         return place;
     }
 
+    updateConnectionFromJson(json) {
+        const connection = (this.connection || []).find(c => c.id === json.id);
+
+        if (connection) {
+            connection.startPlacePosition = json.startPlacePosition;
+            connection.endPlacePosition = json.endPlacePosition;
+        }
+
+        return connection;
+    }
+
     hasConnection(startPlaceId, endPlaceId) {
         const connection = (this.connections || []).some(c =>
             (c.startPlace.id === startPlaceId && c.endPlace.id === endPlaceId) ||
