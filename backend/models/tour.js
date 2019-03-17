@@ -59,6 +59,13 @@ Tour.methods.deleteConnection = function (place1Id, place2Id) {
 
 Tour.methods.getById = function (id) {
     return this.connections.find(c => c.id === id);
+};
+
+Tour.methods.getPlace = function (id) {
+    const index = this.places.findIndex((value) => value.id === id);
+    const place = this.places[index];
+
+    return place;
 }
 
 module.exports = mongoose.model("Tour", Tour);

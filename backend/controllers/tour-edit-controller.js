@@ -2,7 +2,6 @@ const uuidv1 = require('uuidv1')
 const path = require('path');
 const { Tour } = require('./../models');
 const { addFile } = require('./../utils/fileutils');
-const { getPlace } = require('./../utils/tour-utils');
 const cache = {};
 
 exports.get = (req, res) => {
@@ -106,7 +105,7 @@ exports.updatePlace = (req, res) => {
     const { sessionId } = req.params;
     const placeUpdate = req.body;
     const tour = cache[sessionId];
-    const place = getPlace(cache[sessionId], placeUpdate.id);
+    const place = cache[sessionId].getPlace(placeUpdate.id);
 
     place.name = placeUpdate.name;
     place.longitude = placeUpdate.longitude;
@@ -121,7 +120,7 @@ exports.uploadImage360 = (req, res) => {
     const mapImage = req.files.mapImage;
 
     const tour = cache[sessionId];
-    const place = getPlace(cache[sessionId], placeId);
+    const place = cache[sessionId].getPlace(placeId);
     const image360Name = generatePlaceImage360Name(place, mapImage);
 
     addFile(image360Name, mapImage).then(() => {

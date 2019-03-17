@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { getPlace } = require('./../utils/tour-utils');
 
 const Connection = new mongoose.Schema({
     startPlaceId: { type: String, required: true },
@@ -14,8 +13,8 @@ const Connection = new mongoose.Schema({
 });
 
 Connection.methods.toClient = function (tour) {
-    const startPlace = getPlace(tour, this.startPlaceId).toClient();
-    const endPlace = getPlace(tour, this.endPlaceId).toClient();
+    const startPlace = tour.getPlace(this.startPlaceId).toClient();
+    const endPlace = tour.getPlace(this.endPlaceId).toClient();
 
     const dto = {
         id: this.id,
@@ -30,7 +29,7 @@ Connection.methods.toClient = function (tour) {
 };
 
 Connection.methods.startAsDestination = function (tour) {
-    const start = getPlace(tour, this.startPlaceId).toClient();
+    const start = tour.getPlace(this.startPlaceId).toClient();
 
     return {
         id: start.id,
@@ -43,7 +42,7 @@ Connection.methods.startAsDestination = function (tour) {
 };
 
 Connection.methods.endAsDestination = function (tour) {
-    const end = getPlace(tour, this.endPlaceId).toClient();
+    const end = tour.getPlace(this.endPlaceId).toClient();
 
     return {
         id: end.id,
