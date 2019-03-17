@@ -31,7 +31,7 @@ export default class Hello360 extends React.Component {
     }
 
     _handlePortalClick(e) {
-        this._fetchPlaceById(e.connection.id);
+        this._fetchPlaceById(e.connection.placeId);
     }
 
     _fetchPlaceById(placeId) {
