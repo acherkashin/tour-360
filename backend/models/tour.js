@@ -55,6 +55,10 @@ Tour.methods.hasConnection = function (startPlaceId, endPlaceId) {
 
 Tour.methods.deleteConnection = function (place1Id, place2Id) {
     this.connections = (this.connections || []).filter(c => !c.equals(place1Id, place2Id));
+};
+
+Touch.methods.getById = function (id) {
+    return this.connection.find(c => c.id === id);
 }
 
 module.exports = mongoose.model("Tour", Tour);

@@ -136,6 +136,18 @@ exports.uploadImage360 = (req, res) => {
     });
 };
 
+exports.getConnection = (req, res) => {
+    const { sessionId, id } = req.params;
+    const tour = cache[sessionId];
+
+    const connection = tour.getById(id);
+    if (!connection) {
+        res.status(404).json({ message: "connection not found" });
+    }
+
+    res.status(200).json({ connection: connection.toClient() });
+};
+
 exports.addConnection = (req, res) => {
     const { sessionId } = req.params;
     const { startPlaceId, endPlaceId } = req.body;
@@ -153,7 +165,7 @@ exports.addConnection = (req, res) => {
 
     tour.connections.push(connection);
 
-    res.status(200).json({ tour: tour.toDesignerDto() })
+    res.status(200).json({ tour: tour.toDesignerDto() });
 };
 
 exports.deleteConnection = (req, res) => {
