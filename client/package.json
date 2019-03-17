@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.1",
     "@material-ui/icons": "^3.0.2",
+    "@material-ui/lab": "^3.0.0-alpha.30",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "leaflet": "^1.4.0",
