@@ -79,6 +79,12 @@ export default class TourStore {
         }));
     }
 
+    editConnection(connectionId) {
+        TourEditService.getConnection(this.sessionId, connectionId).then((action((resp) => {
+            console.log(resp.data.connection);
+        })));
+    }
+
     saveEditingPlace(cancel = false) {
         TourEditService.updatePlace(this.sessionId, this.editingPlace.asJson).then(action((resp) => {
             const { place } = resp.data;

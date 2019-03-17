@@ -145,7 +145,7 @@ exports.getConnection = (req, res) => {
         res.status(404).json({ message: "connection not found" });
     }
 
-    res.status(200).json({ connection: connection.toClient() });
+    res.status(200).json({ connection: connection.toClient(tour) });
 };
 
 exports.addConnection = (req, res) => {

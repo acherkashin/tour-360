@@ -105,6 +105,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
         this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
+        this._handleConnectionClick = this._handleConnectionClick.bind(this);
     }
 
     state = {
@@ -228,6 +229,12 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         L.DomEvent.stopPropagation(e.lEvent);
     }
 
+    _handleConnectionClick(e) {
+        if (this.state.mapEditMode === DRAG_MAP) {
+            this.tourStore.editConnection(e.connection.id);
+        }
+    }
+
     _renderMap() {
         if (this.editingTour.hasMapImage && this.editingTour.mapType === 'Image') {
             return this._renderImageMap()
@@ -267,6 +274,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 {connections.map(c => <Connection
                     key={c.id}
                     connection={c}
+                    onClick={this._handleConnectionClick}
                 />)}
                 {places.map(place =>
                     <Place key={place.id}
