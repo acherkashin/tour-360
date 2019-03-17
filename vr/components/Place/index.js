@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Environment, StyleSheet } from 'react-360';
+import { View, StyleSheet } from 'react-360';
 import Background from './Background';
 import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';

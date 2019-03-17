@@ -1,8 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Environment, NativeModules, View, Text } from 'react-360';
-import { HEIGHT, degreeToPosition } from './../../utils/CoordinateUtils';
+import { View, Text, StyleSheet } from 'react-360';
+import { degreeToPosition } from './../../utils/CoordinateUtils';
 import { GazeButton } from './../'
+
+const styles = StyleSheet.create({
+    root: {
+        position: 'absolute',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        borderWidth: 3,
+        borderColor: 'white',
+        borderRadius: 5,
+        paddingHorizontal: 12,
+        paddingVertical: 12,
+        justifyContent: 'center'
+    }
+});
 
 export default class Portal extends React.Component {
     constructor(props) {
@@ -18,17 +31,11 @@ export default class Portal extends React.Component {
     render() {
         const { connection } = this.props;
         const right = degreeToPosition(connection.position) || 0;
-        const top = HEIGHT * 0.5;
 
         return (
-            <View style={{
-                position: 'absolute',
-                transform: [{ translate: [right, top], }]
-            }}>
-                <GazeButton onClick={this._handleClick}>
-                    <Text>{connection.name}</Text>
-                </GazeButton>
-            </View>
+            <GazeButton onClick={this._handleClick} style={[styles.root, { transform: [{ translate: [right, 30], }] }]}>
+                <Text>{connection.name}</Text>
+            </GazeButton>
         );
     }
 }
