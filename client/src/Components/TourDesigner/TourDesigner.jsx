@@ -18,6 +18,7 @@ import MapEditMode from './MapEditMode';
 import { PlaceholderButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
 import Place from './Place';
+import Connection from './Connection';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
 
@@ -263,10 +264,9 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-                {connections.map(c => <Polyline
+                {connections.map(c => <Connection
                     key={c.id}
-                    color="blue"
-                    positions={[[c.startPlace.latitude, c.startPlace.longitude], [c.endPlace.latitude, c.endPlace.longitude]]}
+                    connection={c}
                 />)}
                 {places.map(place =>
                     <Place key={place.id}
