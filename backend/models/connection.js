@@ -55,4 +55,9 @@ Connection.methods.endAsDestination = function (tour) {
     };
 };
 
+Connection.methods.equals = function (place1Id, place2Id) {
+    return (this.startPlaceId === place1Id && this.endPlaceId === place2Id) ||
+        (this.startPlaceId === place2Id && this.endPlaceId === place1Id);
+};
+
 module.exports = Connection;

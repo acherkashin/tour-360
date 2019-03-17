@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { observer } from 'mobx-react';
 import ConnectionItem from './ConnectionItem';
-import { List, ListSubheader, ListItem, ListItemText, ListItemIcon, IconButton } from '@material-ui/core';
+import { List, ListSubheader, Typography } from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -15,10 +14,10 @@ const styles = theme => ({
 class ConnectionList extends React.Component {
     render() {
         const { classes, connections, onClick, onViewClick, onRemoveClick, onEditClick } = this.props;
-
+        const hasConnections = connections && connections.length > 0;
         return (
             <List className={classes.root} subheader={<ListSubheader>Connections</ListSubheader>} >
-                {(connections || []).map(connection => <ConnectionItem
+                {hasConnections && (connections || []).map(connection => <ConnectionItem
                     key={connection.id}
                     connection={connection}
                     onClick={onClick}
@@ -26,6 +25,7 @@ class ConnectionList extends React.Component {
                     onRemoveClick={onRemoveClick}
                     onEditClick={onEditClick}
                 />)}
+                {!hasConnections && <Typography align="center" variant="caption" color="textPrimary">No connecions</Typography>}
             </List>
         );
     }

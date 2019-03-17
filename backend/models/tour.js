@@ -48,23 +48,13 @@ Tour.methods.toDesignerDto = function () {
 };
 
 Tour.methods.hasConnection = function (startPlaceId, endPlaceId) {
-    const connection = (this.connections || []).some(c =>
-        (c.startPlaceId === startPlaceId && c.endPlaceId === endPlaceId) ||
-        (c.startPlaceId === endPlaceId && c.endPlaceId === startPlaceId)
-    );
+    const connection = (this.connections || []).some(c => c.equals(startPlaceId, endPlaceId));
 
     return connection;
 };
 
 Tour.methods.deleteConnection = function (place1Id, place2Id) {
-    //TODO: method works wrong!!!
-    this.connections = (this.connections || [])
-        .filter(connection =>
-            !(connection.startPlaceId !== place1Id &&
-                connection.endPlaceId !== place2Id)
-        ).filter(connection =>
-            !(connection.startPlaceId !== place2Id &&
-                connection.endPlaceId !== place1Id));
+    this.connections = (this.connections || []).filter(c => !c.equals(place1Id, place2Id));
 }
 
 module.exports = mongoose.model("Tour", Tour);
