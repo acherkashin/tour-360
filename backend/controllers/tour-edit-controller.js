@@ -208,8 +208,13 @@ function generateTourImageName(tour, mapImage) {
 
 function findFreeNameForPlace(tour) {
     const length = tour.places.length;
+
+    if(length === 0) {
+        return `New Place 1`;
+    }
+
     for (let i = 1; i <= length; i++) {
-        const name = `New Place ${i}`;
+        const name = `New Place ${i + 1}`;
         let isFree = true;
         for (let j = 0; j < length; j++) {
             if (tour.places[j].name == name) {
