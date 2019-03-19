@@ -1,9 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
+import {
+    TextField,
+    Button,
+    Select,
+    FormControl,
+    MenuItem,
+    InputLabel,
+    Input
+} from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -18,6 +25,7 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
 
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
+        this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
     }
 
     _handleNameChanged(e) {
@@ -28,8 +36,13 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
         this.props.onChangeImageMapClick({ origin: this });
     }
 
+    _handleStartPlaceChanged(e) {
+        this.props.onStartPlaceChanged({ origin: this, startPlace: e.target });
+    }
+
     render() {
-        const { classes, tour } = this.props;
+        const { classes, tour, startPlaceId } = this.props;
+        const places = tour.places || [];
 
         return (<div className={classes.root}>
             <TextField
@@ -43,6 +56,17 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImageMapClick} >
                 Change Map Image
             </Button>
+            <FormControl variant="filled" fullWidth disabled={places.length === 0}>
+                <InputLabel htmlFor="start-place-field">Start Place</InputLabel>
+                <Select
+                    variant="filled"
+                    fullWidth
+                    onChange={this._handleStartPlaceChanged}
+                    input={<Input name="start-place-field" id="start-place-field" />}
+                    value={startPlaceId || ""}>
+                    {places.map(place => <MenuItem key={place.id} value={place.name}>{place.name}</MenuItem>)}
+                </Select>
+            </FormControl>
         </div>);
     }
 });
@@ -51,9 +75,15 @@ EditTourPanel.propTypes = {
     classes: PropTypes.object.isRequired,
     tour: PropTypes.shape({
         name: PropTypes.string.isRequired,
+        places: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+        })),
     }).isRequired,
+    startPlaceId: PropTypes.string,
     onNameChanged: PropTypes.func.isRequired,
     onChangeImageMapClick: PropTypes.func.isRequired,
+    onStartPlaceChanged: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(EditTourPanel);

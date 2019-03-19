@@ -107,6 +107,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
+        this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
     }
 
     state = {
@@ -155,6 +156,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     get showEditTourPanel() {
         return Boolean(this.editingTour) && !this.showEditPlacePanel && !this.showEditConnectionPanel;
+    }
+
+    _handleStartPlaceChanged(e) {
+        console.log(e);
     }
 
     _handleViewImage360Click() {
@@ -397,6 +402,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                             tour={this.editingTour}
                             onNameChanged={this._handleNameChanged}
                             onChangeImageMapClick={this._handleChangeImageMapClick}
+                            onStartPlaceChanged={this._handleStartPlaceChanged}
                         />
                         <MapEditMode
                             value={mapEditMode}
