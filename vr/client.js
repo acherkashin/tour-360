@@ -2,6 +2,8 @@
 // If you want to modify your application's content, start in "index.js"
 
 import { ReactInstance, Surface } from 'react-360-web';
+import WebVRPolyfill from 'webvr-polyfill';
+const polyfill = new WebVRPolyfill();
 
 function init(bundle, parent, options = {}) {
   const r360 = new ReactInstance(bundle, parent, {
