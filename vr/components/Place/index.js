@@ -5,6 +5,7 @@ import Background from './Background';
 import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';
 import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';
+import { BACKEND_URL } from './../../config'
 
 export default class Place extends React.Component {
     constructor() {
@@ -27,7 +28,7 @@ export default class Place extends React.Component {
     render() {
         //https://stackoverflow.com/questions/43437907/vr-view-360-photo-sphere-images-possible-cors-issue?rq=1
         const { place } = this.props;
-        const url = `http://localhost:3001/${place.image360Name}`;
+        const url = `${BACKEND_URL}/${place.image360Name}`;
 
         return (
             <View style={styles.place}>

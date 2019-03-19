@@ -7,6 +7,7 @@ import {
 import Place from './components/Place';
 import { getUrlParams } from './utils';
 import axios from 'axios';
+import { BACKEND_URL } from './config';
 
 export default class Hello360 extends React.Component {
     constructor(props) {
@@ -43,9 +44,9 @@ export default class Hello360 extends React.Component {
     _getPlace(placeId) {
         const { sessionId, tourId } = this.state;
         if (sessionId) {
-            return axios.get(`http://localhost:3001/api/tour-edit/${sessionId}/place/${placeId}`);
+            return axios.get(`${BACKEND_URL}/api/tour-edit/${sessionId}/place/${placeId}`);
         } else if (tourId) {
-            return axios.get(`http://localhost:3001/api/tour/${tourId}/place/${placeId}`);
+            return axios.get(`${BACKEND_URL}/api/tour/${tourId}/place/${placeId}`);
         }
     }
 
