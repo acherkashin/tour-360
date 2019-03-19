@@ -26,14 +26,14 @@ const Tours = observer(class Tours extends React.Component {
     }
 
     render() {
-        const { tours, classes, actions, onItemClick } = this.props;
+        const { tours, classes, getActions, onItemClick } = this.props;
 
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     {(tours || []).map(tour => (
                         <Grid key={tour.id} item>
-                            <TourItem key={tour.id} tour={tour} actions={actions} onItemClick={onItemClick} />
+                            <TourItem key={tour.id} tour={tour} getActions={getActions} onItemClick={onItemClick} />
                         </Grid>
                     ))}
                 </Grid>
@@ -50,7 +50,7 @@ Tours.propTypes = {
         name: PropTypes.string,
     })),
     onItemClick: PropTypes.func.isRequired,
-    actions: PropTypes.array.isRequired,
+    getActions: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Tours);

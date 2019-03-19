@@ -16,6 +16,7 @@ export default class EditTour {
             imageHash: Date.now(),
             imageWidth: 0,
             imageHeight: 0,
+            startPlaceId: '',
             get mapImageUrl() {
                 return this.hasMapImage ? `/${this.filename}?${this.imageHash}` : null;
             }
@@ -33,6 +34,7 @@ export default class EditTour {
         this.imageHeight = json.imageHeight || 0;
         this.places = json.places || [];
         this.connections = json.connections || [];
+        this.startPlaceId = json.startPlaceId;
     }
 
     updatePlaceFromJson(json) {

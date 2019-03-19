@@ -2,6 +2,7 @@ import { extendObservable, action, observable, runInAction } from 'mobx';
 import { TourService, TourEditService } from './../api';
 import { Tour, EditTour, EditPlace, EditConnection } from './';
 import { deepObserve } from 'mobx-utils';
+import { VR_URL } from './../config';
 
 export default class TourStore {
     constructor() {
@@ -200,8 +201,16 @@ export default class TourStore {
         }));
     }
 
+    view(tourId, placeId) {
+        const tour = this._getById(tourId);
+        if (!placeId) {
+            placeId = tour.startPlaceId;
+        }
+        window.open(`${VR_URL}?tourId=${tourId}&placeId=${placeId}`);
+    }
+
     viewPlaceImage360(placeId) {
-        window.open(`http://localhost:8081/index.html?sessionId=${this.sessionId}&placeId=${placeId}`);
+        window.open(`${VR_URL}?sessionId=${this.sessionId}&placeId=${placeId}`);
     }
 
     _getById(id) {

@@ -17,6 +17,7 @@ export default class EditPlace {
             image360Height: 0,
             image360Name: '',
             connections: [],
+            startPlaceId: null,
 
             get mapImage360Url() {
                 return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
@@ -35,6 +36,7 @@ export default class EditPlace {
         this.image360Height = json.image360Height;
         this.image360Name = json.image360Name;
         this.connections = json.connections;
+        this.startPlaceId = json.startPlaceId;
 
         return this;
     }
@@ -45,6 +47,7 @@ export default class EditPlace {
             longitude: this.longitude,
             latitude: this.latitude,
             name: this.name,
+            startPlaceId: this.startPlaceId,
         };
     }
 }

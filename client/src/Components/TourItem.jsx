@@ -83,7 +83,7 @@ const Tour = observer(class Tour extends React.Component {
     }
 
     render() {
-        const { tour, classes, actions } = this.props;
+        const { tour, classes, getActions } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
@@ -123,7 +123,10 @@ const Tour = observer(class Tour extends React.Component {
                 }}
             >
                 <MenuList>
-                    {actions.map(action => (
+                    {getActions({
+                        origin: this,
+                        tour,
+                    }).map(action => (
                         <MenuItem key={action.text} className={classes.menuItem} onClick={() => this._handleActionClick(action)}>
                             <ListItemIcon>
                                 {action.icon}
@@ -145,11 +148,7 @@ Tour.propTypes = {
         name: PropTypes.string,
     }),
     onItemClick: PropTypes.func,
-    actions: PropTypes.arrayOf(PropTypes.shape({
-        icon: PropTypes.object.isRequired,
-        text: PropTypes.string.isRequired,
-        action: PropTypes.func.isRequired,
-    })).isRequired
+    getActions: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Tour);

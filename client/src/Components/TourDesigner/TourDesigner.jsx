@@ -159,7 +159,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleStartPlaceChanged(e) {
-        console.log(e);
+        this.editingTour.startPlaceId = e.startPlaceId;
     }
 
     _handleViewImage360Click() {
@@ -213,7 +213,6 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleNameChanged(e) {
-        console.log(e);
         this.editingTour.name = e.name;
     }
 

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Header, Tours, ViewTourPanel, NoToursPlaceholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
-import { Add, Edit, Delete } from '@material-ui/icons';
+import { Add, Edit, Delete, Visibility } from '@material-ui/icons';
 import { observer, inject } from 'mobx-react';
 import { Route } from "react-router-dom";
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
@@ -124,6 +124,36 @@ const ToursPage = inject("tourStore")(observer(
             this.store.saveEditing();
         }
 
+        _getActionsForTour(e, history) {
+            const actions = [{
+                icon: <Edit />,
+                text: 'Edit',
+                action: (e) => {
+                    this.store.beginEditing(e.tour.id).then((sessionId) => {
+                        history.push(`/edit/${sessionId}`);
+                    });
+                }
+            }, {
+                icon: <Delete />,
+                text: 'Delete',
+                action: (e) => {
+                    this.store.delete(e.tour.id);
+                }
+            }];
+
+            if (e.tour.startPlaceId) {
+                actions.push({
+                    icon: <Visibility />,
+                    text: 'View',
+                    action: (e) => {
+                        this.store.view(e.tour.id);
+                    }
+                });
+            }
+
+            return actions;
+        }
+
         render() {
             const { classes } = this.props;
             const { isOpenedCreateDialog, isOpenedUploadImageDialog, mapTypes, newTourMapType } = this.state;
@@ -156,21 +186,7 @@ const ToursPage = inject("tourStore")(observer(
                                     <Tours
                                         tours={tours}
                                         onItemClick={this._handleTourItemClick}
-                                        actions={[{
-                                            icon: <Edit />,
-                                            text: 'Edit',
-                                            action: (e) => {
-                                                this.store.beginEditing(e.tour.id).then((sessionId) => {
-                                                    history.push(`/edit/${sessionId}`);
-                                                });
-                                            }
-                                        }, {
-                                            icon: <Delete />,
-                                            text: 'Delete',
-                                            action: (e) => {
-                                                this.store.delete(e.tour.id);
-                                            }
-                                        }]}
+                                        getActions={(e) => this._getActionsForTour(e, history)}
                                     />)} />}
                                 {!hasTours && <NoToursPlaceholder onAddClick={this._handleOnAddClick} />}
                                 <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >

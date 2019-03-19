@@ -4,6 +4,7 @@ const Connection = require('./connection');
 
 const Tour = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
+    startPlaceId: { type: String },
     cover: {
         filename: String,
         contentType: String,
@@ -22,12 +23,19 @@ const Tour = new mongoose.Schema({
 });
 
 Tour.methods.toClient = function () {
+    let startPlaceId = this.startPlaceId;
+
+    if (!startPlaceId && (this.places || []).length !== 0) {
+        startPlaceId = this.places[0].id;
+    }
+
     return {
         id: this.id,
         name: this.name,
         mapType: this.mapType,
         hasImage: this.cover && this.cover.filename != null,
         filename: this.cover && this.cover.filename,
+        startPlaceId
     };
 };
 
@@ -42,6 +50,7 @@ Tour.methods.toDesignerDto = function () {
         imageWidth: this.mapImage && this.mapImage.width,
         imageHeight: this.mapImage && this.mapImage.height,
         filename: this.mapImage && this.mapImage.filename,
+        startPlaceId: this.startPlaceId,
     };
 
     return dto;

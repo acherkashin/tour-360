@@ -20,6 +20,7 @@ export default class Tour {
         this.name = json.name;
         this.hasImage = json.hasImage;
         this.filename = json.filename;
+        this.startPlaceId = json.startPlaceId;
     }
 
     refreshCover() {

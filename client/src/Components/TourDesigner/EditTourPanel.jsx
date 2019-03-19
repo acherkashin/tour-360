@@ -37,12 +37,13 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
     }
 
     _handleStartPlaceChanged(e) {
-        this.props.onStartPlaceChanged({ origin: this, startPlace: e.target });
+        this.props.onStartPlaceChanged({ origin: this, startPlaceId: e.target.value });
     }
 
     render() {
-        const { classes, tour, startPlaceId } = this.props;
-        const places = tour.places || [];
+        const { classes, tour } = this.props;
+        // const places = tour.places || [];
+        const { places = [], startPlaceId = "" } = tour;
 
         return (<div className={classes.root}>
             <TextField
@@ -63,8 +64,8 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
                     fullWidth
                     onChange={this._handleStartPlaceChanged}
                     input={<Input name="start-place-field" id="start-place-field" />}
-                    value={startPlaceId || ""}>
-                    {places.map(place => <MenuItem key={place.id} value={place.name}>{place.name}</MenuItem>)}
+                    value={startPlaceId}>
+                    {places.map(place => <MenuItem key={place.id} value={place.id}>{place.name}</MenuItem>)}
                 </Select>
             </FormControl>
         </div>);
