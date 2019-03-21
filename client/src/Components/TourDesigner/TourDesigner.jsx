@@ -106,6 +106,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
         this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
+        this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
     }
@@ -164,6 +165,10 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     _handleViewImage360Click() {
         this.tourStore.viewPlaceImage360(this.editingPlace.id);
+    }
+
+    _handleDeletePlaceClick() {
+        this.tourStore.removePlace(this.editingPlace.id);
     }
 
     _closeConfirmDialog() {
@@ -420,6 +425,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}
                             onViewImage360Click={this._handleViewImage360Click}
+                            onDeleteClick={this._handleDeletePlaceClick}
                             onConnectionClick={(e) => {
                                 this.tourStore.editPlace(e.connection.placeId);
                             }}
