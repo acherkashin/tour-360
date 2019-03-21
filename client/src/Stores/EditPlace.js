@@ -19,6 +19,10 @@ export default class EditPlace {
             connections: [],
             startPlaceId: null,
 
+            get viewImage360Url() {
+                return this.hasImage360 ? this.store.getPlaceImage360Url(this.id) : null;
+            },
+
             get mapImage360Url() {
                 return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
             }
