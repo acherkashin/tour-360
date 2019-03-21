@@ -6,8 +6,8 @@ export function get(sessionId) {
 export function beginEditing(tourId) {
     return client.post(`/api/tour-edit/${tourId}`);
 }
-export function saveChanges(sessionId) {
-    return client.post(`/api/tour-edit/${sessionId}/save`);
+export function saveChanges(sessionId, options) {
+    return client.post(`/api/tour-edit/${sessionId}/save`, options);
 }
 export function cancelChanges(sessionId) {
     return client.post(`/api/tour-edit/${sessionId}/cancel`);

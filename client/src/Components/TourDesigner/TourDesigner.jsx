@@ -195,11 +195,11 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleSave() {
-        this.tourStore.saveEditing();
+        this.tourStore.completeEditing();
     }
 
     _handleOkConfirmClick() {
-        this.tourStore.saveEditing().then(() => {
+        this.tourStore.completeEditing().then(() => {
             this.tourStore.cancelEditing();
         }).finally(() => {
             this._closeConfirmDialog();
@@ -295,20 +295,23 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 onmousemove={this._handleMouseMoveOnMap}
                 onzoomend={this._handleZoomChanged}>
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-                {connections.map(c => <Connection
-                    key={c.id}
-                    isSelected={(this.editingConnection) && c.id === this.editingConnection.id}
-                    connection={c}
-                    onClick={this._handleConnectionClick}
-                />)}
+                {connections.map(c => {
+                    const isSelected = ((this.editingConnection) && c.id === this.editingConnection.id) || false;
+
+                    return <Connection
+                        key={c.id}
+                        isSelected={isSelected}
+                        connection={c}
+                        onClick={this._handleConnectionClick}
+                    />;
+                })}
                 {places.map(place => {
-                    const isSelected = (this.editingPlace && place.id === this.editingPlace.id) || (firstPlace && firstPlace.id === place.id);
+                    const isSelected = ((this.editingPlace && place.id === this.editingPlace.id) || (firstPlace && firstPlace.id === place.id)) || false;
 
                     return <Place key={place.id}
                         place={place}
                         isSelected={isSelected}
-                        onClick={this._handlePlaceClick}
-                        isSelected={isSelected} />;
+                        onClick={this._handlePlaceClick} />;
                 })}
             </Map>
             {this._renderStatusBar()}

@@ -28,8 +28,14 @@ exports.startEditing = (req, res) => {
 
 exports.saveChanges = (req, res) => {
     const { sessionId } = req.params;
-    cache[sessionId].save().then(() => {
-        const tour = cache[sessionId].toDesignerDto();
+    const { startPlaceId, name } = req.body;
+
+    let tour = cache[sessionId];
+    tour.startPlaceId = startPlaceId;
+    tour.name = name;
+
+    tour.save().then(() => {
+        tour = cache[sessionId].toDesignerDto();
         res.json({ tour });
     }).catch((error) => {
         res.status(500).json({ error });
@@ -209,7 +215,7 @@ function generateTourImageName(tour, mapImage) {
 function findFreeNameForPlace(tour) {
     const length = tour.places.length;
 
-    if(length === 0) {
+    if (length === 0) {
         return `New Place 1`;
     }
 

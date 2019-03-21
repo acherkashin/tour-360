@@ -125,9 +125,11 @@ export default class TourStore {
         }))
     }
 
-    // TODO: rename to saveChanges
-    saveEditing() {
-        return TourEditService.saveChanges(this.sessionId).then(action((result) => {
+    completeEditing() {
+        return TourEditService.saveChanges(this.sessionId, {
+            name: this.editingTour.name,
+            startPlaceId: this.editingTour.startPlaceId,
+        }).then(action((result) => {
             this.editingTour.updateFromJson(result.data.tour);
         }));
     }
