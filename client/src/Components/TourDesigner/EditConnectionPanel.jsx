@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import PlacePosition from './PlacePosition';
 import Slider from '@material-ui/lab/Slider';
 
 const styles = theme => ({
@@ -12,13 +13,6 @@ const styles = theme => ({
         // slider causes overflow of panel
         overflow: 'hidden',
     },
-    slider: {
-        padding: '16px 12px',
-    },
-    thumb: {
-        width: 20,
-        height: 20,
-    }
 });
 
 const EditConnectionPanel = observer(class EditConnectionPanel extends React.Component {
@@ -66,19 +60,16 @@ const EditConnectionPanel = observer(class EditConnectionPanel extends React.Com
         const { classes, connection } = this.props;
 
         return <div className={classes.root}>
-            <div></div>
-            {this._renderPlacePosition({
-                id: "start-place-position",
-                label: `${connection.startPlace.name} - Start Place Position`,
-                value: connection.startPlacePosition,
-                onChange: this._handleStartPlacePositionChanged,
-            })}
-            {this._renderPlacePosition({
-                id: "end-place-position",
-                label: `${connection.endPlace.name} - End Place Position`,
-                value: connection.endPlacePosition,
-                onChange: this._handleEndPlacePositionChanged,
-            })}
+            <PlacePosition
+                id="start-place-position"
+                label={`${connection.startPlace.name} - Start Place Position`}
+                value={connection.startPlacePosition}
+                onChange={this._handleStartPlacePositionChanged} />
+            <PlacePosition
+                id="end-place-position"
+                label={`${connection.endPlace.name} - End Place Position`}
+                value={connection.endPlacePosition}
+                onChange={this._handleEndPlacePositionChanged} />
         </div>;
     }
 });
