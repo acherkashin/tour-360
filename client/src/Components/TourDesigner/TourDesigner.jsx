@@ -297,15 +297,19 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
                 {connections.map(c => <Connection
                     key={c.id}
+                    isSelected={(this.editingConnection) && c.id === this.editingConnection.id}
                     connection={c}
                     onClick={this._handleConnectionClick}
                 />)}
-                {places.map(place =>
-                    <Place key={place.id}
+                {places.map(place => {
+                    const isSelected = (this.editingPlace && place.id === this.editingPlace.id) || (firstPlace && firstPlace.id === place.id);
+
+                    return <Place key={place.id}
                         place={place}
+                        isSelected={isSelected}
                         onClick={this._handlePlaceClick}
-                        isSelected={Boolean(firstPlace && firstPlace.id === place.id)} />
-                )}
+                        isSelected={isSelected} />;
+                })}
             </Map>
             {this._renderStatusBar()}
         </div>);
