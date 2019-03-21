@@ -325,10 +325,12 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 })}
                 {places.map(place => {
                     const isSelected = ((this.editingPlace && place.id === this.editingPlace.id) || (firstPlace && firstPlace.id === place.id)) || false;
+                    const isStart = this.editingTour.startPlaceId === place.id;
 
                     return <Place key={place.id}
                         place={place}
                         isSelected={isSelected}
+                        isStart={isStart}
                         onClick={this._handlePlaceClick} />;
                 })}
             </Map>
