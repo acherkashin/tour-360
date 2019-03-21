@@ -106,9 +106,12 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
         this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
-        this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
+
+        this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
+        this._handleOkDeletePlaceClick = this._handleOkDeletePlaceClick.bind(this);
+        this._closeDeleteDialog = this._closeDeleteDialog.bind(this);
     }
 
     state = {
@@ -117,6 +120,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         currentZoom: 0,
         uploadImageDialogState: 0,
         isOpenedConfirmDialog: false,
+        isOpenedDeleteDialog: false,
         mapEditMode: 0,
     };
 
@@ -168,7 +172,16 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     _handleDeletePlaceClick() {
-        this.tourStore.removePlace(this.editingPlace.id);
+        this.setState({ isOpenedDeleteDialog: true });
+    }
+    _handleOkDeletePlaceClick() {
+        this.tourStore.removePlace(this.editingPlace.id).finally(() => {
+            this._closeDeleteDialog();
+            this.tourStore.cancelEditingPlace();
+        });
+    }
+    _closeDeleteDialog() {
+        this.setState({ isOpenedDeleteDialog: false });
     }
 
     _closeConfirmDialog() {
@@ -388,7 +401,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         }
 
         const { classes } = this.props;
-        const { uploadImageDialogState, isOpenedConfirmDialog, mapEditMode } = this.state;
+        const { uploadImageDialogState, isOpenedConfirmDialog, isOpenedDeleteDialog, mapEditMode } = this.state;
 
         return (
             <Dialog
@@ -470,6 +483,16 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     onCancelClick={this._handleCancelConfigrmClick}
                     isOpened={isOpenedConfirmDialog}
                     onClose={this._closeConfirmDialog}
+                />
+                <ConfirmDialog
+                    title='Delete Place'
+                    okButtonText='Yes'
+                    cancelButtonText="No"
+                    contentText="Are you sure you want to delete this place?"
+                    onOkClick={this._handleOkDeletePlaceClick}
+                    onCancelClick={this._closeDeleteDialog}
+                    isOpened={isOpenedDeleteDialog}
+                    onClose={this._closeDeleteDialog}
                 />
             </Dialog>
         );

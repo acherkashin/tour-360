@@ -95,11 +95,15 @@ export default class TourStore {
             this.editingTour.updatePlaceFromJson(place);
 
             if (cancel) {
-                this.editingPlace = null;
+                this.cancelEditingPlace();
             } else {
                 this.editingPlace.updateFromJson(place);
             }
         }));
+    }
+
+    cancelEditingPlace() {
+        this.editingPlace = null;
     }
 
     saveEditingConnection(cancel = false) {
