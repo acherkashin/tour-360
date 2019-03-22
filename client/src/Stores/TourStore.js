@@ -95,11 +95,15 @@ export default class TourStore {
             this.editingTour.updatePlaceFromJson(place);
 
             if (cancel) {
-                this.editingPlace = null;
+                this.cancelEditingPlace();
             } else {
                 this.editingPlace.updateFromJson(place);
             }
         }));
+    }
+
+    cancelEditingPlace() {
+        this.editingPlace = null;
     }
 
     saveEditingConnection(cancel = false) {
@@ -212,7 +216,10 @@ export default class TourStore {
     }
 
     viewPlaceImage360(placeId) {
-        window.open(`${VR_URL}?sessionId=${this.sessionId}&placeId=${placeId}`);
+        window.open(this.getPlaceImage360Url(placeId));
+    }
+    getPlaceImage360Url(placeId) {
+        return `${VR_URL}?sessionId=${this.sessionId}&placeId=${placeId}`;
     }
 
     _getById(id) {

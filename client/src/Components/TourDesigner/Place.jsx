@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import blue from '@material-ui/core/colors/blue';
-import green from '@material-ui/core/colors/green';
+import { blue, green, red } from '@material-ui/core/colors';
 import { CircleMarker, Tooltip } from 'react-leaflet';
 
 export default class Place extends Component {
     render() {
-        const { place, onClick, isSelected } = this.props;
+        const { place, onClick, isSelected, isStart } = this.props;
         const radius = 20;
-        const fillColor = isSelected ? green[500] : blue[500];
+
+        const startFillColor = green[500];
+        const defaultFillColor = blue[500];
+        const fillColor = isStart ? startFillColor : defaultFillColor;
+
+        const selectedColor = red[500];
 
         return (<CircleMarker
             key={place.id}
             center={[place.latitude, place.longitude]}
             radius={radius}
+            color={isSelected ? selectedColor : fillColor}
             fillColor={fillColor}
             fillOpacity={1}
             onClick={(e) => {

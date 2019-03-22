@@ -5,6 +5,7 @@ import { TextField, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ConnectionList from './ConnectionList';
 import { EditImage } from './../';
+import PreviewImage360 from '../PreviewImage360';
 
 const styles = theme => ({
     root: {
@@ -19,6 +20,8 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handleChangeImage360Click = this._handleChangeImage360Click.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
+        this._handlePreviewClick = this._handlePreviewClick.bind(this);
+        this._handleDeleteClick = this._handleDeleteClick.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleViewConnectionClick = this._handleViewConnectionClick.bind(this);
         this._handleRemoveConnectionClick = this._handleRemoveConnectionClick.bind(this);
@@ -35,6 +38,14 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
 
     _handleViewImage360Click(e) {
         this.props.onViewImage360Click({ origin: this, place: this.props.place });
+    }
+
+    _handlePreviewClick(e) {
+        this.props.onPreviewClick({ origin: this, place: this.props.place });
+    }
+
+    _handleDeleteClick(e) {
+        this.props.onDeleteClick({ origin: this, place: this.props.place });
     }
 
     _handleConnectionClick(e) {
@@ -72,6 +83,12 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
             <Button fullWidth variant="text" color="primary" onClick={this._handleViewImage360Click}>
                 Open
             </Button>
+            <Button fullWidth variant="text" color="primary" onClick={this._handlePreviewClick}>
+                Preview
+            </Button>
+            <Button fullWidth variant="text" color="primary" onClick={this._handleDeleteClick}>
+                Delete
+            </Button>
             <ConnectionList
                 connections={place.connections}
                 onClick={this._handleConnectionClick}
@@ -79,6 +96,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 onViewClick={this._handleViewConnectionClick}
                 onEditClick={this._handleEditConnectionClick}
             />
+            <PreviewImage360 hasImage={place.hasImage360} imageUrl={place.viewImage360Url} name={place.name} />
         </div>;
     }
 });
@@ -91,6 +109,8 @@ EditPlacePanel.propTypes = {
     onNameChanged: PropTypes.func.isRequired,
     onChangeImage360Click: PropTypes.func.isRequired,
     onViewImage360Click: PropTypes.func.isRequired,
+    onPreviewClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func.isRequired,
     onConnectionClick: PropTypes.func.isRequired,
     onViewConnectionClick: PropTypes.func.isRequired,
     onRemoveConnectionClick: PropTypes.func.isRequired,

@@ -22,6 +22,7 @@ import Place from './Place';
 import Connection from './Connection';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
+import ViewUrlDialog from '../Dialogs/ViewUrlDialog';
 
 const styles = (theme) => ({
     appBar: {
@@ -100,14 +101,22 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this._handleZoomChanged = this._handleZoomChanged.bind(this);
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
         this._handleFileSelected = this._handleFileSelected.bind(this);
-        this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
-        this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
         this._handleModeChanged = this._handleModeChanged.bind(this);
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
-        this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
+        
+        this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
+        this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
+        this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
+
+        this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
+        this._handleOkDeletePlaceClick = this._handleOkDeletePlaceClick.bind(this);
+        this._closeDeleteDialog = this._closeDeleteDialog.bind(this);
+
+        this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
+        this._closePreviewDialog = this._closePreviewDialog.bind(this);
     }
 
     state = {
@@ -116,6 +125,8 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         currentZoom: 0,
         uploadImageDialogState: 0,
         isOpenedConfirmDialog: false,
+        isOpenedDeleteDialog: false,
+        isOpenedPreviewDialog: false,
         mapEditMode: 0,
     };
 
@@ -166,9 +177,46 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         this.tourStore.viewPlaceImage360(this.editingPlace.id);
     }
 
+    /* Confirm Save Dialog */
+    _handleOkConfirmClick() {
+        this.tourStore.completeEditing().then(() => {
+            this.tourStore.cancelEditing();
+        }).finally(() => {
+            this._closeConfirmDialog();
+        });
+    }
+    _handleCancelConfigrmClick() {
+        this.tourStore.cancelEditing().finally(() => {
+            this._closeConfirmDialog();
+        });
+    }
     _closeConfirmDialog() {
         this.setState({ isOpenedConfirmDialog: false });
     }
+
+    /* Delete dialog */
+    _handleDeletePlaceClick() {
+        this.setState({ isOpenedDeleteDialog: true });
+    }
+    _handleOkDeletePlaceClick() {
+        this.tourStore.removePlace(this.editingPlace.id).finally(() => {
+            this._closeDeleteDialog();
+            this.tourStore.cancelEditingPlace();
+        });
+    }
+    _closeDeleteDialog() {
+        this.setState({ isOpenedDeleteDialog: false });
+    }
+
+    /* Preview Dialog */
+    _handlePreviewPlaceClick() {
+        this.setState({ isOpenedPreviewDialog: true });
+    }
+    _closePreviewDialog() {
+        this.setState({ isOpenedPreviewDialog: false });
+    }
+
+
 
     _handleChangeImageMapClick(e) {
         this.setState({ uploadImageDialogState: TOUR_MAP });
@@ -196,20 +244,6 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
 
     _handleSave() {
         this.tourStore.completeEditing();
-    }
-
-    _handleOkConfirmClick() {
-        this.tourStore.completeEditing().then(() => {
-            this.tourStore.cancelEditing();
-        }).finally(() => {
-            this._closeConfirmDialog();
-        });
-    }
-
-    _handleCancelConfigrmClick() {
-        this.tourStore.cancelEditing().finally(() => {
-            this._closeConfirmDialog();
-        });
     }
 
     _handleNameChanged(e) {
@@ -307,10 +341,12 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                 })}
                 {places.map(place => {
                     const isSelected = ((this.editingPlace && place.id === this.editingPlace.id) || (firstPlace && firstPlace.id === place.id)) || false;
+                    const isStart = this.editingTour.startPlaceId === place.id;
 
                     return <Place key={place.id}
                         place={place}
                         isSelected={isSelected}
+                        isStart={isStart}
                         onClick={this._handlePlaceClick} />;
                 })}
             </Map>
@@ -383,7 +419,7 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
         }
 
         const { classes } = this.props;
-        const { uploadImageDialogState, isOpenedConfirmDialog, mapEditMode } = this.state;
+        const { uploadImageDialogState, isOpenedConfirmDialog, isOpenedDeleteDialog, isOpenedPreviewDialog, mapEditMode } = this.state;
 
         return (
             <Dialog
@@ -420,6 +456,8 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}
                             onViewImage360Click={this._handleViewImage360Click}
+                            onPreviewClick={this._handlePreviewPlaceClick}
+                            onDeleteClick={this._handleDeletePlaceClick}
                             onConnectionClick={(e) => {
                                 this.tourStore.editPlace(e.connection.placeId);
                             }}
@@ -464,6 +502,22 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
                     onCancelClick={this._handleCancelConfigrmClick}
                     isOpened={isOpenedConfirmDialog}
                     onClose={this._closeConfirmDialog}
+                />
+                <ConfirmDialog
+                    title='Delete Place'
+                    okButtonText='Yes'
+                    cancelButtonText="No"
+                    contentText="Are you sure you want to delete this place?"
+                    onOkClick={this._handleOkDeletePlaceClick}
+                    onCancelClick={this._closeDeleteDialog}
+                    isOpened={isOpenedDeleteDialog}
+                    onClose={this._closeDeleteDialog}
+                />
+                <ViewUrlDialog
+                    title='Preview Place'
+                    url={this.editingPlace && this.tourStore.getPlaceImage360Url(this.editingPlace.id)}
+                    isOpened={isOpenedPreviewDialog}
+                    onClose={this._closePreviewDialog}
                 />
             </Dialog>
         );
