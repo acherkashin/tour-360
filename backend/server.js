@@ -8,7 +8,7 @@ const fileUpload = require('express-fileupload');
 const config = require('./config');
 const app = express();
 app.use(cors());
-const { TourRouter, TourEditRouter } = require("./routers");
+const { TourRouter, TourEditRouter, UserRouter } = require("./routers");
 
 mongoose.connect(config.MONGO_URL, { useNewUrlParser: true });
 let db = mongoose.connection;
@@ -24,6 +24,6 @@ app.use(fileUpload());
 app.use(express.static(__dirname + '/public'));
 
 // append /api for our http requests
-app.use("/api", TourRouter, TourEditRouter);
+app.use("/api", TourRouter, TourEditRouter, UserRouter);
 
 app.listen(config.API_PORT, () => console.log(`LISTENING ON PORT ${config.API_PORT}`));
