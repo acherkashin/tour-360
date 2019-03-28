@@ -41,7 +41,7 @@ const styles = theme => ({
     }
 });
 
-const ToursPage = inject("tourStore")(observer(
+const ToursPage = inject("rootStore")(observer(
     class ToursPage extends React.Component {
         constructor(props) {
             super(props);
@@ -68,7 +68,7 @@ const ToursPage = inject("tourStore")(observer(
         }
 
         get store() {
-            return this.props.tourStore;
+            return this.props.rootStore.tourStore;
         }
 
         loadAllTours() {
@@ -130,7 +130,7 @@ const ToursPage = inject("tourStore")(observer(
                 text: 'Edit',
                 action: (e) => {
                     this.store.beginEditing(e.tour.id).then((sessionId) => {
-                        history.push(`/edit/${sessionId}`);
+                        history.push(`/tours/edit/${sessionId}`);
                     });
                 }
             }, {
@@ -197,7 +197,7 @@ const ToursPage = inject("tourStore")(observer(
                                 width={`${window.innerWidth * 0.25}px`}
                                 tour={selectedTour}
                                 onImageChangeClick={this._handleImageChangeClick} />}
-                            <Route path="/edit/:sessionId" component={TourDesigner} />
+                            <Route path="/tours/edit/:sessionId" component={TourDesigner} />
                         </div>
                     </div>
                 </div>

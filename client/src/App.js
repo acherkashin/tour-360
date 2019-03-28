@@ -5,7 +5,7 @@ import { Provider } from 'mobx-react';
 import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
 import { SignInPage, SignUpPage, ToursPage } from './Pages';
-import TourStore from './Stores/TourStore';
+import RootStore from './Stores/RootStore';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 const styles = theme => ({
@@ -21,10 +21,10 @@ class App extends Component {
 
     return (
       //TODO: replace with rootStore
-      <Provider tourStore={new TourStore()}>
+      <Provider rootStore={new RootStore()}>
         <Router>
           <div className={classes.root}>
-            <Route exact path="/" component={ToursPage} />
+            <Route path="/tours" component={ToursPage} />
             <Route path="/sign-in" component={SignInPage} />
             <Route path="/sign-up" component={SignUpPage} />
           </div>

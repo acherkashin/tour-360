@@ -87,7 +87,7 @@ const CLOSED = 0;
 const TOUR_MAP = 1;
 const PLACE_360 = 2;
 
-const TourDesigner = inject("tourStore")(observer(class TourDesigner extends React.Component {
+const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component {
     constructor(props) {
         super(props);
 
@@ -138,23 +138,23 @@ const TourDesigner = inject("tourStore")(observer(class TourDesigner extends Rea
     }
 
     get tourStore() {
-        return this.props.tourStore;
+        return this.props.rootStore.tourStore;
     }
 
     get editingPlace() {
-        return this.props.tourStore.editingPlace;
+        return this.tourStore.editingPlace;
     }
 
     get editingTour() {
-        return this.props.tourStore.editingTour;
+        return this.tourStore.editingTour;
     }
 
     get editingConnection() {
-        return this.props.tourStore.editingConnection;
+        return this.tourStore.editingConnection;
     }
 
     get sessionId() {
-        return this.props.tourStore.sessionId;
+        return this.tourStore.sessionId;
     }
 
     get showEditPlacePanel() {

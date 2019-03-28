@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TextField, Typography, Button } from '@material-ui/core';
+import { observer, inject } from 'mobx-react';
 
 const styles = theme => ({
     root: {
@@ -24,102 +25,118 @@ const styles = theme => ({
     }
 });
 
-class SignUpPage extends React.Component {
-    constructor(props) {
-        super(props);
+const SignUpPage = inject("rootStore")(observer(
+    class SignUpPage extends React.Component {
+        constructor(props) {
+            super(props);
 
-        this._handleLastNameChanged = this._handleLastNameChanged.bind(this);
-        this._handleFirstNameChanged = this._handleFirstNameChanged.bind(this);
-        this._handleEmailChanged = this._handleEmailChanged.bind(this);
-        this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
-        this._handleRepeatPasswordChanged = this._handleRepeatPasswordChanged.bind(this);
-        this._handleRegisterClick = this._handleRegisterClick.bind(this);
-    }
+            this.state = {
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+                repeatPassword: '',
+            };
 
-    _handleFirstNameChanged(e) {
-        console.log(e.target.value);
-    }
+            this._handleLastNameChanged = this._handleLastNameChanged.bind(this);
+            this._handleFirstNameChanged = this._handleFirstNameChanged.bind(this);
+            this._handleEmailChanged = this._handleEmailChanged.bind(this);
+            this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
+            this._handleRepeatPasswordChanged = this._handleRepeatPasswordChanged.bind(this);
+            this._handleRegisterClick = this._handleRegisterClick.bind(this);
+        }
 
-    _handleLastNameChanged(e) {
-        console.log(e.target.value);
-    }
+        get store() {
+            return this.rootStore.userStore;
+        }
 
-    _handleEmailChanged(e) {
-        console.log(e.target.value);
-    }
+        _handleFirstNameChanged(e) {
+            this.setState({ firstName: e.target.value });
+        }
 
-    _handlePasswordChanged(e) {
-        console.log(e.target.value);
-    }
+        _handleLastNameChanged(e) {
+            this.setState({ lastName: e.target.value });
+        }
 
-    _handleRepeatPasswordChanged(e) {
-        console.log(e.target.value);
-    }
+        _handleEmailChanged(e) {
+            this.setState({ email: e.target.value });
+        }
 
-    _handleRegisterClick() {
+        _handlePasswordChanged(e) {
+            this.setState({ password: e.target.value });
+        }
 
-    }
+        _handleRepeatPasswordChanged(e) {
+            this.setState({ repeatPassword: e.target.value });
+        }
 
-    render() {
-        const { classes } = this.props;
-        const email = "";
-        const password = "";
-        const firstName = "";
-        const lastName = "";
+        _handleRegisterClick() {
+            this.store.signUp({
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                email: this.state.email,
+                password: this.state.password,
+            });
+        }
 
-        return <div className={classes.root}>
-            <div className={classes.panel}>
-                <Typography align="center" variant="h5" title="Registration">Registration</Typography>
-                <TextField
-                    label="First Name"
-                    value={firstName}
-                    onChange={this._handleFirstNameChanged}
-                    margin="normal"
-                    fullWidth={true}
-                    autoFocus
-                />
-                <TextField
-                    label="Last Name"
-                    value={lastName}
-                    onChange={this._handleLastNameChanged}
-                    margin="normal"
-                    fullWidth={true}
-                    autoFocus
-                />
-                <TextField
-                    label="Email"
-                    value={email}
-                    onChange={this._handleEmailChanged}
-                    margin="normal"
-                    fullWidth={true}
-                    autoFocus
-                />
-                <TextField
-                    label="Enter Password"
-                    value={password}
-                    type="password"
-                    onChange={this._handlePasswordChanged}
-                    margin="normal"
-                    fullWidth={true}
-                />
-                <TextField
-                    label="Repeat Password"
-                    value={password}
-                    type="password"
-                    onChange={this._handleRepeatPasswordChanged}
-                    margin="normal"
-                    fullWidth={true}
-                />
-                <Button
-                    className={classes.register}
-                    fullWidth={true}
-                    color="primary"
-                    onClick={this._handleRegisterClick}
-                >Register</Button>
-            </div>
-        </div>;
-    }
-}
+        render() {
+            const { classes } = this.props;
+            const { email, password, firstName, lastName, repeatPassword } = this.state;
+
+            return <div className={classes.root}>
+                <div className={classes.panel}>
+                    <Typography align="center" variant="h5" title="Registration">Registration</Typography>
+                    <TextField
+                        label="First Name"
+                        value={firstName}
+                        onChange={this._handleFirstNameChanged}
+                        margin="normal"
+                        fullWidth={true}
+                        autoFocus
+                    />
+                    <TextField
+                        label="Last Name"
+                        value={lastName}
+                        onChange={this._handleLastNameChanged}
+                        margin="normal"
+                        fullWidth={true}
+                        autoFocus
+                    />
+                    <TextField
+                        label="Email"
+                        value={email}
+                        onChange={this._handleEmailChanged}
+                        margin="normal"
+                        fullWidth={true}
+                        autoFocus
+                    />
+                    <TextField
+                        label="Enter Password"
+                        value={password}
+                        type="password"
+                        onChange={this._handlePasswordChanged}
+                        margin="normal"
+                        fullWidth={true}
+                    />
+                    <TextField
+                        label="Repeat Password"
+                        value={repeatPassword}
+                        type="password"
+                        onChange={this._handleRepeatPasswordChanged}
+                        margin="normal"
+                        fullWidth={true}
+                    />
+                    <Button
+                        className={classes.register}
+                        fullWidth={true}
+                        color="primary"
+                        onClick={this._handleRegisterClick}
+                    >Register</Button>
+                </div>
+            </div>;
+        }
+    })
+);
 
 SignUpPage.propTypes = {
     classes: PropTypes.object.isRequired,
