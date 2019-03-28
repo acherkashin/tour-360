@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Provider } from 'mobx-react';
 import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
-import ToursPage from './Pages/ToursPage';
+import { SignInPage, SignUpPage, ToursPage } from './Pages';
 import TourStore from './Stores/TourStore';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -13,7 +13,11 @@ class App extends Component {
       //TODO: replace with rootStore
       <Provider tourStore={new TourStore()}>
         <Router>
-          <Route path="/" component={ToursPage}/>
+          <div>
+            <Route exact path="/" component={ToursPage} />
+            <Route path="/sign-in" component={SignInPage} />
+            <Route path="/sign-up" component={SignUpPage} />
+          </div>
         </Router>
       </Provider>
     );
