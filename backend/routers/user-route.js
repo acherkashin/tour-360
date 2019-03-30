@@ -4,13 +4,11 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 
-router.post('/signup', function (req, res) {
+router.post('/signup', (req, res) => {
     console.log(req.body);
-    bcrypt.hash(req.body.password, 10, function (err, hash) {
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
         if (err) {
-            return res.status(500).json({
-                error: err
-            });
+            return res.status(500).json({ error: err });
         } else {
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
@@ -19,25 +17,20 @@ router.post('/signup', function (req, res) {
                 lastName: req.body.lastName,
                 password: hash
             });
-            user.save().then(function (result) {
-                console.log(result);
-                res.status(200).json({
-                    success: 'New user has been created'
-                });
+            user.save().then((result) => {
+                res.status(200).json({ user: user.toClient() });
             }).catch(error => {
-                res.status(500).json({
-                    error: err
-                });
+                res.status(500).json({ error });
             });
         }
     });
 });
 
-router.post('/signin', function (req, res) {
+router.post('/signin', (req, res) => {
     User.findOne({ email: req.body.email })
         .exec()
-        .then(function (user) {
-            bcrypt.compare(req.body.password, user.password, function (err, result) {
+        .then((user) => {
+            bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (err) {
                     return res.status(401).json({
                         failed: 'Unauthorized Access'
@@ -66,7 +59,7 @@ router.post('/signin', function (req, res) {
             res.status(500).json({
                 error: error
             });
-        });;
+        });
 });
 
 module.exports = router;

@@ -7,7 +7,7 @@ instance.interceptors.request.use((config) => {
     // const token = 
     // config.headers.Authorization = token;
 
-    // return config;
+    return config;
 });
 
 module.exports = instance;

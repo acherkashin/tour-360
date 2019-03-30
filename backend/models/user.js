@@ -8,4 +8,13 @@ const User = mongoose.Schema({
     lastName: { type: String, required: true },
 });
 
+User.methods.toClient = function () {
+    return {
+        id: this.id,
+        email: this.email,
+        firstName: this.firstName,
+        lastName: this.lastName,
+    };
+};
+
 module.exports = mongoose.model('User', User);

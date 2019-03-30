@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { grey, green } from '@material-ui/core/colors';
 import { TextField, Typography, Button, CircularProgress } from '@material-ui/core';
@@ -14,6 +15,8 @@ const styles = theme => ({
         alignItems: 'center',
     },
     panel: {
+        display: 'flex',
+        flexDirection: 'column',
         width: '400px',
         backgroundColor: grey[100],
         border: `1px solid ${grey[300]}`,
@@ -21,6 +24,9 @@ const styles = theme => ({
         borderRadius: 5,
     },
     signIn: {
+    },
+    registerLink: {
+        alignSelf: 'flex-end',
     },
     signInWrapper: {
         position: 'relative',
@@ -92,6 +98,7 @@ const SignInPage = inject("rootStore")(observer(class SignInPage extends React.C
                     fullWidth={true}
                     required
                 />
+                <Link className={classes.registerLink} to="/sign-up">To Register?</Link>
                 <div className={classes.signInWrapper}>
                     <Button
                         className={classes.signIn}
@@ -103,7 +110,7 @@ const SignInPage = inject("rootStore")(observer(class SignInPage extends React.C
                     {this.userStore.signInLoading && <CircularProgress size={24} className={classes.signInProgress} />}
                 </div>
             </div>
-        </div>;
+        </div >;
     }
 }));
 

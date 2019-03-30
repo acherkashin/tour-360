@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Header, Tours, ViewTourPanel, NoToursPlaceholder } from '../Components';
-import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete, Visibility } from '@material-ui/icons';
 import { observer, inject } from 'mobx-react';
 import { Route } from "react-router-dom";
+import requireAuth from '../HOC/requireAuth';
+import { Header, Tours, ViewTourPanel, NoToursPlaceholder } from '../Components';
+import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
 
 const styles = theme => ({
@@ -41,7 +42,7 @@ const styles = theme => ({
     }
 });
 
-const ToursPage = inject("rootStore")(observer(
+const ToursPage = requireAuth(inject("rootStore")(observer(
     class ToursPage extends React.Component {
         constructor(props) {
             super(props);
@@ -204,7 +205,7 @@ const ToursPage = inject("rootStore")(observer(
             );
         }
     })
-);
+));
 
 ToursPage.propTypes = {
     classes: PropTypes.object.isRequired,
