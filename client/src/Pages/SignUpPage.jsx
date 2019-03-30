@@ -92,6 +92,7 @@ const SignUpPage = inject("rootStore")(observer(
                         onChange={this._handleFirstNameChanged}
                         margin="normal"
                         fullWidth={true}
+                        required
                         autoFocus
                     />
                     <TextField
@@ -100,14 +101,17 @@ const SignUpPage = inject("rootStore")(observer(
                         onChange={this._handleLastNameChanged}
                         margin="normal"
                         fullWidth={true}
+                        required
                         autoFocus
                     />
                     <TextField
                         label="Email"
                         value={email}
+                        inputProps={{ type: 'email' }}
                         onChange={this._handleEmailChanged}
                         margin="normal"
                         fullWidth={true}
+                        required
                         autoFocus
                     />
                     <TextField
@@ -125,6 +129,7 @@ const SignUpPage = inject("rootStore")(observer(
                         onChange={this._handleRepeatPasswordChanged}
                         margin="normal"
                         fullWidth={true}
+                        required
                     />
                     <Button
                         className={classes.register}
