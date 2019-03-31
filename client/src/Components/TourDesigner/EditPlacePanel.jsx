@@ -5,7 +5,7 @@ import { TextField, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ConnectionList from './ConnectionList';
 import { EditImage } from './../';
-import PreviewImage360 from '../PreviewImage360';
+import SoundEditor from './SoundEditor';
 
 const styles = theme => ({
     root: {
@@ -18,6 +18,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     constructor(props) {
         super(props);
         this._handleNameChanged = this._handleNameChanged.bind(this);
+        // this._handleChangeSoundClick = this._handleChangeSoundClick.bind(this);
         this._handleChangeImage360Click = this._handleChangeImage360Click.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handlePreviewClick = this._handlePreviewClick.bind(this);
@@ -31,6 +32,11 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     _handleNameChanged(e) {
         this.props.onNameChanged({ origin: this, name: e.target.value });
     }
+
+    //TODO:
+    // _handleChangeSoundClick(e) {
+    //     this.props.onChangeSouncClick({ origin: this, place: this.props.place });
+    // }
 
     _handleChangeImage360Click(e) {
         this.props.onChangeImage360Click({ origin: this, place: this.props.place });
@@ -77,6 +83,12 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 autoFocus
             />
             <EditImage hasImage={place.hasImage} imageUrl={place.mapImage360Url} name={place.name} onImageChangeClick={this._handleChangeImage360Click} />
+            <SoundEditor
+                soundName="Sound.mp3"
+                soundUrl="lksdjlfslf"
+                onSoundChanged={() => { console.log("changed") }}
+                onSoundRemoved={() => { console.log("removed") }}
+            />
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImage360Click} >
                 Change Image 360
             </Button>
@@ -96,7 +108,6 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 onViewClick={this._handleViewConnectionClick}
                 onEditClick={this._handleEditConnectionClick}
             />
-            <PreviewImage360 hasImage={place.hasImage360} imageUrl={place.viewImage360Url} name={place.name} />
         </div>;
     }
 });
@@ -108,6 +119,7 @@ EditPlacePanel.propTypes = {
     }).isRequired,
     onNameChanged: PropTypes.func.isRequired,
     onChangeImage360Click: PropTypes.func.isRequired,
+    // onChangeSouncClick: PropTypes.func.isRequired,
     onViewImage360Click: PropTypes.func.isRequired,
     onPreviewClick: PropTypes.func.isRequired,
     onDeleteClick: PropTypes.func.isRequired,

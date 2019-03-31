@@ -21,13 +21,16 @@ router.route('/tour-edit/:sessionId/addConnnection')
 router.route('/tour-edit/:sessionId/removeConnection/:place1Id/:place2Id')
     .delete(verifyToken, TourEditController.deleteConnection);
 router.route('/tour-edit/:sessionId/connection/:id')
-    .get(verifyToken, TourEditController.getConnection);
+    .get(verifyToken, TourEditController.getConnection)
 router.route('/tour-edit/:sessionId/connection')
     .put(verifyToken, TourEditController.updateConnection);
 
 router.route('/tour-edit/:sessionId/place/:placeId')
     .get(verifyToken, TourEditController.getPlace)
     .delete(verifyToken, TourEditController.removePlace);
+
+router.route('/tour-edit/:sessionId/place/:placeId/sound')
+    .post(verifyToken, TourEditController.uploadSound);
 
 router.route('/tour-edit/:sessionId/place')
     .put(verifyToken, TourEditController.updatePlace);

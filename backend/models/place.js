@@ -41,6 +41,7 @@ Place.methods.toDesignerDto = function (tour) {
         image360Width: this.image360 && this.image360.width,
         image360Height: this.image360 && this.image360.height,
         image360Name: this.image360 && this.image360.filename,
+        soundName: this.sound && this.sound.filename,
         connections: [...starts, ...ends],
     };
 

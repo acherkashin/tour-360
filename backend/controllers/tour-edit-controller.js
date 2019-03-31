@@ -56,6 +56,7 @@ exports.cancelChanges = (req, res) => {
 };
 
 exports.uploadMapImage = (req, res) => {
+    //TODO: check extensions for images
     const { sessionId } = req.params;
     const { width, height } = req.body;
     const mapImage = req.files.mapImage;
@@ -71,8 +72,27 @@ exports.uploadMapImage = (req, res) => {
 
         res.json({ tour: tour.toDesignerDto() });
     }).catch(error => {
-        res.status(500).json({ error });
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
+};
+
+exports.uploadSound = (req, res) => {
+    const { sessionId } = req.params;
+    const { placeId } = req.body;
+    const sound = req.files.sound;
+
+    const place = cache[sessionId].getPlace(placeId);
+    const newFileName = generatePlaceSoundName(place, sound);
+
+    addFile(newFileName, sound)
+        .then(() => {
+            place.sound.filename = newFileName;
+            place.sound.contentType = mapImage.mimetype;
+
+            res.json({ place: place.toDesignerDto(tour) });
+        }).catch(error => {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        });
 };
 
 exports.addPlace = (req, res) => {
@@ -110,7 +130,7 @@ exports.getPlace = (req, res) => {
     const tour = cache[sessionId];
     const place = tour.places.find(item => item.id === placeId);
 
-    res.json({ place: place.toDesignerDto(tour) })
+    res.json({ place: place.toDesignerDto(tour) });
 };
 
 exports.updatePlace = (req, res) => {
@@ -143,7 +163,7 @@ exports.uploadImage360 = (req, res) => {
 
         res.json({ place: place.toDesignerDto(tour) });
     }).catch(error => {
-        res.status(500).json({ error });
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
 };
 
@@ -153,10 +173,10 @@ exports.getConnection = (req, res) => {
 
     const connection = tour.getConnectionById(id);
     if (!connection) {
-        res.status(404).json({ message: "connection not found" });
+        res.status(HttpStatus.NOT_FOUND).json({ message: "connection not found" });
     }
 
-    res.status(200).json({ connection: connection.toClient(tour) });
+    res.status(HttpStatus.OK).json({ connection: connection.toClient(tour) });
 };
 
 exports.addConnection = (req, res) => {
@@ -165,7 +185,7 @@ exports.addConnection = (req, res) => {
     const tour = cache[sessionId];
 
     if (tour.hasConnection(startPlaceId, endPlaceId)) {
-        res.status(409).json({ message: "connection already exists" });
+        res.status(HttpStatus.CONFLICT).json({ message: "connection already exists" });
         return;
     }
 
@@ -176,7 +196,7 @@ exports.addConnection = (req, res) => {
 
     tour.connections.push(connection);
 
-    res.status(200).json({ tour: tour.toDesignerDto() });
+    res.status(HttpStatus.OK).json({ tour: tour.toDesignerDto() });
 };
 
 exports.updateConnection = (req, res) => {
@@ -196,12 +216,12 @@ exports.deleteConnection = (req, res) => {
     const tour = cache[sessionId];
 
     if (!tour.hasConnection(place1Id, place2Id)) {
-        res.status(404).json({ message: "connection doesn't exist" });
+        res.status(HttpStatus.NOT_FOUND).json({ message: "connection doesn't exist" });
     }
 
     tour.deleteConnection(place1Id, place2Id);
 
-    res.status(200).json({ tour: tour.toDesignerDto() })
+    res.status(HttpStatus.OK).json({ tour: tour.toDesignerDto() })
 }
 
 function generatePlaceImage360Name(place, mapImage) {
@@ -214,6 +234,13 @@ function generatePlaceImage360Name(place, mapImage) {
 function generateTourImageName(tour, mapImage) {
     const extension = path.extname(mapImage.name);
     const newFileName = `${tour.id}-${uuidv1()}-map${extension}`;
+
+    return newFileName;
+}
+
+function generatePlaceSoundName(place, sound) {
+    const extension = path.extname(sound.name);
+    const newFileName = `${place.id}-${uuidv1()}-sound${extension}`;
 
     return newFileName;
 }

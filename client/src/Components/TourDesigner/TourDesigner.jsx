@@ -106,7 +106,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
-        
+
         this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
         this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
         this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
@@ -198,7 +198,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     _handleDeletePlaceClick() {
         this.setState({ isOpenedDeleteDialog: true });
     }
-    
+
     _handleOkDeletePlaceClick() {
         this.tourStore.removePlace(this.editingPlace.id).finally(() => {
             this._closeDeleteDialog();
@@ -471,6 +471,9 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                                 this.tourStore.saveEditingPlace(true).then(() => {
                                     this.tourStore.editConnection(e.connection.id);
                                 });
+                            }}
+                            onChangeSouncClick={(e) => {
+                                
                             }}
                         />
                     </div>}
