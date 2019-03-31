@@ -7,3 +7,7 @@ export function signUp(user) {
 export function signIn(email, password) {
     return client.post('/api/signin', { email, password });
 }
+
+export function getUser(id) {
+    return client.get(`/api/users/${id}`);
+}

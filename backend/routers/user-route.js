@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 
 router.post('/signup', (req, res) => {
-    console.log(req.body);
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if (err) {
             return res.status(500).json({ error: err });
@@ -32,34 +31,48 @@ router.post('/signin', (req, res) => {
         .then((user) => {
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (err) {
-                    return res.status(401).json({
-                        failed: 'Unauthorized Access'
-                    });
+                    return res.status(401).json({ failed: 'Unauthorized Access' });
                 }
                 if (result) {
-                    const JWTToken = jwt.sign({
-                        email: user.email,
-                        _id: user._id
-                    },
-                        'secret',
-                        {
-                            expiresIn: '24h'
-                        });
+                    const token = createToken(user);
                     return res.status(200).json({
-                        success: 'Welcome to the JWT Auth',
-                        token: JWTToken
+                        user: user.toClient(),
+                        token,
                     });
                 }
-                return res.status(401).json({
-                    failed: 'Unauthorized Access'
-                });
+                return res.status(401).json({ failed: 'Unauthorized Access' });
             });
         })
         .catch(error => {
-            res.status(500).json({
-                error: error
-            });
+            res.status(500).json({ error });
         });
 });
+
+router.get('/users/:id', (req, res) => {
+    const { id } = req.params;
+
+    if (id == null) {
+        res.status(400).json({ error: "id should be provided" });
+    }
+
+    User.findById(id)
+        .then(user => {
+            return res.json({ user: user.toClient() });
+        })
+        .catch(error => {
+            return res.status(500).json({ error });
+        });
+});
+
+function createToken(user) {
+    const token = jwt.sign({
+        id: user._id,
+        email: user.email,
+    }, 'secret', {
+            expiresIn: '24h'
+        });
+
+    return token;
+}
 
 module.exports = router;

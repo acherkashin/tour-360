@@ -1,13 +1,12 @@
-const axios = require('axios');
+import axios from 'axios';
+import { UserStore } from './../Stores';
 
-const instance = axios.create({
-});
+const instance = axios.create({});
 
 instance.interceptors.request.use((config) => {
-    // const token = 
-    // config.headers.Authorization = token;
+    config.headers.Authorization = UserStore.getToken();
 
     return config;
 });
 
-module.exports = instance;
+export default instance;

@@ -1,7 +1,19 @@
 import Tour from "./Tour";
 import EditTour from './EditTour';
 import EditPlace from './EditPlace';
-import TourStore from './TourStore';
 import EditConnection from './EditConnection';
 
-export { Tour, EditTour, TourStore, EditPlace, EditConnection };
+import RootStore from './RootStore';
+import TourStore from './TourStore';
+import UserStore from './UserStore';
+
+export {
+    Tour,
+    EditTour,
+    EditPlace,
+    EditConnection,
+
+    RootStore,
+    TourStore,
+    UserStore,
+};
