@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
 import { SignInPage, SignUpPage, ToursPage } from './Pages';
 import RootStore from './Stores/RootStore';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -18,15 +18,20 @@ const styles = theme => ({
 class App extends Component {
   render() {
     const { classes } = this.props;
+    const rootStore = new RootStore();
 
     return (
       //TODO: replace with rootStore
-      <Provider rootStore={new RootStore()}>
+      <Provider rootStore={rootStore}>
         <Router>
           <div className={classes.root}>
-            <Route path="/tours" component={ToursPage} />
-            <Route path="/sign-in" component={SignInPage} />
-            <Route path="/sign-up" component={SignUpPage} />
+            <Switch>
+              <Route path="/tours" component={ToursPage} />
+              <Route path="/sign-in" component={SignInPage} />
+              <Route path="/sign-up" component={SignUpPage} />
+              {rootStore.userStore.siggnedIn && <Redirect to='/tours' />}
+              {!rootStore.userStore.siggnedIn && <Redirect to='/sign-in' />}
+            </Switch>
           </div>
         </Router>
       </Provider>
