@@ -57,7 +57,7 @@ export default class UserStore {
 
     signOut() {
         this.signInResult = null;
-        this.clearToken();
+        UserStore.clearToken();
     }
 
     static getToken() {

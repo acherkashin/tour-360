@@ -46,6 +46,10 @@ const Header = inject("rootStore")(
             this.setState({ anchorEl: null });
         };
 
+        handleSignOut = () => {
+            this.props.rootStore.userStore.signOut();
+        };
+
         render() {
             const { classes } = this.props;
             const { auth, anchorEl } = this.state;
@@ -84,6 +88,7 @@ const Header = inject("rootStore")(
                                         onClose={this.handleClose}
                                     >
                                         <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                                        <MenuItem onClick={this.handleSignOut}>Sign Out</MenuItem>
                                     </Menu>
                                 </div>
                             )}
