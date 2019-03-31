@@ -47,6 +47,8 @@ export default class UserStore {
 
             this.getCurrentUserResult.then((resp) => {
                 this.currentUser = resp.data.user;
+            }, () => {
+                UserStore.clearToken();
             });
         } else {
             throw new Error("Current user doesn't exist.");

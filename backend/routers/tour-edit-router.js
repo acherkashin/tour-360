@@ -1,28 +1,38 @@
 const router = require('express').Router();
 const { TourEditController } = require("./../controllers");
+const { verifyToken } = require('./../utils/verify-token');
 
-router.route('/tour-edit/:id').post(TourEditController.startEditing);
+router.route('/tour-edit/:id').post(verifyToken, TourEditController.startEditing);
 
-router.route('/tour-edit/:sessionId/get').get(TourEditController.get);
-router.route('/tour-edit/:sessionId/save').post(TourEditController.saveChanges);
-router.route('/tour-edit/:sessionId/cancel').post(TourEditController.cancelChanges);
-router.route('/tour-edit/:sessionId/uploadMapImage').post(TourEditController.uploadMapImage);
+router.route('/tour-edit/:sessionId/get')
+    .get(verifyToken, TourEditController.get);
+router.route('/tour-edit/:sessionId/save')
+    .post(verifyToken, TourEditController.saveChanges);
+router.route('/tour-edit/:sessionId/cancel')
+    .post(verifyToken, TourEditController.cancelChanges);
+router.route('/tour-edit/:sessionId/uploadMapImage')
+    .post(verifyToken, TourEditController.uploadMapImage);
 //TODO: rename pathes to /place/
-router.route('/tour-edit/:sessionId/addPlace').post(TourEditController.addPlace);
+router.route('/tour-edit/:sessionId/addPlace')
+    .post(verifyToken, TourEditController.addPlace);
 //TODO: rename pathes to /connection/
-router.route('/tour-edit/:sessionId/addConnnection').post(TourEditController.addConnection);
-router.route('/tour-edit/:sessionId/removeConnection/:place1Id/:place2Id').delete(TourEditController.deleteConnection);
-router.route('/tour-edit/:sessionId/connection/:id').get(TourEditController.getConnection);
-router.route('/tour-edit/:sessionId/connection').put(TourEditController.updateConnection);
+router.route('/tour-edit/:sessionId/addConnnection')
+    .post(verifyToken, TourEditController.addConnection);
+router.route('/tour-edit/:sessionId/removeConnection/:place1Id/:place2Id')
+    .delete(verifyToken, TourEditController.deleteConnection);
+router.route('/tour-edit/:sessionId/connection/:id')
+    .get(verifyToken, TourEditController.getConnection);
+router.route('/tour-edit/:sessionId/connection')
+    .put(verifyToken, TourEditController.updateConnection);
 
 router.route('/tour-edit/:sessionId/place/:placeId')
-    .get(TourEditController.getPlace)
-    .delete(TourEditController.removePlace);
+    .get(verifyToken, TourEditController.getPlace)
+    .delete(verifyToken, TourEditController.removePlace);
 
 router.route('/tour-edit/:sessionId/place')
-    .put(TourEditController.updatePlace);
+    .put(verifyToken, TourEditController.updatePlace);
 
 router.route('/tour-edit/:sessionId/place/:placeId/uploadImage360')
-    .post(TourEditController.uploadImage360);
+    .post(verifyToken, TourEditController.uploadImage360);
 
 module.exports = router;

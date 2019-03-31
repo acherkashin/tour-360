@@ -23,6 +23,7 @@ module.exports = {
     { name: "designer" },
     { name: "tour" },
     { name: "place" },
+    { name: "auth" },
   ],
 
   // Возможность задать спец ОБЛАСТЬ для определенного типа коммита (пример для 'fix')

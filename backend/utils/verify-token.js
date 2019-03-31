@@ -9,9 +9,7 @@ const verifyToken = (req, res, next) => {
     }
 
     if (!token) {
-        return res.status(403).send({
-            auth: false, message: 'No token provided.'
-        });
+        return res.status(403).send({ auth: false, message: 'No token provided.' });
     }
 
     jwt.verify(token, config.SECRET_KEY, (err, decoded) => {
@@ -21,7 +19,7 @@ const verifyToken = (req, res, next) => {
                 message: 'Fail to Authentication. Error -> ' + err
             });
         }
-        // req.userId = decoded.id;
+        req.userId = decoded.id;
         next();
     });
 }

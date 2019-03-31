@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
+const config = require('./../config');
 
-router.post('/signup', (req, res) => {
+exports.signup = (req, res) => {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if (err) {
             return res.status(500).json({ error: err });
@@ -23,15 +24,15 @@ router.post('/signup', (req, res) => {
             });
         }
     });
-});
+};
 
-router.post('/signin', (req, res) => {
+exports.signin = (req, res) => {
     User.findOne({ email: req.body.email })
         .exec()
         .then((user) => {
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (err) {
-                    return res.status(401).json({ failed: 'Unauthorized Access' });
+                    return res.status(401).json({ error: 'Unauthorized Access' });
                 }
                 if (result) {
                     const token = createToken(user);
@@ -40,15 +41,15 @@ router.post('/signin', (req, res) => {
                         token,
                     });
                 }
-                return res.status(401).json({ failed: 'Unauthorized Access' });
+                return res.status(401).json({ error: 'Unauthorized Access' });
             });
         })
         .catch(error => {
             res.status(500).json({ error });
         });
-});
+};
 
-router.get('/users/:id', (req, res) => {
+exports.getUserById = (req, res) => {
     const { id } = req.params;
 
     if (id == null) {
@@ -62,17 +63,16 @@ router.get('/users/:id', (req, res) => {
         .catch(error => {
             return res.status(500).json({ error });
         });
-});
+};
 
 function createToken(user) {
     const token = jwt.sign({
         id: user._id,
         email: user.email,
-    }, 'secret', {
+    }, config.SECRET_KEY,
+        {
             expiresIn: '24h'
         });
 
     return token;
 }
-
-module.exports = router;

@@ -1,18 +1,19 @@
 const router = require('express').Router();
 const { TourController } = require("./../controllers");
+const { verifyToken } = require('./../utils/verify-token');
 
 router.route('/tour')
-    .get(TourController.getAll)
-    .post(TourController.create);
+    .get(verifyToken, TourController.getAll)
+    .post(verifyToken, TourController.create);
 
 router.route('/tour/:id')
-    .get(TourController.getById)
-    .delete(TourController.delete);
+    .get(verifyToken, TourController.getById)
+    .delete(verifyToken, TourController.delete);
 
 router.route('/tour/:id/cover')
-    .post(TourController.uploadCover);
+    .post(verifyToken, TourController.uploadCover);
 
 router.route('/tour/:id/place/:placeId')
-    .get(TourController.getPlace);
+    .get(verifyToken, TourController.getPlace);
 
 module.exports = router;
