@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { grey, green } from '@material-ui/core/colors';
 import { TextField, Typography, Button, CircularProgress } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
+import { redirectWhenAuth } from '../HOC';
 
 const styles = theme => ({
     root: {
@@ -42,77 +43,79 @@ const styles = theme => ({
     }
 });
 
-const SignInPage = inject("rootStore")(observer(class SignInPage extends React.Component {
-    constructor(props) {
-        super(props);
+const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
+    class SignInPage extends React.Component {
+        constructor(props) {
+            super(props);
 
-        this.state = {
-            email: '',
-            password: '',
-        };
+            this.state = {
+                email: '',
+                password: '',
+            };
 
-        this._handleEmailChanged = this._handleEmailChanged.bind(this);
-        this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
-        this._handleLogin = this._handleLogin.bind(this);
-    }
+            this._handleEmailChanged = this._handleEmailChanged.bind(this);
+            this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
+            this._handleLogin = this._handleLogin.bind(this);
+        }
 
-    get userStore() {
-        return this.props.rootStore.userStore;
-    }
+        get userStore() {
+            return this.props.rootStore.userStore;
+        }
 
-    _handleEmailChanged(e) {
-        this.setState({ email: e.target.value });
-    }
+        _handleEmailChanged(e) {
+            this.setState({ email: e.target.value });
+        }
 
-    _handlePasswordChanged(e) {
-        this.setState({ password: e.target.value });
-    }
+        _handlePasswordChanged(e) {
+            this.setState({ password: e.target.value });
+        }
 
-    _handleLogin(e) {
-        this.userStore.signIn(this.state.email, this.state.password);
-    }
+        _handleLogin(e) {
+            this.userStore.signIn(this.state.email, this.state.password);
+        }
 
-    render() {
-        const { classes } = this.props;
-        const { email, password } = this.state;
+        render() {
+            const { classes } = this.props;
+            const { email, password } = this.state;
 
-        return <div className={classes.root}>
-            <div className={classes.panel}>
-                <Typography align="center" variant="h5" title="Login">Login</Typography>
-                <TextField
-                    label="Email"
-                    value={email}
-                    inputProps={{ type: 'email' }}
-                    onChange={this._handleEmailChanged}
-                    margin="normal"
-                    fullWidth={true}
-                    required
-                    autoFocus
-                />
-                <TextField
-                    label="Password"
-                    value={password}
-                    type="password"
-                    onChange={this._handlePasswordChanged}
-                    margin="normal"
-                    fullWidth={true}
-                    required
-                />
-                <Link className={classes.registerLink} to="/sign-up">To Register?</Link>
-                <div className={classes.signInWrapper}>
-                    <Button
-                        className={classes.signIn}
+            return <div className={classes.root}>
+                <div className={classes.panel}>
+                    <Typography align="center" variant="h5" title="Login">Login</Typography>
+                    <TextField
+                        label="Email"
+                        value={email}
+                        inputProps={{ type: 'email' }}
+                        onChange={this._handleEmailChanged}
+                        margin="normal"
                         fullWidth={true}
-                        disabled={this.userStore.signInLoading}
-                        color="primary"
-                        onClick={this._handleLogin}
-                    >Login</Button>
-                    {this.userStore.signInLoading && <CircularProgress size={24} className={classes.signInProgress} />}
+                        required
+                        autoFocus
+                    />
+                    <TextField
+                        label="Password"
+                        value={password}
+                        type="password"
+                        onChange={this._handlePasswordChanged}
+                        margin="normal"
+                        fullWidth={true}
+                        required
+                    />
+                    <Link className={classes.registerLink} to="/sign-up">To Register?</Link>
+                    <div className={classes.signInWrapper}>
+                        <Button
+                            className={classes.signIn}
+                            fullWidth={true}
+                            disabled={this.userStore.signInLoading}
+                            color="primary"
+                            onClick={this._handleLogin}
+                        >Login</Button>
+                        {this.userStore.signInLoading && <CircularProgress size={24} className={classes.signInProgress} />}
+                    </div>
                 </div>
-            </div>
-        </div >;
+            </div >;
+        }
     }
-}));
+)));
 
 SignInPage.propTypes = {
     classes: PropTypes.object.isRequired,

@@ -5,7 +5,7 @@ import { Fab } from '@material-ui/core';
 import { Add, Edit, Delete, Visibility } from '@material-ui/icons';
 import { observer, inject } from 'mobx-react';
 import { Route } from "react-router-dom";
-import requireAuth from '../HOC/requireAuth';
+import { requireAuth } from '../HOC';
 import { Header, Tours, ViewTourPanel, NoToursPlaceholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import TourDesigner from '../Components/TourDesigner/TourDesigner';

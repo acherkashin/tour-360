@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 
 export default function requireAuth(WrappedComponent) {
     return inject("rootStore")(observer(
-        class Authentication extends Component {
+        class extends Component {
             get userStore() {
                 return this.props.rootStore.userStore;
             }
