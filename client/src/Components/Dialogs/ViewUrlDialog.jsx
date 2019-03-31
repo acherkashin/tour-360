@@ -26,7 +26,6 @@ class ViewUrlDialog extends React.Component {
             fullScreen
                 onClose={this._handleClose}
                 open={isOpened}
-                // maxWidth={'sm'}
                 fullWidth>
                 <DialogTitleWithClose onClose={this._handleClose}>{title}</DialogTitleWithClose>
                 <DialogContent>

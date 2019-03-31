@@ -18,6 +18,7 @@ export default class Hello360 extends React.Component {
             sessionId: null,
             tourId: null,
             placeId: null,
+            token: null,
         };
 
         this._handlePortalClick = this._handlePortalClick.bind(this);
@@ -26,7 +27,7 @@ export default class Hello360 extends React.Component {
     componentDidMount() {
         const options = getUrlParams();
 
-        this.setState({ sessionId: options.sessionId, tourId: options.tourId }, () => {
+        this.setState({ sessionId: options.sessionId, tourId: options.tourId, token: options.token }, () => {
             this._fetchPlaceById(options.placeId);
         })
     }
@@ -44,9 +45,13 @@ export default class Hello360 extends React.Component {
     _getPlace(placeId) {
         const { sessionId, tourId } = this.state;
         if (sessionId) {
-            return axios.get(`${BACKEND_URL}/api/tour-edit/${sessionId}/place/${placeId}`);
+            return axios.get(`${BACKEND_URL}/api/tour-edit/${sessionId}/place/${placeId}`, {
+                headers: { Authorization: this.state.token }
+            });
         } else if (tourId) {
-            return axios.get(`${BACKEND_URL}/api/tour/${tourId}/place/${placeId}`);
+            return axios.get(`${BACKEND_URL}/api/tour/${tourId}/place/${placeId}`, {
+                headers: { Authorization: this.state.token }
+            });
         }
     }
 

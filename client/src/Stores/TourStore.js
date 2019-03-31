@@ -3,6 +3,7 @@ import { TourService, TourEditService } from './../api';
 import { Tour, EditTour, EditPlace, EditConnection } from './';
 import { deepObserve } from 'mobx-utils';
 import { VR_URL } from './../config';
+import UserStore from './UserStore'
 
 export default class TourStore {
     constructor() {
@@ -212,14 +213,15 @@ export default class TourStore {
         if (!placeId) {
             placeId = tour.startPlaceId;
         }
-        window.open(`${VR_URL}?tourId=${tourId}&placeId=${placeId}`);
+        window.open(`${VR_URL}?tourId=${tourId}&placeId=${placeId}&token=${UserStore.getToken()}`);
     }
 
     viewPlaceImage360(placeId) {
         window.open(this.getPlaceImage360Url(placeId));
     }
+
     getPlaceImage360Url(placeId) {
-        return `${VR_URL}?sessionId=${this.sessionId}&placeId=${placeId}`;
+        return `${VR_URL}?sessionId=${this.sessionId}&placeId=${placeId}&token=${UserStore.getToken()}`;
     }
 
     _getById(id) {

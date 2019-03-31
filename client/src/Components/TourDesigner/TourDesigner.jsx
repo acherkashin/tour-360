@@ -198,6 +198,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     _handleDeletePlaceClick() {
         this.setState({ isOpenedDeleteDialog: true });
     }
+    
     _handleOkDeletePlaceClick() {
         this.tourStore.removePlace(this.editingPlace.id).finally(() => {
             this._closeDeleteDialog();
@@ -212,11 +213,10 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     _handlePreviewPlaceClick() {
         this.setState({ isOpenedPreviewDialog: true });
     }
+
     _closePreviewDialog() {
         this.setState({ isOpenedPreviewDialog: false });
     }
-
-
 
     _handleChangeImageMapClick(e) {
         this.setState({ uploadImageDialogState: TOUR_MAP });
