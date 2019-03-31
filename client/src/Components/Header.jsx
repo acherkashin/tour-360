@@ -30,13 +30,12 @@ const styles = {
 const Header = inject("rootStore")(
     observer(class Header extends React.Component {
         state = {
-            auth: true,
             anchorEl: null,
         };
 
-        handleChange = event => {
-            this.setState({ auth: event.target.checked });
-        };
+        get userStore() {
+            return this.props.rootStore.userStore;
+        }
 
         handleMenu = event => {
             this.setState({ anchorEl: event.currentTarget });
@@ -47,12 +46,13 @@ const Header = inject("rootStore")(
         };
 
         handleSignOut = () => {
-            this.props.rootStore.userStore.signOut();
+            this.userStore.signOut();
         };
 
         render() {
             const { classes } = this.props;
-            const { auth, anchorEl } = this.state;
+            const { anchorEl } = this.state;
+            const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
             const open = Boolean(anchorEl);
 
             return (
