@@ -1,22 +1,24 @@
 const { Tour } = require('./../models');
 const path = require('path');
 const uuidv1 = require('uuidv1')
+const HttpStatus = require('http-status-codes');
 const { addFile, removeFile } = require('./../utils/fileutils');
 
 exports.getAll = (req, res) => {
-    Tour.find().then((tours) => {
-        const result = tours.map(tour => tour.toClient());
-        return res.json({ result });
-    }).catch(err => {
-        return res.json({ error: err });
-    })
+    Tour.find({ createdBy: req.userId })
+        .then((tours) => {
+            const result = tours.map(tour => tour.toClient());
+            return res.json({ result });
+        }).catch(err => {
+            return res.json({ error: err });
+        })
 };
 
 exports.getById = (req, res) => {
     const { id } = req.params;
 
     if (id == null) {
-        res.status(400).json({ error: "id should be provided" });
+        res.status(HttpStatus.BAD_REQUEST).json({ error: "id should be provided" });
     }
 
     Tour.findById(id)
@@ -33,9 +35,9 @@ exports.getPlace = (req, res) => {
     const { id, placeId } = req.params;
 
     if (id == null) {
-        req.status(400).send("id should be provided");
+        req.status(HttpStatus.BAD_REQUEST).send("id should be provided");
     } else if (placeId == null) {
-        req.status(400).send("placeId should be provided");
+        req.status(HttpStatus.BAD_REQUEST).send("placeId should be provided");
     }
 
     Tour.findById(id)
@@ -56,11 +58,12 @@ exports.create = (req, res) => {
 
     const tour = new Tour({
         name,
-        mapType
+        mapType,
+        createdBy: req.userId,
     });
 
     tour.save().then(() => {
-        return res.json({});
+        return res.json({ tour: tour.toClient() });
     }).catch((error) => {
         return res.status(500).json({ error });
     });
@@ -73,7 +76,7 @@ exports.uploadCover = (req, res) => {
     }
 
     if (Object.keys(req.files).length == 0) {
-        return res.status(400).send('No files were uploaded.');
+        return res.status(HttpStatus.BAD_REQUEST).send('No files were uploaded.');
     }
 
     let tour = null;
@@ -110,7 +113,7 @@ exports.delete = (req, res) => {
     const { id } = req.params;
     Tour.findOneAndDelete(id, error => {
         if (error) {
-            return res.status(500).send({ error });
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error });
         } else {
             return res.json({});
         }

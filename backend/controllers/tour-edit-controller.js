@@ -1,13 +1,19 @@
 const uuidv1 = require('uuidv1')
 const path = require('path');
+const HttpStatus = require('http-status-codes');
 const { Tour } = require('./../models');
 const { addFile } = require('./../utils/fileutils');
 const cache = {};
 
 exports.get = (req, res) => {
     const { sessionId } = req.params;
-    const tour = cache[sessionId].toDesignerDto();
-    res.json({ tour });
+    const tour = cache[sessionId];
+
+    if (tour) {
+        res.json({ tour: tour.toDesignerDto() });
+    } else {
+        res.status(HttpStatus.NOT_FOUND).send("Session not found");
+    }
 };
 
 exports.startEditing = (req, res) => {

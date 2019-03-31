@@ -6,6 +6,7 @@ const User = mongoose.Schema({
     password: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
+    tours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 User.methods.toClient = function () {

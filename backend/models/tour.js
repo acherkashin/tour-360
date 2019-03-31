@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const Place = require('./place');
 const Connection = require('./connection');
 
 const Tour = new mongoose.Schema({
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     startPlaceId: { type: String },
     cover: {
         filename: String,
@@ -20,7 +21,10 @@ const Tour = new mongoose.Schema({
     mapType: { type: String, enum: ['Earth', 'Image'], required: true },
     places: [Place],
     connections: [Connection],
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
+
+Tour.index({ createdBy: 1, name: 1 }, { unique: true });
 
 Tour.methods.toClient = function () {
     let startPlaceId = this.startPlaceId;
