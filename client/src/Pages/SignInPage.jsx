@@ -6,6 +6,7 @@ import { grey, green } from '@material-ui/core/colors';
 import { TextField, Typography, Button, CircularProgress } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { redirectWhenAuth } from '../HOC';
+import { validate } from '../utils/validate.js';
 
 const styles = theme => ({
     root: {
@@ -50,7 +51,12 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
             this.state = {
                 email: '',
+                isEmailValid: false,
+                emailError: 'enter email',
+
                 password: '',
+                isPasswordValid: false,
+                passwordError: 'enter password'
             };
 
             this._handleEmailChanged = this._handleEmailChanged.bind(this);
@@ -63,11 +69,15 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
         }
 
         _handleEmailChanged(e) {
-            this.setState({ email: e.target.value });
+            const { value } = e.target;
+            const { valid, error } = validate(value, 'email');
+            this.setState({ email: value, isEmailValid: valid, emailError: error});
         }
 
         _handlePasswordChanged(e) {
-            this.setState({ password: e.target.value });
+            const { value } = e.target;
+            const { valid, error } = validate(value, 'password');
+            this.setState({ password: value, isPasswordValid: valid, passwordError: error});
         }
 
         _handleLogin(e) {
@@ -76,7 +86,7 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
         render() {
             const { classes } = this.props;
-            const { email, password } = this.state;
+            const { email, password, isEmailValid, isPasswordValid, emailError, passwordError } = this.state;
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
@@ -87,6 +97,8 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         inputProps={{ type: 'email' }}
                         onChange={this._handleEmailChanged}
                         margin="normal"
+                        error={!isEmailValid}
+                        helperText={emailError}
                         fullWidth={true}
                         required
                         autoFocus
@@ -97,6 +109,8 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         type="password"
                         onChange={this._handlePasswordChanged}
                         margin="normal"
+                        error={!isPasswordValid}
+                        helperText={passwordError}
                         fullWidth={true}
                         required
                     />
