@@ -52,11 +52,11 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
             this.state = {
                 email: '',
                 isEmailValid: false,
-                emailError: 'enter email',
+                emailError: 'please fill out this field',
 
                 password: '',
                 isPasswordValid: false,
-                passwordError: 'enter password'
+                passwordError: 'please fill out this field'
             };
 
             this._handleEmailChanged = this._handleEmailChanged.bind(this);
@@ -119,7 +119,7 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         <Button
                             className={classes.signIn}
                             fullWidth={true}
-                            disabled={this.userStore.signInLoading}
+                            disabled={this.userStore.signInLoading || !isEmailValid  || !isPasswordValid}
                             color="primary"
                             onClick={this._handleLogin}
                         >Login</Button>

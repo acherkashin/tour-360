@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TextField, Typography, Button } from '@material-ui/core';
@@ -16,11 +17,16 @@ const styles = theme => ({
         alignItems: 'center',
     },
     panel: {
+        display: 'flex',
+        flexDirection: 'column',
         width: '400px',
         backgroundColor: grey[100],
         border: `1px solid ${grey[300]}`,
         padding: 15,
         borderRadius: 5,
+    },
+    loginLink: {
+        alignSelf: 'flex-end',
     },
     register: {
         marginTop: '15px',
@@ -35,23 +41,23 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
             this.state = {
                 firstName: '',
                 isFirstNameValid: false,
-                firstNameError: 'enter first name',
+                firstNameError: 'please fill out this field',
 
                 lastName: '',
                 isLastNameValid: false,
-                lastNameError: 'enter last name',
+                lastNameError: 'please fill out this field',
 
                 email: '',
                 isEmailValid: false,
-                emailError: 'enter email',
+                emailError: 'please fill out this field',
 
                 password: '',
                 isPasswordValid: false,
-                passwordError: 'enter password',
+                passwordError: 'please fill out this field',
 
                 confirmationPassword: '',
                 isConfirmationPasswordValid: false,
-                confirmationPasswordError: 'enter password',
+                confirmationPasswordError: 'please fill out this field',
             };
 
             this._handleLastNameChanged = this._handleLastNameChanged.bind(this);
@@ -168,10 +174,12 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         fullWidth={true}
                         required
                     />
+                    <Link className={classes.loginLink} to="/sign-in">To Login?</Link>
                     <Button
                         className={classes.register}
                         fullWidth={true}
                         color="primary"
+                        disabled={!isEmailValid || !isPasswordValid || !isConfirmationPasswordValid || !isFirstNameValid || !isLastNameValid}
                         onClick={this._handleRegisterClick}
                     >Register</Button>
                 </div>

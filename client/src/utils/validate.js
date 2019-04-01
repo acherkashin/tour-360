@@ -14,20 +14,28 @@ const valideEmail = (value) => {
 }
 
 const validePassword = (value) => {
-    const passwordRe = /^(.{8,})$/ ;
+    const passwordRe = /^(.{8,})$/;
 
     return passwordRe.test(value) ? { valid: true, error: '' } : { valid: false, error: 'password must be at least 8 characters long' };
 };
 
 const valideName = (value) => {
-    const nameRe = /^((\w|[а-яА-Я]){2,})$/ ;
-
-    return nameRe.test(value) ? { valid: true, error: '' } : { valid: false, error: 'name must be at least 2 characters long' };
+    value = value.trim();
+    const nameRe = /^([a-zA-Z]|[а-яА-Я]){2,}$/;
+    if (value.length > 1) {
+        if (nameRe.test(value)) {
+            return { valid: true, error: '' };
+        } else {
+            return { valid: false, error: 'name must contain only latin and russian characters'};
+        }
+    } else {
+        return { valid: false, error: 'name must be at least 2 characters long' };
+    }
 };
 
 const valideConfirmationPassword = (value) => {
     const { confirmationPassword, password } = value;
-    return confirmationPassword === password ? { valid: true, error: '' } : { valid: false, error: 'passwords do not match' }
+    return confirmationPassword === password ? { valid: true, error: '' } : { valid: false, error: 'passwords do not match' };
 }
 
 export const validate = (value, type) => {
