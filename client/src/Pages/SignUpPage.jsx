@@ -6,7 +6,7 @@ import grey from '@material-ui/core/colors/grey';
 import { TextField, Typography, Button } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { redirectWhenAuth } from '../HOC';
-import { validate } from '../utils/validate.js';
+import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
 
 const styles = theme => ({
     root: {
@@ -74,32 +74,32 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
 
         _handleFirstNameChanged(e) {
             const { value } = e.target;
-            const { valid, error } = validate(value, 'name');
+            const { valid, error } = validName(value);
             this.setState({ firstName: value, isFirstNameValid: valid, firstNameError: error});
         }
 
         _handleLastNameChanged(e) {
             const { value } = e.target;
-            const { valid, error } = validate(value, 'name');
+            const { valid, error } = validName(value);
             this.setState({ lastName: value, isLastNameValid: valid, lastNameError: error});
         }
 
         _handleEmailChanged(e) {
             const { value } = e.target;
-            const { valid, error } = validate(value, 'email');
+            const { valid, error } = validEmail(value);
             this.setState({ email: value, isEmailValid: valid, emailError: error});
         }
 
         _handlePasswordChanged(e) {
             const { value } = e.target;
-            const { valid, error } = validate(value, 'password');
+            const { valid, error } = validPassword(value);
             this.setState({ password: value, isPasswordValid: valid, passwordError: error});
         }
 
         _handleConfirmationPasswordChanged(e) {
             const { value } = e.target;
             const { password } = this.state
-            const { valid, error } = validate({ confirmationPassword: value, password: password }, 'confirmationPassword');
+            const { valid, error } = validConfirmationPassword({ confirmationPassword: value, password: password });
             this.setState({ confirmationPassword: value, isConfirmationPasswordValid: valid, confirmationPasswordError: error });
         }
 

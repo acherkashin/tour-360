@@ -6,7 +6,7 @@ import { grey, green } from '@material-ui/core/colors';
 import { TextField, Typography, Button, CircularProgress } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { redirectWhenAuth } from '../HOC';
-import { validate } from '../utils/validate.js';
+import { validEmail, validPassword } from '../utils/validate.js';
 
 const styles = theme => ({
     root: {
@@ -70,13 +70,13 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
         _handleEmailChanged(e) {
             const { value } = e.target;
-            const { valid, error } = validate(value, 'email');
+            const { valid, error } = validEmail(value);
             this.setState({ email: value, isEmailValid: valid, emailError: error});
         }
 
         _handlePasswordChanged(e) {
             const { value } = e.target;
-            const { valid, error } = validate(value, 'password');
+            const { valid, error } = validPassword(value);
             this.setState({ password: value, isPasswordValid: valid, passwordError: error});
         }
 

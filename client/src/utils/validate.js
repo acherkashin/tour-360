@@ -1,49 +1,45 @@
-const valideEmail = (value) => {
+export const validEmail = (value) => {
     value = value.trim();
     const emailRe = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     
-    if (value !== '') {
-        if ( emailRe.test(value) ) {
-            return { valid: true, error: '' };
-        } else {
-            return { valid: false, error: 'wrong email' };
-        }
-    } else {
-        return { valid: false, error: 'enter email' };
+    if (value === '') {
+        return { valid: false, error: 'please fill out this field' };
     }
-}
 
-const validePassword = (value) => {
+    return emailRe.test(value) ? { valid: true, error: '' } : { valid: false, error: 'wrong email' };
+};
+
+export const validPassword = (value) => {
     const passwordRe = /^(.{8,})$/;
+
+    if (value.trim() === '') {
+        return { valid: false, error: 'please fill out this field' };
+    }
 
     return passwordRe.test(value) ? { valid: true, error: '' } : { valid: false, error: 'password must be at least 8 characters long' };
 };
 
-const valideName = (value) => {
+export const validName = (value) => {
     value = value.trim();
     const nameRe = /^([a-zA-Z]|[а-яА-Я]){2,}$/;
-    if (value.length > 1) {
-        if (nameRe.test(value)) {
-            return { valid: true, error: '' };
-        } else {
-            return { valid: false, error: 'name must contain only latin and russian characters'};
-        }
-    } else {
+
+    if (value.trim() === '') {
+        return { valid: false, error: 'please fill out this field' };
+    }
+    
+    if (value.length < 2) {
         return { valid: false, error: 'name must be at least 2 characters long' };
     }
+    
+    return nameRe.test(value) ? { valid: true, error: '' } : { valid: false, error: 'name must contain only latin and russian characters' };
 };
 
-const valideConfirmationPassword = (value) => {
+export const validConfirmationPassword = (value) => {
     const { confirmationPassword, password } = value;
-    return confirmationPassword === password ? { valid: true, error: '' } : { valid: false, error: 'passwords do not match' };
-}
 
-export const validate = (value, type) => {
-    switch (type) {
-        case 'email': return valideEmail(value);
-        case 'password': return validePassword(value);
-        case 'name': return valideName(value);
-        case 'confirmationPassword': return valideConfirmationPassword(value);
-        default: return { valid: false, error: '' }
+    if (value.trim() === '') {
+        return { valid: false, error: 'please fill out this field' };
     }
+
+    return confirmationPassword === password ? { valid: true, error: '' } : { valid: false, error: 'passwords do not match' };
 }
