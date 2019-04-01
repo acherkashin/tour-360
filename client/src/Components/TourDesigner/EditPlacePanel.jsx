@@ -18,7 +18,8 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     constructor(props) {
         super(props);
         this._handleNameChanged = this._handleNameChanged.bind(this);
-        // this._handleChangeSoundClick = this._handleChangeSoundClick.bind(this);
+        this._handleSoundChanged = this._handleSoundChanged.bind(this);
+        this._handleSoundRemoved = this._handleSoundRemoved.bind(this);
         this._handleChangeImage360Click = this._handleChangeImage360Click.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handlePreviewClick = this._handlePreviewClick.bind(this);
@@ -33,10 +34,13 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
         this.props.onNameChanged({ origin: this, name: e.target.value });
     }
 
-    //TODO:
-    // _handleChangeSoundClick(e) {
-    //     this.props.onChangeSouncClick({ origin: this, place: this.props.place });
-    // }
+    _handleSoundChanged(e) {
+        this.props.onSoundChanged({ origin: this, place: this.props.place, file: e.file });
+    }
+
+    _handleSoundRemoved(e) {
+        this.props.onSoundRemoved({ origin: this, place: this.props.place });
+    }
 
     _handleChangeImage360Click(e) {
         this.props.onChangeImage360Click({ origin: this, place: this.props.place });
@@ -82,12 +86,16 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 fullWidth={true}
                 autoFocus
             />
-            <EditImage hasImage={place.hasImage} imageUrl={place.mapImage360Url} name={place.name} onImageChangeClick={this._handleChangeImage360Click} />
+            <EditImage
+                name={place.name}
+                hasImage={place.hasImage}
+                imageUrl={place.mapImage360Url}
+                onImageChangeClick={this._handleChangeImage360Click}
+            />
             <SoundEditor
-                soundName="Sound.mp3"
-                soundUrl="lksdjlfslf"
-                onSoundChanged={() => { console.log("changed") }}
-                onSoundRemoved={() => { console.log("removed") }}
+                soundUrl={place.soundUrl}
+                onSoundChanged={this._handleSoundChanged}
+                onSoundRemoved={this._handleSoundRemoved}
             />
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImage360Click} >
                 Change Image 360
@@ -119,7 +127,8 @@ EditPlacePanel.propTypes = {
     }).isRequired,
     onNameChanged: PropTypes.func.isRequired,
     onChangeImage360Click: PropTypes.func.isRequired,
-    // onChangeSouncClick: PropTypes.func.isRequired,
+    onSoundChanged: PropTypes.func.isRequired,
+    onSoundRemoved: PropTypes.func.isRequired,
     onViewImage360Click: PropTypes.func.isRequired,
     onPreviewClick: PropTypes.func.isRequired,
     onDeleteClick: PropTypes.func.isRequired,

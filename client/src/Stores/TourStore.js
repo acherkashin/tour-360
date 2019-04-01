@@ -208,6 +208,18 @@ export default class TourStore {
         }));
     }
 
+    updatePlaceSound(soundFile) {
+        return TourEditService.uploadPlaceSound(this.sessionId, this.editingPlace.id, soundFile).then(action((resp) => {
+            const place = resp.data.place;
+            this.editingTour.updatePlaceFromJson(place);
+            this.editingPlace && this.editingPlace.updateFromJson(place);
+        }));
+    }
+
+    removePlaceSound() {
+        return TourEditService.removePlaceSound(this.sessionId, this.editingPlace.id)
+    }
+
     view(tourId, placeId) {
         const tour = this._getById(tourId);
         if (!placeId) {

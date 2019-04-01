@@ -6,24 +6,14 @@ import {
     Button,
     ListSubheader,
     ListItem,
-    ListItemText,
-    IconButton,
-    ListItemIcon,
-    ListItemAvatar,
-    ListItemSecondaryAction,
 } from '@material-ui/core';
-import {
-    Delete as DeleteIcon,
-    Visibility as VisibilityIcon,
-    Edit as EditIcon,
-    PlayCircleOutline
-} from '@material-ui/icons';
+import { AudioPlayer } from '@blackbox-vision/mui-audio-player';
 
 const styles = theme => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
-    }
+    },
 });
 
 class SoundEditor extends React.Component {
@@ -35,7 +25,14 @@ class SoundEditor extends React.Component {
     }
 
     _handleSoundChanged(e) {
-        this.props.onSoundChanged({ origin: this });
+        const file = e.target.files[0];
+
+        if (file) {
+            this.props.onSoundChanged({
+                file,
+                origin: this,
+            });
+        }
     }
 
     _handleSoundRemoved(e) {
@@ -43,37 +40,35 @@ class SoundEditor extends React.Component {
     }
 
     render() {
-        const { soundName, soundUrl, classes } = this.props;
+        const { soundUrl, classes } = this.props;
 
-        if (!soundName || !soundUrl) {
-            return <Button variant="text" component="label" color="primary">
+        if (!soundUrl) {
+            return <Button variant="text" component="label" color="primary" fullWidth>
                 Change Sound
-                <input type="file" style={{ display: "none" }} onChange={this._handleChangeSoundClick} />
+                <input type="file" style={{ display: "none" }} onChange={this._handleSoundChanged} />
             </Button>;
         }
 
         return <List
             component="nav"
-            subheader={<ListSubheader component="div">Nested List Items</ListSubheader>}
+            subheader={<ListSubheader component="div">Tour's sound</ListSubheader>}
             className={classes.root}
         >
             <ListItem>
-                <IconButton>
-                    <PlayCircleOutline />
-                </IconButton>
-                <ListItemText primary={soundName} />
-                <ListItemSecondaryAction>
-                    <IconButton onClick={this._handleSoundRemoved}>
-                        <DeleteIcon />
-                    </IconButton>
-                </ListItemSecondaryAction>
+                <AudioPlayer
+                    src={soundUrl}
+                    autoPlay={false}
+                    rounded={null}
+                    elevation={0}
+                    showLoopIcon={false}
+                    width="100%"
+                />
             </ListItem>
         </List>
     }
 }
 
 SoundEditor.propTypes = {
-    soundName: PropTypes.string,
     soundUrl: PropTypes.string,
 
     onSoundChanged: PropTypes.func.isRequired,

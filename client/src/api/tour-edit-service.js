@@ -60,7 +60,22 @@ export function updateImage360(sessionId, placeId, file, width, height) {
 
     return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadImage360`, formData, {
         headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
         }
     });
+}
+
+export function uploadPlaceSound(sessionId, placeId, file) {
+    const formData = new FormData();
+    formData.append('sound', file);
+
+    return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/sound`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    })
+}
+
+export function removePlaceSound(sessionId, placeId) {
+    return client.delete(`/api/tour-edit/${sessionId}/place/${placeId}/sound`);
 }

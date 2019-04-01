@@ -13,6 +13,7 @@ export default class EditPlace {
 
             hasImage360: false,
             image360Hash: Date.now(),
+            soundHash: Date.now(),
             image360Width: 0,
             image360Height: 0,
             image360Name: '',
@@ -26,8 +27,8 @@ export default class EditPlace {
             get mapImage360Url() {
                 return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
             },
-            get soundImage360Url() {
-                return this.soundName ? `/${this.soundName}` : null;
+            get soundUrl() {
+                return this.soundName ? `/${this.soundName}?${this.soundHash}` : null;
             }
         });
 
@@ -44,7 +45,11 @@ export default class EditPlace {
         this.image360Name = json.image360Name;
         this.connections = json.connections;
         this.startPlaceId = json.startPlaceId;
-        this.soundName = json.soundName;
+
+        if (this.soundName !== json.soundName) {
+            this.soundName = json.soundName;
+            this.refreshSound();
+        }
 
         return this;
     }
@@ -58,5 +63,9 @@ export default class EditPlace {
             startPlaceId: this.startPlaceId,
             soundName: this.soundName,
         };
+    }
+
+    refreshSound() {
+        this.soundHash = Date.now();
     }
 }

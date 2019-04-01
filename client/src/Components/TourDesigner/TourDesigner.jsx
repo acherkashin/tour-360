@@ -472,8 +472,11 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                                     this.tourStore.editConnection(e.connection.id);
                                 });
                             }}
-                            onChangeSouncClick={(e) => {
-                                
+                            onSoundChanged={(e) => {
+                                this.tourStore.updatePlaceSound(e.file);
+                            }}
+                            onSoundRemoved={(e) => {
+                                this.tourStore.removePlaceSound();
                             }}
                         />
                     </div>}

@@ -31,7 +31,8 @@ router.route('/tour-edit/:sessionId/place/:placeId')
     .delete(verifyToken, verifySession, TourEditController.removePlace);
 
 router.route('/tour-edit/:sessionId/place/:placeId/sound')
-    .post(verifyToken, verifySession, TourEditController.uploadSound);
+    .post(verifyToken, verifySession, TourEditController.uploadSound)
+    .delete(verifyToken, verifySession, TourEditController.removeSound);
 
 router.route('/tour-edit/:sessionId/place')
     .put(verifyToken, verifySession, TourEditController.updatePlace);
