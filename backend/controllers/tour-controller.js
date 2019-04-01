@@ -27,7 +27,7 @@ exports.getById = (req, res) => {
             return res.json({ result });
         })
         .catch(error => {
-            return res.status(500).json({ error });
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
         });
 };
 
@@ -65,7 +65,7 @@ exports.create = (req, res) => {
     tour.save().then(() => {
         return res.json({ tour: tour.toClient() });
     }).catch((error) => {
-        return res.status(500).json({ error });
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
 };
 

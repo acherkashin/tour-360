@@ -4,11 +4,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 const config = require('./../config');
+const HttpStatus = require('http-status-codes');
 
 exports.signup = (req, res) => {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if (err) {
-            return res.status(500).json({ error: err });
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: err });
         } else {
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
@@ -18,9 +19,9 @@ exports.signup = (req, res) => {
                 password: hash
             });
             user.save().then((result) => {
-                res.status(200).json({ user: user.toClient() });
+                res.status(HttpStatus.OK).json({ user: user.toClient() });
             }).catch(error => {
-                res.status(500).json({ error });
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
             });
         }
     });
@@ -32,20 +33,20 @@ exports.signin = (req, res) => {
         .then((user) => {
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (err) {
-                    return res.status(401).json({ error: 'Unauthorized Access' });
+                    return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Unauthorized Access' });
                 }
                 if (result) {
                     const token = createToken(user);
-                    return res.status(200).json({
+                    return res.status(HttpStatus.OK).json({
                         user: user.toClient(),
                         token,
                     });
                 }
-                return res.status(401).json({ error: 'Unauthorized Access' });
+                return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Unauthorized Access' });
             });
         })
         .catch(error => {
-            res.status(500).json({ error });
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
         });
 };
 
@@ -53,7 +54,7 @@ exports.getUserById = (req, res) => {
     const { id } = req.params;
 
     if (id == null) {
-        res.status(400).json({ error: "id should be provided" });
+        res.status(HttpStatus.BAD_REQUEST).json({ error: "id should be provided" });
     }
 
     User.findById(id)
@@ -61,7 +62,7 @@ exports.getUserById = (req, res) => {
             return res.json({ user: user.toClient() });
         })
         .catch(error => {
-            return res.status(500).json({ error });
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
         });
 };
 

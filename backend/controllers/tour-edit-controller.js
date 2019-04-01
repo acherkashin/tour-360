@@ -28,7 +28,7 @@ exports.startEditing = (req, res) => {
             const result = { sessionId, tour: dto };
             res.json({ result });
         }).catch(error => {
-            res.status(500).json({ error });
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
         });
 };
 
@@ -44,7 +44,7 @@ exports.saveChanges = (req, res) => {
         tour = cache[sessionId].toDesignerDto();
         res.json({ tour });
     }).catch((error) => {
-        res.status(500).json({ error });
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
 };
 
