@@ -23,7 +23,7 @@ export const validName = (value) => {
     value = value.trim();
     const nameRe = /^([a-zA-Z]|[а-яА-Я]){2,}$/;
 
-    if (value.trim() === '') {
+    if (value === '') {
         return { valid: false, error: 'please fill out this field' };
     }
     
