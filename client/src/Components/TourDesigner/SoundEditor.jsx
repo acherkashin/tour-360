@@ -6,7 +6,9 @@ import {
     Button,
     ListSubheader,
     ListItem,
+    IconButton,
 } from '@material-ui/core';
+import { Delete as DeleteIcon } from '@material-ui/icons'
 import { AudioPlayer } from '@blackbox-vision/mui-audio-player';
 
 const styles = theme => ({
@@ -56,7 +58,7 @@ class SoundEditor extends React.Component {
             className={classes.root}
         >
             <ListItem>
-                {/*key used to force updating when src is changed https://github.com/facebook/react/issues/9447 */}
+                {/*key used to force updating when src https://github.com/facebook/react/issues/9447 */}
                 <AudioPlayer key={soundUrl}
                     src={soundUrl}
                     autoPlay={false}
@@ -65,6 +67,9 @@ class SoundEditor extends React.Component {
                     showLoopIcon={false}
                     width="100%"
                 />
+                <IconButton onClick={this._handleSoundRemoved}>
+                    <DeleteIcon />
+                </IconButton>
             </ListItem>
         </List>
     }

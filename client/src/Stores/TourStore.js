@@ -217,7 +217,11 @@ export default class TourStore {
     }
 
     removePlaceSound() {
-        return TourEditService.removePlaceSound(this.sessionId, this.editingPlace.id)
+        return TourEditService.removePlaceSound(this.sessionId, this.editingPlace.id).then(action((resp) => {
+            const place = resp.data.place;
+            this.editingTour.updatePlaceFromJson(place);
+            this.editingPlace && this.editingPlace.updateFromJson(place);
+        }));
     }
 
     view(tourId, placeId) {

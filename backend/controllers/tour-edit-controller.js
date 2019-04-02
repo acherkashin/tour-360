@@ -104,6 +104,8 @@ exports.removeSound = (req, res) => {
 
     if (place && place.sound && place.sound.filename) {
         removeFile(place.sound.filename).then(() => {
+            place.sound = null;
+
             res.status(HttpStatus.OK).json({ place: place.toDesignerDto(tour) });
         }).catch((error) => {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
