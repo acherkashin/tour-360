@@ -13,6 +13,7 @@ const styles = theme => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
+        overflow: 'hidden',
     },
 });
 
@@ -55,7 +56,8 @@ class SoundEditor extends React.Component {
             className={classes.root}
         >
             <ListItem>
-                <AudioPlayer
+                {/*key used to force updating when src is changed https://github.com/facebook/react/issues/9447 */}
+                <AudioPlayer key={soundUrl}
                     src={soundUrl}
                     autoPlay={false}
                     rounded={null}

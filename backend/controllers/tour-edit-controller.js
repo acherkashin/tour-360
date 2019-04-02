@@ -81,7 +81,8 @@ exports.uploadSound = (req, res) => {
     const { sessionId, placeId } = req.params;
     const sound = req.files.sound;
 
-    const place = cache[sessionId].getPlace(placeId);
+    const tour = cache[sessionId];
+    const place = tour.getPlace(placeId);
     const newFileName = generatePlaceSoundName(place, sound);
 
     addFile(newFileName, sound)
