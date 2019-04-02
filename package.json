@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "start mongod",
     "start": "concurrently \"cd backend && nodemon server.js\" \"npm run frontend\"",
-    "frontend": "concurrently \"cd client && npm start\" \"cd vr && npm run start\""
+    "frontend": "concurrently \"cd client && npm start\" \"cd vr && npm run start\"",
+    "localstart": "concurrently \"cd backend && nodemon server.js\" \"npm run frontend\" \"start mongod\""
   },
   "keywords": [],
   "author": "",
