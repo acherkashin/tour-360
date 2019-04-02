@@ -12,6 +12,9 @@ const styles = theme => ({
         flex: 1,
         padding: theme.spacing.unit * 2,
     },
+    panelItem: {
+        marginTop: theme.spacing.unit,
+    },
 });
 
 const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
@@ -92,8 +95,20 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 imageUrl={place.mapImage360Url}
                 onImageChangeClick={this._handleChangeImage360Click}
             />
+            <ConnectionList
+                className={classes.panelItem}
+                connections={place.connections}
+                onClick={this._handleConnectionClick}
+                onRemoveClick={this._handleRemoveConnectionClick}
+                onViewClick={this._handleViewConnectionClick}
+                onEditClick={this._handleEditConnectionClick}
+            />
             <SoundEditor
                 soundUrl={place.soundUrl}
+                classNames={{
+                    changeSound: classes.panelItem,
+                    editor: classes.panelItem
+                }}
                 onSoundChanged={this._handleSoundChanged}
                 onSoundRemoved={this._handleSoundRemoved}
             />
@@ -109,13 +124,6 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
             <Button fullWidth variant="text" color="primary" onClick={this._handleDeleteClick}>
                 Delete
             </Button>
-            <ConnectionList
-                connections={place.connections}
-                onClick={this._handleConnectionClick}
-                onRemoveClick={this._handleRemoveConnectionClick}
-                onViewClick={this._handleViewConnectionClick}
-                onEditClick={this._handleEditConnectionClick}
-            />
         </div>;
     }
 });

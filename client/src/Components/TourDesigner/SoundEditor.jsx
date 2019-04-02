@@ -10,12 +10,15 @@ import {
 } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons'
 import { AudioPlayer } from '@blackbox-vision/mui-audio-player';
+import grey from '@material-ui/core/colors/grey';
+import classnames from 'classnames';
 
 const styles = theme => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
         overflow: 'hidden',
+        border: `1px solid ${grey[300]}`,
     },
 });
 
@@ -43,19 +46,26 @@ class SoundEditor extends React.Component {
     }
 
     render() {
-        const { soundUrl, classes } = this.props;
+        const { soundUrl, classes, classNames = {} } = this.props;
 
         if (!soundUrl) {
-            return <Button variant="text" component="label" color="primary" fullWidth>
+            return <Button className={classNames.changeSound} variant="text" component="label" color="primary" fullWidth>
                 Change Sound
                 <input type="file" style={{ display: "none" }} onChange={this._handleSoundChanged} />
             </Button>;
         }
 
+        const editorClass = classNames.editor || '';
+
+        const root = classnames({
+            [editorClass]: !!editorClass,
+            [classes.root]: true,
+        })
+
         return <List
             component="nav"
             subheader={<ListSubheader component="div">Tour's sound</ListSubheader>}
-            className={classes.root}
+            className={root}
         >
             <ListItem>
                 {/*key used to force updating when src https://github.com/facebook/react/issues/9447 */}
@@ -77,6 +87,10 @@ class SoundEditor extends React.Component {
 
 SoundEditor.propTypes = {
     soundUrl: PropTypes.string,
+    classNames: PropTypes.shape({
+        editor: PropTypes.string,
+        changeSound: PropTypes.string,
+    }),
 
     onSoundChanged: PropTypes.func.isRequired,
     onSoundRemoved: PropTypes.func.isRequired,
