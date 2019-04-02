@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"cd backend && nodemon server.js\" \"npm run frontend\"",
+    "start": "node server",
+    "build": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "frontend": "concurrently \"cd client && npm start\" \"cd vr && npm run start\"",
-    "localstart": "concurrently \"cd backend && nodemon server.js\" \"npm run frontend\" \"start mongod\""
+    "dev": "concurrently \"cd backend && nodemon server.js\" \"npm run frontend\" \"start mongod\""
   },
   "keywords": [],
   "author": "",
