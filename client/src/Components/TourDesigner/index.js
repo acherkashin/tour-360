@@ -9,6 +9,7 @@ import Place from './Place';
 import PlacePosition from './PlacePosition';
 import SoundEditor from './SoundEditor';
 import TourDesigner from './TourDesigner';
+import TourMap from './TourMap';
 
 export {
     Connection,
@@ -22,4 +23,5 @@ export {
     PlacePosition,
     SoundEditor,
     TourDesigner,
+    TourMap,
 };
