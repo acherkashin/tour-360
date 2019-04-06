@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 const config = require('./../config');
+const { validateForm } = require('../utils/validate');
 const HttpStatus = require('http-status-codes');
 
 exports.signup = (req, res) => {
@@ -11,6 +12,16 @@ exports.signup = (req, res) => {
         if (err) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: err });
         } else {
+            const validation = validateForm({ 
+                email: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                password: hash 
+            });
+            if (!validation.isValid) {
+                return res.status(400).json({ error: validation.error });
+            };
+
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 email: req.body.email,

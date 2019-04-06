@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TextField, Typography, Button } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { redirectWhenAuth } from '../HOC';
+import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
 
 const styles = theme => ({
     root: {
@@ -15,11 +17,16 @@ const styles = theme => ({
         alignItems: 'center',
     },
     panel: {
+        display: 'flex',
+        flexDirection: 'column',
         width: '400px',
         backgroundColor: grey[100],
         border: `1px solid ${grey[300]}`,
         padding: 15,
         borderRadius: 5,
+    },
+    loginLink: {
+        alignSelf: 'flex-end',
     },
     register: {
         marginTop: '15px',
@@ -33,17 +40,31 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
 
             this.state = {
                 firstName: '',
+                isFirstNameValid: false,
+                firstNameError: 'please fill out this field',
+
                 lastName: '',
+                isLastNameValid: false,
+                lastNameError: 'please fill out this field',
+
                 email: '',
+                isEmailValid: false,
+                emailError: 'please fill out this field',
+
                 password: '',
-                repeatPassword: '',
+                isPasswordValid: false,
+                passwordError: 'please fill out this field',
+
+                confirmationPassword: '',
+                isConfirmationPasswordValid: false,
+                confirmationPasswordError: 'please fill out this field',
             };
 
             this._handleLastNameChanged = this._handleLastNameChanged.bind(this);
             this._handleFirstNameChanged = this._handleFirstNameChanged.bind(this);
             this._handleEmailChanged = this._handleEmailChanged.bind(this);
             this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
-            this._handleRepeatPasswordChanged = this._handleRepeatPasswordChanged.bind(this);
+            this._handleConfirmationPasswordChanged = this._handleConfirmationPasswordChanged.bind(this);
             this._handleRegisterClick = this._handleRegisterClick.bind(this);
         }
 
@@ -52,23 +73,34 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
         }
 
         _handleFirstNameChanged(e) {
-            this.setState({ firstName: e.target.value });
+            const { value } = e.target;
+            const { valid, error } = validName(value);
+            this.setState({ firstName: value, isFirstNameValid: valid, firstNameError: error});
         }
 
         _handleLastNameChanged(e) {
-            this.setState({ lastName: e.target.value });
+            const { value } = e.target;
+            const { valid, error } = validName(value);
+            this.setState({ lastName: value, isLastNameValid: valid, lastNameError: error});
         }
 
         _handleEmailChanged(e) {
-            this.setState({ email: e.target.value });
+            const { value } = e.target;
+            const { valid, error } = validEmail(value);
+            this.setState({ email: value, isEmailValid: valid, emailError: error});
         }
 
         _handlePasswordChanged(e) {
-            this.setState({ password: e.target.value });
+            const { value } = e.target;
+            const { valid, error } = validPassword(value);
+            this.setState({ password: value, isPasswordValid: valid, passwordError: error});
         }
 
-        _handleRepeatPasswordChanged(e) {
-            this.setState({ repeatPassword: e.target.value });
+        _handleConfirmationPasswordChanged(e) {
+            const { value } = e.target;
+            const { password } = this.state
+            const { valid, error } = validConfirmationPassword({ confirmationPassword: value, password: password });
+            this.setState({ confirmationPassword: value, isConfirmationPasswordValid: valid, confirmationPasswordError: error });
         }
 
         _handleRegisterClick() {
@@ -82,7 +114,7 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
 
         render() {
             const { classes } = this.props;
-            const { email, password, firstName, lastName, repeatPassword } = this.state;
+            const { email, password, firstName, lastName, confirmationPassword, isEmailValid, emailError, isPasswordValid, passwordError, isConfirmationPasswordValid, confirmationPasswordError, isFirstNameValid, firstNameError, isLastNameValid, lastNameError } = this.state;
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
@@ -92,6 +124,8 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         value={firstName}
                         onChange={this._handleFirstNameChanged}
                         margin="normal"
+                        error={!isFirstNameValid}
+                        helperText={firstNameError}
                         fullWidth={true}
                         required
                         autoFocus
@@ -101,6 +135,8 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         value={lastName}
                         onChange={this._handleLastNameChanged}
                         margin="normal"
+                        error={!isLastNameValid}
+                        helperText={lastNameError}
                         fullWidth={true}
                         required
                         autoFocus
@@ -111,6 +147,8 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         inputProps={{ type: 'email' }}
                         onChange={this._handleEmailChanged}
                         margin="normal"
+                        error={!isEmailValid}
+                        helperText={emailError}
                         fullWidth={true}
                         required
                         autoFocus
@@ -121,21 +159,27 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         type="password"
                         onChange={this._handlePasswordChanged}
                         margin="normal"
+                        error={!isPasswordValid}
+                        helperText={passwordError}
                         fullWidth={true}
                     />
                     <TextField
                         label="Repeat Password"
-                        value={repeatPassword}
+                        value={confirmationPassword}
                         type="password"
-                        onChange={this._handleRepeatPasswordChanged}
+                        onChange={this._handleConfirmationPasswordChanged}
                         margin="normal"
+                        error={!isConfirmationPasswordValid || !isPasswordValid}
+                        helperText={confirmationPasswordError}
                         fullWidth={true}
                         required
                     />
+                    <Link className={classes.loginLink} to="/sign-in">To Login?</Link>
                     <Button
                         className={classes.register}
                         fullWidth={true}
                         color="primary"
+                        disabled={!isEmailValid || !isPasswordValid || !isConfirmationPasswordValid || !isFirstNameValid || !isLastNameValid}
                         onClick={this._handleRegisterClick}
                     >Register</Button>
                 </div>
