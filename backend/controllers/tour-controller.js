@@ -23,7 +23,7 @@ exports.getById = (req, res) => {
 
     Tour.findById(id)
         .then(tour => {
-            const result = tour.toClient();
+            const result = tour.toDetailDto();
             return res.json({ result });
         })
         .catch(error => {

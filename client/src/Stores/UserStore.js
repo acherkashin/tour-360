@@ -5,7 +5,7 @@ import decode from 'jwt-decode';
 import { UserService } from './../api';
 
 export default class UserStore {
-    constructor() {
+    constructor(rootStore) {
         extendObservable(this, {
             signInResult: null,
             signUpResult: null,

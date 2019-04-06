@@ -6,7 +6,7 @@ import { VR_URL } from './../config';
 import UserStore from './UserStore'
 
 export default class TourEditStore {
-    constructor() {
+    constructor(rootStore) {
         this.editingTourDisposer = null;
 
         extendObservable(this, {

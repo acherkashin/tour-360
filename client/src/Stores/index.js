@@ -7,6 +7,7 @@ import RootStore from "./RootStore";
 import TourStore from "./TourStore";
 import UserStore from "./UserStore";
 import TourEditStore from "./TourEditStore";
+import ViewTourStore from "./ViewTourStore";
 
 export {
     Tour,
@@ -18,4 +19,5 @@ export {
     TourStore,
     UserStore,
     TourEditStore,
+    ViewTourStore,
 };

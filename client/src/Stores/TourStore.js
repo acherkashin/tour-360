@@ -5,30 +5,21 @@ import { VR_URL } from './../config';
 import UserStore from './UserStore'
 
 export default class TourStore {
-    constructor() {
+    constructor(rootStore) {
         this.editingTourDisposer = null;
 
         extendObservable(this, {
             tours: observable.array([]),
             selectedTour: null,
-            editingTour: null,
-            editingPlace: null,
-            editingConnection: null,
-            sessionId: null,
-            firstConnectionPlace: null,
-            get designerIsOpened() {
-                return this.editingTour != null
-            },
             get hasTours() {
                 return (this.tours || []).length > 0;
             },
-            isDirty: false,
         });
     }
 
-    getById(id) {
-        return TourService.getById(id).then((resp) => {
-            return this.updateTourFromServer(resp.data.result);
+    selectTour(id) {
+        TourService.getById(id).then((resp) => {
+            this.selectedTour = resp.data.result;
         });
     }
 

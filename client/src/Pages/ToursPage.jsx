@@ -91,9 +91,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
         }
 
         _handleTourItemClick(e) {
-            this.store.getById(e.tour.id).then((tour) => {
-                this.store.selectedTour = tour;
-            });
+            this.store.selectTour(e.tour.id);
         }
 
         _handleOnAddClick() {

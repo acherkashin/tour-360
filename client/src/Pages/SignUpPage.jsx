@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
-import { TextField, Typography, Button } from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { redirectWhenAuth } from '../HOC';
 import { LoadingButton } from './../Components';
