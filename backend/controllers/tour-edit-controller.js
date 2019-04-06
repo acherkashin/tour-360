@@ -2,7 +2,7 @@ const uuidv1 = require('uuidv1')
 const path = require('path');
 const HttpStatus = require('http-status-codes');
 const { Tour } = require('./../models');
-const { addFile } = require('./../utils/fileutils');
+const { addFile, removeFile } = require('./../utils/fileutils');
 const cache = {};
 
 exports.get = (req, res) => {
@@ -28,7 +28,7 @@ exports.startEditing = (req, res) => {
             const result = { sessionId, tour: dto };
             res.json({ result });
         }).catch(error => {
-            res.status(500).json({ error });
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
         });
 };
 
@@ -44,7 +44,7 @@ exports.saveChanges = (req, res) => {
         tour = cache[sessionId].toDesignerDto();
         res.json({ tour });
     }).catch((error) => {
-        res.status(500).json({ error });
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
 };
 
@@ -77,22 +77,42 @@ exports.uploadMapImage = (req, res) => {
 };
 
 exports.uploadSound = (req, res) => {
-    const { sessionId } = req.params;
-    const { placeId } = req.body;
+    //TODO: add checking extension for uploaded file
+    const { sessionId, placeId } = req.params;
     const sound = req.files.sound;
 
-    const place = cache[sessionId].getPlace(placeId);
+    const tour = cache[sessionId];
+    const place = tour.getPlace(placeId);
     const newFileName = generatePlaceSoundName(place, sound);
 
     addFile(newFileName, sound)
         .then(() => {
             place.sound.filename = newFileName;
-            place.sound.contentType = mapImage.mimetype;
+            place.sound.contentType = sound.mimetype;
 
             res.json({ place: place.toDesignerDto(tour) });
         }).catch(error => {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR)
         });
+};
+
+exports.removeSound = (req, res) => {
+    const { sessionId, placeId } = req.params;
+
+    const tour = cache[sessionId];
+    const place = tour.getPlace(placeId);
+
+    if (place && place.sound && place.sound.filename) {
+        removeFile(place.sound.filename).then(() => {
+            place.sound = null;
+
+            res.status(HttpStatus.OK).json({ place: place.toDesignerDto(tour) });
+        }).catch((error) => {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+        });
+    } else {
+        res.status(HttpStatus.NO_CONTENT).json({ place: place.toDesignerDto(tour) });
+    }
 };
 
 exports.addPlace = (req, res) => {

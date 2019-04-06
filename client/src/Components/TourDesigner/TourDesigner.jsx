@@ -10,16 +10,13 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
-import L from 'leaflet';
 import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
 import MapEditMode from './MapEditMode';
 import { PlaceholderButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
-import Place from './Place';
-import Connection from './Connection';
+import { TourMap } from './';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
 import ViewUrlDialog from '../Dialogs/ViewUrlDialog';
@@ -29,9 +26,6 @@ const styles = (theme) => ({
         position: 'relative',
     },
     tourName: {
-        flex: 1,
-    },
-    map: {
         flex: 1,
     },
     noImageMap: {
@@ -227,7 +221,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     _handleZoomChanged(e) {
-        this.setState({ currentZoom: e.target._zoom });
+        this.setState({ currentZoom: e.zoom });
     }
 
     _handleModeChanged(e) {
@@ -282,9 +276,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         } else if (this.state.mapEditMode === ADD_CONNECTION) {
             this.tourStore.selectPlace(e.place);
         }
-
-        // prevent map click event
-        L.DomEvent.stopPropagation(e.lEvent);
     }
 
     _handleConnectionClick(e) {
@@ -294,10 +285,8 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     _renderMap() {
-        if (this.editingTour.hasMapImage && this.editingTour.mapType === 'Image') {
-            return this._renderImageMap()
-        } else if (this.editingTour.mapType === 'Earth') {
-            return this._renderEarthMap()
+        if ((this.editingTour.hasMapImage && this.editingTour.mapType === 'Image') || this.editingTour.mapType === 'Earth') {
+            return this._renderMap()
         } else {
             return this._renderNoMapPlaceholder();
         }
@@ -311,47 +300,38 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         </div>);
     }
 
-    _renderImageMap() {
+    _renderMap() {
         const { classes } = this.props;
-        const bounds = [[0, 0], [this.editingTour.imageHeight, this.editingTour.imageWidth]];
         const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
-
-        const places = this.editingTour.places || [];
-        const connections = this.editingTour.connections || [];
-        const firstPlace = this.tourStore.firstConnectionPlace;
+        const selectedPlaceId = this._getSelectedPlaceId();
 
         return (<div className={classes.mapWrapper}>
-            <Map crs={L.CRS.Simple}
-                bounds={bounds}
-                className={classes.map}
+            <TourMap
+                tour={this.editingTour}
                 style={mapStyle}
-                onclick={this._handleMapClick}
-                onmousemove={this._handleMouseMoveOnMap}
-                onzoomend={this._handleZoomChanged}>
-                <ImageOverlay url={this.editingTour.mapImageUrl} bounds={bounds} />
-                {connections.map(c => {
-                    const isSelected = ((this.editingConnection) && c.id === this.editingConnection.id) || false;
-
-                    return <Connection
-                        key={c.id}
-                        isSelected={isSelected}
-                        connection={c}
-                        onClick={this._handleConnectionClick}
-                    />;
-                })}
-                {places.map(place => {
-                    const isSelected = ((this.editingPlace && place.id === this.editingPlace.id) || (firstPlace && firstPlace.id === place.id)) || false;
-                    const isStart = this.editingTour.startPlaceId === place.id;
-
-                    return <Place key={place.id}
-                        place={place}
-                        isSelected={isSelected}
-                        isStart={isStart}
-                        onClick={this._handlePlaceClick} />;
-                })}
-            </Map>
+                selectedPlaceId={selectedPlaceId}
+                onClick={this._handleMapClick}
+                onConnectionClick={this._handleConnectionClick}
+                onPlaceClick={this._handlePlaceClick}
+                onMouseMove={this._handleMouseMoveOnMap}
+                onZoomChanged={this._handleZoomChanged}
+            />
             {this._renderStatusBar()}
         </div>);
+    }
+
+    _getSelectedPlaceId() {
+        if (this.editingPlace) {
+            return this.editingPlace.id;
+        }
+
+        const firstPlace = this.tourStore.firstConnectionPlace;
+
+        if (firstPlace) {
+            return firstPlace.id;
+        }
+
+        return null;
     }
 
     _renderStatusBar() {
@@ -374,29 +354,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 </span>
             </div>
         )
-    }
-
-    _renderEarthMap() {
-        const { classes } = this.props;
-        const state = {
-            position: [0, 0],
-            zoom: 13,
-        };
-
-        return (
-            <Map center={state.position}
-                zoom={state.zoom}
-                className={classes.map}
-                onclick={this._handleMapClick}>
-                <TileLayer
-                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {/* <Circle center={position} radius={30} fill={true}>
-                    <Popup>A pretty CSS3 popup. <br /> Easily customizable.</Popup>
-                </Circle> */}
-            </Map>
-        );
     }
 
     _handleFileSelected(e) {
@@ -472,8 +429,11 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                                     this.tourStore.editConnection(e.connection.id);
                                 });
                             }}
-                            onChangeSouncClick={(e) => {
-                                
+                            onSoundChanged={(e) => {
+                                this.tourStore.updatePlaceSound(e.file);
+                            }}
+                            onSoundRemoved={(e) => {
+                                this.tourStore.removePlaceSound();
                             }}
                         />
                     </div>}

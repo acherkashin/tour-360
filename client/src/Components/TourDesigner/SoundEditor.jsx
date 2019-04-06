@@ -6,24 +6,20 @@ import {
     Button,
     ListSubheader,
     ListItem,
-    ListItemText,
     IconButton,
-    ListItemIcon,
-    ListItemAvatar,
-    ListItemSecondaryAction,
 } from '@material-ui/core';
-import {
-    Delete as DeleteIcon,
-    Visibility as VisibilityIcon,
-    Edit as EditIcon,
-    PlayCircleOutline
-} from '@material-ui/icons';
+import { Delete as DeleteIcon } from '@material-ui/icons'
+import { AudioPlayer } from '@blackbox-vision/mui-audio-player';
+import grey from '@material-ui/core/colors/grey';
+import classnames from 'classnames';
 
 const styles = theme => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
-    }
+        overflow: 'hidden',
+        border: `1px solid ${grey[300]}`,
+    },
 });
 
 class SoundEditor extends React.Component {
@@ -35,7 +31,14 @@ class SoundEditor extends React.Component {
     }
 
     _handleSoundChanged(e) {
-        this.props.onSoundChanged({ origin: this });
+        const file = e.target.files[0];
+
+        if (file) {
+            this.props.onSoundChanged({
+                file,
+                origin: this,
+            });
+        }
     }
 
     _handleSoundRemoved(e) {
@@ -43,38 +46,51 @@ class SoundEditor extends React.Component {
     }
 
     render() {
-        const { soundName, soundUrl, classes } = this.props;
+        const { soundUrl, classes, classNames = {} } = this.props;
 
-        if (!soundName || !soundUrl) {
-            return <Button variant="text" component="label" color="primary">
+        if (!soundUrl) {
+            return <Button className={classNames.changeSound} variant="text" component="label" color="primary" fullWidth>
                 Change Sound
-                <input type="file" style={{ display: "none" }} onChange={this._handleChangeSoundClick} />
+                <input type="file" style={{ display: "none" }} onChange={this._handleSoundChanged} />
             </Button>;
         }
 
+        const editorClass = classNames.editor || '';
+
+        const root = classnames({
+            [editorClass]: !!editorClass,
+            [classes.root]: true,
+        })
+
         return <List
             component="nav"
-            subheader={<ListSubheader component="div">Nested List Items</ListSubheader>}
-            className={classes.root}
+            subheader={<ListSubheader component="div">Tour's sound</ListSubheader>}
+            className={root}
         >
             <ListItem>
-                <IconButton>
-                    <PlayCircleOutline />
+                {/*key used to force updating when src https://github.com/facebook/react/issues/9447 */}
+                <AudioPlayer key={soundUrl}
+                    src={soundUrl}
+                    autoPlay={false}
+                    rounded={null}
+                    elevation={0}
+                    showLoopIcon={false}
+                    width="100%"
+                />
+                <IconButton onClick={this._handleSoundRemoved}>
+                    <DeleteIcon />
                 </IconButton>
-                <ListItemText primary={soundName} />
-                <ListItemSecondaryAction>
-                    <IconButton onClick={this._handleSoundRemoved}>
-                        <DeleteIcon />
-                    </IconButton>
-                </ListItemSecondaryAction>
             </ListItem>
         </List>
     }
 }
 
 SoundEditor.propTypes = {
-    soundName: PropTypes.string,
     soundUrl: PropTypes.string,
+    classNames: PropTypes.shape({
+        editor: PropTypes.string,
+        changeSound: PropTypes.string,
+    }),
 
     onSoundChanged: PropTypes.func.isRequired,
     onSoundRemoved: PropTypes.func.isRequired,
