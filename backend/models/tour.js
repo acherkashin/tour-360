@@ -43,11 +43,11 @@ Tour.methods.toClient = function () {
     };
 };
 
-Tour.methods.toDesignerDto = function () {
+Tour.methods.toDetailDto = function () {
     const dto = {
         id: this.id,
         name: this.name,
-        places: (this.places || []).map(place => place.toDesignerDto(this)),
+        places: (this.places || []).map(place => place.toDetailDto(this)),
         connections: (this.connections || []).map(connection => connection.toClient(this)),
         mapType: this.mapType,
         hasMapImage: this.mapImage && this.mapImage.filename != null,

@@ -10,7 +10,7 @@ exports.get = (req, res) => {
     const tour = cache[sessionId];
 
     if (tour) {
-        res.json({ tour: tour.toDesignerDto() });
+        res.json({ tour: tour.toDetailDto() });
     } else {
         res.status(HttpStatus.NOT_FOUND).send("Session not found");
     }
@@ -23,7 +23,7 @@ exports.startEditing = (req, res) => {
         .then(tour => {
             const sessionId = uuidv1();
             cache[sessionId] = tour;
-            const dto = tour.toDesignerDto();
+            const dto = tour.toDetailDto();
 
             const result = { sessionId, tour: dto };
             res.json({ result });
@@ -41,7 +41,7 @@ exports.saveChanges = (req, res) => {
     tour.name = name;
 
     tour.save().then(() => {
-        tour = cache[sessionId].toDesignerDto();
+        tour = cache[sessionId].toDetailDto();
         res.json({ tour });
     }).catch((error) => {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
@@ -70,7 +70,7 @@ exports.uploadMapImage = (req, res) => {
         tour.mapImage.height = parseInt(height);
         tour.mapImage.width = parseInt(width);
 
-        res.json({ tour: tour.toDesignerDto() });
+        res.json({ tour: tour.toDetailDto() });
     }).catch(error => {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
@@ -90,7 +90,7 @@ exports.uploadSound = (req, res) => {
             place.sound.filename = newFileName;
             place.sound.contentType = sound.mimetype;
 
-            res.json({ place: place.toDesignerDto(tour) });
+            res.json({ place: place.toDetailDto(tour) });
         }).catch(error => {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR)
         });
@@ -106,12 +106,12 @@ exports.removeSound = (req, res) => {
         removeFile(place.sound.filename).then(() => {
             place.sound = null;
 
-            res.status(HttpStatus.OK).json({ place: place.toDesignerDto(tour) });
+            res.status(HttpStatus.OK).json({ place: place.toDetailDto(tour) });
         }).catch((error) => {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
         });
     } else {
-        res.status(HttpStatus.NO_CONTENT).json({ place: place.toDesignerDto(tour) });
+        res.status(HttpStatus.NO_CONTENT).json({ place: place.toDetailDto(tour) });
     }
 };
 
@@ -130,7 +130,7 @@ exports.addPlace = (req, res) => {
 
     tour.places.push(place);
 
-    const dto = tour.toDesignerDto();
+    const dto = tour.toDetailDto();
     res.json({ tour: dto });
 };
 
@@ -140,7 +140,7 @@ exports.removePlace = (req, res) => {
     const tour = cache[sessionId];
     tour.places = tour.places.filter(item => item.id !== placeId);
 
-    const dto = tour.toDesignerDto();
+    const dto = tour.toDetailDto();
     res.json({ tour: dto });
 };
 
@@ -150,7 +150,7 @@ exports.getPlace = (req, res) => {
     const tour = cache[sessionId];
     const place = tour.places.find(item => item.id === placeId);
 
-    res.json({ place: place.toDesignerDto(tour) });
+    res.json({ place: place.toDetailDto(tour) });
 };
 
 exports.updatePlace = (req, res) => {
@@ -163,7 +163,7 @@ exports.updatePlace = (req, res) => {
     place.longitude = placeUpdate.longitude;
     place.latitude = placeUpdate.latitude;
 
-    res.json({ place: place.toDesignerDto(tour) });
+    res.json({ place: place.toDetailDto(tour) });
 };
 
 exports.uploadImage360 = (req, res) => {
@@ -181,7 +181,7 @@ exports.uploadImage360 = (req, res) => {
         place.image360.height = parseInt(height);
         place.image360.width = parseInt(width);
 
-        res.json({ place: place.toDesignerDto(tour) });
+        res.json({ place: place.toDetailDto(tour) });
     }).catch(error => {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
@@ -216,7 +216,7 @@ exports.addConnection = (req, res) => {
 
     tour.connections.push(connection);
 
-    res.status(HttpStatus.OK).json({ tour: tour.toDesignerDto() });
+    res.status(HttpStatus.OK).json({ tour: tour.toDetailDto() });
 };
 
 exports.updateConnection = (req, res) => {
@@ -241,7 +241,7 @@ exports.deleteConnection = (req, res) => {
 
     tour.deleteConnection(place1Id, place2Id);
 
-    res.status(HttpStatus.OK).json({ tour: tour.toDesignerDto() })
+    res.status(HttpStatus.OK).json({ tour: tour.toDetailDto() })
 }
 
 function generatePlaceImage360Name(place, mapImage) {

@@ -28,7 +28,7 @@ Place.methods.toClient = function () {
     return dto;
 };
 
-Place.methods.toDesignerDto = function (tour) {
+Place.methods.toDetailDto = function (tour) {
     const starts = (tour.connections || []).filter(c => c.startPlaceId === this.id).map(c => c.endAsDestination(tour));
     const ends = (tour.connections || []).filter(c => c.endPlaceId === this.id).map(c => c.startAsDestination(tour));
 
