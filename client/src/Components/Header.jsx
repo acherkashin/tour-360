@@ -9,7 +9,6 @@ import {
     IconButton,
 } from '@material-ui/core';
 import {
-    Menu as MenuIcon,
     AccountCircle,
 } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';

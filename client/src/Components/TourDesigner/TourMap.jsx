@@ -140,7 +140,7 @@ TourMap.propTypes = {
     tour: PropTypes.shape(PropTypes.shape({
         places: PropTypes.array.isRequired,
         connections: PropTypes.array.isRequired,
-        mapType: PropTypes.oneOf('Earth', 'Image').isRequired,
+        mapType: PropTypes.oneOf(['Earth', 'Image']).isRequired,
     })).isRequired,
     onClick: PropTypes.func.isRequired,
     onMouseMove: PropTypes.func.isRequired,

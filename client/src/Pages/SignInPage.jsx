@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { grey, green } from '@material-ui/core/colors';
-import { TextField, Typography, Button, CircularProgress } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
+import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
+import { LoadingButton } from './../Components';
 import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword } from '../utils/validate.js';
 
@@ -25,23 +26,9 @@ const styles = theme => ({
         padding: 15,
         borderRadius: 5,
     },
-    signIn: {
-    },
     registerLink: {
         alignSelf: 'flex-end',
     },
-    signInWrapper: {
-        position: 'relative',
-        marginTop: '15px',
-    },
-    signInProgress: {
-        color: green[500],
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
 });
 
 const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
@@ -71,13 +58,13 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
         _handleEmailChanged(e) {
             const { value } = e.target;
             const { valid, error } = validEmail(value);
-            this.setState({ email: value, isEmailValid: valid, emailError: error});
+            this.setState({ email: value, isEmailValid: valid, emailError: error });
         }
 
         _handlePasswordChanged(e) {
             const { value } = e.target;
             const { valid, error } = validPassword(value);
-            this.setState({ password: value, isPasswordValid: valid, passwordError: error});
+            this.setState({ password: value, isPasswordValid: valid, passwordError: error });
         }
 
         _handleLogin(e) {
@@ -114,17 +101,14 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         fullWidth={true}
                         required
                     />
+                    {this.userStore.singInRejected && <Typography color="error">Invalid Username or Password</Typography>}
                     <Link className={classes.registerLink} to="/sign-up">To Register?</Link>
-                    <div className={classes.signInWrapper}>
-                        <Button
-                            className={classes.signIn}
-                            fullWidth={true}
-                            disabled={this.userStore.signInLoading || !isEmailValid  || !isPasswordValid}
-                            color="primary"
-                            onClick={this._handleLogin}
-                        >Login</Button>
-                        {this.userStore.signInLoading && <CircularProgress size={24} className={classes.signInProgress} />}
-                    </div>
+                    <LoadingButton
+                        style={{ marginTop: '15px' }}
+                        isLoading={this.userStore.signInLoading}
+                        disabled={this.userStore.signInLoading || !isEmailValid || !isPasswordValid}
+                        onClick={this._handleLogin}
+                    >Login</LoadingButton>
                 </div>
             </div >;
         }

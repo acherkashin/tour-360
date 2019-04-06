@@ -6,6 +6,7 @@ import TourCover from './TourCover';
 import NoToursPlaceholder from './NoToursPlaceholder';
 import PlaceholderButton from './PlaceholderButton';
 import EditImage from './EditImage';
+import LoadingButton from './LoadingButton';
 
 export {
     Header,
@@ -16,4 +17,5 @@ export {
     NoToursPlaceholder,
     PlaceholderButton,
     EditImage,
+    LoadingButton,
 };

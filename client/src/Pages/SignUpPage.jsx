@@ -6,6 +6,7 @@ import grey from '@material-ui/core/colors/grey';
 import { TextField, Typography, Button } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { redirectWhenAuth } from '../HOC';
+import { LoadingButton } from './../Components';
 import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
 
 const styles = theme => ({
@@ -27,9 +28,6 @@ const styles = theme => ({
     },
     loginLink: {
         alignSelf: 'flex-end',
-    },
-    register: {
-        marginTop: '15px',
     }
 });
 
@@ -75,25 +73,25 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
         _handleFirstNameChanged(e) {
             const { value } = e.target;
             const { valid, error } = validName(value);
-            this.setState({ firstName: value, isFirstNameValid: valid, firstNameError: error});
+            this.setState({ firstName: value, isFirstNameValid: valid, firstNameError: error });
         }
 
         _handleLastNameChanged(e) {
             const { value } = e.target;
             const { valid, error } = validName(value);
-            this.setState({ lastName: value, isLastNameValid: valid, lastNameError: error});
+            this.setState({ lastName: value, isLastNameValid: valid, lastNameError: error });
         }
 
         _handleEmailChanged(e) {
             const { value } = e.target;
             const { valid, error } = validEmail(value);
-            this.setState({ email: value, isEmailValid: valid, emailError: error});
+            this.setState({ email: value, isEmailValid: valid, emailError: error });
         }
 
         _handlePasswordChanged(e) {
             const { value } = e.target;
             const { valid, error } = validPassword(value);
-            this.setState({ password: value, isPasswordValid: valid, passwordError: error});
+            this.setState({ password: value, isPasswordValid: valid, passwordError: error });
         }
 
         _handleConfirmationPasswordChanged(e) {
@@ -114,7 +112,23 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
 
         render() {
             const { classes } = this.props;
-            const { email, password, firstName, lastName, confirmationPassword, isEmailValid, emailError, isPasswordValid, passwordError, isConfirmationPasswordValid, confirmationPasswordError, isFirstNameValid, firstNameError, isLastNameValid, lastNameError } = this.state;
+            const {
+                email,
+                password,
+                firstName,
+                lastName,
+                confirmationPassword,
+                isEmailValid,
+                emailError,
+                isPasswordValid,
+                passwordError,
+                isConfirmationPasswordValid,
+                confirmationPasswordError,
+                isFirstNameValid,
+                firstNameError,
+                isLastNameValid,
+                lastNameError
+            } = this.state;
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
@@ -175,13 +189,11 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         required
                     />
                     <Link className={classes.loginLink} to="/sign-in">To Login?</Link>
-                    <Button
-                        className={classes.register}
-                        fullWidth={true}
-                        color="primary"
+                    <LoadingButton
+                        style={{ marginTop: '15px' }}
                         disabled={!isEmailValid || !isPasswordValid || !isConfirmationPasswordValid || !isFirstNameValid || !isLastNameValid}
                         onClick={this._handleRegisterClick}
-                    >Register</Button>
+                    >Register</LoadingButton>
                 </div>
             </div>;
         }
