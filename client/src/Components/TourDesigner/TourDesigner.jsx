@@ -132,7 +132,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     get tourStore() {
-        return this.props.rootStore.tourStore;
+        return this.props.rootStore.tourEditStore;
     }
 
     get editingPlace() {
@@ -146,6 +146,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     get editingConnection() {
         return this.tourStore.editingConnection;
     }
+
 
     get sessionId() {
         return this.tourStore.sessionId;
@@ -286,7 +287,23 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
     _renderMap() {
         if ((this.editingTour.hasMapImage && this.editingTour.mapType === 'Image') || this.editingTour.mapType === 'Earth') {
-            return this._renderMap()
+            const { classes } = this.props;
+            const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
+            const selectedPlaceId = this._getSelectedPlaceId();
+    
+            return (<div className={classes.mapWrapper}>
+                <TourMap
+                    tour={this.editingTour}
+                    style={mapStyle}
+                    selectedPlaceId={selectedPlaceId}
+                    onClick={this._handleMapClick}
+                    onConnectionClick={this._handleConnectionClick}
+                    onPlaceClick={this._handlePlaceClick}
+                    onMouseMove={this._handleMouseMoveOnMap}
+                    onZoomChanged={this._handleZoomChanged}
+                />
+                {this._renderStatusBar()}
+            </div>);
         } else {
             return this._renderNoMapPlaceholder();
         }
@@ -297,26 +314,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
         return (<div className={classes.noImageMap}>
             <Typography className={classes.noImageMapPlaceholder}>Image for map is not selected. Click <PlaceholderButton onClick={this._handleChangeImageMapClick} text={'here'} /> to select image</Typography>
-        </div>);
-    }
-
-    _renderMap() {
-        const { classes } = this.props;
-        const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
-        const selectedPlaceId = this._getSelectedPlaceId();
-
-        return (<div className={classes.mapWrapper}>
-            <TourMap
-                tour={this.editingTour}
-                style={mapStyle}
-                selectedPlaceId={selectedPlaceId}
-                onClick={this._handleMapClick}
-                onConnectionClick={this._handleConnectionClick}
-                onPlaceClick={this._handlePlaceClick}
-                onMouseMove={this._handleMouseMoveOnMap}
-                onZoomChanged={this._handleZoomChanged}
-            />
-            {this._renderStatusBar()}
         </div>);
     }
 

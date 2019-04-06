@@ -1,4 +1,4 @@
-import { extendObservable, action, observable, runInAction } from 'mobx';
+import { extendObservable } from 'mobx';
 import localStorage from 'mobx-localstorage';
 import { fromPromise } from 'mobx-utils';
 import decode from 'jwt-decode';
@@ -13,6 +13,9 @@ export default class UserStore {
             currentUser: null,
             get signInLoading() {
                 return this.signInResult && this.signInResult.state === "pending";
+            },
+            get singInRejected() {
+                return this.signInResult && this.signInResult.state === "rejected";
             },
             get siggnedIn() {
                 const token = UserStore.getToken();

@@ -72,6 +72,10 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
             return this.props.rootStore.tourStore;
         }
 
+        get editStore() {
+            return this.props.rootStore.tourEditStore;
+        }
+
         loadAllTours() {
             this.store.loadTours();
         }
@@ -130,7 +134,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                 icon: <Edit />,
                 text: 'Edit',
                 action: (e) => {
-                    this.store.beginEditing(e.tour.id).then((sessionId) => {
+                    this.editStore.beginEditing(e.tour.id).then((sessionId) => {
                         history.push(`/tours/edit/${sessionId}`);
                     });
                 }
