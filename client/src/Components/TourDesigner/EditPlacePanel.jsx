@@ -31,6 +31,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
         this._handleViewConnectionClick = this._handleViewConnectionClick.bind(this);
         this._handleRemoveConnectionClick = this._handleRemoveConnectionClick.bind(this);
         this._handleEditConnectionClick = this._handleEditConnectionClick.bind(this);
+        this._handleDescriptionChanged = this._handleDescriptionChanged.bind(this);
     }
 
     _handleNameChanged(e) {
@@ -75,6 +76,10 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
 
     _handleEditConnectionClick(e) {
         this.props.onEditConnectionClick({ origin: this, connection: e.connection });
+    }
+
+    _handleDescriptionChanged(e) {
+        this.props.onDescriptionClick({ origin: this });
     }
 
     render() {
@@ -124,6 +129,9 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
             <Button fullWidth variant="text" color="primary" onClick={this._handleDeleteClick}>
                 Delete
             </Button>
+            <Button fullWidth variant="text" color="primary" onClick={this._handleDescriptionChanged}>
+                Edit Description
+            </Button>
         </div>;
     }
 });
@@ -144,6 +152,7 @@ EditPlacePanel.propTypes = {
     onViewConnectionClick: PropTypes.func.isRequired,
     onRemoveConnectionClick: PropTypes.func.isRequired,
     onEditConnectionClick: PropTypes.func.isRequired,
+    onDescriptionClick: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(EditPlacePanel);

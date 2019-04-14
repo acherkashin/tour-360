@@ -11,6 +11,7 @@ const Place = new mongoose.Schema({
         height: Number,
         width: Number,
     },
+    description: { type: String, default: '' },
 });
 
 Place.methods.toClient = function () {

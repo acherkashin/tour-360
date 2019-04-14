@@ -11,9 +11,6 @@ const styles = theme => ({
 
 const ViewMapPage = requireAuth(inject("rootStore")(observer(
     class ViewMapPage extends React.Component {
-        constructor(props) {
-            super(props);
-        }
         get store() {
             return this.props.rootStore.viewTourStore;
         }

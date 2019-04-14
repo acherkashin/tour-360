@@ -15,7 +15,7 @@ import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
 import MapEditMode from './MapEditMode';
 import { PlaceholderButton, LoadingButton } from './../';
-import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
+import { UploadImageDialog, ConfirmDialog, HtmlEditDialog } from './../Dialogs';
 import { TourMap } from './';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
@@ -94,6 +94,9 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
         this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
         this._closePreviewDialog = this._closePreviewDialog.bind(this);
+
+        this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
+        this._handleCloseDescriptionDialog = this._handleCloseDescriptionDialog.bind(this);
     }
 
     state = {
@@ -101,6 +104,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         isOpenedConfirmDialog: false,
         isOpenedDeleteDialog: false,
         isOpenedPreviewDialog: false,
+        isOpenedPlaceDescriptionDialog: false,
         mapEditMode: 0,
     };
 
@@ -168,6 +172,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             this._handleCloseConfirmDialog();
         });
     }
+
     _handleCloseConfirmDialog() {
         this.setState({ isOpenedConfirmDialog: false });
     }
@@ -194,6 +199,15 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
     _closePreviewDialog() {
         this.setState({ isOpenedPreviewDialog: false });
+    }
+
+    /* Description Dialog */
+    _handleOpenDescriptionDialog() {
+        this.setState({ isOpenedPlaceDescriptionDialog: true });
+    }
+
+    _handleCloseDescriptionDialog() {
+        this.setState({ isOpenedPlaceDescriptionDialog: false });
     }
 
     _handleChangeImageMapClick(e) {
@@ -266,7 +280,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
     _renderMap() {
         if ((this.editingTour.hasMapImage && this.editingTour.mapType === 'Image') || this.editingTour.mapType === 'Earth') {
-            const { classes } = this.props;
             const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
             const selectedPlaceId = this._getSelectedPlaceId();
 
@@ -326,7 +339,14 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         }
 
         const { classes } = this.props;
-        const { uploadImageDialogState, isOpenedConfirmDialog, isOpenedDeleteDialog, isOpenedPreviewDialog, mapEditMode } = this.state;
+        const {
+            uploadImageDialogState,
+            isOpenedConfirmDialog,
+            isOpenedDeleteDialog,
+            isOpenedPreviewDialog,
+            isOpenedPlaceDescriptionDialog,
+            mapEditMode,
+        } = this.state;
         const { saveLoading, isDirty } = this.tourStore;
 
         return (
@@ -387,6 +407,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             onSoundRemoved={(e) => {
                                 this.tourStore.removePlaceSound();
                             }}
+                            onDescriptionClick={this._handleOpenDescriptionDialog}
                         />
                     </div>}
                     {this.showEditConnectionPanel && <div className={classes.rightPanel}>
@@ -433,6 +454,16 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                     url={this.editingPlace && this.tourStore.getPlaceImage360Url(this.editingPlace.id)}
                     isOpened={isOpenedPreviewDialog}
                     onClose={this._closePreviewDialog}
+                />
+                <HtmlEditDialog
+                    title="Edit Place Description"
+                    htmlContent={this.editingPlace && this.editingPlace.description}
+                    isOpened={isOpenedPlaceDescriptionDialog}
+                    onClose={this._handleCloseDescriptionDialog}
+                    onSaveClick={(e) => {
+                        this.editingPlace.description = e.htmlContent;
+                        this._handleCloseDescriptionDialog();
+                    }}
                 />
             </Dialog>
         );

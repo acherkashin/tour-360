@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 import DialogTitleWithClose from './DialogTItleWithClose';
 
-
 class ConfirmDialog extends React.Component {
     constructor(props) {
         super(props);
@@ -56,8 +55,8 @@ class ConfirmDialog extends React.Component {
 ConfirmDialog.propTypes = {
     title: PropTypes.string.isRequired,
     contentText: PropTypes.string.isRequired,
-    okButtonText: PropTypes.string.isRequired,
-    cancelButtonText: PropTypes.string.isRequired,
+    okButtonText: PropTypes.string,
+    cancelButtonText: PropTypes.string,
     onOkClick: PropTypes.func.isRequired,
     onCancelClick: PropTypes.func.isRequired,
     isOpened: PropTypes.bool.isRequired,
