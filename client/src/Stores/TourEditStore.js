@@ -9,6 +9,8 @@ export default class TourEditStore {
     constructor(rootStore) {
         this.rootStore = rootStore;
         this.editingTourDisposer = null;
+        this.editingPlaceDisposer = null;
+        this.editingConnectionDisposer = null;
 
         extendObservable(this, {
             saveResult: null,
@@ -43,10 +45,11 @@ export default class TourEditStore {
     }
 
     editPlace(placeId) {
-        this.editingConnection = null;
+        this._clearEditingConnection();
         return TourEditService.getPlace(this.sessionId, placeId).then(action((resp) => {
             const { place } = resp.data;
             this.editingPlace = new EditPlace(this, this.sessionId, place);
+            this.editingPlaceDisposer = deepObserve(this.editingPlace, () => this.isDirty = true);
         }));
     }
 
@@ -82,9 +85,10 @@ export default class TourEditStore {
     }
 
     editConnection(connectionId) {
-        this.editingPlace = null;
+        this._clearEditingPlace();
         return TourEditService.getConnection(this.sessionId, connectionId).then((action((resp) => {
             this.editingConnection = new EditConnection(this, this.sessionId, resp.data.connection);
+            this.editingConnectionDisposer = deepObserve(this.editingConnection, () => this.isDirty = true);
         })));
     }
 
@@ -94,7 +98,7 @@ export default class TourEditStore {
             this.editingTour.updatePlaceFromJson(place);
 
             if (cancel) {
-                this.cancelEditingPlace();
+                this._clearEditingPlace();
             } else {
                 this.editingPlace.updateFromJson(place);
             }
@@ -102,7 +106,7 @@ export default class TourEditStore {
     }
 
     cancelEditingPlace() {
-        this.editingPlace = null;
+        this._clearEditingPlace();
     }
 
     saveEditingConnection(cancel = false) {
@@ -112,7 +116,7 @@ export default class TourEditStore {
             this.editingTour.updateConnectionFromJson(connection);
 
             if (cancel) {
-                this.editingConnection = null;
+                this._clearEditingConnection();
             } else {
                 this.editingConnection.updateFromJson(connection);
             }
@@ -122,7 +126,7 @@ export default class TourEditStore {
     cancelEditing() {
         return TourEditService.cancelChanges(this.sessionId).then(action(() => {
             this.editingTour = null;
-            this.editingPlace = null;
+            this._clearEditingPlace();
             this.isDirty = false;
             this.editingTourDisposer && this.editingTourDisposer();
         }))
@@ -134,7 +138,7 @@ export default class TourEditStore {
             startPlaceId: this.editingTour.startPlaceId,
             isPublic: this.editingTour.isPublic,
         }));
-        
+
         this.saveResult.then(action((result) => {
             this.editingTour.updateFromJson(result.data.tour);
             this.isDirty = false;
@@ -192,13 +196,26 @@ export default class TourEditStore {
         return `${VR_URL}?sessionId=${this.sessionId}&placeId=${placeId}&token=${UserStore.getToken()}`;
     }
 
+    _clearEditingPlace() {
+        this.editingPlace = null;
+        this.editingPlaceDisposer && this.editingPlaceDisposer();
+    }
+
+    _clearEditingConnection() {
+        this.editingConnection = null;
+        this.editingConnectionDisposer && this.editingConnectionDisposer();
+    }
+
+    _clearEditingTour() {
+        this.editingTour = null;
+        this.editingTourDisposer && this.editingTourDisposer();
+    }
+
     _updateEditingTour = action((sessionId, tour) => {
         this.editingTour = new EditTour(this, tour);
         this.isDirty = false;
 
-        this.editingTourDisposer = deepObserve(this.editingTour, (change, path, root) => {
-            this.isDirty = true;
-        });
+        this.editingTourDisposer = deepObserve(this.editingTour, () => this.isDirty = true);
 
         this.sessionId = sessionId;
     });
