@@ -103,7 +103,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
         this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
         this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
-        this._handleCloseConfirmDialog = this._closeConfirmDialog.bind(this);
+        this._handleCloseConfirmDialog = this._handleCloseConfirmDialog.bind(this);
 
         this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
         this._handleOkDeletePlaceClick = this._handleOkDeletePlaceClick.bind(this);
@@ -177,15 +177,15 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this.tourStore.completeEditing().then(() => {
             this.tourStore.cancelEditing();
         }).finally(() => {
-            this._closeConfirmDialog();
+            this._handleCloseConfirmDialog();
         });
     }
     _handleCancelConfigrmClick() {
         this.tourStore.cancelEditing().finally(() => {
-            this._closeConfirmDialog();
+            this._handleCloseConfirmDialog();
         });
     }
-    _closeConfirmDialog() {
+    _handleCloseConfirmDialog() {
         this.setState({ isOpenedConfirmDialog: false });
     }
 
@@ -461,7 +461,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                     onOkClick={this._handleOkConfirmClick}
                     onCancelClick={this._handleCancelConfigrmClick}
                     isOpened={isOpenedConfirmDialog}
-                    onClose={this._closeConfirmDialog}
+                    onClose={this._handleCloseConfirmDialog}
                 />
                 <ConfirmDialog
                     title='Delete Place'
