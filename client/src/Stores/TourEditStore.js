@@ -135,8 +135,8 @@ export default class TourEditStore {
         }));
         
         this.saveResult.then(action((result) => {
-            this.isDirty = false;
             this.editingTour.updateFromJson(result.data.tour);
+            this.isDirty = false;
         }));
     }
 
