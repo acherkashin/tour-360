@@ -4,11 +4,30 @@ import { withStyles } from '@material-ui/core/styles';
 import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import { Connection, Place, } from './';
+import grey from '@material-ui/core/colors/grey';
 
 const styles = theme => ({
     root: {
-        flex: 1
-    }
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'stretch',
+    },
+    map: {
+        flex: 1,
+    },
+    statusBar: {
+        borderTop: `1px solid ${grey[300]}`,
+        padding: 3,
+    },
+    field: {
+        marginLeft: 5,
+    },
+    lable: {
+        fontWeight: 700,
+        marginRight: 5,
+    },
+    value: {}
 });
 
 class TourMap extends React.Component {
@@ -22,6 +41,12 @@ class TourMap extends React.Component {
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
     }
 
+    state = {
+        currentLat: 0,
+        currentLng: 0,
+        currentZoom: 0,
+    }
+
     _handleMapClick(e) {
         this.props.onClick && this.props.onClick({
             origin: this,
@@ -30,6 +55,8 @@ class TourMap extends React.Component {
     }
 
     _handleMouseMove(e) {
+        this.setState({ currentLat: e.latlng.lat, currentLng: e.latlng.lng });
+
         this.props.onMouseMove && this.props.onMouseMove({
             origin: this,
             latlng: e.latlng,
@@ -92,16 +119,16 @@ class TourMap extends React.Component {
         </>;
     }
 
-    render() {
-        const { classes, tour, style } = this.props;
+    _renderMap() {
+        const { classes, tour, mapStyle } = this.props;
 
         if (tour.mapType === "Image") {
             const bounds = [[0, 0], [tour.imageHeight, tour.imageWidth]];
 
             return <Map crs={L.CRS.Simple}
                 bounds={bounds}
-                className={classes.root}
-                style={style}
+                className={classes.map}
+                style={mapStyle}
                 onclick={this._handleMapClick}
                 onmousemove={this._handleMouseMove}
                 onzoomend={this._handleZoomChanged}>
@@ -117,8 +144,8 @@ class TourMap extends React.Component {
             return (
                 <Map center={state.position}
                     zoom={state.zoom}
-                    className={classes.root}
-                    style={style}
+                    className={classes.map}
+                    style={mapStyle}
                     onclick={this._handleMapClick}
                     onmousemove={this._handleMouseMove}
                     onzoomend={this._handleZoomChanged}>
@@ -131,22 +158,53 @@ class TourMap extends React.Component {
             );
         }
     }
+
+    _renderStatusBar() {
+        const { classes } = this.props;
+        const { currentLng, currentLat, currentZoom } = this.state;
+
+        return (
+            <div className={classes.statusBar}>
+                <span className={classes.field}>
+                    <span className={classes.lable}>X:</span>
+                    <span className={classes.value}>{parseInt(currentLng)}</span>
+                </span>
+                <span className={classes.field}>
+                    <span className={classes.lable}>Y:</span>
+                    <span className={classes.value}>{parseInt(currentLat)}</span>
+                </span>
+                <span className={classes.field}>
+                    <span className={classes.lable}>Z:</span>
+                    <span className={classes.value}>{parseInt(currentZoom)}</span>
+                </span>
+            </div>
+        )
+    }
+
+    render() {
+        const { classes } = this.props;
+
+        return <div className={classes.root}>
+            {this._renderMap()}
+            {this._renderStatusBar()}
+        </div>;
+    }
 }
 
 TourMap.propTypes = {
     classes: PropTypes.object.isRequired,
-    style: PropTypes.object,
+    mapStyle: PropTypes.object,
     selectedPlaceId: PropTypes.string,
     tour: PropTypes.shape(PropTypes.shape({
         places: PropTypes.array.isRequired,
         connections: PropTypes.array.isRequired,
         mapType: PropTypes.oneOf(['Earth', 'Image']).isRequired,
     })).isRequired,
-    onClick: PropTypes.func.isRequired,
-    onMouseMove: PropTypes.func.isRequired,
-    onZoomChanged: PropTypes.func.isRequired,
-    onPlaceClick: PropTypes.func.isRequired,
-    onConnectionClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
+    onMouseMove: PropTypes.func,
+    onZoomChanged: PropTypes.func,
+    onPlaceClick: PropTypes.func,
+    onConnectionClick: PropTypes.func,
 }
 
 export default withStyles(styles)(TourMap);

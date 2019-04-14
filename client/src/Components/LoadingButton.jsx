@@ -20,13 +20,21 @@ const styles = theme => ({
 
 class LoadingButton extends React.Component {
     render() {
-        const { classes, style, disabled = false, onClick, isLoading = false, children } = this.props;
+        const {
+            classes,
+            style,
+            disabled = false,
+            onClick,
+            isLoading = false,
+            children,
+            color = "primary",
+        } = this.props;
 
         return <div className={classes.root} style={style || {}}>
             <Button
                 fullWidth={true}
                 disabled={disabled}
-                color="primary"
+                color={color}
                 onClick={onClick}
             >
                 {children}
@@ -39,6 +47,7 @@ class LoadingButton extends React.Component {
 LoadingButton.propTypes = {
     classes: PropTypes.object.isRequired,
     style: PropTypes.object,
+    color: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     isLoading: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,

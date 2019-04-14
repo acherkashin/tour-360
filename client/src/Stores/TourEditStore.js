@@ -1,7 +1,7 @@
 import { extendObservable, action, runInAction } from 'mobx';
 import { TourEditService } from './../api';
 import { EditTour, EditPlace, EditConnection } from './';
-import { deepObserve } from 'mobx-utils';
+import { deepObserve, fromPromise } from 'mobx-utils';
 import { VR_URL } from './../config';
 import UserStore from './UserStore'
 
@@ -10,12 +10,17 @@ export default class TourEditStore {
         this.editingTourDisposer = null;
 
         extendObservable(this, {
+            saveResult: null,
+
             editingTour: null,
             editingPlace: null,
             editingConnection: null,
             sessionId: null,
-            firstConnectionPlace: null, 
+            firstConnectionPlace: null,
             isDirty: false,
+            get saveLoading() {
+                return this.saveResult && this.saveResult.state === "pending";
+            },
         });
     }
 
@@ -123,10 +128,13 @@ export default class TourEditStore {
     }
 
     completeEditing() {
-        return TourEditService.saveChanges(this.sessionId, {
+        this.saveResult = fromPromise(TourEditService.saveChanges(this.sessionId, {
             name: this.editingTour.name,
             startPlaceId: this.editingTour.startPlaceId,
-        }).then(action((result) => {
+        }));
+        
+        this.saveResult.then(action((result) => {
+            this.isDirty = false;
             this.editingTour.updateFromJson(result.data.tour);
         }));
     }

@@ -2,24 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import {
+    Dialog,
+    AppBar,
+    Toolbar,
+    IconButton,
+    Typography,
+    Slide,
+} from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import grey from '@material-ui/core/colors/grey';
 import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
 import MapEditMode from './MapEditMode';
-import { PlaceholderButton } from './../';
+import { PlaceholderButton, LoadingButton } from './../';
 import { UploadImageDialog, ConfirmDialog } from './../Dialogs';
 import { TourMap } from './';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
 import ViewUrlDialog from '../Dialogs/ViewUrlDialog';
+import grey from '@material-ui/core/colors/grey';
 
 const styles = (theme) => ({
     appBar: {
@@ -44,12 +45,6 @@ const styles = (theme) => ({
         flexDirection: 'row',
         alignItems: 'stretch',
     },
-    mapWrapper: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'stretch',
-    },
     rightPanel: {
         display: 'flex',
         flexDirection: 'column',
@@ -59,18 +54,6 @@ const styles = (theme) => ({
         backgroundColor: grey[100],
         borderLeft: `1px solid ${theme.palette.divider}`,
     },
-    statusBar: {
-        borderTop: `1px solid ${grey[300]}`,
-        padding: 3,
-    },
-    field: {
-        marginLeft: 5,
-    },
-    lable: {
-        fontWeight: 700,
-        marginRight: 5,
-    },
-    value: {}
 });
 
 function Transition(props) {
@@ -91,7 +74,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handlePlaceNameChanged = this._handlePlaceNameChanged.bind(this);
         this._handleChangePlaceImage360Click = this._handleChangePlaceImage360Click.bind(this);
-        this._handleMouseMoveOnMap = this._handleMouseMoveOnMap.bind(this);
         this._handleZoomChanged = this._handleZoomChanged.bind(this);
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
         this._handleFileSelected = this._handleFileSelected.bind(this);
@@ -114,9 +96,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     state = {
-        currentLat: 0,
-        currentLng: 0,
-        currentZoom: 0,
         uploadImageDialogState: 0,
         isOpenedConfirmDialog: false,
         isOpenedDeleteDialog: false,
@@ -217,10 +196,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this.setState({ uploadImageDialogState: TOUR_MAP });
     }
 
-    _handleMouseMoveOnMap(e) {
-        this.setState({ currentLat: e.latlng.lat, currentLng: e.latlng.lng });
-    }
-
     _handleZoomChanged(e) {
         this.setState({ currentZoom: e.zoom });
     }
@@ -290,20 +265,16 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             const { classes } = this.props;
             const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
             const selectedPlaceId = this._getSelectedPlaceId();
-    
-            return (<div className={classes.mapWrapper}>
-                <TourMap
-                    tour={this.editingTour}
-                    style={mapStyle}
-                    selectedPlaceId={selectedPlaceId}
-                    onClick={this._handleMapClick}
-                    onConnectionClick={this._handleConnectionClick}
-                    onPlaceClick={this._handlePlaceClick}
-                    onMouseMove={this._handleMouseMoveOnMap}
-                    onZoomChanged={this._handleZoomChanged}
-                />
-                {this._renderStatusBar()}
-            </div>);
+
+            return <TourMap
+                tour={this.editingTour}
+                mapStyle={mapStyle}
+                selectedPlaceId={selectedPlaceId}
+                onClick={this._handleMapClick}
+                onConnectionClick={this._handleConnectionClick}
+                onPlaceClick={this._handlePlaceClick}
+                onZoomChanged={this._handleZoomChanged}
+            />;
         } else {
             return this._renderNoMapPlaceholder();
         }
@@ -331,28 +302,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         return null;
     }
 
-    _renderStatusBar() {
-        const { classes } = this.props;
-        const { currentLng, currentLat, currentZoom } = this.state;
-
-        return (
-            <div className={classes.statusBar}>
-                <span className={classes.field}>
-                    <span className={classes.lable}>X:</span>
-                    <span className={classes.value}>{parseInt(currentLng)}</span>
-                </span>
-                <span className={classes.field}>
-                    <span className={classes.lable}>Y:</span>
-                    <span className={classes.value}>{parseInt(currentLat)}</span>
-                </span>
-                <span className={classes.field}>
-                    <span className={classes.lable}>Z:</span>
-                    <span className={classes.value}>{parseInt(currentZoom)}</span>
-                </span>
-            </div>
-        )
-    }
-
     _handleFileSelected(e) {
         const { uploadImageDialogState } = this.state;
         if (uploadImageDialogState === TOUR_MAP) {
@@ -374,6 +323,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
         const { classes } = this.props;
         const { uploadImageDialogState, isOpenedConfirmDialog, isOpenedDeleteDialog, isOpenedPreviewDialog, mapEditMode } = this.state;
+        const { saveLoading, isDirty } = this.tourStore;
 
         return (
             <Dialog
@@ -387,7 +337,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.tourName}>{this.editingTour.name}</Typography>
-                        <Button color="inherit" onClick={this._handleSave}>save</Button>
+                        <LoadingButton color={"inherit"} disabled={!isDirty} isLoading={saveLoading} onClick={this._handleSave}>save</LoadingButton>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
