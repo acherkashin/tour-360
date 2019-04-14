@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
 import {
+    FormControlLabel,
     TextField,
     Button,
     Select,
     FormControl,
     MenuItem,
     InputLabel,
-    Input
+    Input,
+    Checkbox,
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -26,6 +28,7 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
+        this._handleIsPublicChanged = this._handleIsPublicChanged.bind(this);
     }
 
     _handleNameChanged(e) {
@@ -38,6 +41,10 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
 
     _handleStartPlaceChanged(e) {
         this.props.onStartPlaceChanged({ origin: this, startPlaceId: e.target.value });
+    }
+
+    _handleIsPublicChanged(e) {
+        this.props.onIsPublicChanged({ origin: this, isPublic: e.target.checked });
     }
 
     render() {
@@ -68,6 +75,17 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
                     {places.map(place => <MenuItem key={place.id} value={place.id}>{place.name}</MenuItem>)}
                 </Select>
             </FormControl>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={tour.isPublic}
+                        onChange={this._handleIsPublicChanged}
+                        value="isPublic"
+                    />
+                }
+                label="Is Public Tour"
+                title="Determines can unauthorized users see this tour"
+            />
         </div>);
     }
 });
@@ -85,6 +103,7 @@ EditTourPanel.propTypes = {
     onNameChanged: PropTypes.func.isRequired,
     onChangeImageMapClick: PropTypes.func.isRequired,
     onStartPlaceChanged: PropTypes.func.isRequired,
+    onIsPublicChanged: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(EditTourPanel);

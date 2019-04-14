@@ -22,6 +22,7 @@ const Tour = new mongoose.Schema({
     places: [Place],
     connections: [Connection],
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    isPublic: { type: Boolean, default: false, required: true },
 });
 
 Tour.index({ createdBy: 1, name: 1 }, { unique: true });
@@ -39,7 +40,8 @@ Tour.methods.toClient = function () {
         mapType: this.mapType,
         hasImage: this.cover && this.cover.filename != null,
         filename: this.cover && this.cover.filename,
-        startPlaceId
+        startPlaceId,
+        isPublic: this.isPublic,
     };
 };
 
@@ -55,6 +57,7 @@ Tour.methods.toDetailDto = function () {
         imageHeight: this.mapImage && this.mapImage.height,
         filename: this.mapImage && this.mapImage.filename,
         startPlaceId: this.startPlaceId,
+        isPublic: this.isPublic,
     };
 
     return dto;

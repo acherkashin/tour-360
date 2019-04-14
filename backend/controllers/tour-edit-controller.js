@@ -34,11 +34,12 @@ exports.startEditing = (req, res) => {
 
 exports.saveChanges = (req, res) => {
     const { sessionId } = req.params;
-    const { startPlaceId, name } = req.body;
+    const { startPlaceId, name, isPublic } = req.body;
 
     let tour = cache[sessionId];
     tour.startPlaceId = startPlaceId;
     tour.name = name;
+    tour.isPublic = isPublic;
 
     tour.save().then(() => {
         tour = cache[sessionId].toDetailDto();

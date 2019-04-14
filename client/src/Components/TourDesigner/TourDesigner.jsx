@@ -82,6 +82,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
+        this._handleIsPublicChanged = this._handleIsPublicChanged.bind(this);
 
         this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
         this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
@@ -126,7 +127,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         return this.tourStore.editingConnection;
     }
 
-
     get sessionId() {
         return this.tourStore.sessionId;
     }
@@ -145,6 +145,10 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
     _handleStartPlaceChanged(e) {
         this.editingTour.startPlaceId = e.startPlaceId;
+    }
+
+    _handleIsPublicChanged(e) {
+        this.editingTour.isPublic = e.isPublic;
     }
 
     _handleViewImage360Click() {
@@ -349,6 +353,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             onNameChanged={this._handleNameChanged}
                             onChangeImageMapClick={this._handleChangeImageMapClick}
                             onStartPlaceChanged={this._handleStartPlaceChanged}
+                            onIsPublicChanged={this._handleIsPublicChanged}
                         />
                         <MapEditMode
                             value={mapEditMode}

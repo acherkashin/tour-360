@@ -132,6 +132,7 @@ export default class TourEditStore {
         this.saveResult = fromPromise(TourEditService.saveChanges(this.sessionId, {
             name: this.editingTour.name,
             startPlaceId: this.editingTour.startPlaceId,
+            isPublic: this.editingTour.isPublic,
         }));
         
         this.saveResult.then(action((result) => {
