@@ -1,9 +1,8 @@
 import { extendObservable } from "mobx";
 
 export default class EditTour {
-    constructor(store, sessionId, json) {
+    constructor(store, json) {
         this.store = store;
-        this.sessionId = sessionId;
         this.id = json.id;
 
         extendObservable(this, {

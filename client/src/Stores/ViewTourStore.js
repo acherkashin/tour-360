@@ -1,8 +1,11 @@
-import { extendObservable, action, runInAction } from 'mobx';
+import { extendObservable } from 'mobx';
 import { TourService } from './../api';
+import EditTour from './../Stores/Models/EditTour';
 
 export default class ViewTourStore {
     constructor(rootStore) {
+        this.rootStore = rootStore;
+
         extendObservable(this, {
             tour: null,
         });
@@ -10,7 +13,8 @@ export default class ViewTourStore {
 
     selectById(id) {
         TourService.getById(id).then((resp) => {
-            this.tour = resp.data.result;
+            //TODO: we shouldn't to use EditTour here
+            this.tour = new EditTour(this.rootStore.tourEditStore, resp.data.result);
         });
     }
 }

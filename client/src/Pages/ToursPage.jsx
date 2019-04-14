@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Fab } from '@material-ui/core';
-import { Add, Edit, Delete, Visibility } from '@material-ui/icons';
+import { Add, Edit, Delete, Visibility, Map } from '@material-ui/icons';
 import { observer, inject } from 'mobx-react';
 import { Route } from "react-router-dom";
 import { requireAuth } from '../HOC';
@@ -141,6 +141,12 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                 text: 'Delete',
                 action: (e) => {
                     this.store.delete(e.tour.id);
+                }
+            }, {
+                icon: <Map />,
+                text: 'View Tour Map',
+                action: (e) => {
+                    this.store.viewMap(e.tour.id);
                 }
             }];
 

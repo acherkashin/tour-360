@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Provider } from 'mobx-react';
 import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
-import { SignInPage, SignUpPage, ToursPage } from './Pages';
+import { SignInPage, SignUpPage, ToursPage, ViewMapPage } from './Pages';
 import RootStore from './Stores/RootStore';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
@@ -12,6 +12,7 @@ const styles = theme => ({
   root: {
     width: '100%',
     height: '100%',
+    display: 'flex',
   }
 });
 
@@ -26,6 +27,7 @@ class App extends Component {
         <Router>
           <div className={classes.root}>
             <Switch>
+              <Route path="/tour/:tourId/view-tour" component={ViewMapPage}/>
               <Route path="/tours" component={ToursPage} />
               <Route path="/sign-in" component={SignInPage} />
               <Route path="/sign-up" component={SignUpPage} />

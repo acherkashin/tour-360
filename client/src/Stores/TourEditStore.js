@@ -7,6 +7,7 @@ import UserStore from './UserStore'
 
 export default class TourEditStore {
     constructor(rootStore) {
+        this.rootStore = rootStore;
         this.editingTourDisposer = null;
 
         extendObservable(this, {
@@ -191,7 +192,7 @@ export default class TourEditStore {
     }
 
     _updateEditingTour = action((sessionId, tour) => {
-        this.editingTour = new EditTour(this, sessionId, tour);
+        this.editingTour = new EditTour(this, tour);
         this.isDirty = false;
 
         this.editingTourDisposer = deepObserve(this.editingTour, (change, path, root) => {

@@ -195,11 +195,11 @@ TourMap.propTypes = {
     classes: PropTypes.object.isRequired,
     mapStyle: PropTypes.object,
     selectedPlaceId: PropTypes.string,
-    tour: PropTypes.shape(PropTypes.shape({
+    tour: PropTypes.shape({
         places: PropTypes.array.isRequired,
         connections: PropTypes.array.isRequired,
         mapType: PropTypes.oneOf(['Earth', 'Image']).isRequired,
-    })).isRequired,
+    }).isRequired,
     onClick: PropTypes.func,
     onMouseMove: PropTypes.func,
     onZoomChanged: PropTypes.func,

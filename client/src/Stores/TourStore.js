@@ -59,6 +59,11 @@ export default class TourStore {
         }));
     });
 
+    viewMap(tourId) {
+        window.open(`/tour/${tourId}/view-tour`);
+    }
+
+    //TODO: rename to view360 or viewPlace
     view(tourId, placeId) {
         const tour = this._getById(tourId);
         if (!placeId) {
