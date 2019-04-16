@@ -5,8 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
-import { LoadingButton } from './../Components';
-import { requireAuth } from './../HOC';
+import { LoadingButton } from '../Components';
+import { requireAuth } from '../HOC';
 import { validEmail, validName } from '../utils/validate.js';
 
 const styles = theme => ({
@@ -31,8 +31,8 @@ const styles = theme => ({
     },
 });
 
-const Profile = requireAuth(inject("rootStore")(observer(
-    class Profile extends React.Component {
+const ProfilePage = requireAuth(inject("rootStore")(observer(
+    class ProfilePage extends React.Component {
         constructor(props) {
             super(props);
 
@@ -141,8 +141,8 @@ const Profile = requireAuth(inject("rootStore")(observer(
     }
 )));
 
-Profile.propTypes = {
+ProfilePage.propTypes = {
     classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Profile);
+export default withStyles(styles)(ProfilePage);

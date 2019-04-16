@@ -47,7 +47,7 @@ class LoadingButton extends React.Component {
 LoadingButton.propTypes = {
     classes: PropTypes.object.isRequired,
     style: PropTypes.object,
-    color: PropTypes.string.isRequired,
+    color: PropTypes.string,
     disabled: PropTypes.bool,
     isLoading: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
