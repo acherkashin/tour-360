@@ -9,6 +9,7 @@ export default class UserStore {
         extendObservable(this, {
             signInResult: null,
             signUpResult: null,
+            editUserResult: null,
             getCurrentUserResult: null,
             currentUser: null,
             get signInLoading() {
@@ -16,6 +17,9 @@ export default class UserStore {
             },
             get singInRejected() {
                 return this.signInResult && this.signInResult.state === "rejected";
+            },
+            get editUserLoading() {
+                return this.editUserResult && this.editUserResult.state === "pending";
             },
             get siggnedIn() {
                 const token = UserStore.getToken();
@@ -41,6 +45,14 @@ export default class UserStore {
         });
 
         return this.signInResult;
+    }
+
+    editUser(email, newEmail, firstName, lastName) {
+        this.editUserResult = fromPromise(UserService.editUser(email, newEmail, firstName, lastName)).then((resp) => {
+            console.log(resp);
+        });
+
+        return this.editUserResult;
     }
 
     getCurrentUser() {
