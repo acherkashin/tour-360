@@ -127,7 +127,7 @@ class UploadImageDialog extends React.Component {
                 <DialogContent className={classes.dialogContent}>
                     {!selectedFileUrl && <Typography align="center" variant="body1" className={classes.prompt}>{prompt}</Typography>}
                     {selectedFileUrl && (<div className={classes.previewContainer}>
-                        <img className={classes.imagePreview} src={selectedFileUrl} alt="Selected image preview" />
+                        <img className={classes.imagePreview} src={selectedFileUrl} alt="Selected preview" />
                         <div>
                             <Typography inline className={classes.width}>
                                 Width: {fileWidth},

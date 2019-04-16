@@ -1,13 +1,10 @@
 const jwt = require('jsonwebtoken');
 const config = require('./../config.js');
 const HttpStatus = require('http-status-codes');
+const { getTokenFromRequest } = require('./tokenutils');
 
 const verifyToken = (req, res, next) => {
-    let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
-    if (token.startsWith('Bearer ')) {
-        // Remove Bearer from string
-        token = token.slice(7, token.length);
-    }
+    const token = getTokenFromRequest(req);
 
     if (!token) {
         return res.status(HttpStatus.FORBIDDEN).send({ auth: false, message: 'No token provided.' });

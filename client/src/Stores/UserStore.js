@@ -47,9 +47,11 @@ export default class UserStore {
         return this.signInResult;
     }
 
-    editUser(email, newEmail, firstName, lastName) {
-        this.editUserResult = fromPromise(UserService.editUser(email, newEmail, firstName, lastName)).then((resp) => {
-            console.log(resp);
+    editUser(user) {
+        this.editUserResult = fromPromise(UserService.editUser(user));
+
+        this.editUserResult.then((resp) => {
+            this.currentUser = resp.data.user;
         });
 
         return this.editUserResult;

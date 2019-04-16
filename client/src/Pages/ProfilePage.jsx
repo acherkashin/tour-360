@@ -79,12 +79,17 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
         }
 
         _handleSave() {
-            this.userStore.editUser(
-                this.userStore.currentUser.email,
-                this.state.email,
-                this.state.firstName,
-                this.state.lastName
-            )
+            this.userStore.editUser({
+                email: this.state.email,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+            }).then((result) => {
+                this.setState({
+                    email: result.data.user.email,
+                    firstName: result.data.user.firstName,
+                    lastName: result.data.user.lastName,
+                });
+            });
         }
 
         render() {

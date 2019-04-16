@@ -8,8 +8,8 @@ export function signIn(email, password) {
     return client.post('/api/signin', { email, password });
 }
 
-export function editUser(email, newEmail, firstName, lastName) {
-    return client.post('/api/editUser', { email, newEmail, firstName, lastName });
+export function editUser(user) {
+    return client.post('/api/editUser', user);
 }
 
 export function getUser(id) {
