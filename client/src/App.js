@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Provider } from 'mobx-react';
 import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
-import { SignInPage, SignUpPage, ToursPage, ViewMapPage, Profile } from './Pages';
+import { SignInPage, SignUpPage, ToursPage, ViewMapPage, ProfilePage } from './Pages';
 import RootStore from './Stores/RootStore';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
@@ -31,7 +31,7 @@ class App extends Component {
               <Route path="/tours" component={ToursPage} />
               <Route path="/sign-in" component={SignInPage} />
               <Route path="/sign-up" component={SignUpPage} />
-              <Route path="/profile" component={Profile} />
+              <Route path="/profile" component={ProfilePage} />
               {rootStore.userStore.siggnedIn && <Redirect to='/tours' />}
               {!rootStore.userStore.siggnedIn && <Redirect to='/sign-in' />}
             </Switch>
