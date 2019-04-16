@@ -56,3 +56,5 @@ exports.validateForm = (form) => {
         return { isValid: true, error: '' }
     }
 } 
+exports.validEmail = validEmail;
+exports.validName = validName;

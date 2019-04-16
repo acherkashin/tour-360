@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 const config = require('./../config');
-const { validateForm } = require('../utils/validate');
+const { validateForm, validName, validEmail } = require('../utils/validate');
 const HttpStatus = require('http-status-codes');
 
 exports.signup = (req, res) => {
@@ -19,7 +19,7 @@ exports.signup = (req, res) => {
                 password: hash 
             });
             if (!validation.isValid) {
-                return res.status(400).json({ error: validation.error });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: validation.error });
             };
 
             const user = new User({
@@ -55,6 +55,35 @@ exports.signin = (req, res) => {
                 }
                 return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Unauthorized Access' });
             });
+        })
+        .catch(error => {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+        });
+};
+
+exports.editUser = (req, res) => {
+    User.findOne({ email: req.body.email })
+        .then((user) => {
+            if (user) {
+                const { newEmail, firstName, lastName } = req.body;
+
+                const emailValidation = validEmail(newEmail);
+                const firstNameValidation = validName(firstName);
+                const lastNameValidation = validName(lastName);
+                
+                if ( emailValidation.valid && firstNameValidation.valid && lastNameValidation.valid ) {
+                    user.email = newEmail;
+                    user.firstName = firstName;
+                    user.lastName = lastName;
+                    user.save();
+                    
+                    res.status(HttpStatus.OK);
+                } else {
+                    res.status(HttpStatus.BAD_REQUEST).json({emailError: emailValidation.error, firstNameError: firstNameValidation.error, lastNameError: lastNameValidation.error});
+                }
+            } else {
+                res.status(HttpStatus.BAD_REQUEST).json({message: 'There aren\'nt user with this email'});
+            }
         })
         .catch(error => {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });

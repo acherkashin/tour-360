@@ -13,6 +13,7 @@ import {
 } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
+import { Redirect } from "react-router";
 
 const styles = {
     root: {
@@ -30,6 +31,7 @@ const Header = inject("rootStore")(
     observer(class Header extends React.Component {
         state = {
             anchorEl: null,
+            openedProfile: false
         };
 
         get userStore() {
@@ -48,9 +50,13 @@ const Header = inject("rootStore")(
             this.userStore.signOut();
         };
 
+        handleOpenProfile = () => {
+            this.setState({ openedProfile: true });
+        };
+
         render() {
             const { classes } = this.props;
-            const { anchorEl } = this.state;
+            const { anchorEl, openedProfile } = this.state;
             const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
             const open = Boolean(anchorEl);
 
@@ -86,13 +92,14 @@ const Header = inject("rootStore")(
                                         open={open}
                                         onClose={this.handleClose}
                                     >
-                                        <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                                        <MenuItem onClick={this.handleOpenProfile}>My account</MenuItem>
                                         <MenuItem onClick={this.handleSignOut}>Sign Out</MenuItem>
                                     </Menu>
                                 </div>
                             )}
                         </Toolbar>
                     </AppBar>
+                    {openedProfile && <Redirect to='/profile' />}
                 </div>
             );
         }
