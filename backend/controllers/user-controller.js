@@ -6,14 +6,20 @@ const { createToken } = require('./../utils/tokenutils');
 const { validateForm, validName, validEmail } = require('../utils/validate');
 const HttpStatus = require('http-status-codes');
 const GoogleRecaptcha = require('google-recaptcha');
+const RECAPTCHA_SECRET_KEY = require('../config').RECAPTCHA_SECRET_KEY;
 
-const googleRecaptcha = new GoogleRecaptcha({secret: '6LfNRZ8UAAAAAIfaNq79ei94kAauuLqHkW3kpfaJ'})
+const googleRecaptcha = new GoogleRecaptcha({ secret: RECAPTCHA_SECRET_KEY });
 
 exports.signup = (req, res) => {
-    bcrypt.hash(req.body.user.password, 10, (err, hash) => {
-        if (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: err });
-        } else {
+    User.findOne({ email: req.body.user.email }).then((user) => {
+        if (user) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error is occured during registering' });
+        }
+
+        bcrypt.hash(req.body.user.password, 10, (err, hash) => {
+            if (err) {
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: err });
+            }
             const validation = validateForm({
                 email: req.body.user.email,
                 firstName: req.body.user.firstName,
@@ -21,14 +27,9 @@ exports.signup = (req, res) => {
                 password: hash
             });
             if (!validation.isValid) {
-                res.status(HttpStatus.BAD_REQUEST).json({ error: validation.error });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: validation.error });
             };
-            googleRecaptcha.verify({ response: req.body.ReCAPTCHAValue }, (error) => {
-                if (error) {
-                    res.status(HttpStatus.BAD_REQUEST).json({ message: 'You are not human' });
-                }
-            });
-
+    
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 email: req.body.user.email,
@@ -36,42 +37,48 @@ exports.signup = (req, res) => {
                 lastName: req.body.user.lastName,
                 password: hash
             });
-            user.save().then((result) => {
-                res.status(HttpStatus.OK).json({ user: user.toClient() });
-            }).catch(error => {
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    
+            googleRecaptcha.verify({ response: req.body.ReCAPTCHAValue }, (error) => {
+                if (error) {
+                    return res.status(HttpStatus.BAD_REQUEST).json({ message: 'You are not human' });
+                };
+    
+                user.save().then((result) => {
+                    return res.status(HttpStatus.OK).json({ user: user.toClient() });
+                }).catch(error => {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+                });
             });
-        }
-    });
+        });
+    })
 };
 
 exports.signin = (req, res) => {
     googleRecaptcha.verify({ response: req.body.ReCAPTCHAValue }, (error) => {
         if (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({ message: 'You are not human' });
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'You are not human' });
         }
-    });
 
-    User.findOne({ email: req.body.email })
-        .exec()
-        .then((user) => {
-            bcrypt.compare(req.body.password, user.password, (err, result) => {
-                if (err) {
+        User.findOne({ email: req.body.email })
+            .then((user) => {
+                bcrypt.compare(req.body.password, user.password, (err, result) => {
+                    if (err) {
+                        return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Unauthorized Access' });
+                    }
+                    if (result) {
+                        const token = createToken(user);
+                        return res.status(HttpStatus.OK).json({
+                            user: user.toClient(),
+                            token,
+                        });
+                    }
                     return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Unauthorized Access' });
-                }
-                if (result) {
-                    const token = createToken(user);
-                    return res.status(HttpStatus.OK).json({
-                        user: user.toClient(),
-                        token,
-                    });
-                }
-                return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Unauthorized Access' });
+                });
+            })
+            .catch(error => {
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
             });
-        })
-        .catch(error => {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
-        });
+    });
 };
 
 exports.editUser = (req, res) => {
@@ -90,7 +97,7 @@ exports.editUser = (req, res) => {
                     user.lastName = lastName;
                     user.save();
 
-                    return res.status(HttpStatus.OK)
+                    res.status(HttpStatus.OK)
                         .json({
                             user: user.toClient(),
                         });
@@ -102,7 +109,7 @@ exports.editUser = (req, res) => {
                     });
                 }
             } else {
-                res.status(HttpStatus.BAD_REQUEST).json({ message: "Error is occured during editing" });
+                res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error is occured during editing' });
             }
         })
         .catch(error => {
@@ -114,7 +121,7 @@ exports.getUserById = (req, res) => {
     const { id } = req.params;
 
     if (id == null) {
-        res.status(HttpStatus.BAD_REQUEST).json({ error: "id should be provided" });
+        res.status(HttpStatus.BAD_REQUEST).json({ error: 'id should be provided' });
     }
 
     User.findById(id)

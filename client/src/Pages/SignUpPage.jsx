@@ -9,6 +9,7 @@ import { redirectWhenAuth } from '../HOC';
 import { LoadingButton } from './../Components';
 import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
 import ReCAPTCHA from "react-google-recaptcha";
+import {SITEKEY} from "../config";
 
 const styles = theme => ({
     root: {
@@ -204,7 +205,7 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         required
                     />
                     <ReCAPTCHA
-                        sitekey="6LfNRZ8UAAAAANx-UJbKT2oacHAWeQizxrYlcMvv"
+                        sitekey={SITEKEY}
                         onChange={this._handleReCAPTCHAChange}
                     />
                     <Link className={classes.loginLink} to="/sign-in">To Login?</Link>

@@ -9,6 +9,7 @@ import { LoadingButton } from './../Components';
 import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword } from '../utils/validate.js';
 import ReCAPTCHA from "react-google-recaptcha";
+import {SITEKEY} from "../config";
 
 const styles = theme => ({
     root: {
@@ -80,7 +81,6 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
         }
 
         _handleReCAPTCHAChange(val) {
-            console.log(val)
             this.setState({ ReCAPTCHAValue: val });
         }
 
@@ -114,11 +114,11 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         fullWidth={true}
                         required
                     />
-                    {this.userStore.singInRejected && <Typography color="error">Invalid Username or Password</Typography>}
                     <ReCAPTCHA
-                        sitekey="6LfNRZ8UAAAAANx-UJbKT2oacHAWeQizxrYlcMvv"
+                        sitekey={SITEKEY}
                         onChange={this._handleReCAPTCHAChange}
                     />
+                    {this.userStore.singInRejected && <Typography color="error">Invalid data</Typography>}
                     <Link className={classes.registerLink} to="/sign-up">To Register?</Link>
                     <LoadingButton
                         style={{ marginTop: '15px' }}
