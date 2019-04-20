@@ -5,27 +5,35 @@ const { User } = require('../models/index');
 const { createToken } = require('./../utils/tokenutils');
 const { validateForm, validName, validEmail } = require('../utils/validate');
 const HttpStatus = require('http-status-codes');
+const GoogleRecaptcha = require('google-recaptcha');
+
+const googleRecaptcha = new GoogleRecaptcha({secret: '6LfNRZ8UAAAAAIfaNq79ei94kAauuLqHkW3kpfaJ'})
 
 exports.signup = (req, res) => {
-    bcrypt.hash(req.body.password, 10, (err, hash) => {
+    bcrypt.hash(req.body.user.password, 10, (err, hash) => {
         if (err) {
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: err });
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: err });
         } else {
             const validation = validateForm({
-                email: req.body.email,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
+                email: req.body.user.email,
+                firstName: req.body.user.firstName,
+                lastName: req.body.user.lastName,
                 password: hash
             });
             if (!validation.isValid) {
-                return res.status(HttpStatus.BAD_REQUEST).json({ error: validation.error });
+                res.status(HttpStatus.BAD_REQUEST).json({ error: validation.error });
             };
+            googleRecaptcha.verify({ response: req.body.ReCAPTCHAValue }, (error) => {
+                if (error) {
+                    res.status(HttpStatus.BAD_REQUEST).json({ message: 'You are not human' });
+                }
+            });
 
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
-                email: req.body.email,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
+                email: req.body.user.email,
+                firstName: req.body.user.firstName,
+                lastName: req.body.user.lastName,
                 password: hash
             });
             user.save().then((result) => {
@@ -38,6 +46,12 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+    googleRecaptcha.verify({ response: req.body.ReCAPTCHAValue }, (error) => {
+        if (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({ message: 'You are not human' });
+        }
+    });
+
     User.findOne({ email: req.body.email })
         .exec()
         .then((user) => {
