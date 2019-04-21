@@ -7,6 +7,7 @@ import NoToursPlaceholder from './NoToursPlaceholder';
 import PlaceholderButton from './PlaceholderButton';
 import EditImage from './EditImage';
 import LoadingButton from './LoadingButton';
+import PlaceList from './PlaceList';
 
 export {
     Header,
@@ -18,4 +19,5 @@ export {
     PlaceholderButton,
     EditImage,
     LoadingButton,
+    PlaceList,
 };

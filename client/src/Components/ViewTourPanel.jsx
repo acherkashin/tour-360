@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { withStyles,  } from '@material-ui/core/styles';
+import { withStyles, } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { observer } from 'mobx-react';
-import { EditImage } from './';
+import {
+    EditImage,
+    PlaceList,
+} from './';
 
 const styles = theme => ({
     root: {
@@ -18,6 +21,9 @@ const styles = theme => ({
     },
     editImage: {
         width: '80%',
+    },
+    places: {
+        marginTop: 20,
     }
 });
 
@@ -39,7 +45,20 @@ const ViewTourPanel = observer(class ViewTourPanel extends React.Component {
             <div className={classes.root} style={{ width: width || '250px' }}>
                 <Typography variant="h4" gutterBottom align='center'>{tour.name}</Typography>
 
-                <EditImage className={classes.editImage} hasImage={true} name={tour.name} imageUrl={tour.imageUrl} onImageChangeClick={this._handleImageChangeClick}/>
+                <EditImage
+                    className={classes.editImage}
+                    hasImage={true}
+                    name={tour.name}
+                    imageUrl={tour.imageUrl}
+                    onImageChangeClick={this._handleImageChangeClick}
+                />
+
+                <PlaceList
+                    className={classes.places}
+                    places={tour.places}
+                    onViewClick={(e) => console.log(e)}
+                    onEditClick={(e) => console.log(e)}
+                />
             </div>
         );
     }

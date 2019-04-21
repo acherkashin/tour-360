@@ -42,6 +42,7 @@ Tour.methods.toClient = function () {
         filename: this.cover && this.cover.filename,
         startPlaceId,
         isPublic: this.isPublic,
+        places: (this.places || []).map(place => place.toClient()),
     };
 };
 
