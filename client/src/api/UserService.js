@@ -1,11 +1,11 @@
 import client from './client';
 
-export function signUp(user) {
-    return client.post('/api/signup', user);
+export function signUp(user, ReCAPTCHAValue) {
+    return client.post('/api/signup', { user, ReCAPTCHAValue });
 }
 
-export function signIn(email, password) {
-    return client.post('/api/signin', { email, password });
+export function signIn(email, password, ReCAPTCHAValue) {
+    return client.post('/api/signin', { email, password, ReCAPTCHAValue });
 }
 
 export function editUser(user) {

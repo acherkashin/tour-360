@@ -28,16 +28,16 @@ export default class UserStore {
         });
     }
 
-    signUp(userData) {
-        this.signUpResult = fromPromise(UserService.signUp(userData)).then((resp) => {
+    signUp(userData, ReCAPTCHAValue) {
+        this.signUpResult = fromPromise(UserService.signUp(userData, ReCAPTCHAValue)).then((resp) => {
             console.log(resp);
         });
 
         return this.signUpResult;
     }
 
-    signIn(email, password) {
-        this.signInResult = fromPromise(UserService.signIn(email, password));
+    signIn(email, password, ReCAPTCHAValue) {
+        this.signInResult = fromPromise(UserService.signIn(email, password, ReCAPTCHAValue));
         this.signInResult.then((resp) => {
             const { user, token } = resp.data;
             UserStore.setToken(token);

@@ -8,6 +8,8 @@ import { observer, inject } from 'mobx-react';
 import { LoadingButton } from './../Components';
 import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword } from '../utils/validate.js';
+import ReCAPTCHA from "react-google-recaptcha";
+import {SITEKEY} from "../config";
 
 const styles = theme => ({
     root: {
@@ -43,12 +45,15 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
                 password: '',
                 isPasswordValid: false,
-                passwordError: 'please fill out this field'
+                passwordError: 'please fill out this field',
+
+                ReCAPTCHAValue: null
             };
 
             this._handleEmailChanged = this._handleEmailChanged.bind(this);
             this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
             this._handleLogin = this._handleLogin.bind(this);
+            this._handleReCAPTCHAChange = this._handleReCAPTCHAChange.bind(this);
         }
 
         get userStore() {
@@ -58,17 +63,25 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
         _handleEmailChanged(e) {
             const { value } = e.target;
             const { valid, error } = validEmail(value);
+
             this.setState({ email: value, isEmailValid: valid, emailError: error });
         }
 
         _handlePasswordChanged(e) {
             const { value } = e.target;
             const { valid, error } = validPassword(value);
+
             this.setState({ password: value, isPasswordValid: valid, passwordError: error });
         }
 
         _handleLogin(e) {
-            this.userStore.signIn(this.state.email, this.state.password);
+            const { email, password, ReCAPTCHAValue } = this.state;
+
+            this.userStore.signIn(email, password, ReCAPTCHAValue);
+        }
+
+        _handleReCAPTCHAChange(val) {
+            this.setState({ ReCAPTCHAValue: val });
         }
 
         render() {
@@ -101,7 +114,11 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         fullWidth={true}
                         required
                     />
-                    {this.userStore.singInRejected && <Typography color="error">Invalid Username or Password</Typography>}
+                    <ReCAPTCHA
+                        sitekey={SITEKEY}
+                        onChange={this._handleReCAPTCHAChange}
+                    />
+                    {this.userStore.singInRejected && <Typography color="error">Invalid data</Typography>}
                     <Link className={classes.registerLink} to="/sign-up">To Register?</Link>
                     <LoadingButton
                         style={{ marginTop: '15px' }}

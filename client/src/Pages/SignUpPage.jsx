@@ -8,6 +8,8 @@ import { observer, inject } from 'mobx-react';
 import { redirectWhenAuth } from '../HOC';
 import { LoadingButton } from './../Components';
 import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
+import ReCAPTCHA from "react-google-recaptcha";
+import {SITEKEY} from "../config";
 
 const styles = theme => ({
     root: {
@@ -56,6 +58,8 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                 confirmationPassword: '',
                 isConfirmationPasswordValid: false,
                 confirmationPasswordError: 'please fill out this field',
+
+                ReCAPTCHAValue: null
             };
 
             this._handleLastNameChanged = this._handleLastNameChanged.bind(this);
@@ -64,6 +68,7 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
             this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
             this._handleConfirmationPasswordChanged = this._handleConfirmationPasswordChanged.bind(this);
             this._handleRegisterClick = this._handleRegisterClick.bind(this);
+            this._handleReCAPTCHAChange = this._handleReCAPTCHAChange.bind(this);
         }
 
         get userStore() {
@@ -73,24 +78,28 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
         _handleFirstNameChanged(e) {
             const { value } = e.target;
             const { valid, error } = validName(value);
+
             this.setState({ firstName: value, isFirstNameValid: valid, firstNameError: error });
         }
 
         _handleLastNameChanged(e) {
             const { value } = e.target;
             const { valid, error } = validName(value);
+
             this.setState({ lastName: value, isLastNameValid: valid, lastNameError: error });
         }
 
         _handleEmailChanged(e) {
             const { value } = e.target;
             const { valid, error } = validEmail(value);
+
             this.setState({ email: value, isEmailValid: valid, emailError: error });
         }
 
         _handlePasswordChanged(e) {
             const { value } = e.target;
             const { valid, error } = validPassword(value);
+
             this.setState({ password: value, isPasswordValid: valid, passwordError: error });
         }
 
@@ -98,16 +107,23 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
             const { value } = e.target;
             const { password } = this.state
             const { valid, error } = validConfirmationPassword({ confirmationPassword: value, password: password });
+
             this.setState({ confirmationPassword: value, isConfirmationPasswordValid: valid, confirmationPasswordError: error });
         }
 
         _handleRegisterClick() {
+            const { ReCAPTCHAValue } = this.state;
+
             this.userStore.signUp({
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 email: this.state.email,
                 password: this.state.password,
-            });
+            }, ReCAPTCHAValue);
+        }
+
+        _handleReCAPTCHAChange(val) {
+            this.setState({ ReCAPTCHAValue: val });
         }
 
         render() {
@@ -187,6 +203,10 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         helperText={confirmationPasswordError}
                         fullWidth={true}
                         required
+                    />
+                    <ReCAPTCHA
+                        sitekey={SITEKEY}
+                        onChange={this._handleReCAPTCHAChange}
                     />
                     <Link className={classes.loginLink} to="/sign-in">To Login?</Link>
                     <LoadingButton
