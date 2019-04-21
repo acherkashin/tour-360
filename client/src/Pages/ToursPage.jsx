@@ -9,6 +9,7 @@ import { requireAuth } from '../HOC';
 import { Header, Tours, ViewTourPanel, NoToursPlaceholder } from '../Components';
 import { CreateTourDialog, UploadImageDialog } from './../Components/Dialogs';
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
+import { PlaceDesigner } from '../Components/PlaceDesigner';
 
 const styles = theme => ({
     addTour: {
@@ -181,6 +182,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                         onMapTypeChanged={this._handleMapTypeChanged}
                         onClose={() => this.setState({ isOpenedCreateDialog: false })}
                     />
+                    <PlaceDesigner />
                     <UploadImageDialog
                         title="Upload new photo"
                         prompt="Upload cover of your virtual tour"

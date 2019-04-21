@@ -9,7 +9,7 @@ import {
     IconButton,
     Typography,
     Slide,
-} from '@material-ui/core'
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
