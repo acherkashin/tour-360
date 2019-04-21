@@ -11,6 +11,7 @@
     "classnames": "^2.2.6",
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
+    "equirect-cubemap-faces-js": "^2.3.0",
     "html-to-draftjs": "^1.4.0",
     "jwt-decode": "^2.2.0",
     "leaflet": "^1.4.0",
