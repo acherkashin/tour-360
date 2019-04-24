@@ -8,6 +8,7 @@ import TourStore from "./TourStore";
 import UserStore from "./UserStore";
 import TourEditStore from "./TourEditStore";
 import ViewTourStore from "./ViewTourStore";
+import PlaceEditStore from './PlaceEditStore';
 
 export {
     Tour,
@@ -20,4 +21,5 @@ export {
     UserStore,
     TourEditStore,
     ViewTourStore,
+    PlaceEditStore,
 };

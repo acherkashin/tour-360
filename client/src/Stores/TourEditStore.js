@@ -2,7 +2,6 @@ import { extendObservable, action, runInAction } from 'mobx';
 import { TourEditService } from './../api';
 import { EditTour, EditPlace, EditConnection } from './';
 import { deepObserve, fromPromise } from 'mobx-utils';
-import { VR_URL } from './../config';
 import UserStore from './UserStore'
 
 export default class TourEditStore {
@@ -193,7 +192,7 @@ export default class TourEditStore {
     }
 
     getPlaceImage360Url(placeId) {
-        return `${VR_URL}?sessionId=${this.sessionId}&placeId=${placeId}&token=${UserStore.getToken()}`;
+        return TourEditService.getPanoUrl(this.sessionId, placeId, UserStore.getToken());
     }
 
     _clearEditingPlace() {

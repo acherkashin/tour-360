@@ -1,11 +1,5 @@
-import client from './client';
+import { VR_URL } from './../config';
 
-export function getAll() {
-    return client.get("/api/place");
-}
-export function create(name) {
-    return client.post('/api/place', { name });
-}
-export function deleteById(id) {
-    return client.delete(`/api/place/delete/${id}`);
+export function getPanoUrl(tourId, placeId, token) {
+    return `${VR_URL}?tourId=${tourId}&placeId=${placeId}&token=${token}`;
 }

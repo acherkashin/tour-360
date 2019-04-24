@@ -2,7 +2,8 @@ import {
     UserStore,
     TourStore,
     TourEditStore,
-    ViewTourStore
+    ViewTourStore,
+    PlaceEditStore,
 } from "./";
 
 export default class RootStore {
@@ -11,5 +12,6 @@ export default class RootStore {
         this.tourStore = new TourStore(this);
         this.tourEditStore = new TourEditStore(this);
         this.viewTourStore = new ViewTourStore(this);
+        this.placeEditStore = new PlaceEditStore(this);
     }
 }

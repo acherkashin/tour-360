@@ -1,8 +1,8 @@
 import { extendObservable, action, observable } from 'mobx';
-import { TourService } from './../api';
+import { TourService, PlaceService } from './../api';
 import { Tour } from './';
 import { VR_URL } from './../config';
-import UserStore from './UserStore'
+import UserStore from './UserStore';
 
 export default class TourStore {
     constructor(rootStore) {
@@ -69,7 +69,8 @@ export default class TourStore {
         if (!placeId) {
             placeId = tour.startPlaceId;
         }
-        window.open(`${VR_URL}?tourId=${tourId}&placeId=${placeId}&token=${UserStore.getToken()}`);
+        const url = PlaceService.getPanoUrl(tourId, placeId, UserStore.getToken());
+        window.open(url);
     }
 
     _getById(id) {

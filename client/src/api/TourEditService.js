@@ -1,9 +1,11 @@
 import client from './client';
+import { VR_URL } from './../config';
 
 export function get(sessionId) {
     return client.get(`/api/tour-edit/${sessionId}/get`);
 }
 export function beginEditing(tourId) {
+    //todo: pass tourId in body
     return client.post(`/api/tour-edit/${tourId}`);
 }
 export function saveChanges(sessionId, options) {
@@ -78,4 +80,8 @@ export function uploadPlaceSound(sessionId, placeId, file) {
 
 export function removePlaceSound(sessionId, placeId) {
     return client.delete(`/api/tour-edit/${sessionId}/place/${placeId}/sound`);
+}
+
+export function getPanoUrl(sessionId, placeId, token) {
+    return `${VR_URL}?sessionId=${sessionId}&placeId=${placeId}&token=${token}`;
 }

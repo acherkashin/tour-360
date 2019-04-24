@@ -19,11 +19,11 @@ class PlaceItem extends React.Component {
     }
 
     _handleViewClick() {
-        this.props.onViewClick && this.props.onViewClick({ origin: this });
+        this.props.onViewClick && this.props.onViewClick({ origin: this, place: this.props.place });
     }
 
     _handleEditClick() {
-        this.props.onEditClick && this.props.onEditClick({ origin: this });
+        this.props.onEditClick && this.props.onEditClick({ origin: this, place: this.props.place });
     }
 
     render() {

@@ -56,8 +56,16 @@ const ViewTourPanel = observer(class ViewTourPanel extends React.Component {
                 <PlaceList
                     className={classes.places}
                     places={tour.places}
-                    onViewClick={(e) => console.log(e)}
-                    onEditClick={(e) => console.log(e)}
+                    onViewClick={(e) => this.props.onViewPlaceClick({
+                        origin: this,
+                        place: e.place,
+                        tour,
+                    })}
+                    onEditClick={(e) => this.props.onEditPlaceClick({
+                        origin: this,
+                        place: e.place,
+                        tour,
+                    })}
                 />
             </div>
         );
@@ -71,6 +79,8 @@ ViewTourPanel.propTypes = {
     }).isRequired,
     width: PropTypes.string,
     onImageChangeClick: PropTypes.func.isRequired,
+    onViewPlaceClick: PropTypes.func.isRequired,
+    onEditPlaceClick: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ViewTourPanel);

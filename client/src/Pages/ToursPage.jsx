@@ -67,6 +67,8 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
             this._handleCloseDesigner = this._handleCloseDesigner.bind(this);
             this._handleSaveChanges = this._handleSaveChanges.bind(this);
             this._handleMapTypeChanged = this._handleMapTypeChanged.bind(this);
+            this._handleViewPlace = this._handleViewPlace.bind(this);
+            this._handleEditPlace = this._handleEditPlace.bind(this);
         }
 
         get store() {
@@ -128,13 +130,23 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
             this.store.saveEditing();
         }
 
+        _handleEditPlace(e, history) {
+            this.props.rootStore.placeEditStore.beginEditing(e.tour.id, e.place.id).then((sessionId) => {
+                history.push(`/tours/edit-place/${sessionId}`);
+            });
+        }
+
+        _handleViewPlace(e) {
+            this.store.view(e.tour.id, e.place.id);
+        }
+
         _getActionsForTour(e, history) {
             const actions = [{
                 icon: <Edit />,
                 text: 'Edit',
                 action: (e) => {
                     this.editStore.beginEditing(e.tour.id).then((sessionId) => {
-                        history.push(`/tours/edit/${sessionId}`);
+                        history.push(`/tours/edit-tour/${sessionId}`);
                     });
                 }
             }, {
@@ -182,7 +194,6 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                         onMapTypeChanged={this._handleMapTypeChanged}
                         onClose={() => this.setState({ isOpenedCreateDialog: false })}
                     />
-                    <PlaceDesigner />
                     <UploadImageDialog
                         title="Upload new photo"
                         prompt="Upload cover of your virtual tour"
@@ -204,11 +215,16 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                                     <Add />
                                 </Fab>
                             </div>
-                            {selectedTour && <ViewTourPanel
-                                width={`${window.innerWidth * 0.25}px`}
-                                tour={selectedTour}
-                                onImageChangeClick={this._handleImageChangeClick} />}
-                            <Route path="/tours/edit/:sessionId" component={TourDesigner} />
+                            {selectedTour && <Route render={({ history }) => (
+                                <ViewTourPanel
+                                    width={`${window.innerWidth * 0.25}px`}
+                                    tour={selectedTour}
+                                    onImageChangeClick={this._handleImageChangeClick}
+                                    onViewPlaceClick={this._handleViewPlace}
+                                    onEditPlaceClick={(e) => this._handleEditPlace(e, history)} />
+                            )} />}
+                            <Route path="/tours/edit-tour/:sessionId" component={TourDesigner} />
+                            <Route path="/tours/edit-place/:sessionId" component={PlaceDesigner} />
                         </div>
                     </div>
                 </div>
