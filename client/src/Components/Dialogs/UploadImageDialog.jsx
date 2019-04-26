@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogActions, Typography } from '@material-ui/c
 import { withStyles } from '@material-ui/core/styles';
 import DialogTitleWithClose from './DialogTItleWithClose';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     prompt: {
@@ -113,6 +114,7 @@ class UploadImageDialog extends React.Component {
 
     render() {
         const { classes, title, prompt } = this.props;
+        const { messages, formatMessage } = this.props.intl;
         const { selectedFileUrl, fileWidth, fileHeight } = this.state;
         const selectButtonVariant = selectedFileUrl != null ? "text" : "contained";
 
@@ -140,11 +142,11 @@ class UploadImageDialog extends React.Component {
                 </DialogContent>
                 <DialogActions className={classes.dialogActions}>
                     <Button variant={selectButtonVariant} component="label" color="primary" className={classes.selectImage} onClick={this._handleUploadClick} autoFocus>
-                        Select File
+                        {formatMessage(messages.selectFile)}
                         <input type="file" style={{ display: "none" }} onChange={this._handleFileSelected} />
                     </Button>
                     {selectedFileUrl != null && <Button variant="contained" color="primary" onClick={this._handleFileUpload} autoFocus>
-                        Upload
+                        {formatMessage(messages.upload)}
                         <CloudUploadIcon className={classes.rightIcon} />
                     </Button>}
                 </DialogActions>
@@ -161,6 +163,8 @@ UploadImageDialog.propTypes = {
     onUploadClick: PropTypes.func,
     onClose: PropTypes.func,
     onFileSelected: PropTypes.func.isRequired,
+
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(UploadImageDialog);
+export default withStyles(styles)(injectIntl(UploadImageDialog));

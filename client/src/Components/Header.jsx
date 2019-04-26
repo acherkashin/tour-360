@@ -14,6 +14,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
 import { Redirect } from "react-router";
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = {
     root: {
@@ -57,6 +58,7 @@ const Header = inject("rootStore")(
         render() {
             const { classes } = this.props;
             const { anchorEl, openedProfile } = this.state;
+            const { messages, formatMessage } = this.props.intl;
             const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
             const open = Boolean(anchorEl);
 
@@ -67,7 +69,7 @@ const Header = inject("rootStore")(
                             {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton> */}
-                            <Typography variant="h6" color="inherit" className={classes.grow}>Your virtual tours</Typography>
+                            <Typography variant="h6" color="inherit" className={classes.grow}>{formatMessage(messages.headerTitle)}</Typography>
                             {auth && (
                                 <div>
                                     <IconButton
@@ -108,6 +110,7 @@ const Header = inject("rootStore")(
 
 Header.propTypes = {
     classes: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(Header);
+export default withStyles(styles)(injectIntl(Header));

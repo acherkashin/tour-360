@@ -8,6 +8,7 @@ import {
     DialogContentText,
 } from '@material-ui/core';
 import DialogTitleWithClose from './DialogTItleWithClose';
+import { injectIntl } from 'react-intl';
 
 class ConfirmDialog extends React.Component {
     constructor(props) {
@@ -63,4 +64,4 @@ ConfirmDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-export default ConfirmDialog;
+export default injectIntl(ConfirmDialog);

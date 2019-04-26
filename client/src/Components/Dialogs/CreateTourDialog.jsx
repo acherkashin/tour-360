@@ -12,6 +12,7 @@ import {
     InputLabel,
     Input
 } from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 import DialogTitleWithClose from './DialogTItleWithClose';
 
 class CreateTourDialog extends React.Component {
@@ -42,6 +43,7 @@ class CreateTourDialog extends React.Component {
 
     render() {
         const { name, mapTypes, mapTypeValue, isOpened } = this.props;
+        const { messages, formatMessage } = this.props.intl;
 
         return (
             <Dialog
@@ -49,10 +51,10 @@ class CreateTourDialog extends React.Component {
                 open={isOpened}
                 maxWidth={'sm'}
                 fullWidth>
-                <DialogTitleWithClose onClose={this._handleClose}>Create Virtual Tour</DialogTitleWithClose>
+                <DialogTitleWithClose onClose={this._handleClose}>{formatMessage(messages.createTourDialogTitle)}</DialogTitleWithClose>
                 <DialogContent>
                     <TextField
-                        label="Tour Name"
+                        label={formatMessage(messages.createTourDialogTourName)}
                         value={name}
                         onChange={this._handleNameChanged}
                         margin="normal"
@@ -60,7 +62,7 @@ class CreateTourDialog extends React.Component {
                         autoFocus
                     />
                     <FormControl fullWidth>
-                        <InputLabel htmlFor="name-disabled">Map type</InputLabel>
+                        <InputLabel htmlFor="name-disabled">{formatMessage(messages.createTourDialogMapType)}</InputLabel>
                         <Select
                             variant="filled"
                             fullWidth={true}
@@ -72,7 +74,7 @@ class CreateTourDialog extends React.Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this._handleCreateClick} color="primary">Create</Button>
+                    <Button onClick={this._handleCreateClick} color="primary">{formatMessage(messages.create)}</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -88,6 +90,8 @@ CreateTourDialog.propTypes = {
     name: PropTypes.string,
     mapTypeValue: PropTypes.string.isRequired,
     mapTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+
+    intl: intlShape.isRequired,
 };
 
-export default CreateTourDialog;
+export default injectIntl(CreateTourDialog);
