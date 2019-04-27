@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Fab } from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 import { Add, Edit, Delete, Visibility, Map } from '@material-ui/icons';
 import { observer, inject } from 'mobx-react';
 import { Route } from "react-router-dom";
@@ -141,9 +142,11 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
         }
 
         _getActionsForTour(e, history) {
+        const { messages, formatMessage } = this.props.intl;
+
             const actions = [{
                 icon: <Edit />,
-                text: 'Edit',
+                text: formatMessage(messages.edit),
                 action: (e) => {
                     this.editStore.beginEditing(e.tour.id).then((sessionId) => {
                         history.push(`/tours/edit-tour/${sessionId}`);
@@ -166,7 +169,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
             if (e.tour.startPlaceId) {
                 actions.push({
                     icon: <Visibility />,
-                    text: 'View',
+                    text: formatMessage(messages.view),
                     action: (e) => {
                         this.store.view(e.tour.id);
                     }
@@ -237,4 +240,4 @@ ToursPage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ToursPage);
+export default withStyles(styles)(injectIntl(ToursPage));

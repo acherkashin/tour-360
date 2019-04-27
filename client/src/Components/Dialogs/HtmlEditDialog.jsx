@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 import {
+    Button,
     Dialog,
     DialogContent,
     DialogActions,
 } from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 import { Editor } from 'react-draft-wysiwyg';
 import './../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import DialogTitleWithClose from './DialogTItleWithClose';
@@ -60,6 +61,7 @@ class HtmlEditDialog extends React.Component {
     render() {
         const { isOpened, title } = this.props;
         const { editorState } = this.state;
+        const { messages, formatMessage } = this.props.intl;
 
         return (
             <Dialog
@@ -75,7 +77,7 @@ class HtmlEditDialog extends React.Component {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this._handleSaveClick} color="primary" variant="contained" autoFocus>SAVE</Button>
+                    <Button onClick={this._handleSaveClick} color="primary" variant="contained" autoFocus>{formatMessage(messages.save)}</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -89,6 +91,8 @@ HtmlEditDialog.propTypes = {
     onSaveClick: PropTypes.func.isRequired,
     isOpened: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 };
 
-export default HtmlEditDialog;
+export default injectIntl(HtmlEditDialog);

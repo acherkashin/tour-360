@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { ListItem, ListItemText, IconButton } from '@material-ui/core';
+import {
+    ListItem,
+    ListItemText,
+    IconButton
+} from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 import {
     Delete as DeleteIcon,
     Visibility as VisibilityIcon,
@@ -49,6 +54,7 @@ class ConnectionItem extends React.Component {
 
     render() {
         const { classes, connection } = this.props;
+        const { messages, formatMessage } = this.props.intl;
 
         return (
             <ListItem
@@ -65,10 +71,10 @@ class ConnectionItem extends React.Component {
                     secondary={
                         <React.Fragment>
                             <Typography component="span" variant="caption" className={classes.coordinateItem}>
-                                Latitude: {connection.latitude}
+                                {formatMessage(messages.latitude)}: {connection.latitude}
                             </Typography>
                             <Typography component="span" variant="caption" className={classes.coordinateItem}>
-                                Longitude: {connection.longitude}
+                            {formatMessage(messages.longitude)}: {connection.longitude}
                             </Typography>
                         </React.Fragment>
                     }
@@ -98,4 +104,6 @@ ConnectionItem.propTypes = {
     onViewClick: PropTypes.func.isRequired,
     onRemoveClick: PropTypes.func.isRequired,
     onEditClick: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 };

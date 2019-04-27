@@ -132,10 +132,10 @@ class UploadImageDialog extends React.Component {
                         <img className={classes.imagePreview} src={selectedFileUrl} alt="Selected preview" />
                         <div>
                             <Typography inline className={classes.width}>
-                                Width: {fileWidth},
+                                {formatMessage(messages.width)}: {fileWidth},
                             </Typography>
                             <Typography inline>
-                                Height: {fileHeight}
+                                {formatMessage(messages.height)}: {fileHeight}
                             </Typography>
                         </div>
                     </div>)}

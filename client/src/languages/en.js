@@ -1,6 +1,14 @@
 import { defineMessages } from 'react-intl';
 
 const en = defineMessages({
+    edit: {
+        id: 'common.edit',
+        defaultMessage: 'Edit',
+    },
+    view: {
+        id: 'common.view',
+        defaultMessage: 'View',
+    },
     save: {
         id: 'common.save',
         defaultMessage: 'Save',
@@ -20,6 +28,30 @@ const en = defineMessages({
     upload: {
         id: 'common.upload',
         defaultMessage: 'Upload',
+    },
+    width: {
+        id: 'common.width',
+        defaultMessage: 'Width',
+    },
+    height: {
+        id: 'common.height',
+        defaultMessage: 'Height',
+    },
+    latitude: {
+        id: 'common.latitude',
+        defaultMessage: 'Latitude',
+    },
+    longitude: {
+        id: 'common.longitude',
+        defaultMessage: 'Longitude',
+    },
+    connections: {
+        id: 'common.connections',
+        defaultMessage: 'Connections',
+    },
+    noConnections: {
+        id: 'common.no-connections',
+        defaultMessage: 'No connections',
     },
 
     headerTitle: {

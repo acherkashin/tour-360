@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ConnectionItem from './ConnectionItem';
-import { List, ListSubheader, Typography } from '@material-ui/core';
+import {
+    List,
+    ListSubheader,
+    Typography,
+} from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 import grey from '@material-ui/core/colors/grey';
 import classnames from 'classnames';
 
@@ -18,6 +23,7 @@ class ConnectionList extends React.Component {
     render() {
         const { classes, connections, onClick, onViewClick, onRemoveClick, onEditClick, className } = this.props;
         const hasConnections = connections && connections.length > 0;
+        const { messages, formatMessage } = this.props.intl;
 
         const root = classnames({
             [classes.root]: true,
@@ -25,7 +31,7 @@ class ConnectionList extends React.Component {
         });
 
         return (
-            <List className={root} subheader={<ListSubheader>Connections</ListSubheader>} >
+            <List className={root} subheader={<ListSubheader>{formatMessage(messages.connections)}</ListSubheader>} >
                 {hasConnections && (connections || []).map(connection => <ConnectionItem
                     key={connection.id}
                     connection={connection}
@@ -34,13 +40,13 @@ class ConnectionList extends React.Component {
                     onRemoveClick={onRemoveClick}
                     onEditClick={onEditClick}
                 />)}
-                {!hasConnections && <Typography align="center" variant="caption" color="textPrimary">No connecions</Typography>}
+                {!hasConnections && <Typography align="center" variant="caption" color="textPrimary">{formatMessage(messages.noConnections)}</Typography>}
             </List>
         );
     }
 }
 
-export default withStyles(styles)(ConnectionList);
+export default withStyles(styles)(injectIntl(ConnectionList));
 
 ConnectionList.propTypes = {
     classes: PropTypes.object.isRequired,
@@ -55,4 +61,6 @@ ConnectionList.propTypes = {
     onViewClick: PropTypes.func.isRequired,
     onRemoveClick: PropTypes.func.isRequired,
     onEditClick: PropTypes.func.isRequired,
+
+    intl: intlShape.isRequired,
 };
