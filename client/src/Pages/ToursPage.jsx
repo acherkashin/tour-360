@@ -154,13 +154,13 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                 }
             }, {
                 icon: <Delete />,
-                text: 'Delete',
+                text: formatMessage(messages.delete),
                 action: (e) => {
                     this.store.delete(e.tour.id);
                 }
             }, {
                 icon: <Map />,
-                text: 'View Tour Map',
+                text: formatMessage(messages.toursPageTourMap),
                 action: (e) => {
                     this.store.viewMap(e.tour.id);
                 }

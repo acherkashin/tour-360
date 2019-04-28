@@ -1,6 +1,17 @@
 import { defineMessages } from 'react-intl';
 
+// const en = defineMessages({
+//  componentNameStringName: {
+//      id: 'component-name.string-name',
+//      defaultMessage: 'StringName',
+//  }
+// });
+
 const en = defineMessages({
+    delete: {
+        id: 'common.delete',
+        defaultMessage: 'Delete',
+    },
     edit: {
         id: 'common.edit',
         defaultMessage: 'Edit',
@@ -60,7 +71,7 @@ const en = defineMessages({
     },
 
     createTourDialogTitle: {
-        id:'create-tour-dialog.title',
+        id: 'create-tour-dialog.title',
         defaultMessage: 'Create Virtual Tour'
     },
     createTourDialogTourName: {
@@ -70,7 +81,13 @@ const en = defineMessages({
     createTourDialogMapType: {
         id: 'create-tour-dialog.title',
         defaultMessage: 'Map Type',
-    }
+    },
+
+    toursPageTourMap: {
+        id: 'tours-page.tour-map',
+        defaultMessage: 'Tour Map',
+    },
+
 });
 
 export default en;

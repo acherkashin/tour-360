@@ -2,13 +2,17 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Provider } from 'mobx-react';
-import { IntlProvider } from 'react-intl';
+import { addLocaleData, IntlProvider } from 'react-intl';
 import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
 import { SignInPage, SignUpPage, ToursPage, ViewMapPage, ProfilePage } from './Pages';
 import RootStore from './Stores/RootStore';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { getMessages } from './languages';
+
+import enLocaleData from 'react-intl/locale-data/en';
+import ruLocaleData from 'react-intl/locale-data/ru';
+addLocaleData([...enLocaleData, ...ruLocaleData]);
 
 const styles = theme => ({
   root: {
@@ -19,15 +23,17 @@ const styles = theme => ({
 });
 
 class App extends Component {
+  constructor()
   render() {
     const { classes } = this.props;
     const rootStore = new RootStore();
-    const messages = getMessages('ru');
+    const locale = 'ru';
+    const messages = getMessages(locale);
 
     return (
-      //TODO: replace with rootStore
       <Provider rootStore={rootStore}>
-        <IntlProvider locale="en" messages={messages}>
+        {/*TODO: use locale variable inside local prop */}
+        <IntlProvider locale={'en'} messages={messages}>
           <Router>
             <div className={classes.root}>
               <Switch>

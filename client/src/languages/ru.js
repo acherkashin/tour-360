@@ -1,6 +1,10 @@
 import { defineMessages } from 'react-intl';
 
 const en = defineMessages({
+    delete: {
+        id: 'common.delete',
+        defaultMessage: 'Удалить',
+    },
     edit: {
         id: 'common.edit',
         defaultMessage: 'Редактировать',
@@ -70,7 +74,12 @@ const en = defineMessages({
     createTourDialogMapType: {
         id: 'create-tour-dialog.title',
         defaultMessage: 'Тип Карты',
-    }
+    },
+
+    toursPageTourMap: {
+        id: 'tours-page.tour-map',
+        defaultMessage: 'Карта Экскурсии',
+    },
 });
 
 export default en;
