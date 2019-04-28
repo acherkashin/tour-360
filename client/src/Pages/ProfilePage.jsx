@@ -3,7 +3,15 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
-import { TextField, Typography } from '@material-ui/core';
+import {
+    TextField,
+    Typography,
+    Select,
+    FormControl,
+    MenuItem,
+    InputLabel,
+    Input,
+} from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { LoadingButton } from '../Components';
 import { requireAuth } from '../HOC';
@@ -48,11 +56,14 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                 lastName: this.userStore.currentUser.lastName,
                 isLastNameValid: true,
                 lastNameError: '',
+
+                language: this.userStore.currentUser.language || 'Русский',
             };
 
             this._handleEmailChanged = this._handleEmailChanged.bind(this);
             this._handleFirstNameChanged = this._handleFirstNameChanged.bind(this);
             this._handleLastNameChanged = this._handleLastNameChanged.bind(this);
+            this._handleLanguageChanged = this._handleLanguageChanged.bind(this);
             this._handleSave = this._handleSave.bind(this);
         }
 
@@ -83,6 +94,7 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                 email: this.state.email,
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
+                language: this.state.language,
             }).then((result) => {
                 this.setState({
                     email: result.data.user.email,
@@ -92,9 +104,26 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
             });
         }
 
+        _handleLanguageChanged(e) {
+            this.setState({ language: e.target.value });
+        }
+
         render() {
             const { classes } = this.props;
-            const { email, isEmailValid, emailError, firstName, isFirstNameValid, firstNameError, lastName, isLastNameValid, lastNameError } = this.state;
+            const {
+                email,
+                isEmailValid,
+                emailError,
+                firstName,
+                isFirstNameValid,
+                firstNameError,
+                lastName,
+                isLastNameValid,
+                lastNameError,
+                language,
+            } = this.state;
+
+            const languages = ['Русский', 'English'];
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
@@ -133,6 +162,17 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                         required
                         autoFocus
                     />
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="name-disabled">Language</InputLabel>
+                        <Select
+                            variant="filled"
+                            fullWidth={true}
+                            onChange={this._handleLanguageChanged}
+                            input={<Input name="language" />}
+                            value={language}>
+                            {languages.map(language => <MenuItem key={language} value={language}>{language}</MenuItem>)}
+                        </Select>
+                    </FormControl>
                     <Link className={classes.registerLink} to="/tours">To tours</Link>
                     <LoadingButton
                         style={{ marginTop: '15px' }}

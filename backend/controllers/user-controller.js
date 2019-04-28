@@ -85,7 +85,7 @@ exports.editUser = (req, res) => {
     User.findOne({ _id: req.userId })
         .then((user) => {
             if (user) {
-                const { email, firstName, lastName } = req.body;
+                const { email, firstName, lastName, language } = req.body;
 
                 const emailValidation = validEmail(email);
                 const firstNameValidation = validName(firstName);
@@ -95,6 +95,7 @@ exports.editUser = (req, res) => {
                     user.email = email;
                     user.firstName = firstName;
                     user.lastName = lastName;
+                    user.language = language;
                     user.save();
 
                     res.status(HttpStatus.OK)

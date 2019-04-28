@@ -67,7 +67,7 @@ class CreateTourDialog extends React.Component {
                             variant="filled"
                             fullWidth={true}
                             onChange={this._handleMapTypeChanged}
-                            input={<Input name="name" id="name-disabled" />}
+                            input={<Input name="name"/>}
                             value={mapTypeValue}>
                             {mapTypes.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                         </Select>
