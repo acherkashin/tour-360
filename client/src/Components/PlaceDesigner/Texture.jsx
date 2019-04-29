@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import equirectToCubemapFaces from 'equirect-cubemap-faces-js';
 import { CircularProgress } from '@material-ui/core';
 import classNames from 'classnames';
+import { NoPlacePlaceholder } from "./";
 
 const CUBE_SIZE = 1024;
 
@@ -42,6 +43,8 @@ class Texture extends React.Component {
 
         this.rootRef = React.createRef();
         this.canvasRef = React.createRef();
+
+
     }
 
     componentDidMount() {
@@ -64,7 +67,7 @@ class Texture extends React.Component {
     render() {
         const { classes } = this.props;
         const { isLoaded } = this.state;
-        
+
         const className = classNames({
             [classes.root]: true,
             [classes.rootLoading]: !isLoaded,

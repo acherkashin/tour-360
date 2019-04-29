@@ -100,7 +100,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     state = {
-        uploadImageDialogState: 0,
+        uploadImageDialogState: CLOSED,
         isOpenedConfirmDialog: false,
         isOpenedDeleteDialog: false,
         isOpenedPreviewDialog: false,

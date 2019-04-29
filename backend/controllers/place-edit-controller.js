@@ -1,8 +1,10 @@
 const { Tour } = require('./../models');
 const uuidv1 = require('uuidv1')
-const path = require('path');
 const HttpStatus = require('http-status-codes');
-
+const { 
+    addFile, 
+    generatePlaceImage360Name,
+} = require('./../utils/fileutils');
 const cache = {};
 
 exports.get = (req, res) => {
@@ -60,6 +62,31 @@ exports.saveChanges = (req, res) => {
             place: place.toDetailDto(tour),
         });
     }).catch((error) => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    });
+};
+
+exports.uploadImage360 = (req, res) => {
+    //TODO: check extensions for images
+    const { sessionId } = req.params;
+    const { width, height } = req.body;
+    const placeImage = req.files.placeImage;
+
+    const { tour, place } = cache[sessionId];
+    const newFileName = generatePlaceImage360Name(tour, placeImage);
+
+    addFile(newFileName, placeImage).then(() => {
+        place.image360.filename = newFileName;
+        place.image360.contentType = placeImage.mimetype;
+        place.image360.height = parseInt(height);
+        place.image360.width = parseInt(width);
+
+        res.json({
+            sessionId,
+            tourId: tour.id,
+            place: place.toDetailDto(tour),
+        });
+    }).catch(error => {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
 };

@@ -10,7 +10,8 @@ import {
     Typography,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { Texture } from './';
+import { Texture, NoPlacePlaceholder } from './';
+import { UploadImageDialog } from './../Dialogs';
 
 const styles = theme => ({
     root: {},
@@ -36,9 +37,12 @@ const PlaceDesigner = inject("rootStore")(observer(
 
             this._handleClose = this._handleClose.bind(this);
             this._handleSave = this._handleSave.bind(this);
+            this._handleUploadImage = this._handleUploadImage.bind(this);
+            this._handleFileSelected= this._handleFileSelected.bind(this);
 
             this.state = {
                 isOpenedConfirmDialog: false,
+                uploadImageDialogOpened: false,
             };
         }
 
@@ -65,7 +69,18 @@ const PlaceDesigner = inject("rootStore")(observer(
             }
         }
 
+        _handleUploadImage() {
+            this.setState({ uploadImageDialogOpened: true });
+        }
+
+        _handleFileSelected(e) {
+            this.placeEditStore.updateImage360(e.file, e.width, e.height).then(() => {
+                this.setState({ uploadImageDialogOpened: false });
+            });
+        }
+
         _handleSave() {
+            // this.placeEditStore.
         }
 
         render() {
@@ -75,6 +90,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             }
 
             const { classes } = this.props;
+            const { uploadImageDialogOpened } = this.state;
 
             return <Dialog
                 open={true}
@@ -90,8 +106,16 @@ const PlaceDesigner = inject("rootStore")(observer(
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
-                    <Texture imageUrl={this.editingPlace.mapImage360Url} />
+                    {this.editingPlace.mapImage360Url && <Texture imageUrl={this.editingPlace.mapImage360Url} />}
+                    {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                 </div>
+                <UploadImageDialog
+                    title="Upload new map"
+                    prompt="Upload map of your virtual tour. E.g.: floor plan, street plan..."
+                    isOpened={uploadImageDialogOpened}
+                    onFileSelected={this._handleFileSelected}
+                    onClose={() => this.setState({ uploadImageDialogOpened: false })}
+                />
             </Dialog>
         }
     }));

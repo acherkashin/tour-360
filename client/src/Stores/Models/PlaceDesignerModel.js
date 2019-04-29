@@ -1,6 +1,6 @@
 import { extendObservable } from "mobx";
 
-export default class PlaceDesigner {
+export default class PlaceDesignerModel {
     constructor(json) {
         this.id = json.id;
 

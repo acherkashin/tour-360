@@ -11,5 +11,7 @@ router.route('/place-edit/:sessionId/save')
     .post(verifyToken, verifySession, PlaceEditController.saveChanges);
 router.route('/place-edit/:sessionId/cancel')
     .post(verifyToken, verifySession, PlaceEditController.cancelChanges);
+router.route('/place-edit/:sessionId/uploadImage360')
+    .post(verifyToken, verifySession, PlaceEditController.uploadImage360);
 
 module.exports = router;

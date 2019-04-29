@@ -1,8 +1,13 @@
 const uuidv1 = require('uuidv1')
-const path = require('path');
 const HttpStatus = require('http-status-codes');
 const { Tour } = require('./../models');
-const { addFile, removeFile } = require('./../utils/fileutils');
+const { 
+    addFile, 
+    removeFile,
+    generatePlaceImage360Name,
+    generateTourImageName,
+    generatePlaceSoundName,
+} = require('./../utils/fileutils');
 const cache = {};
 
 exports.get = (req, res) => {
@@ -243,27 +248,6 @@ exports.deleteConnection = (req, res) => {
     tour.deleteConnection(place1Id, place2Id);
 
     res.status(HttpStatus.OK).json({ tour: tour.toDetailDto() })
-}
-
-function generatePlaceImage360Name(place, mapImage) {
-    const extension = path.extname(mapImage.name);
-    const newFileName = `${place.id}-${uuidv1()}-place-360${extension}`;
-
-    return newFileName;
-}
-
-function generateTourImageName(tour, mapImage) {
-    const extension = path.extname(mapImage.name);
-    const newFileName = `${tour.id}-${uuidv1()}-map${extension}`;
-
-    return newFileName;
-}
-
-function generatePlaceSoundName(place, sound) {
-    const extension = path.extname(sound.name);
-    const newFileName = `${place.id}-${uuidv1()}-sound${extension}`;
-
-    return newFileName;
 }
 
 function findFreeNameForPlace(tour) {
