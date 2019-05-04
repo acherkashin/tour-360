@@ -17,6 +17,10 @@ const en = defineMessages({
         id: 'common.save',
         defaultMessage: 'Сохранить',
     },
+    doNotSave: {
+        id: 'common.doNotSave',
+        defaultMessage: "Не сохранять",
+    },
     cancel: {
         id: 'common.cancel',
         defaultMessage: 'Закрыть',
@@ -60,12 +64,12 @@ const en = defineMessages({
 
     headerTitle: {
         id: 'header.title',
-        defaultMessage: 'Ваши виртуальные экскурсии',
+        defaultMessage: 'Ваши Виртуальные Экскурсии',
     },
 
     createTourDialogTitle: {
-        id:'create-tour-dialog.title',
-        defaultMessage: 'Создать Виртуальный Тур',
+        id: 'create-tour-dialog.title',
+        defaultMessage: 'Создать Виртуальную Экскурсию',
     },
     createTourDialogTourName: {
         id: 'create-tour-dialog.tour-name',
@@ -80,6 +84,15 @@ const en = defineMessages({
         id: 'tours-page.tour-map',
         defaultMessage: 'Карта Экскурсии',
     },
+
+    placeDesignerSaveDialogTitle: {
+        id: 'place-designer.save-dialog-title',
+        defaultMessage: 'Сохранить Локацию',
+    },
+    placeDesignerConfirmMessage: {
+        id: 'place-designer.confirm-message',
+        defaultMessage: 'Вы собираетесь закрыть дизайнер. Хотите ли вы сохранить свои изменения?',
+    }
 });
 
 export default en;

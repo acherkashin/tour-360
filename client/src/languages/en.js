@@ -24,6 +24,10 @@ const en = defineMessages({
         id: 'common.save',
         defaultMessage: 'Save',
     },
+    doNotSave: {
+        id: 'common.doNotSave',
+        defaultMessage: "Don't save",
+    },
     cancel: {
         id: 'common.cancel',
         defaultMessage: 'Cancel',
@@ -88,6 +92,14 @@ const en = defineMessages({
         defaultMessage: 'Tour Map',
     },
 
+    placeDesignerSaveDialogTitle: {
+        id: 'place-designer.save-dialog-title',
+        defaultMessage: 'Save Place',
+    },
+    placeDesignerConfirmMessage: {
+        id: 'place-designer.confirm-message',
+        defaultMessage: 'You are about to close the designer. Do you want to save your changes?',
+    }
 });
 
 export default en;

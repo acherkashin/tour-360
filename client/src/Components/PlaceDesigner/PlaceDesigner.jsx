@@ -10,7 +10,9 @@ import {
     Typography,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import { intlShape, injectIntl } from 'react-intl';
 import { Texture, NoPlacePlaceholder } from './';
+import { ConfirmDialog } from './../Dialogs';
 import { UploadImageDialog } from './../Dialogs';
 
 const styles = theme => ({
@@ -38,7 +40,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleClose = this._handleClose.bind(this);
             this._handleSave = this._handleSave.bind(this);
             this._handleUploadImage = this._handleUploadImage.bind(this);
-            this._handleFileSelected= this._handleFileSelected.bind(this);
+            this._handleFileSelected = this._handleFileSelected.bind(this);
 
             this.state = {
                 isOpenedConfirmDialog: false,
@@ -84,12 +86,13 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         render() {
+            const { messages, formatMessage } = this.props.intl;
             const isOpened = this.editingPlace != null;
             if (!isOpened) {
                 return null;
             }
 
-            const { classes } = this.props;
+            const { classes, isOpenedConfirmDialog } = this.props;
             const { uploadImageDialogOpened } = this.state;
 
             return <Dialog
@@ -116,6 +119,16 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onFileSelected={this._handleFileSelected}
                     onClose={() => this.setState({ uploadImageDialogOpened: false })}
                 />
+                <ConfirmDialog
+                    title={formatMessage(messages.placeDesignerSaveDialogTitle)}
+                    okButtonText={formatMessage(messages.save)}
+                    cancelButtonText={formatMessage(messages.doNotSave)}
+                    contentText={formatMessage(messages.placeDesignerConfirmMessage)}
+                    onOkClick={this._handleOkConfirmClick}
+                    onCancelClick={this._handleCancelConfigrmClick}
+                    isOpened={isOpenedConfirmDialog}
+                    onClose={this._handleCloseConfirmDialog}
+                />
             </Dialog>
         }
     }));
@@ -124,4 +137,4 @@ PlaceDesigner.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PlaceDesigner);
+export default withStyles(styles)(injectIntl(PlaceDesigner));

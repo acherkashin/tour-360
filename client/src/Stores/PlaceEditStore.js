@@ -45,11 +45,12 @@ export default class PlaceEditStore {
 
     updateImage360(file, width, height) {
         return PlaceEditService.updateImage360(this.sessionId, file, width, height).then(action((resp) => {
-            console.log(resp);
+            const place = resp.data.place;
+            this.editingPlace.updateFromJson(place);
         }));
     }
 
-    _updateEditingPlace = action((sessionId, place, tourId) => {
+    _updateEditingPlace = action((sessionId, tourId, place) => {
         this.editingPlace = new PlaceDesignerModel(place);
         this.isDirty = false;
         this.tourId = tourId;
