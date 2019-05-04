@@ -47,7 +47,7 @@ export default class TourEditStore {
         this._clearEditingConnection();
         return TourEditService.getPlace(this.sessionId, placeId).then(action((resp) => {
             const { place } = resp.data;
-            this.editingPlace = new EditPlace(this, this.sessionId, place);
+            this.editingPlace = new EditPlace(place);
             this.editingPlaceDisposer = deepObserve(this.editingPlace, () => this.isDirty = true);
         }));
     }

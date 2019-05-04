@@ -1,9 +1,7 @@
 import { extendObservable } from "mobx";
 
 export default class EditPlace {
-    constructor(store, sessionId, json) {
-        this.store = store;
-        this.sessionId = sessionId;
+    constructor(json) {
         this.id = json.id;
 
         extendObservable(this, {

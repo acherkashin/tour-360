@@ -2,7 +2,7 @@ import { extendObservable, action, runInAction } from 'mobx';
 import { deepObserve, fromPromise } from 'mobx-utils';
 import { PlaceEditService, PlaceService } from './../api';
 import { UserStore } from './../Stores';
-import PlaceDesignerModel from './../Stores/Models/PlaceDesignerModel';
+import EditPlace from './../Stores/Models/EditPlace';
 
 export default class PlaceEditStore {
     constructor(rootStore) {
@@ -20,6 +20,14 @@ export default class PlaceEditStore {
                 return this.saveResult && this.saveResult.state === "pending";
             },
         });
+    }
+
+    viewPlaceImage360(placeId) {
+        window.open(this.getPlaceImage360Url(placeId));
+    }
+
+    getPlaceImage360Url(placeId) {
+        return PlaceEditService.getPanoUrl(this.sessionId, placeId, UserStore.getToken());
     }
 
     beginEditing(tourId, placeId) {
@@ -64,7 +72,7 @@ export default class PlaceEditStore {
     }
 
     _updateEditingPlace = action((sessionId, tourId, place) => {
-        this.editingPlace = new PlaceDesignerModel(place);
+        this.editingPlace = new EditPlace(place);
         this.isDirty = false;
         this.tourId = tourId;
 

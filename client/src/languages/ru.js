@@ -1,6 +1,6 @@
 import { defineMessages } from 'react-intl';
 
-const en = defineMessages({
+const ru = defineMessages({
     delete: {
         id: 'common.delete',
         defaultMessage: 'Удалить',
@@ -92,7 +92,15 @@ const en = defineMessages({
     placeDesignerConfirmMessage: {
         id: 'place-designer.confirm-message',
         defaultMessage: 'Вы собираетесь закрыть дизайнер. Хотите ли вы сохранить свои изменения?',
-    }
+    },
+    placeDesignerUploadPanoTitle: {
+        id: 'place-designer.upload-pano-title',
+        defaultMessage: 'Загрузить панораму',
+    },
+    placeDesignerUploadPanoPrompt: {
+        id: 'place-designer.upload-pano-prompt',
+        defaultMessage: 'Загрузите панораму для вашей локации',
+    },
 });
 
-export default en;
+export default ru;

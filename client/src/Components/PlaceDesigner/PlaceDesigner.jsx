@@ -14,6 +14,8 @@ import { intlShape, injectIntl } from 'react-intl';
 import { LoadingButton } from './../'
 import { Texture, NoPlacePlaceholder } from './';
 import { ConfirmDialog, UploadImageDialog } from './../Dialogs';
+import EditPlacePanel from './../TourDesigner/EditPlacePanel';
+import { grey } from '@material-ui/core/colors';
 
 const styles = theme => ({
     root: {},
@@ -25,10 +27,23 @@ const styles = theme => ({
     },
     content: {
         height: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+    },
+    panoWrapper: {
+        width: '100%',
+        height: '100%',
         overflow: 'auto',
-        // display: 'flex',
-        // flexDirection: 'row',
-        // alignItems: 'stretch',
+    },
+    rightPanel: {
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: 500,
+        minWidth: 400,
+        flexBasis: 400,
+        backgroundColor: grey[100],
+        borderLeft: `1px solid ${theme.palette.divider}`,
     },
 });
 
@@ -39,10 +54,12 @@ const PlaceDesigner = inject("rootStore")(observer(
 
             this._handleClose = this._handleClose.bind(this);
             this._handleSave = this._handleSave.bind(this);
+            this._handlePlaceNameChanged = this._handlePlaceNameChanged.bind(this);
             this._handleUploadImage = this._handleUploadImage.bind(this);
             this._handleFileSelected = this._handleFileSelected.bind(this);
             this._handleCloseConfirmDialog = this._handleCloseConfirmDialog.bind(this);
             this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
+            this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
 
             this.state = {
                 isOpenedConfirmDialog: false,
@@ -56,6 +73,10 @@ const PlaceDesigner = inject("rootStore")(observer(
 
         get editingPlace() {
             return this.placeEditStore.editingPlace;
+        }
+
+        get showEditPlacePanel() {
+            return Boolean(this.editingPlace);
         }
 
         componentDidMount() {
@@ -105,6 +126,14 @@ const PlaceDesigner = inject("rootStore")(observer(
             });
         }
 
+        _handlePlaceNameChanged(e) {
+            this.editingPlace.name = e.name;
+        }
+
+        _handleViewImage360Click() {
+            this.placeEditStore.viewPlaceImage360(this.editingPlace.id);
+        }
+
         render() {
             const { messages, formatMessage } = this.props.intl;
             const isOpened = this.editingPlace != null;
@@ -130,12 +159,45 @@ const PlaceDesigner = inject("rootStore")(observer(
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
-                    {this.editingPlace.mapImage360Url && <Texture imageUrl={this.editingPlace.mapImage360Url} />}
-                    {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
+                    <div className={classes.panoWrapper}>
+                        {this.editingPlace.mapImage360Url && <Texture imageUrl={this.editingPlace.mapImage360Url} />}
+                        {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
+                    </div>
+                    {this.showEditPlacePanel && <div className={classes.rightPanel}>
+                        <EditPlacePanel
+                            place={this.editingPlace}
+                            onNameChanged={this._handlePlaceNameChanged}
+                            onChangeImage360Click={this._handleUploadImage}
+                            onViewImage360Click={this._handleViewImage360Click}
+                            onPreviewClick={this._handlePreviewPlaceClick}
+                            // onDeleteClick={this._handleDeletePlaceClick}
+                            onConnectionClick={(e) => {
+                                // this.tourStore.editPlace(e.connection.placeId);
+                            }}
+                            onViewConnectionClick={(e) => {
+                                // this.tourStore.viewPlaceImage360(e.connection.placeId);
+                            }}
+                            onRemoveConnectionClick={(e) => {
+                                // this.tourStore.deleteConnection(this.editingPlace.id, e.connection.placeId)
+                            }}
+                            onEditConnectionClick={(e) => {
+                                // this.tourStore.saveEditingPlace(true).then(() => {
+                                //     this.tourStore.editConnection(e.connection.id);
+                                // });
+                            }}
+                            onSoundChanged={(e) => {
+                                // this.tourStore.updatePlaceSound(e.file);
+                            }}
+                            onSoundRemoved={(e) => {
+                                // this.tourStore.removePlaceSound();
+                            }}
+                            onDescriptionClick={this._handleOpenDescriptionDialog}
+                        />
+                    </div>}
                 </div>
                 <UploadImageDialog
-                    title="Upload new map"
-                    prompt="Upload map of your virtual tour. E.g.: floor plan, street plan..."
+                    title={formatMessage(messages.placeDesignerUploadPanoTitle)}
+                    prompt={formatMessage(messages.placeDesignerUploadPanoPrompt)}
                     isOpened={uploadImageDialogOpened}
                     onFileSelected={this._handleFileSelected}
                     onClose={() => this.setState({ uploadImageDialogOpened: false })}

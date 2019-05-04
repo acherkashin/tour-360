@@ -21,7 +21,7 @@ import { TourMap } from './';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
 import ViewUrlDialog from '../Dialogs/ViewUrlDialog';
-import grey from '@material-ui/core/colors/grey';
+import { grey } from '@material-ui/core/colors';
 
 const styles = (theme) => ({
     appBar: {

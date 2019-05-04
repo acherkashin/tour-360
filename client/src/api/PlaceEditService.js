@@ -1,4 +1,5 @@
 import client from './client';
+import { VR_URL } from './../config';
 
 export function beginEditing(tourId, placeId) {
     return client.post(`/api/place-edit/`, {
@@ -26,4 +27,8 @@ export function updateImage360(sessionId, file, width, height) {
             'Content-Type': 'multipart/form-data',
         }
     });
+}
+
+export function getPanoUrl(sessionId, placeId, token) {
+    return `${VR_URL}?placeSessionId=${sessionId}&placeId=${placeId}&token=${token}`;
 }

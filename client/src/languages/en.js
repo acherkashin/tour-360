@@ -99,6 +99,14 @@ const en = defineMessages({
     placeDesignerConfirmMessage: {
         id: 'place-designer.confirm-message',
         defaultMessage: 'You are about to close the designer. Do you want to save your changes?',
+    },
+    placeDesignerUploadPanoTitle: {
+        id: 'place-designer.upload-pano-title',
+        defaultMessage: 'Upload Pano',
+    },
+    placeDesignerUploadPanoPrompt: {
+        id: 'place-designer.upload-pano-prompt',
+        defaultMessage: 'Upload pano for your place',
     }
 });
 
