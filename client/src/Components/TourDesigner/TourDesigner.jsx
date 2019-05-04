@@ -10,6 +10,7 @@ import {
     Typography,
     Slide,
 } from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 import CloseIcon from '@material-ui/icons/Close';
 import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
@@ -167,6 +168,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             this._handleCloseConfirmDialog();
         });
     }
+
     _handleCancelConfigrmClick() {
         this.tourStore.cancelEditing().finally(() => {
             this._handleCloseConfirmDialog();
@@ -348,6 +350,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             mapEditMode,
         } = this.state;
         const { saveLoading, isDirty } = this.tourStore;
+        const { messages, formatMessage } = this.props.intl;
 
         return (
             <Dialog
@@ -431,8 +434,8 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 />
                 <ConfirmDialog
                     title='Save Virtual Tour'
-                    okButtonText='Save'
-                    cancelButtonText="Don't save"
+                    okButtonText={formatMessage(messages.save)}
+                    cancelButtonText={formatMessage(messages.doNotSave)}
                     contentText="You are about to close the designer. Do you want to save your changes?"
                     onOkClick={this._handleOkConfirmClick}
                     onCancelClick={this._handleCancelConfigrmClick}
@@ -441,8 +444,8 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 />
                 <ConfirmDialog
                     title='Delete Place'
-                    okButtonText='Yes'
-                    cancelButtonText="No"
+                    okButtonText={formatMessage(messages.yes)}
+                    cancelButtonText={formatMessage(messages.no)}
                     contentText="Are you sure you want to delete this place?"
                     onOkClick={this._handleOkDeletePlaceClick}
                     onCancelClick={this._closeDeleteDialog}
@@ -472,6 +475,8 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
 TourDesigner.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(TourDesigner);
+export default withStyles(styles)(injectIntl(TourDesigner));

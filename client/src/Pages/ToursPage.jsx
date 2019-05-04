@@ -142,7 +142,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
         }
 
         _getActionsForTour(e, history) {
-        const { messages, formatMessage } = this.props.intl;
+            const { messages, formatMessage } = this.props.intl;
 
             const actions = [{
                 icon: <Edit />,
@@ -238,6 +238,8 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
 
 ToursPage.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    intl: intlShape.isRequired,
 };
 
 export default withStyles(styles)(injectIntl(ToursPage));

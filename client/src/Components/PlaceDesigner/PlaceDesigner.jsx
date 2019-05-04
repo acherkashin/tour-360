@@ -11,9 +11,9 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { intlShape, injectIntl } from 'react-intl';
+import { LoadingButton } from './../'
 import { Texture, NoPlacePlaceholder } from './';
-import { ConfirmDialog } from './../Dialogs';
-import { UploadImageDialog } from './../Dialogs';
+import { ConfirmDialog, UploadImageDialog } from './../Dialogs';
 
 const styles = theme => ({
     root: {},
@@ -41,6 +41,8 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleSave = this._handleSave.bind(this);
             this._handleUploadImage = this._handleUploadImage.bind(this);
             this._handleFileSelected = this._handleFileSelected.bind(this);
+            this._handleCloseConfirmDialog = this._handleCloseConfirmDialog.bind(this);
+            this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
 
             this.state = {
                 isOpenedConfirmDialog: false,
@@ -82,7 +84,25 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _handleSave() {
-            // this.placeEditStore.
+            this.placeEditStore.completeEditing();
+        }
+
+        _handleCloseConfirmDialog() {
+            this.setState({ isOpenedConfirmDialog: false });
+        }
+
+        _handleOkConfirmClick() {
+            this.placeEditStore.completeEditing().then(() => {
+                this.placeEditStore.cancelEditing();
+            }).finally(() => {
+                this._handleCloseConfirmDialog();
+            });
+        }
+
+        _handleCancelConfigrmClick() {
+            this.placeEditStore.cancelEditing().finally(() => {
+                this._handleCloseConfirmDialog();
+            });
         }
 
         render() {
@@ -92,6 +112,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 return null;
             }
 
+            const { isDirty, saveLoading } = this.placeEditStore;
             const { classes, isOpenedConfirmDialog } = this.props;
             const { uploadImageDialogOpened } = this.state;
 
@@ -105,7 +126,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.tourName}>{this.editingPlace.name}</Typography>
-                        {/* <LoadingButton color={"inherit"} disabled={!isDirty} isLoading={saveLoading} onClick={this._handleSave}>save</LoadingButton> */}
+                        <LoadingButton color={"inherit"} disabled={!isDirty} isLoading={saveLoading} onClick={this._handleSave}>save</LoadingButton>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
@@ -135,6 +156,8 @@ const PlaceDesigner = inject("rootStore")(observer(
 
 PlaceDesigner.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    intl: intlShape.isRequired,
 };
 
 export default withStyles(styles)(injectIntl(PlaceDesigner));

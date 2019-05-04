@@ -9,12 +9,16 @@ export default class PlaceEditStore {
         this.rootStore = rootStore;
 
         extendObservable(this, {
+            saveResult: null,
             editingPlace: null,
             isDirty: false,
             tourId: null,
             get panoUrl() {
                 return PlaceService.getPanoUrl(this.tourId, this.editingPlace.id, UserStore.getToken());
-            }
+            },
+            get saveLoading() {
+                return this.saveResult && this.saveResult.state === "pending";
+            },
         });
     }
 
@@ -29,7 +33,7 @@ export default class PlaceEditStore {
     getFromSession(sessionId) {
         return PlaceEditService.get(sessionId).then(action((resp) => {
             const { sessionId, place, tourId } = resp.data;
-            this._updateEditingPlace(sessionId, place, tourId);
+            this._updateEditingPlace(sessionId, tourId, place);
 
             return this.editingPlace;
         }));
@@ -41,6 +45,15 @@ export default class PlaceEditStore {
             this.isDirty = false;
             this.editingPlaceDisposer && this.editingPlaceDisposer();
         }))
+    }
+
+    completeEditing() {
+        this.saveResult = fromPromise(PlaceEditService.saveChanges(this.sessionId, {}));
+
+        this.saveResult.then(action((result) => {
+            this.editingPlace.updateFromJson(result.data.place);
+            this.isDirty = false;
+        }));
     }
 
     updateImage360(file, width, height) {

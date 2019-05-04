@@ -1,7 +1,7 @@
 import { extendObservable, action, runInAction } from 'mobx';
+import { deepObserve, fromPromise } from 'mobx-utils';
 import { TourEditService } from './../api';
 import { EditTour, EditPlace, EditConnection } from './';
-import { deepObserve, fromPromise } from 'mobx-utils';
 import UserStore from './UserStore'
 
 export default class TourEditStore {
