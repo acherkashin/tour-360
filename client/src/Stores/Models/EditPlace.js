@@ -19,6 +19,7 @@ export default class EditPlace {
             startPlaceId: null,
             soundName: '',
             description: '',
+            widgets: [],
 
             get viewImage360Url() {
                 return this.hasImage360 ? this.store.getPlaceImage360Url(this.id) : null;
@@ -45,6 +46,7 @@ export default class EditPlace {
         this.connections = json.connections;
         this.startPlaceId = json.startPlaceId;
         this.description = json.description;
+        this.widgets = json.widgets;
 
         if (this.soundName !== json.soundName) {
             this.soundName = json.soundName;

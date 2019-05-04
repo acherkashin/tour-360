@@ -8,6 +8,14 @@ import { defineMessages } from 'react-intl';
 // });
 
 const en = defineMessages({
+    yes: {
+        id: 'common.yes',
+        defaultMessage: 'Yes',
+    },
+    no: {
+        id: 'common.no',
+        defaultMessage: 'No',
+    },
     delete: {
         id: 'common.delete',
         defaultMessage: 'Delete',

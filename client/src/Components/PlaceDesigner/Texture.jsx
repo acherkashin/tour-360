@@ -6,7 +6,7 @@ import { CircularProgress } from '@material-ui/core';
 import classNames from 'classnames';
 import { NoPlacePlaceholder } from "./";
 
-const CUBE_SIZE = 1024;
+const CUBE_SIZE = 1170;
 
 const styles = theme => ({
     root: {
@@ -52,14 +52,34 @@ class Texture extends React.Component {
 
         loadImage(imageUrl)
             .then((i) => {
-                const cs = equirectToCubemapFaces(i);
+                const cs = equirectToCubemapFaces(i, CUBE_SIZE);
 
                 this.setState({ isLoaded: true }, () => {
                     const context = this.canvasRef.current.getContext('2d');
-                    context.drawImage(cs[1], 0, 0);
-                    context.drawImage(cs[4], CUBE_SIZE, 0);
-                    context.drawImage(cs[0], 2 * CUBE_SIZE, 0);
-                    context.drawImage(cs[5], 3 * CUBE_SIZE, 0);
+                    context.drawImage(cs[5],
+                        CUBE_SIZE / 2, // source x
+                        0, // source y
+                        CUBE_SIZE / 2, // source width
+                        CUBE_SIZE, // source height
+                        0, // destination x
+                        0, // destination y
+                        CUBE_SIZE / 2, // destination width
+                        CUBE_SIZE // destination height
+                    );
+                    context.drawImage(cs[1], 0.5 * CUBE_SIZE, 0);
+                    context.drawImage(cs[4], 1.5 * CUBE_SIZE, 0);
+                    context.drawImage(cs[0], 2.5 * CUBE_SIZE, 0);
+
+                    context.drawImage(cs[5],
+                        0, // source x
+                        0, // source y
+                        CUBE_SIZE / 2, // source width
+                        CUBE_SIZE, // source height
+                        3.5 * CUBE_SIZE, // destination x
+                        0, // destination y
+                        CUBE_SIZE / 2, // destination width
+                        CUBE_SIZE // destination height
+                    );
                 });
             });
     }
@@ -73,7 +93,7 @@ class Texture extends React.Component {
             [classes.rootLoading]: !isLoaded,
         });
 
-        return <div className={className} ref={this.rootRef}>
+        return <div className={className} ref={this.rootRef} style={{ width: CUBE_SIZE * 4, height: CUBE_SIZE }}>
             {isLoaded && <canvas width={CUBE_SIZE * 4} height={CUBE_SIZE} ref={this.canvasRef} className={classes.canvas}></canvas>}
             {!isLoaded && <CircularProgress size={48} />}
         </div>;

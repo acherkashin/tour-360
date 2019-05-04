@@ -1,6 +1,14 @@
 import { defineMessages } from 'react-intl';
 
 const ru = defineMessages({
+    yes: {
+        id: 'common.yes',
+        defaultMessage: 'Да',
+    },
+    no: {
+        id: 'common.no',
+        defaultMessage: 'Нет',
+    },
     delete: {
         id: 'common.delete',
         defaultMessage: 'Удалить',

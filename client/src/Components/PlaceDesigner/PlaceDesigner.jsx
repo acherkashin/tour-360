@@ -16,6 +16,8 @@ import { Texture, NoPlacePlaceholder } from './';
 import { ConfirmDialog, UploadImageDialog } from './../Dialogs';
 import EditPlacePanel from './../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
+import { TextWidget, CoordinateSystem } from './';
+import { HEIGHT, WIDTH } from './utils';
 
 const styles = theme => ({
     root: {},
@@ -35,6 +37,7 @@ const styles = theme => ({
         width: '100%',
         height: '100%',
         overflow: 'auto',
+        position: 'relative',
     },
     rightPanel: {
         display: 'flex',
@@ -45,6 +48,10 @@ const styles = theme => ({
         backgroundColor: grey[100],
         borderLeft: `1px solid ${theme.palette.divider}`,
     },
+    widgetArea: {
+        position: 'absolute',
+        top: 285,
+    }
 });
 
 const PlaceDesigner = inject("rootStore")(observer(
@@ -134,7 +141,17 @@ const PlaceDesigner = inject("rootStore")(observer(
             this.placeEditStore.viewPlaceImage360(this.editingPlace.id);
         }
 
+        _renderWidget(widget) {
+            if (widget.type === 'text') {
+                return <TextWidget key={widget.id} options={widget} />;
+            }
+
+            throw new Error("Unknown type of widget");
+        }
+
         render() {
+
+
             const { messages, formatMessage } = this.props.intl;
             const isOpened = this.editingPlace != null;
             if (!isOpened) {
@@ -160,7 +177,19 @@ const PlaceDesigner = inject("rootStore")(observer(
                 </AppBar>
                 <div className={classes.content}>
                     <div className={classes.panoWrapper}>
-                        {this.editingPlace.mapImage360Url && <Texture imageUrl={this.editingPlace.mapImage360Url} />}
+                        {this.editingPlace.mapImage360Url &&
+                            <>
+                                <Texture imageUrl={this.editingPlace.mapImage360Url} />
+                                <div className={classes.widgetArea}>
+                                    <CoordinateSystem
+                                        width={WIDTH}
+                                        height={HEIGHT}
+                                        stepX={200}
+                                        stepY={100}
+                                    />
+                                    {this.editingPlace.widgets && this.editingPlace.widgets.map((item) => this._renderWidget(item))}
+                                </div>
+                            </>}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
