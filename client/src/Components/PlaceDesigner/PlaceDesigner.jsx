@@ -72,6 +72,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
             this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
             this._handleWidgetClick = this._handleWidgetClick.bind(this);
+            this._handleSurfaceWrapperClick = this._handleSurfaceWrapperClick.bind(this);
 
             this.surfaceWrapperRef = React.createRef();
 
@@ -195,8 +196,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                 return <TextWidget
                     key={widget.id}
                     widget={widget}
-                    isSelected={this.editingWidget && this.editingWidget.id == widget.id}
-                    onClick={this._handleWidgetClick} 
+                    isSelected={Boolean(this.editingWidget && this.editingWidget.id == widget.id)}
+                    onClick={this._handleWidgetClick}
                 />;
             }
 
@@ -205,7 +206,6 @@ const PlaceDesigner = inject("rootStore")(observer(
 
         _handleWidgetClick(event) {
             this.placeEditStore.editWidget(event.widget.id);
-            console.log(event);
         }
 
         _renderSurface() {
@@ -213,7 +213,10 @@ const PlaceDesigner = inject("rootStore")(observer(
             const { textureIsLoaded } = this.state;
 
             return <>
-                <Texture imageUrl={this.editingPlace.mapImage360Url} onLoaded={this._handleTextureLoaded} />
+                <Texture
+                    onClick={() => this.placeEditStore.completeEditWidget()}
+                    imageUrl={this.editingPlace.mapImage360Url}
+                    onLoaded={this._handleTextureLoaded} />
                 {textureIsLoaded && <div className={classes.widgetArea}>
                     <CoordinateSystem
                         width={WIDTH}
@@ -236,6 +239,11 @@ const PlaceDesigner = inject("rootStore")(observer(
 
         _handleOpenDescriptionDialog() {
             throw new Error("Method is not implemented!");
+        }
+
+        _handleSurfaceWrapperClick(e) {
+            this.placeEditStore.completeEditWidget();
+            console.log(e);
         }
 
         render() {
@@ -263,7 +271,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
-                    <div className={classes.surfaceWrapper} ref={this.surfaceWrapperRef}>
+                    <div className={classes.surfaceWrapper} ref={this.surfaceWrapperRef} onClick={this._handleSurfaceWrapperClick}>
                         {this.editingPlace.mapImage360Url && this._renderSurface()}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>

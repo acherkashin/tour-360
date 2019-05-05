@@ -41,6 +41,8 @@ class Texture extends React.Component {
 
         this.rootRef = React.createRef();
         this.canvasRef = React.createRef();
+
+        this._handleClick = this._handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -77,9 +79,13 @@ class Texture extends React.Component {
                         CUBE_SIZE // destination height
                     );
 
-                    onLoaded && onLoaded();
+                    onLoaded && onLoaded({ origin: this });
                 });
             });
+    }
+
+    _handleClick() {
+        this.props.onClick && this.props.onClick({ origin: this });
     }
 
     render() {
@@ -87,7 +93,7 @@ class Texture extends React.Component {
         const { isLoaded } = this.state;
 
         if (isLoaded) {
-            return <div className={classes.root} ref={this.rootRef} style={{ width: CUBE_SIZE * 4, height: CUBE_SIZE }}>
+            return <div className={classes.root} ref={this.rootRef} style={{ width: CUBE_SIZE * 4, height: CUBE_SIZE }} onClick={this._handleClick}>
                 <canvas width={CUBE_SIZE * 4} height={CUBE_SIZE} ref={this.canvasRef} className={classes.canvas}></canvas>
             </div>;
         } else {
@@ -103,6 +109,7 @@ Texture.propTypes = {
     imageUrl: PropTypes.string.isRequired,
 
     onLoaded: PropTypes.func,
+    onClick: PropTypes.func,
 }
 
 export default withStyles(styles)(Texture);

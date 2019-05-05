@@ -82,7 +82,6 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
 
 TextWidgetEditPanel.propTypes = {
     widget: TextWidgetShape,
-    isSelected: PropTypes.bool.isRequired,
     onXChanged: PropTypes.func.isRequired,
     onYChanged: PropTypes.func.isRequired,
     onContentChanged: PropTypes.func.isRequired,

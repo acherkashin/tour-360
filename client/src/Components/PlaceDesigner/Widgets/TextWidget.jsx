@@ -25,6 +25,7 @@ const TextWidget = observer(class TextWidget extends React.Component {
     }
 
     _handleClick(e) {
+        e.stopPropagation();
         this.props.onClick({ origin: this, widget: this.props.widget })
     }
 

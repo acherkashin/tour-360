@@ -7,6 +7,8 @@ import EditPlace from './../Stores/Models/EditPlace';
 export default class PlaceEditStore {
     constructor(rootStore) {
         this.rootStore = rootStore;
+        this.editingPlaceDisposer = null;
+        this.editingWidgetDisposer = null;
 
         extendObservable(this, {
             saveResult: null,
@@ -73,8 +75,14 @@ export default class PlaceEditStore {
     }
 
     editWidget(id) {
-        // add disposing
+        this.completeEditWidget();
         this.editingWidget = this.editingPlace.widgets.find((value) => value.id === id);
+        this.editingWidgetDisposer = deepObserve(this.editingWidget, () => this.isDirty = true);
+    }
+
+    completeEditWidget() {
+        this.editingWidgetDisposer && this.editingWidgetDisposer();
+        this.editingWidget = null;
     }
 
     _updateEditingPlace = action((sessionId, tourId, place) => {

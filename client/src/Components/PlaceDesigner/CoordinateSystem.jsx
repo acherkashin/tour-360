@@ -48,6 +48,12 @@ const styles = (theme) => ({
 });
 
 class CoordinateSystem extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this._handleClick = this._handleClick.bind(this);
+    }
+
     getPositionsX() {
         const {
             width = WIDTH,
@@ -80,11 +86,15 @@ class CoordinateSystem extends React.Component {
         return positions;
     }
 
+    _handleClick() {
+        this.props.onClick && this.props.onClick({ origin: this });
+    }
+
     render() {
         const positionsX = this.getPositionsX();
         const positionsY = this.getPositionsY();
 
-        const { classes, className } = this.props;
+        const { classes, className, onClick } = this.props;
 
         const root = classNames({
             [className]: !!className,
@@ -92,7 +102,7 @@ class CoordinateSystem extends React.Component {
         });
 
         return (
-            <div className={root}>
+            <div className={root} onClick={() => onClick && onClick()}>
                 <div className={`${classes.axis} ${classes.axisX}`} style={{ top: getScreenY(0) }} />
                 {positionsX.map((left) => <div key={`x_${left}`} className={`${classes.axis} ${classes.lineX}`} style={{ left: getScreenX(left) }} />)}
                 {positionsX.map((left) => <span key={`label_x_${left}`} className={classes.label} style={{ left: getScreenX(left) + 5, top: getScreenY(0) + 5 }}>{left}</span>)}
@@ -107,6 +117,8 @@ class CoordinateSystem extends React.Component {
 CoordinateSystem.propTypes = {
     classes: PropTypes.object.isRequired,
     className: PropTypes.string,
+
+    onClick: PropTypes.func,
 };
 
 export default withStyles(styles)(CoordinateSystem);
