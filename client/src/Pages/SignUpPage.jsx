@@ -10,6 +10,7 @@ import { LoadingButton } from './../Components';
 import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
 import ReCAPTCHA from "react-google-recaptcha";
 import {SITEKEY} from "../config";
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -36,28 +37,30 @@ const styles = theme => ({
 const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
     class SignUpPage extends React.Component {
         constructor(props) {
+            const { messages, formatMessage } = props.intl;
+
             super(props);
 
             this.state = {
                 firstName: '',
                 isFirstNameValid: false,
-                firstNameError: 'please fill out this field',
+                firstNameError: formatMessage(messages.fillOut),
 
                 lastName: '',
                 isLastNameValid: false,
-                lastNameError: 'please fill out this field',
+                lastNameError: formatMessage(messages.fillOut),
 
                 email: '',
                 isEmailValid: false,
-                emailError: 'please fill out this field',
+                emailError: formatMessage(messages.fillOut),
 
                 password: '',
                 isPasswordValid: false,
-                passwordError: 'please fill out this field',
+                passwordError: formatMessage(messages.fillOut),
 
                 confirmationPassword: '',
                 isConfirmationPasswordValid: false,
-                confirmationPasswordError: 'please fill out this field',
+                confirmationPasswordError: formatMessage(messages.fillOut),
 
                 ReCAPTCHAValue: null
             };
@@ -145,12 +148,13 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                 isLastNameValid,
                 lastNameError
             } = this.state;
+            const { messages, formatMessage } = this.props.intl;
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
-                    <Typography align="center" variant="h5" title="Registration">Registration</Typography>
+                    <Typography align="center" variant="h5" title="Registration">{formatMessage(messages.signUpPageTitle)}</Typography>
                     <TextField
-                        label="First Name"
+                        label={formatMessage(messages.firstName)}
                         value={firstName}
                         onChange={this._handleFirstNameChanged}
                         margin="normal"
@@ -161,7 +165,7 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         autoFocus
                     />
                     <TextField
-                        label="Last Name"
+                        label={formatMessage(messages.lastName)}
                         value={lastName}
                         onChange={this._handleLastNameChanged}
                         margin="normal"
@@ -172,7 +176,7 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         autoFocus
                     />
                     <TextField
-                        label="Email"
+                        label={formatMessage(messages.email)}
                         value={email}
                         inputProps={{ type: 'email' }}
                         onChange={this._handleEmailChanged}
@@ -184,7 +188,7 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         autoFocus
                     />
                     <TextField
-                        label="Enter Password"
+                        label={formatMessage(messages.password)}
                         value={password}
                         type="password"
                         onChange={this._handlePasswordChanged}
@@ -194,7 +198,7 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         fullWidth={true}
                     />
                     <TextField
-                        label="Repeat Password"
+                        label={formatMessage(messages.confirmationPassword)}
                         value={confirmationPassword}
                         type="password"
                         onChange={this._handleConfirmationPasswordChanged}
@@ -208,12 +212,12 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
                         sitekey={SITEKEY}
                         onChange={this._handleReCAPTCHAChange}
                     />
-                    <Link className={classes.loginLink} to="/sign-in">To Login?</Link>
+                    <Link className={classes.loginLink} to="/sign-in">{formatMessage(messages.signUpPageToLogin)}</Link>
                     <LoadingButton
                         style={{ marginTop: '15px' }}
                         disabled={!isEmailValid || !isPasswordValid || !isConfirmationPasswordValid || !isFirstNameValid || !isLastNameValid}
                         onClick={this._handleRegisterClick}
-                    >Register</LoadingButton>
+                    >{formatMessage(messages.signUpPageButtonTitle)}</LoadingButton>
                 </div>
             </div>;
         }
@@ -222,6 +226,8 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
 
 SignUpPage.propTypes = {
     classes: PropTypes.object.isRequired,
+    
+    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(SignUpPage);
+export default withStyles(styles)(injectIntl(SignUpPage));

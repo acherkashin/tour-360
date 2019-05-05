@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import PlacePosition from './PlacePosition';
 import Slider from '@material-ui/lab/Slider';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -58,16 +59,17 @@ const EditConnectionPanel = observer(class EditConnectionPanel extends React.Com
 
     render() {
         const { classes, connection } = this.props;
+        const { messages, formatMessage } = this.props.intl;
 
         return <div className={classes.root}>
             <PlacePosition
                 id="start-place-position"
-                label={`${connection.startPlace.name} - Start Place Position`}
+                label={`${connection.startPlace.name} - ${formatMessage(messages.editConnectionPanelStartPlacePosition)}`}
                 value={connection.startPlacePosition}
                 onChange={this._handleStartPlacePositionChanged} />
             <PlacePosition
                 id="end-place-position"
-                label={`${connection.endPlace.name} - End Place Position`}
+                label={`${connection.endPlace.name} - ${formatMessage(messages.editConnectionPanelEndPlacePosition)}`}
                 value={connection.endPlacePosition}
                 onChange={this._handleEndPlacePositionChanged} />
         </div>;
@@ -89,6 +91,8 @@ EditConnectionPanel.propTypes = {
     }).isRequired,
     onStartPlacePositionChanged: PropTypes.func.isRequired,
     onEndPlacePositionChanged: PropTypes.func.isRequired,
+
+    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(EditConnectionPanel);
+export default withStyles(styles)(injectIntl(EditConnectionPanel));

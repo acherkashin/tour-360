@@ -12,6 +12,7 @@ import { Delete as DeleteIcon } from '@material-ui/icons'
 import { AudioPlayer } from '@blackbox-vision/mui-audio-player';
 import grey from '@material-ui/core/colors/grey';
 import classnames from 'classnames';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -47,10 +48,11 @@ class SoundEditor extends React.Component {
 
     render() {
         const { soundUrl, classes, classNames = {} } = this.props;
+        const { messages, formatMessage } = this.props.intl;
 
         if (!soundUrl) {
             return <Button className={classNames.changeSound} variant="text" component="label" color="primary" fullWidth>
-                Change Sound
+                {formatMessage(messages.soundEditorChangeSound)}
                 <input type="file" style={{ display: "none" }} onChange={this._handleSoundChanged} />
             </Button>;
         }
@@ -64,7 +66,7 @@ class SoundEditor extends React.Component {
 
         return <List
             component="nav"
-            subheader={<ListSubheader component="div">Tour's sound</ListSubheader>}
+            subheader={<ListSubheader component="div">{formatMessage(messages.soundEditorToursSound)}</ListSubheader>}
             className={root}
         >
             <ListItem>
@@ -94,6 +96,8 @@ SoundEditor.propTypes = {
 
     onSoundChanged: PropTypes.func.isRequired,
     onSoundRemoved: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(SoundEditor);
+export default withStyles(styles)(injectIntl(SoundEditor));

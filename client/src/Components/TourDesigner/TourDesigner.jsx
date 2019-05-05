@@ -301,9 +301,10 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
     _renderNoMapPlaceholder() {
         const { classes } = this.props;
+        const { messages, formatMessage } = this.props.intl;
 
         return (<div className={classes.noImageMap}>
-            <Typography className={classes.noImageMapPlaceholder}>Image for map is not selected. Click <PlaceholderButton onClick={this._handleChangeImageMapClick} text={'here'} /> to select image</Typography>
+            <Typography className={classes.noImageMapPlaceholder}>{formatMessage(messages.tourDesignernoImageMapPlaceholderFirstPart)} <PlaceholderButton onClick={this._handleChangeImageMapClick} text={formatMessage(messages.here)} /> {formatMessage(messages.tourDesignernoImageMapPlaceholderSecondPart)}</Typography>
         </div>);
     }
 
@@ -360,16 +361,16 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" onClick={this._handleClose} aria-label="Close">
+                        <IconButton color="inherit" onClick={this._handleClose} aria-label={formatMessage(messages.close)}>
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.tourName}>{this.editingTour.name}</Typography>
-                        <LoadingButton color={"inherit"} disabled={!isDirty} isLoading={saveLoading} onClick={this._handleSave}>save</LoadingButton>
+                        <LoadingButton color={"inherit"} disabled={!isDirty} isLoading={saveLoading} onClick={this._handleSave}>{formatMessage(messages.save)}</LoadingButton>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
                     {this._renderMap()}
-                    {!this.editingTour.mapType && <Typography className={classes.map}>Map type is not defined</Typography>}
+                    {!this.editingTour.mapType && <Typography className={classes.map}>{formatMessage(messages.tourDesignerMapTypeError)}</Typography>}
                     {this.showEditTourPanel && <div className={classes.rightPanel}>
                         <EditTourPanel
                             tour={this.editingTour}
@@ -426,40 +427,40 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                     </div>}
                 </div>
                 <UploadImageDialog
-                    title="Upload new map"
-                    prompt="Upload map of your virtual tour. E.g.: floor plan, street plan..."
+                    title={formatMessage(messages.tourDesignerUploadNewMap)}
+                    prompt={formatMessage(messages.tourDesignerUploadNewMapPrompt)}
                     isOpened={uploadImageDialogState !== CLOSED}
                     onFileSelected={this._handleFileSelected}
                     onClose={() => this.setState({ uploadImageDialogState: CLOSED })}
                 />
                 <ConfirmDialog
-                    title='Save Virtual Tour'
+                    title={formatMessage(messages.tourDesignerSaveTour)}
                     okButtonText={formatMessage(messages.save)}
                     cancelButtonText={formatMessage(messages.doNotSave)}
-                    contentText="You are about to close the designer. Do you want to save your changes?"
+                    contentText={formatMessage(messages.tourDesignerSaveTourContentText)}
                     onOkClick={this._handleOkConfirmClick}
                     onCancelClick={this._handleCancelConfigrmClick}
                     isOpened={isOpenedConfirmDialog}
                     onClose={this._handleCloseConfirmDialog}
                 />
                 <ConfirmDialog
-                    title='Delete Place'
+                    title={formatMessage(messages.tourDesignerDeletePlace)}
                     okButtonText={formatMessage(messages.yes)}
                     cancelButtonText={formatMessage(messages.no)}
-                    contentText="Are you sure you want to delete this place?"
+                    contentText={formatMessage(messages.tourDesignerDeletePlaceContentText)}
                     onOkClick={this._handleOkDeletePlaceClick}
                     onCancelClick={this._closeDeleteDialog}
                     isOpened={isOpenedDeleteDialog}
                     onClose={this._closeDeleteDialog}
                 />
                 <ViewUrlDialog
-                    title='Preview Place'
+                    title={formatMessage(messages.tourDesignerPreviewPlace)}
                     url={this.editingPlace && this.tourStore.getPlaceImage360Url(this.editingPlace.id)}
                     isOpened={isOpenedPreviewDialog}
                     onClose={this._closePreviewDialog}
                 />
                 <HtmlEditDialog
-                    title="Edit Place Description"
+                    title={formatMessage(messages.tourDesignerEditPlaceDescription)}
                     htmlContent={this.editingPlace && this.editingPlace.description}
                     isOpened={isOpenedPlaceDescriptionDialog}
                     onClose={this._handleCloseDescriptionDialog}

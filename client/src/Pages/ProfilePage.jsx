@@ -16,6 +16,7 @@ import { observer, inject } from 'mobx-react';
 import { LoadingButton } from '../Components';
 import { requireAuth } from '../HOC';
 import { validEmail, validName } from '../utils/validate.js';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -122,14 +123,16 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                 lastNameError,
                 language,
             } = this.state;
+            
+            const { messages, formatMessage } = this.props.intl;
 
             const languages = ['Русский', 'English'];
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
-                    <Typography align="center" variant="h5" title="Profile">Profile</Typography>
+                    <Typography align="center" variant="h5" title="Profile">{formatMessage(messages.profilePageTitle)}</Typography>
                     <TextField
-                        label="Email"
+                        label={formatMessage(messages.email)}
                         value={email}
                         inputProps={{ type: 'email' }}
                         onChange={this._handleEmailChanged}
@@ -141,7 +144,7 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                         autoFocus
                     />
                     <TextField
-                        label="First Name"
+                        label={formatMessage(messages.firstName)}
                         value={firstName}
                         onChange={this._handleFirstNameChanged}
                         margin="normal"
@@ -152,7 +155,7 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                         autoFocus
                     />
                     <TextField
-                        label="Last Name"
+                        label={formatMessage(messages.lastName)}
                         value={lastName}
                         onChange={this._handleLastNameChanged}
                         margin="normal"
@@ -163,7 +166,7 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                         autoFocus
                     />
                     <FormControl fullWidth>
-                        <InputLabel htmlFor="name-disabled">Language</InputLabel>
+                        <InputLabel htmlFor="name-disabled">{formatMessage(messages.language)}</InputLabel>
                         <Select
                             variant="filled"
                             fullWidth={true}
@@ -173,13 +176,13 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                             {languages.map(language => <MenuItem key={language} value={language}>{language}</MenuItem>)}
                         </Select>
                     </FormControl>
-                    <Link className={classes.registerLink} to="/tours">To tours</Link>
+                    <Link className={classes.registerLink} to="/tours">{formatMessage(messages.profilePageToTours)}</Link>
                     <LoadingButton
                         style={{ marginTop: '15px' }}
                         isLoading={this.userStore.editUserLoading}
                         disabled={this.userStore.editUserLoading || !isEmailValid || !isFirstNameValid || !isLastNameValid}
                         onClick={this._handleSave}
-                    >Save</LoadingButton>
+                    >{formatMessage(messages.save)}</LoadingButton>
                 </div>
             </div >;
         }
@@ -188,6 +191,8 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
 
 ProfilePage.propTypes = {
     classes: PropTypes.object.isRequired,
+    
+    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(ProfilePage);
+export default withStyles(styles)(injectIntl(ProfilePage));

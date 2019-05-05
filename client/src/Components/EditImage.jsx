@@ -5,6 +5,7 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import classNames from 'classnames';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -66,12 +67,13 @@ class EditImage extends React.Component {
             [className]: !!className,
             [classes.root]: true,
         });
+        const { messages, formatMessage } = this.props.intl;
 
         return (
             <div className={root}>
                 <img className={classes.cover} src={imageUrl || `/src/no-image.png`} alt={name || ''} />
                 <div className={classes.titleBar} onClick={this._handleImageChangeClick}>
-                    <Typography variant="subtitle1" align='center' inline={true} noWrap={true} className={classes.changeImageLabel}>Change image</Typography>
+                    <Typography variant="subtitle1" align='center' inline={true} noWrap={true} className={classes.changeImageLabel}>{formatMessage(messages.editImageChangeImage)}</Typography>
                     <CloudUpload className={classes.changeImageIcon} />
                 </div>
             </div>
@@ -85,6 +87,8 @@ EditImage.propTypes = {
     imageUrl: PropTypes.string,
     classes: PropTypes.object.isRequired,
     onImageChangeClick: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(EditImage);
+export default withStyles(styles)(injectIntl(EditImage));
