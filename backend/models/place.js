@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
-const Widget = new mongoose.Schema({
-    type: { type: String, required: true },
-});
+// const Widget = new mongoose.Schema({
+//     type: { type: String, required: true },
+// });
 
 const Place = new mongoose.Schema({
     name: { type: String, required: true },
@@ -16,7 +16,7 @@ const Place = new mongoose.Schema({
         width: Number,
     },
     description: { type: String, default: '' },
-    widgets: [Widget],
+    widgets: [Object],
 });
 
 Place.methods.toClient = function () {
@@ -37,7 +37,8 @@ Place.methods.toClient = function () {
 Place.methods.toDetailDto = function (tour) {
     const starts = (tour.connections || []).filter(c => c.startPlaceId === this.id).map(c => c.endAsDestination(tour));
     const ends = (tour.connections || []).filter(c => c.endPlaceId === this.id).map(c => c.startAsDestination(tour));
-    const widgets = [{
+
+    const temporWidgets = [{
         id: '1',
         type: 'text',
         x: 0,
@@ -62,7 +63,7 @@ Place.methods.toDetailDto = function (tour) {
         image360Name: this.image360 && this.image360.filename,
         soundName: this.sound && this.sound.filename,
         connections: [...starts, ...ends],
-        widgets,
+        widgets: this.widgets || temporWidgets,
     };
 
     return dto;

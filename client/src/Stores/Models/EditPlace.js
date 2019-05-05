@@ -65,6 +65,7 @@ export default class EditPlace {
             startPlaceId: this.startPlaceId,
             soundName: this.soundName,
             description: this.description,
+            widgets: this.widgets,
         };
     }
 

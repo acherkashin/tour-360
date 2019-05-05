@@ -1,8 +1,8 @@
 const { Tour } = require('./../models');
 const uuidv1 = require('uuidv1')
 const HttpStatus = require('http-status-codes');
-const { 
-    addFile, 
+const {
+    addFile,
     generatePlaceImage360Name,
 } = require('./../utils/fileutils');
 const cache = {};
@@ -53,8 +53,20 @@ exports.startEditing = (req, res) => {
 
 exports.saveChanges = (req, res) => {
     const { sessionId } = req.params;
-
     let { tour, place } = cache[sessionId];
+
+    const updateData = req.body;
+
+    place.id = updateData.id;
+    place.name = updateData.name;
+    place.longitude = updateData.longitude;
+    place.latitude = updateData.latitude;
+    place.startPlaceId = updateData.startPlaceId;
+    place.soundName = updateData.soundName;
+    place.description = updateData.description;
+    place.widgets = updateData.widgets;
+    place.markModified('widgets');
+
     tour.save().then(() => {
         res.json({
             sessionId,
@@ -64,6 +76,23 @@ exports.saveChanges = (req, res) => {
     }).catch((error) => {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     });
+};
+
+exports.addWidget = (req, res) => {
+    const { sessionId } = req.params;
+    const { type } = req.body;
+    let { place } = cache[sessionId];
+
+    if (type === 'text') {
+        const textWidget = {
+            x: 0,
+            y: 0,
+            content: '[Enter your text]',
+        };
+        place.widgets.push(textWidget);
+    } else {
+        throw new Error('Unknown widget type');
+    }
 };
 
 exports.uploadImage360 = (req, res) => {
