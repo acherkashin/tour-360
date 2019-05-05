@@ -115,6 +115,15 @@ const en = defineMessages({
     placeDesignerUploadPanoPrompt: {
         id: 'place-designer.upload-pano-prompt',
         defaultMessage: 'Upload pano for your place',
+    },
+
+    toursPageUploadCoverDialogTitle: {
+        id: 'tours-page.upload-cover-dialog-title',
+        defaultMessage: 'Upload new photo',
+    },
+    toursPageUploadCoverDialogPrompt: {
+        id: 'tours-page.upload-cover-dialog-prompt',
+        defaultMessage: 'Upload cover of your virtual tour'
     }
 });
 

@@ -181,6 +181,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
 
         render() {
             const { classes } = this.props;
+            const { messages, formatMessage } = this.props.intl;
             const { isOpenedCreateDialog, isOpenedUploadImageDialog, mapTypes, newTourMapType } = this.state;
             const { selectedTour, tours, hasTours } = this.store;
 
@@ -198,8 +199,8 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                         onClose={() => this.setState({ isOpenedCreateDialog: false })}
                     />
                     <UploadImageDialog
-                        title="Upload new photo"
-                        prompt="Upload cover of your virtual tour"
+                        title={formatMessage(messages.toursPageUploadCoverDialogTitle)}
+                        prompt={formatMessage(messages.toursPageUploadCoverDialogPrompt)}
                         isOpened={isOpenedUploadImageDialog}
                         onFileSelected={this._handleFileSelected}
                         onClose={() => this.setState({ isOpenedUploadImageDialog: false })}

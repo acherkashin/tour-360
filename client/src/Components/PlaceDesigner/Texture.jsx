@@ -21,7 +21,7 @@ const styles = theme => ({
     canvas: {
         width: CUBE_SIZE * 4,
         height: CUBE_SIZE,
-    }
+    },
 });
 
 function loadImage(src) {
@@ -43,12 +43,10 @@ class Texture extends React.Component {
 
         this.rootRef = React.createRef();
         this.canvasRef = React.createRef();
-
-
     }
 
     componentDidMount() {
-        const { imageUrl } = this.props;
+        const { imageUrl, onLoaded } = this.props;
 
         loadImage(imageUrl)
             .then((i) => {
@@ -80,6 +78,8 @@ class Texture extends React.Component {
                         CUBE_SIZE / 2, // destination width
                         CUBE_SIZE // destination height
                     );
+
+                    onLoaded && onLoaded();
                 });
             });
     }
@@ -88,21 +88,23 @@ class Texture extends React.Component {
         const { classes } = this.props;
         const { isLoaded } = this.state;
 
-        const className = classNames({
-            [classes.root]: true,
-            [classes.rootLoading]: !isLoaded,
-        });
-
-        return <div className={className} ref={this.rootRef} style={{ width: CUBE_SIZE * 4, height: CUBE_SIZE }}>
-            {isLoaded && <canvas width={CUBE_SIZE * 4} height={CUBE_SIZE} ref={this.canvasRef} className={classes.canvas}></canvas>}
-            {!isLoaded && <CircularProgress size={48} />}
-        </div>;
+        if (isLoaded) {
+            return <div className={classes.root} ref={this.rootRef} style={{ width: CUBE_SIZE * 4, height: CUBE_SIZE }}>
+                <canvas width={CUBE_SIZE * 4} height={CUBE_SIZE} ref={this.canvasRef} className={classes.canvas}></canvas>
+            </div>;
+        } else {
+            return <div className={classes.rootLoading}>
+                <CircularProgress size={48} />
+            </div>;
+        }
     }
 }
 
 Texture.propTypes = {
     classes: PropTypes.object.isRequired,
     imageUrl: PropTypes.string.isRequired,
+
+    onLoaded: PropTypes.func,
 }
 
 export default withStyles(styles)(Texture);

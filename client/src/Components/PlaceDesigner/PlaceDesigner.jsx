@@ -33,7 +33,7 @@ const styles = theme => ({
         flexDirection: 'row',
         alignItems: 'stretch',
     },
-    panoWrapper: {
+    surfaceWrapper: {
         width: '100%',
         height: '100%',
         overflow: 'auto',
@@ -67,10 +67,16 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleCloseConfirmDialog = this._handleCloseConfirmDialog.bind(this);
             this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
             this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
+            this._handleTextureLoaded = this._handleTextureLoaded.bind(this);
+            this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
+            this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
+
+            this.surfaceWrapperRef = React.createRef();
 
             this.state = {
                 isOpenedConfirmDialog: false,
                 uploadImageDialogOpened: false,
+                textureIsLoaded: false,
             };
         }
 
@@ -90,6 +96,16 @@ const PlaceDesigner = inject("rootStore")(observer(
             if (!this.editingPlace) {
                 const sessionId = this.props.match.params.sessionId;
                 this.placeEditStore.getFromSession(sessionId);
+            }
+        }
+
+        componentDidUpdate(prevProps, prevState) {
+            if (!prevState.textureIsLoaded && this.state.textureIsLoaded) {
+                const el = this.surfaceWrapperRef.current;
+                const top = (el.scrollHeight - el.clientHeight) / 2;
+                const left = (el.scrollWidth - el.clientWidth) / 2;
+                el.scrollTop = top;
+                el.scrollLeft = left;
             }
         }
 
@@ -149,6 +165,36 @@ const PlaceDesigner = inject("rootStore")(observer(
             throw new Error("Unknown type of widget");
         }
 
+        _renderSurface() {
+            const { classes } = this.props;
+            const { textureIsLoaded } = this.state;
+
+            return <>
+                <Texture imageUrl={this.editingPlace.mapImage360Url} onLoaded={this._handleTextureLoaded} />
+                {textureIsLoaded && <div className={classes.widgetArea}>
+                    <CoordinateSystem
+                        width={WIDTH}
+                        height={HEIGHT}
+                        stepX={200}
+                        stepY={100}
+                    />
+                    {this.editingPlace.widgets && this.editingPlace.widgets.map((item) => this._renderWidget(item))}
+                </div>}
+            </>;
+        }
+
+        _handleTextureLoaded() {
+            this.setState({ textureIsLoaded: true });
+        }
+
+        _handlePreviewPlaceClick() {
+            throw new Error("Method is not implemented!");
+        }
+
+        _handleOpenDescriptionDialog() {
+            throw new Error("Method is not implemented!");
+        }
+
         render() {
             const { messages, formatMessage } = this.props.intl;
             const isOpened = this.editingPlace != null;
@@ -157,8 +203,8 @@ const PlaceDesigner = inject("rootStore")(observer(
             }
 
             const { isDirty, saveLoading } = this.placeEditStore;
-            const { classes, isOpenedConfirmDialog } = this.props;
-            const { uploadImageDialogOpened } = this.state;
+            const { classes } = this.props;
+            const { uploadImageDialogOpened, isOpenedConfirmDialog } = this.state;
 
             return <Dialog
                 open={true}
@@ -174,20 +220,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
-                    <div className={classes.panoWrapper}>
-                        {this.editingPlace.mapImage360Url &&
-                            <>
-                                <Texture imageUrl={this.editingPlace.mapImage360Url} />
-                                <div className={classes.widgetArea}>
-                                    <CoordinateSystem
-                                        width={WIDTH}
-                                        height={HEIGHT}
-                                        stepX={200}
-                                        stepY={100}
-                                    />
-                                    {this.editingPlace.widgets && this.editingPlace.widgets.map((item) => this._renderWidget(item))}
-                                </div>
-                            </>}
+                    <div className={classes.surfaceWrapper} ref={this.surfaceWrapperRef}>
+                        {this.editingPlace.mapImage360Url && this._renderSurface()}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>

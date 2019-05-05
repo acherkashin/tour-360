@@ -109,6 +109,15 @@ const ru = defineMessages({
         id: 'place-designer.upload-pano-prompt',
         defaultMessage: 'Загрузите панораму для вашей локации',
     },
+
+    toursPageUploadCoverDialogTitle: {
+        id: 'tours-page.upload-cover-dialog-title',
+        defaultMessage: 'Загрузить новое фото',
+    },
+    toursPageUploadCoverDialogPrompt: {
+        id: 'tours-page.upload-cover-dialog-prompt',
+        defaultMessage: 'Загрузите обложку вашего виртуального тура',
+    }
 });
 
 export default ru;

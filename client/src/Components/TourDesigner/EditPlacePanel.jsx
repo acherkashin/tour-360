@@ -34,6 +34,10 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
         this._handleDescriptionChanged = this._handleDescriptionChanged.bind(this);
     }
 
+    get _canDelete() {
+        return this.props.onDeleteClick != null;
+    }
+
     _handleNameChanged(e) {
         this.props.onNameChanged({ origin: this, name: e.target.value });
     }
@@ -59,7 +63,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     }
 
     _handleDeleteClick(e) {
-        this.props.onDeleteClick({ origin: this, place: this.props.place });
+        this.props.onDeleteClick && this.props.onDeleteClick({ origin: this, place: this.props.place });
     }
 
     _handleConnectionClick(e) {
@@ -126,9 +130,9 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
             <Button fullWidth variant="text" color="primary" onClick={this._handlePreviewClick}>
                 Preview
             </Button>
-            <Button fullWidth variant="text" color="primary" onClick={this._handleDeleteClick}>
+            {this._canDelete && <Button fullWidth variant="text" color="primary" onClick={this._handleDeleteClick}>
                 Delete
-            </Button>
+            </Button>}
             <Button fullWidth variant="text" color="primary" onClick={this._handleDescriptionChanged}>
                 Edit Description
             </Button>
@@ -147,7 +151,7 @@ EditPlacePanel.propTypes = {
     onSoundRemoved: PropTypes.func.isRequired,
     onViewImage360Click: PropTypes.func.isRequired,
     onPreviewClick: PropTypes.func.isRequired,
-    onDeleteClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func,
     onConnectionClick: PropTypes.func.isRequired,
     onViewConnectionClick: PropTypes.func.isRequired,
     onRemoveConnectionClick: PropTypes.func.isRequired,
