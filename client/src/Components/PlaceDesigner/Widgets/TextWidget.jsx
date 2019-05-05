@@ -44,7 +44,7 @@ const TextWidget = observer(class TextWidget extends React.Component {
             style={{
                 left,
                 top,
-            }}>{content}</span>;
+            }}>{content || '[No Content]'}</span>;
     }
 });
 

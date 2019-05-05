@@ -13,5 +13,7 @@ router.route('/place-edit/:sessionId/cancel')
     .post(verifyToken, verifySession, PlaceEditController.cancelChanges);
 router.route('/place-edit/:sessionId/uploadImage360')
     .post(verifyToken, verifySession, PlaceEditController.uploadImage360);
+router.route('/place-edit/:sessionId/addWidget')
+    .post(verifyToken, verifySession, PlaceEditController.addWidget);
 
 module.exports = router;

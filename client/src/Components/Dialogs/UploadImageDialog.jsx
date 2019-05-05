@@ -143,7 +143,7 @@ class UploadImageDialog extends React.Component {
                 <DialogActions className={classes.dialogActions}>
                     <Button variant={selectButtonVariant} component="label" color="primary" className={classes.selectImage} onClick={this._handleUploadClick} autoFocus>
                         {formatMessage(messages.selectFile)}
-                        <input type="file" style={{ display: "none" }} onChange={this._handleFileSelected} />
+                        <input accept="image/*" type="file" style={{ display: "none" }} onChange={this._handleFileSelected} />
                     </Button>
                     {selectedFileUrl != null && <Button variant="contained" color="primary" onClick={this._handleFileUpload} autoFocus>
                         {formatMessage(messages.upload)}

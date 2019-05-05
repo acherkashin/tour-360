@@ -16,6 +16,9 @@ export function cancelChanges(sessionId) {
 export function saveChanges(sessionId, place) {
     return client.post(`/api/place-edit/${sessionId}/save`, place);
 }
+export function addWidget(sessionId, type) {
+    return client.post(`/api/place-edit/${sessionId}/addWidget`, { type });
+}
 export function updateImage360(sessionId, file, width, height) {
     const formData = new FormData();
     formData.append('placeImage', file);

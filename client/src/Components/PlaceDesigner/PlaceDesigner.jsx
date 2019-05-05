@@ -8,8 +8,12 @@ import {
     Toolbar,
     IconButton,
     Typography,
+    Fab,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import {
+    Close as CloseIcon,
+    Add as AddIcon,
+} from '@material-ui/icons';
 import { intlShape, injectIntl } from 'react-intl';
 import { LoadingButton } from './../'
 import { Texture, NoPlacePlaceholder } from './';
@@ -22,6 +26,11 @@ import { HEIGHT, WIDTH } from './utils';
 
 const styles = theme => ({
     root: {},
+    addWidget: {
+        position: 'fixed',
+        bottom: theme.spacing.unit * 3,
+        right: 400 + theme.spacing.unit * 3,
+    },
     appBar: {
         position: 'relative',
     },
@@ -196,7 +205,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 return <TextWidget
                     key={widget.id}
                     widget={widget}
-                    isSelected={Boolean(this.editingWidget && this.editingWidget.id == widget.id)}
+                    isSelected={Boolean(this.editingWidget && this.editingWidget.id === widget.id)}
                     onClick={this._handleWidgetClick}
                 />;
             }
@@ -243,7 +252,10 @@ const PlaceDesigner = inject("rootStore")(observer(
 
         _handleSurfaceWrapperClick(e) {
             this.placeEditStore.completeEditWidget();
-            console.log(e);
+        }
+
+        _addWidget(e) {
+            this.placeEditStore.addWidget('text');
         }
 
         render() {
@@ -267,7 +279,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.tourName}>{this.editingPlace.name}</Typography>
-                        <LoadingButton color={"inherit"} disabled={!isDirty} isLoading={saveLoading} onClick={this._handleSave}>save</LoadingButton>
+                        <LoadingButton color={"inherit"} disabled={!isDirty} isLoading={saveLoading} onClick={this._handleSave}>{formatMessage(messages.save)}</LoadingButton>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
@@ -275,6 +287,9 @@ const PlaceDesigner = inject("rootStore")(observer(
                         {this.editingPlace.mapImage360Url && this._renderSurface()}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>
+                    {this.editingPlace.mapImage360Url && <Fab color="secondary" className={classes.addWidget} onClick={() => this._addWidget()}>
+                        <AddIcon />
+                    </Fab>}
                     {this.showEditWidget && <div className={classes.rightPanel}>
                         {this._renderWidgetEditPanel()}
                     </div>}

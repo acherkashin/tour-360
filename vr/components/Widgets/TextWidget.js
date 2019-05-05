@@ -6,6 +6,8 @@ const styles = StyleSheet.create({
     root: {
         position: 'absolute',
         layoutOrigin: [-0.5, -0.5],
+    },
+    text: {
         color: 'black',
     }
 });
@@ -19,7 +21,7 @@ export default class TextWidget extends React.Component {
         const { x, y, content } = this.props.options;
 
         return <View style={[styles.root, { transform: [{ translate: [x, y], }] }]}>
-            <Text>{content}</Text>
+            <Text style={styles.text}>{content}</Text>
         </View>
     }
 }

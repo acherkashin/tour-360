@@ -8,6 +8,7 @@ import { HEIGHT, WIDTH } from './../utils';
 
 const styles = theme => ({
     root: {
+        padding: theme.spacing.unit * 2,
     },
 });
 

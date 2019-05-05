@@ -81,15 +81,23 @@ exports.saveChanges = (req, res) => {
 exports.addWidget = (req, res) => {
     const { sessionId } = req.params;
     const { type } = req.body;
-    let { place } = cache[sessionId];
+    let { place, tour } = cache[sessionId];
 
     if (type === 'text') {
         const textWidget = {
+            id: uuidv1(),
             x: 0,
             y: 0,
             content: '[Enter your text]',
+            type: 'text',
         };
         place.widgets.push(textWidget);
+
+        res.json({
+            sessionId,
+            tourId: tour.id,
+            place: place.toDetailDto(tour),
+        });
     } else {
         throw new Error('Unknown widget type');
     }

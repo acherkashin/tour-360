@@ -25,6 +25,17 @@ export default class PlaceEditStore {
         });
     }
 
+    addWidget(type) {
+        if (type === "text") {
+            PlaceEditService.addWidget(this.sessionId, type).then(action((resp) => {
+                const { sessionId, place, tourId } = resp.data;
+                this._updateEditingPlace(sessionId, tourId, place);
+            }))
+        } else {
+            throw new Error("Unknown widget type");
+        }
+    }
+
     viewPlaceImage360(placeId) {
         window.open(this.getPlaceImage360Url(placeId));
     }
