@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import { getScreenCoordinates } from '../utils';
 import TextWidgetShape from "./TextWidgetShape";
@@ -8,10 +10,14 @@ const styles = theme => ({
     root: {
         position: 'absolute',
         cursor: 'pointer',
-    }
+    },
+    isSelected: {
+        backgroundColor: 'rgba(255,255,255, 0.3)',
+        border: '1px dashed rgba(255,0,0, 0.3)',
+    },
 });
 
-class TextWidget extends React.Component {
+const TextWidget = observer(class TextWidget extends React.Component {
     constructor(props) {
         super(props);
 
@@ -23,19 +29,23 @@ class TextWidget extends React.Component {
     }
 
     render() {
-        const { classes, widget: { x, y, content } } = this.props;
-
+        const { classes, isSelected, widget: { x, y, content } } = this.props;
         const { left, top } = getScreenCoordinates(x, y);
 
+        const className = classNames({
+            [classes.root]: true,
+            [classes.isSelected]: isSelected,
+        })
+
         return <span
-            className={classes.root}
+            className={className}
             onClick={this._handleClick}
             style={{
                 left,
                 top,
             }}>{content}</span>;
     }
-}
+});
 
 TextWidget.propTypes = {
     classes: PropTypes.object.isRequired,

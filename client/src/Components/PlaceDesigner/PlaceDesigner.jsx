@@ -17,7 +17,7 @@ import { ConfirmDialog, UploadImageDialog } from './../Dialogs';
 import EditPlacePanel from './../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { CoordinateSystem } from './';
-import { TextWidget } from './Widgets';
+import { TextWidget, EditTextWidgetPanel } from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
 
 const styles = theme => ({
@@ -173,9 +173,18 @@ const PlaceDesigner = inject("rootStore")(observer(
 
         _renderWidgetEditPanel() {
             const widget = this.editingWidget;
-            
+
             if (widget.type === 'text') {
-                return <TextWidget key={widget.id} widget={widget} />
+                return <EditTextWidgetPanel
+                    key={widget.id}
+                    widget={widget}
+                    onXChanged={(e) => this.editingWidget.x = e.x}
+                    onYChanged={(e) => this.editingWidget.y = e.y}
+                    onContentChanged={(e) => {
+                        this.editingWidget.content = e.content;
+                        console.log(e);
+                    }}
+                />
             }
 
             throw new Error("Unknown type of widget");
@@ -183,7 +192,12 @@ const PlaceDesigner = inject("rootStore")(observer(
 
         _renderWidget(widget) {
             if (widget.type === 'text') {
-                return <TextWidget key={widget.id} widget={widget} onClick={this._handleWidgetClick} />;
+                return <TextWidget
+                    key={widget.id}
+                    widget={widget}
+                    isSelected={this.editingWidget && this.editingWidget.id == widget.id}
+                    onClick={this._handleWidgetClick} 
+                />;
             }
 
             throw new Error("Unknown type of widget");
@@ -253,7 +267,9 @@ const PlaceDesigner = inject("rootStore")(observer(
                         {this.editingPlace.mapImage360Url && this._renderSurface()}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>
-                    {this.showEditWidget && this._renderWidgetEditPanel()}
+                    {this.showEditWidget && <div className={classes.rightPanel}>
+                        {this._renderWidgetEditPanel()}
+                    </div>}
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
                             place={this.editingPlace}

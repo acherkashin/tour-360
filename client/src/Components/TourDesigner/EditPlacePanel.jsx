@@ -95,7 +95,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 value={place.name}
                 onChange={this._handleNameChanged}
                 margin="normal"
-                fullWidth={true}
+                fullWidth
                 autoFocus
             />
             <EditImage
