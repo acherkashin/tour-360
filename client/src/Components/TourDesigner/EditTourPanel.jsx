@@ -13,6 +13,7 @@ import {
     Input,
     Checkbox,
 } from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -51,10 +52,11 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
         const { classes, tour } = this.props;
         // const places = tour.places || [];
         const { places = [], startPlaceId = "" } = tour;
+        const { messages, formatMessage } = this.props.intl;
 
         return (<div className={classes.root}>
             <TextField
-                label="Tour Name"
+                label={formatMessage(messages.editTourPanelTourName)}
                 value={tour.name}
                 onChange={this._handleNameChanged}
                 margin="normal"
@@ -62,10 +64,10 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
                 autoFocus
             />
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImageMapClick} >
-                Change Map Image
+                {formatMessage(messages.editTourPanelChangeMapImage)}
             </Button>
             <FormControl variant="filled" fullWidth disabled={places.length === 0}>
-                <InputLabel htmlFor="start-place-field">Start Place</InputLabel>
+                <InputLabel htmlFor="start-place-field">{formatMessage(messages.editTourPanelStartPlace)}</InputLabel>
                 <Select
                     variant="filled"
                     fullWidth
@@ -83,8 +85,8 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
                         value="isPublic"
                     />
                 }
-                label="Is Public Tour"
-                title="Determines can unauthorized users see this tour"
+                label={formatMessage(messages.editTourPanelIsPublic)}
+                title={formatMessage(messages.editTourPanelIsPublicDescription)}
             />
         </div>);
     }
@@ -104,6 +106,8 @@ EditTourPanel.propTypes = {
     onChangeImageMapClick: PropTypes.func.isRequired,
     onStartPlaceChanged: PropTypes.func.isRequired,
     onIsPublicChanged: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(EditTourPanel);
+export default withStyles(styles)(injectIntl(EditTourPanel));

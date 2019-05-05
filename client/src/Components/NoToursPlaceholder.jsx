@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import grey from '@material-ui/core/colors/grey';
 import { PlaceholderButton } from './';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = (theme) => ({
     root: {
@@ -30,9 +31,10 @@ export class NoToursPlaceholder extends PureComponent {
 
     render() {
         const { classes } = this.props;
+        const { messages, formatMessage } = this.props.intl;
 
         return (<Typography className={classes.root}>
-            You don't have any tours yet. Click <PlaceholderButton onClick={this._handleAddClick} text={'here'} />  to add new one.
+            {formatMessage(messages.noToursPlaceholderFirstPart)} <PlaceholderButton onClick={this._handleAddClick} text={formatMessage(messages.here)} /> {formatMessage(messages.noToursPlaceholderSecondPart)}
         </Typography>);
     }
 }
@@ -40,6 +42,8 @@ export class NoToursPlaceholder extends PureComponent {
 NoToursPlaceholder.propTypes = {
     classes: PropTypes.object.isRequired,
     onAddClick: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(NoToursPlaceholder);
+export default withStyles(styles)(injectIntl(NoToursPlaceholder));

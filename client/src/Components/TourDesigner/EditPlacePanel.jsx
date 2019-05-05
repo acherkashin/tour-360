@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ConnectionList from './ConnectionList';
 import { EditImage } from './../';
 import SoundEditor from './SoundEditor';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -88,10 +89,11 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
 
     render() {
         const { classes, place, } = this.props;
+        const { messages, formatMessage } = this.props.intl;
 
         return <div className={classes.root}>
             <TextField
-                label="Place Name"
+                label={formatMessage(messages.editPlacePanelPlaceName)}
                 value={place.name}
                 onChange={this._handleNameChanged}
                 margin="normal"
@@ -122,19 +124,19 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 onSoundRemoved={this._handleSoundRemoved}
             />
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImage360Click} >
-                Change Image 360
+                {formatMessage(messages.editPlacePanelChangePano)}
             </Button>
             <Button fullWidth variant="text" color="primary" onClick={this._handleViewImage360Click}>
-                Open
+                {formatMessage(messages.open)}
             </Button>
             <Button fullWidth variant="text" color="primary" onClick={this._handlePreviewClick}>
-                Preview
+                {formatMessage(messages.preview)}
             </Button>
             {this._canDelete && <Button fullWidth variant="text" color="primary" onClick={this._handleDeleteClick}>
-                Delete
+                {formatMessage(messages.delete)}
             </Button>}
             <Button fullWidth variant="text" color="primary" onClick={this._handleDescriptionChanged}>
-                Edit Description
+                {formatMessage(messages.editPlacePanelEditDescription)}
             </Button>
         </div>;
     }
@@ -157,6 +159,8 @@ EditPlacePanel.propTypes = {
     onRemoveConnectionClick: PropTypes.func.isRequired,
     onEditConnectionClick: PropTypes.func.isRequired,
     onDescriptionClick: PropTypes.func.isRequired,
+
+    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(EditPlacePanel);
+export default withStyles(styles)(injectIntl(EditPlacePanel));

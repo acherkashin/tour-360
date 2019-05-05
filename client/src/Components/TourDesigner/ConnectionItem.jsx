@@ -74,7 +74,7 @@ class ConnectionItem extends React.Component {
                                 {formatMessage(messages.latitude)}: {connection.latitude}
                             </Typography>
                             <Typography component="span" variant="caption" className={classes.coordinateItem}>
-                            {formatMessage(messages.longitude)}: {connection.longitude}
+                                {formatMessage(messages.longitude)}: {connection.longitude}
                             </Typography>
                         </React.Fragment>
                     }

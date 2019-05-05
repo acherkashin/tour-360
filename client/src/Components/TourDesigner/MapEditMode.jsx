@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Tabs, Tab } from '@material-ui/core';
 import { AddLocation, LocationOff, CallMade, PanTool } from '@material-ui/icons'
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = (theme) => ({
     root: {
@@ -19,24 +20,6 @@ const styles = (theme) => ({
     }
 });
 
-const tabs = [{
-    id: DRAG_MAP,
-    text: 'DRAG MAP',
-    icon: <PanTool />,
-}, {
-    id: ADD_PLACE,
-    text: 'ADD PLACE',
-    icon: <AddLocation />,
-}, {
-    id: REMOVE_PLACE,
-    text: 'REMOVE PLACE',
-    icon: <LocationOff />,
-}, {
-    id: ADD_CONNECTION,
-    text: 'ADD CONNECTION',
-    icon: <CallMade />,
-}];
-
 class MapEditMode extends React.Component {
     state = {
         value: null,
@@ -51,6 +34,25 @@ class MapEditMode extends React.Component {
 
     render() {
         const { classes } = this.props;
+
+        const { messages, formatMessage } = this.props.intl;
+        const tabs = [{
+            id: DRAG_MAP,
+            text: formatMessage(messages.mapEditModeDragMap),
+            icon: <PanTool />,
+        }, {
+            id: ADD_PLACE,
+            text: formatMessage(messages.mapEditModeAddPlace),
+            icon: <AddLocation />,
+        }, {
+            id: REMOVE_PLACE,
+            text: formatMessage(messages.mapEditModeRemovePlace),
+            icon: <LocationOff />,
+        }, {
+            id: ADD_CONNECTION,
+            text: formatMessage(messages.mapEditModeAddConnection),
+            icon: <CallMade />,
+        }];
 
         return (
             <Tabs
@@ -70,6 +72,8 @@ MapEditMode.propTypes = {
     value: PropTypes.number,
     classes: PropTypes.object.isRequired,
     onModeChanged: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(MapEditMode);
+export default withStyles(styles)(injectIntl(MapEditMode));

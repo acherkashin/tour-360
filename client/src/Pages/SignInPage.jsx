@@ -10,6 +10,7 @@ import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword } from '../utils/validate.js';
 import ReCAPTCHA from "react-google-recaptcha";
 import {SITEKEY} from "../config";
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -36,16 +37,18 @@ const styles = theme => ({
 const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
     class SignInPage extends React.Component {
         constructor(props) {
+            const { messages, formatMessage } = props.intl;
+
             super(props);
 
             this.state = {
                 email: '',
                 isEmailValid: false,
-                emailError: 'please fill out this field',
+                emailError: formatMessage(messages.fillOut),
 
                 password: '',
                 isPasswordValid: false,
-                passwordError: 'please fill out this field',
+                passwordError: formatMessage(messages.fillOut),
 
                 ReCAPTCHAValue: null
             };
@@ -86,13 +89,21 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
         render() {
             const { classes } = this.props;
-            const { email, password, isEmailValid, isPasswordValid, emailError, passwordError } = this.state;
+            const { 
+                email, 
+                password, 
+                isEmailValid, 
+                isPasswordValid, 
+                emailError, 
+                passwordError 
+            } = this.state;
+            const { messages, formatMessage } = this.props.intl;
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
-                    <Typography align="center" variant="h5" title="Login">Login</Typography>
+                    <Typography align="center" variant="h5" title="Login">{formatMessage(messages.signInPageTitle)}</Typography>
                     <TextField
-                        label="Email"
+                        label={formatMessage(messages.email)}
                         value={email}
                         inputProps={{ type: 'email' }}
                         onChange={this._handleEmailChanged}
@@ -104,7 +115,7 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         autoFocus
                     />
                     <TextField
-                        label="Password"
+                        label={formatMessage(messages.password)}
                         value={password}
                         type="password"
                         onChange={this._handlePasswordChanged}
@@ -118,14 +129,14 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         sitekey={SITEKEY}
                         onChange={this._handleReCAPTCHAChange}
                     />
-                    {this.userStore.singInRejected && <Typography color="error">Invalid data</Typography>}
-                    <Link className={classes.registerLink} to="/sign-up">To Register?</Link>
+                    {this.userStore.singInRejected && <Typography color="error">{formatMessage(messages.signInPageInvalidData)}</Typography>}
+                    <Link className={classes.registerLink} to="/sign-up">{formatMessage(messages.signInPageToRegister)}</Link>
                     <LoadingButton
                         style={{ marginTop: '15px' }}
                         isLoading={this.userStore.signInLoading}
                         disabled={this.userStore.signInLoading || !isEmailValid || !isPasswordValid}
                         onClick={this._handleLogin}
-                    >Login</LoadingButton>
+                    >{formatMessage(messages.signInPageButtonTitle)}</LoadingButton>
                 </div>
             </div >;
         }
@@ -134,6 +145,8 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
 SignInPage.propTypes = {
     classes: PropTypes.object.isRequired,
+    
+    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(SignInPage);
+export default withStyles(styles)(injectIntl(SignInPage));
