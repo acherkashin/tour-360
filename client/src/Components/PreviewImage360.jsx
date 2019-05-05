@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import classNames from 'classnames';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -32,11 +33,12 @@ class PreviewImage360 extends React.Component {
             [className]: !!className,
             [classes.root]: true,
         });
+        const { messages, formatMessage } = this.props.intl;
 
         return (
             (hasImage) ? 
                 <div className={root}>
-                    <iframe className={classes.cover} title='Preview Place' src={imageUrl} alt={name || ''}></iframe>
+                    <iframe className={classes.cover} title={formatMessage(messages.previewImage360PreviewPlace)} src={imageUrl} alt={name || ''}></iframe>
                 </div> 
             : <div/>
         );
@@ -49,6 +51,8 @@ PreviewImage360.propTypes = {
     imageUrl: PropTypes.string,
     hasImage: PropTypes.bool.isRequired,
     classes: PropTypes.object.isRequired,
+    
+    intl: intlShape.isRequired,
 };
 
-export default withStyles(styles)(PreviewImage360);
+export default withStyles(styles)(injectIntl(PreviewImage360));

@@ -47,6 +47,8 @@ const styles = theme => ({
 const ToursPage = requireAuth(inject("rootStore")(observer(
     class ToursPage extends React.Component {
         constructor(props) {
+            const { messages, formatMessage } = props.intl;
+
             super(props);
 
             this.state = {
@@ -54,7 +56,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                 isOpenedUploadImageDialog: false,
                 newTourName: '',
                 newTourMapType: 'Image',
-                mapTypes: ['Earth', 'Image'],
+                mapTypes: [formatMessage(messages.toursPageEarth), formatMessage(messages.toursPageImage)],
             };
 
             this.loadAllServices = this.loadAllTours.bind(this);

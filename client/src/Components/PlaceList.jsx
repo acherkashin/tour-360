@@ -5,6 +5,7 @@ import PlaceItem from './PlaceItem';
 import { List, ListSubheader, Typography } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 import classnames from 'classnames';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
     root: {
@@ -18,6 +19,7 @@ class PlaceList extends React.Component {
     render() {
         const { classes, places, onClick, onViewClick, onRemoveClick, onEditClick, className } = this.props;
         const hasPlaces = places && places.length > 0;
+        const { messages, formatMessage } = this.props.intl;
 
         const root = classnames({
             [classes.root]: true,
@@ -34,13 +36,11 @@ class PlaceList extends React.Component {
                     onRemoveClick={onRemoveClick}
                     onEditClick={onEditClick}
                 />)}
-                {!hasPlaces && <Typography align="center" variant="caption" color="textPrimary">No places</Typography>}
+                {!hasPlaces && <Typography align="center" variant="caption" color="textPrimary">{formatMessage(messages.placeListNoPlaces)}</Typography>}
             </List>
         );
     }
 }
-
-export default withStyles(styles)(PlaceList);
 
 PlaceList.propTypes = {
     classes: PropTypes.object.isRequired,
@@ -51,4 +51,8 @@ PlaceList.propTypes = {
     })).isRequired,
     onViewClick: PropTypes.func.isRequired,
     onEditClick: PropTypes.func.isRequired,
+    
+    intl: intlShape.isRequired,
 };
+
+export default withStyles(styles)(injectIntl(PlaceList));

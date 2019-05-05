@@ -94,8 +94,8 @@ const Header = inject("rootStore")(
                                         open={open}
                                         onClose={this.handleClose}
                                     >
-                                        <MenuItem onClick={this.handleOpenProfile}>My account</MenuItem>
-                                        <MenuItem onClick={this.handleSignOut}>Sign Out</MenuItem>
+                                        <MenuItem onClick={this.handleOpenProfile}>{formatMessage(messages.headerMyAccount)}</MenuItem>
+                                        <MenuItem onClick={this.handleSignOut}>{formatMessage(messages.headerSignOut)}</MenuItem>
                                     </Menu>
                                 </div>
                             )}
