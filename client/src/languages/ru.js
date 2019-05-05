@@ -299,6 +299,10 @@ const ru = defineMessages({
         defaultMessage: 'чтобы добавить',
     },
 
+    placeListTitle: {
+        id: 'place-list.title',
+        defaultMessage: 'Локации',
+    },
     placeListNoPlaces: {
         id: 'place-list.no-places',
         defaultMessage: 'Нет локаций',

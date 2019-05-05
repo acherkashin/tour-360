@@ -27,7 +27,7 @@ class PlaceList extends React.Component {
         });
 
         return (
-            <List className={root} subheader={<ListSubheader>Places</ListSubheader>} >
+            <List className={root} subheader={<ListSubheader>{formatMessage(messages.placeListTitle)}</ListSubheader>} >
                 {hasPlaces && (places || []).map(place => <PlaceItem
                     key={place.id}
                     place={place}
@@ -51,7 +51,7 @@ PlaceList.propTypes = {
     })).isRequired,
     onViewClick: PropTypes.func.isRequired,
     onEditClick: PropTypes.func.isRequired,
-    
+
     intl: intlShape.isRequired,
 };
 

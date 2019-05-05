@@ -306,6 +306,10 @@ const en = defineMessages({
         defaultMessage: 'to add new one.',
     },
 
+    placeListTitle: {
+        id: 'place-list.title',
+        defaultMessage: 'Places',
+    },
     placeListNoPlaces: {
         id: 'place-list.no-places',
         defaultMessage: 'No places',
