@@ -70,6 +70,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleTextureLoaded = this._handleTextureLoaded.bind(this);
             this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
             this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
+            this._handleWidgetClick = this._handleWidgetClick.bind(this);
 
             this.surfaceWrapperRef = React.createRef();
 
@@ -102,11 +103,15 @@ const PlaceDesigner = inject("rootStore")(observer(
         componentDidUpdate(prevProps, prevState) {
             if (!prevState.textureIsLoaded && this.state.textureIsLoaded) {
                 const el = this.surfaceWrapperRef.current;
-                const top = (el.scrollHeight - el.clientHeight) / 2;
-                const left = (el.scrollWidth - el.clientWidth) / 2;
-                el.scrollTop = top;
-                el.scrollLeft = left;
+                this._scrollToCenter(el);
             }
+        }
+
+        _scrollToCenter(el) {
+            const top = (el.scrollHeight - el.clientHeight) / 2;
+            const left = (el.scrollWidth - el.clientWidth) / 2;
+            el.scrollTop = top;
+            el.scrollLeft = left;
         }
 
         _handleClose() {
@@ -159,10 +164,14 @@ const PlaceDesigner = inject("rootStore")(observer(
 
         _renderWidget(widget) {
             if (widget.type === 'text') {
-                return <TextWidget key={widget.id} options={widget} />;
+                return <TextWidget key={widget.id} widget={widget} onClick={this._handleWidgetClick} />;
             }
 
             throw new Error("Unknown type of widget");
+        }
+
+        _handleWidgetClick(widget) {
+            console.log(widget);
         }
 
         _renderSurface() {

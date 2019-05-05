@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import equirectToCubemapFaces from 'equirect-cubemap-faces-js';
 import { CircularProgress } from '@material-ui/core';
-import classNames from 'classnames';
-import { NoPlacePlaceholder } from "./";
 
 const CUBE_SIZE = 1170;
 

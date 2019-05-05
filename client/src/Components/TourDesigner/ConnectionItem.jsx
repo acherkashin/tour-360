@@ -90,7 +90,7 @@ class ConnectionItem extends React.Component {
     }
 }
 
-export default withStyles(styles)(ConnectionItem);
+export default withStyles(styles)(injectIntl(ConnectionItem));
 
 ConnectionItem.propTypes = {
     classes: PropTypes.object.isRequired,

@@ -1,7 +1,6 @@
 import { extendObservable, action, observable } from 'mobx';
 import { TourService, PlaceService } from './../api';
 import { Tour } from './';
-import { VR_URL } from './../config';
 import UserStore from './UserStore';
 
 export default class TourStore {
