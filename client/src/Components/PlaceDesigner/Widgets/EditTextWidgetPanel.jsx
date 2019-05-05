@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import TextWidgetShape from './TextWidgetShape';
-import {HEIGHT, WIDTH} from './../utils';
+import { HEIGHT, WIDTH } from './../utils';
 
 const styles = theme => ({
     root: {
@@ -17,19 +17,19 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
 
         this._handleXChanged = this._handleXChanged.bind(this);
         this._handleYChanged = this._handleYChanged.bind(this);
-        this._handleContentChanged = this._handleXChanged.bind(this);
+        this._handleContentChanged = this._handleContentChanged.bind(this);
     }
 
     _handleXChanged(e) {
-        this.props.onXChanged({origin: this, x: parseInt(e.target.value)});
+        this.props.onXChanged({ origin: this, x: parseInt(e.target.value) });
     }
 
     _handleYChanged(e) {
-        this.props.onYChanged({origin: this, y: parseInt(e.target.value)});
+        this.props.onYChanged({ origin: this, y: parseInt(e.target.value) });
     }
 
     _handleContentChanged(e) {
-        this.props.onContentChanged({origin: this, content: e.target.value});
+        this.props.onContentChanged({ origin: this, content: e.target.value });
     }
 
     render() {
@@ -51,6 +51,7 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
                     step: 25,
                 }}
                 fullWidth
+                autoFocus
             />
             <TextField
                 label="Position Y"
@@ -62,7 +63,7 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
                     shrink: true,
                 }}
                 inputProps={{
-                    max: HEIGHT /2 ,
+                    max: HEIGHT / 2,
                     min: - HEIGHT / 2,
                     step: 25,
                 }}
