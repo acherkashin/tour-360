@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import { WIDTH, HEIGHT, getScreenX, getScreenY } from './utils';
 
+const MAIN_AXIS_WEIGHT = 3;
+
 const styles = (theme) => ({
     root: {
         width: WIDTH,
@@ -24,11 +26,11 @@ const styles = (theme) => ({
         position: 'absolute',
     },
     axisX: {
-        height: 5,
+        height: MAIN_AXIS_WEIGHT,
         width: '100%'
     },
     axisY: {
-        width: 5,
+        width: MAIN_AXIS_WEIGHT,
         height: '100%'
     },
     lineX: {
@@ -91,10 +93,10 @@ class CoordinateSystem extends React.Component {
 
         return (
             <div className={root}>
-                <div className={`${classes.axis} ${classes.axisX}`} />
+                <div className={`${classes.axis} ${classes.axisX}`} style={{ top: getScreenY(0) }} />
                 {positionsX.map((left) => <div key={`x_${left}`} className={`${classes.axis} ${classes.lineX}`} style={{ left: getScreenX(left) }} />)}
                 {positionsX.map((left) => <span key={`label_x_${left}`} className={classes.label} style={{ left: getScreenX(left) + 5, top: getScreenY(0) + 5 }}>{left}</span>)}
-                <div className={[classes.axis, classes.axisY]} />
+                <div className={`${classes.axis} ${classes.axisY}`} style={{ left: getScreenX(0) }} />
                 {positionsY.map((top) => <div key={`y_${top}`} className={`${classes.axis} ${classes.lineY}`} style={{ top: getScreenY(top) }} />)}
                 {positionsY.map((i) => <span key={`label_y_${i}`} className={classes.label} style={{ left: getScreenX(5), top: getScreenY(i) + 5 }}>{i}</span>)}
             </div >

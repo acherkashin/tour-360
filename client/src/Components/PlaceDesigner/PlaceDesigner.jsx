@@ -150,8 +150,6 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         render() {
-
-
             const { messages, formatMessage } = this.props.intl;
             const isOpened = this.editingPlace != null;
             if (!isOpened) {

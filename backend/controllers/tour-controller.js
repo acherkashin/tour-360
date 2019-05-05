@@ -43,7 +43,7 @@ exports.getPlace = (req, res) => {
     Tour.findById(id)
         .then(tour => {
             const index = tour.places.findIndex((value) => value.id === placeId);
-            const place = tour.places[index].toClient();
+            const place = tour.places[index].toDetailDto(tour);
 
             return res.json({ place })
         });
