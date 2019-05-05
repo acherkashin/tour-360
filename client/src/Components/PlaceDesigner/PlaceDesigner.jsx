@@ -16,7 +16,8 @@ import { Texture, NoPlacePlaceholder } from './';
 import { ConfirmDialog, UploadImageDialog } from './../Dialogs';
 import EditPlacePanel from './../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
-import { TextWidget, CoordinateSystem } from './';
+import { CoordinateSystem } from './';
+import { TextWidget } from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
 
 const styles = theme => ({
@@ -89,8 +90,16 @@ const PlaceDesigner = inject("rootStore")(observer(
             return this.placeEditStore.editingPlace;
         }
 
+        get editingWidget() {
+            return this.placeEditStore.editingWidget;
+        }
+
+        get showEditWidget() {
+            return Boolean(this.editingWidget);
+        }
+
         get showEditPlacePanel() {
-            return Boolean(this.editingPlace);
+            return Boolean(this.editingPlace) && !this.showEditWidget;
         }
 
         componentDidMount() {
@@ -162,6 +171,16 @@ const PlaceDesigner = inject("rootStore")(observer(
             this.placeEditStore.viewPlaceImage360(this.editingPlace.id);
         }
 
+        _renderWidgetEditPanel() {
+            const widget = this.editingWidget;
+            
+            if (widget.type === 'text') {
+                return <TextWidget key={widget.id} widget={widget} />
+            }
+
+            throw new Error("Unknown type of widget");
+        }
+
         _renderWidget(widget) {
             if (widget.type === 'text') {
                 return <TextWidget key={widget.id} widget={widget} onClick={this._handleWidgetClick} />;
@@ -170,8 +189,9 @@ const PlaceDesigner = inject("rootStore")(observer(
             throw new Error("Unknown type of widget");
         }
 
-        _handleWidgetClick(widget) {
-            console.log(widget);
+        _handleWidgetClick(event) {
+            this.placeEditStore.editWidget(event.widget.id);
+            console.log(event);
         }
 
         _renderSurface() {
@@ -233,6 +253,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                         {this.editingPlace.mapImage360Url && this._renderSurface()}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>
+                    {this.showEditWidget && this._renderWidgetEditPanel()}
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
                             place={this.editingPlace}

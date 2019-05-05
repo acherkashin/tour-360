@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getScreenCoordinates } from './utils';
+import { getScreenCoordinates } from '../utils';
+import TextWidgetShape from "./TextWidgetShape";
 
 const styles = theme => ({
     root: {
@@ -39,11 +40,7 @@ class TextWidget extends React.Component {
 TextWidget.propTypes = {
     classes: PropTypes.object.isRequired,
     isSelected: PropTypes.bool,
-    widget: PropTypes.shape({
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired,
-        content: PropTypes.string.isRequired,
-    }),
+    widget: TextWidgetShape,
     onClick: PropTypes.func.isRequired,
 }
 

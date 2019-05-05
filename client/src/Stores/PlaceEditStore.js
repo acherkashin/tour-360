@@ -11,6 +11,7 @@ export default class PlaceEditStore {
         extendObservable(this, {
             saveResult: null,
             editingPlace: null,
+            editingWidget: null,
             isDirty: false,
             tourId: null,
             get panoUrl() {
@@ -69,6 +70,11 @@ export default class PlaceEditStore {
             const place = resp.data.place;
             this.editingPlace.updateFromJson(place);
         }));
+    }
+
+    editWidget(id) {
+        // add disposing
+        this.editingWidget = this.editingPlace.widgets.find((value) => value.id === id);
     }
 
     _updateEditingPlace = action((sessionId, tourId, place) => {
