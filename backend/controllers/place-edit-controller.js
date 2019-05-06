@@ -73,38 +73,41 @@ exports.addWidget = (req, res) => {
 
 exports.cancelChanges = (req, res) => {
     const { sessionId } = req.params;
-    const { tourSessionId } = cache[sessionId];
-    delete cache[sessionId];
-    delete TourEditController.cache[tourSessionId];
+    const placeEditSession = cache[sessionId];
 
-    res.status(HttpStatus.OK).json({});
+    if (placeEditSession) {
+        const { tourSessionId } = placeEditSession;
+        delete cache[sessionId];
+        delete TourEditController.cache[tourSessionId];
+
+        res.status(HttpStatus.OK).json({});
+    } else {
+        res.status(HttpStatus.NOT_FOUND).json({});
+    }
 };
 
-// exports.saveChanges = (req, res) => {
-//     const { sessionId } = req.params;
-//     let { tourSessionId, place } = cache[sessionId];
-//     const tour = TourEditController.cache[tourSessionId];
+exports.saveChanges = (req, res) => {
+    const { sessionId } = req.params;
+    let { tourSessionId, place } = cache[sessionId];
+    const tour = TourEditController.cache[tourSessionId];
 
-//     const updateData = req.body;
+    const updateData = req.body;
 
-//     place.id = updateData.id;
-//     place.name = updateData.name;
-//     place.longitude = updateData.longitude;
-//     place.latitude = updateData.latitude;
-//     place.startPlaceId = updateData.startPlaceId;
-//     place.soundName = updateData.soundName;
-//     place.description = updateData.description;
-//     place.widgets = updateData.widgets;
-//     place.markModified('widgets');
+    place.name = updateData.name;
+    place.longitude = updateData.longitude;
+    place.latitude = updateData.latitude;
+    place.description = updateData.description;
+    place.widgets = updateData.widgets;
+    place.markModified('widgets');
 
-//     tour.save().then(() => {
-//         res.json({
-//             sessionId,
-//             tourId: tour.id,
-//             place: place.toDetailDto(tour),
-//         });
-//     }).catch((error) => {
-//         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
-//     });
-// };
+    tour.save().then(() => {
+        res.json({
+            sessionId,
+            tourId: tour.id,
+            place: place.toDetailDto(tour),
+        });
+    }).catch((error) => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    });
+};
 

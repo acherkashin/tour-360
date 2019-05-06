@@ -28,8 +28,8 @@ export default class PlaceEditStore {
     addWidget(type) {
         if (type === "text") {
             PlaceEditService.addWidget(this.sessionId, type).then(action((resp) => {
-                const { sessionId, place, tourId } = resp.data;
-                this._updateEditingPlace(sessionId, tourId, place);
+                const { place } = resp.data;
+                this.editingPlace.updateFromJson(place);
             }))
         } else {
             throw new Error("Unknown widget type");
@@ -97,13 +97,13 @@ export default class PlaceEditStore {
             this.editingPlace.updateFromJson(place);
         }));
     }
-    
-    viewPlaceImage360(placeId) {
-        window.open(this.getPlaceImage360Url(placeId));
+
+    viewPlaceImage360() {
+        window.open(this.getPlaceImage360Url());
     }
 
-    getPlaceImage360Url(placeId) {
-        return TourEditService.getPanoUrl(this.sessionId, placeId, UserStore.getToken());
+    getPlaceImage360Url() {
+        return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken());
     }
 
     updateImage360(file, width, height) {

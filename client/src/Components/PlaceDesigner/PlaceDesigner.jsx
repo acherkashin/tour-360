@@ -190,7 +190,7 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _handleViewImage360Click() {
-            this.placeEditStore.viewPlaceImage360(this.editingPlace.id);
+            this.placeEditStore.viewPlaceImage360();
         }
 
         _renderWidgetEditPanel() {

@@ -1,8 +1,8 @@
 const uuidv1 = require('uuidv1')
 const HttpStatus = require('http-status-codes');
 const { Tour } = require('./../models');
-const { 
-    addFile, 
+const {
+    addFile,
     removeFile,
     generatePlaceImage360Name,
     generateTourImageName,
@@ -170,6 +170,9 @@ exports.updatePlace = (req, res) => {
     place.name = placeUpdate.name;
     place.longitude = placeUpdate.longitude;
     place.latitude = placeUpdate.latitude;
+    place.description = placeUpdate.description;
+    place.widgets = placeUpdate.widgets;
+    place.markModified('widgets');
 
     res.json({ place: place.toDetailDto(tour) });
 };
