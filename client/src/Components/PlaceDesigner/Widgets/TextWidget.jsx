@@ -30,7 +30,7 @@ const TextWidget = observer(class TextWidget extends React.Component {
     }
 
     render() {
-        const { classes, isSelected, widget: { x, y, content } } = this.props;
+        const { classes, isSelected, widget: { x, y, content, color, backgroundColor } } = this.props;
         const { left, top } = getScreenCoordinates(x, y);
 
         const className = classNames({
@@ -44,6 +44,8 @@ const TextWidget = observer(class TextWidget extends React.Component {
             style={{
                 left,
                 top,
+                color,
+                backgroundColor,
             }}>{content || '[No Content]'}</span>;
     }
 });
