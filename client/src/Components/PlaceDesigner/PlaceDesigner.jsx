@@ -296,30 +296,16 @@ const PlaceDesigner = inject("rootStore")(observer(
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
                             place={this.editingPlace}
+                            showConnections={false}
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleUploadImage}
                             onViewImage360Click={this._handleViewImage360Click}
                             onPreviewClick={this._handlePreviewPlaceClick}
-                            // onDeleteClick={this._handleDeletePlaceClick}
-                            onConnectionClick={(e) => {
-                                // this.tourStore.editPlace(e.connection.placeId);
-                            }}
-                            onViewConnectionClick={(e) => {
-                                // this.tourStore.viewPlaceImage360(e.connection.placeId);
-                            }}
-                            onRemoveConnectionClick={(e) => {
-                                // this.tourStore.deleteConnection(this.editingPlace.id, e.connection.placeId)
-                            }}
-                            onEditConnectionClick={(e) => {
-                                // this.tourStore.saveEditingPlace(true).then(() => {
-                                //     this.tourStore.editConnection(e.connection.id);
-                                // });
-                            }}
                             onSoundChanged={(e) => {
-                                // this.tourStore.updatePlaceSound(e.file);
+                                this.placeEditStore.updatePlaceSound(e.file);
                             }}
                             onSoundRemoved={(e) => {
-                                // this.tourStore.removePlaceSound();
+                                this.placeEditStore.removePlaceSound();
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
                         />

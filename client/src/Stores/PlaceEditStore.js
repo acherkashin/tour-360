@@ -1,6 +1,6 @@
 import { extendObservable, action, runInAction } from 'mobx';
 import { deepObserve, fromPromise } from 'mobx-utils';
-import { PlaceEditService, PlaceService } from './../api';
+import { PlaceEditService, PlaceService, TourEditService } from './../api';
 import { UserStore } from './../Stores';
 import EditPlace from './../Stores/Models/EditPlace';
 
@@ -15,9 +15,9 @@ export default class PlaceEditStore {
             editingPlace: null,
             editingWidget: null,
             isDirty: false,
-            tourId: null,
+            tourSessionId: null,
             get panoUrl() {
-                return PlaceService.getPanoUrl(this.tourId, this.editingPlace.id, UserStore.getToken());
+                return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken());
             },
             get saveLoading() {
                 return this.saveResult && this.saveResult.state === "pending";
@@ -36,26 +36,18 @@ export default class PlaceEditStore {
         }
     }
 
-    viewPlaceImage360(placeId) {
-        window.open(this.getPlaceImage360Url(placeId));
-    }
-
-    getPlaceImage360Url(placeId) {
-        return PlaceEditService.getPanoUrl(this.sessionId, placeId, UserStore.getToken());
-    }
-
     beginEditing(tourId, placeId) {
         return PlaceEditService.beginEditing(tourId, placeId).then(action((resp) => {
-            const { sessionId, place, tourId } = resp.data;
-            this._updateEditingPlace(sessionId, tourId, place);
+            const { sessionId, place, tourSessionId } = resp.data;
+            this._updateEditingPlace(sessionId, tourSessionId, place);
             return sessionId;
         }));
     }
 
     getFromSession(sessionId) {
         return PlaceEditService.get(sessionId).then(action((resp) => {
-            const { sessionId, place, tourId } = resp.data;
-            this._updateEditingPlace(sessionId, tourId, place);
+            const { sessionId, place, tourSessionId } = resp.data;
+            this._updateEditingPlace(sessionId, tourSessionId, place);
 
             return this.editingPlace;
         }));
@@ -92,8 +84,30 @@ export default class PlaceEditStore {
         }));
     }
 
+    updatePlaceSound(soundFile) {
+        return TourEditService.uploadPlaceSound(this.tourSessionId, this.editingPlace.id, soundFile).then(action((resp) => {
+            const place = resp.data.place;
+            this.editingPlace.updateFromJson(place);
+        }));
+    }
+
+    removePlaceSound() {
+        return TourEditService.removePlaceSound(this.tourSessionId, this.editingPlace.id).then(action((resp) => {
+            const place = resp.data.place;
+            this.editingPlace.updateFromJson(place);
+        }));
+    }
+    
+    viewPlaceImage360(placeId) {
+        window.open(this.getPlaceImage360Url(placeId));
+    }
+
+    getPlaceImage360Url(placeId) {
+        return TourEditService.getPanoUrl(this.sessionId, placeId, UserStore.getToken());
+    }
+
     updateImage360(file, width, height) {
-        return PlaceEditService.updateImage360(this.sessionId, file, width, height).then(action((resp) => {
+        return TourEditService.updateImage360(this.tourSessionId, this.editingPlace.id, file, width, height).then(action((resp) => {
             const place = resp.data.place;
             this.editingPlace.updateFromJson(place);
         }));
@@ -116,10 +130,10 @@ export default class PlaceEditStore {
         this.editingWidgetDisposer = deepObserve(this.editingWidget, () => this.isDirty = true);
     });
 
-    _updateEditingPlace = action((sessionId, tourId, place) => {
+    _updateEditingPlace = action((sessionId, tourSessionId, place) => {
         this.editingPlace = new EditPlace(place);
         this.isDirty = false;
-        this.tourId = tourId;
+        this.tourSessionId = tourSessionId;
 
         this.editingPlaceDisposer = deepObserve(this.editingPlace, () => this.isDirty = true);
 

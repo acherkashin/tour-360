@@ -7,12 +7,8 @@ router.route('/place-edit/')
     .post(verifyToken, PlaceEditController.startEditing);
 router.route('/place-edit/:sessionId/get')
     .get(verifyToken, verifySession, PlaceEditController.get);
-router.route('/place-edit/:sessionId/save')
-    .post(verifyToken, verifySession, PlaceEditController.saveChanges);
 router.route('/place-edit/:sessionId/cancel')
     .post(verifyToken, verifySession, PlaceEditController.cancelChanges);
-router.route('/place-edit/:sessionId/uploadImage360')
-    .post(verifyToken, verifySession, PlaceEditController.uploadImage360);
 router.route('/place-edit/:sessionId/addWidget')
     .post(verifyToken, verifySession, PlaceEditController.addWidget);
 

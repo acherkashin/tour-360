@@ -8,7 +8,9 @@ const {
     generateTourImageName,
     generatePlaceSoundName,
 } = require('./../utils/fileutils');
-const cache = {};
+
+const cache = {}
+exports.cache = cache;
 
 exports.get = (req, res) => {
     const { sessionId } = req.params;

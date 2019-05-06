@@ -292,11 +292,11 @@ const ru = defineMessages({
 
     noToursPlaceholderFirstPart: {
         id: 'no-tours-placeholder.first-part',
-        defaultMessage: 'У вас еще нет никаких экскурсий. Нажмите',
+        defaultMessage: 'У вас еще нет ни одной экскурсии. Нажмите',
     },
     noToursPlaceholderSecondPart: {
         id: 'no-tours-placeholder.second-part',
-        defaultMessage: 'чтобы добавить',
+        defaultMessage: 'чтобы добавить.',
     },
 
     placeListTitle: {

@@ -88,7 +88,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     }
 
     render() {
-        const { classes, place, } = this.props;
+        const { classes, place, showConnections } = this.props;
         const { messages, formatMessage } = this.props.intl;
 
         return <div className={classes.root}>
@@ -106,14 +106,14 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 imageUrl={place.mapImage360Url}
                 onImageChangeClick={this._handleChangeImage360Click}
             />
-            <ConnectionList
+            {showConnections && <ConnectionList
                 className={classes.panelItem}
                 connections={place.connections}
                 onClick={this._handleConnectionClick}
                 onRemoveClick={this._handleRemoveConnectionClick}
                 onViewClick={this._handleViewConnectionClick}
                 onEditClick={this._handleEditConnectionClick}
-            />
+            />}
             <SoundEditor
                 soundUrl={place.soundUrl}
                 classNames={{
@@ -154,11 +154,14 @@ EditPlacePanel.propTypes = {
     onViewImage360Click: PropTypes.func.isRequired,
     onPreviewClick: PropTypes.func.isRequired,
     onDeleteClick: PropTypes.func,
-    onConnectionClick: PropTypes.func.isRequired,
-    onViewConnectionClick: PropTypes.func.isRequired,
-    onRemoveConnectionClick: PropTypes.func.isRequired,
-    onEditConnectionClick: PropTypes.func.isRequired,
     onDescriptionClick: PropTypes.func.isRequired,
+
+    showConnections: PropTypes.bool.isRequired,
+    onConnectionClick: PropTypes.func,
+    onViewConnectionClick: PropTypes.func,
+    onRemoveConnectionClick: PropTypes.func,
+    onEditConnectionClick: PropTypes.func,
+
 
     intl: intlShape.isRequired,
 }
