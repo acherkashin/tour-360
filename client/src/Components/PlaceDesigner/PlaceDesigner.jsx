@@ -17,7 +17,12 @@ import {
 import { intlShape, injectIntl } from 'react-intl';
 import { LoadingButton } from './../'
 import { Texture, NoPlacePlaceholder } from './';
-import { ConfirmDialog, UploadImageDialog } from './../Dialogs';
+import {
+    ConfirmDialog,
+    UploadImageDialog,
+    ViewUrlDialog,
+    HtmlEditDialog,
+} from './../Dialogs';
 import EditPlacePanel from './../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { CoordinateSystem } from './';
@@ -78,15 +83,22 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
             this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
             this._handleTextureLoaded = this._handleTextureLoaded.bind(this);
-            this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
-            this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
+            this._hanldeTextureLoading = this._hanldeTextureLoading.bind(this);
             this._handleWidgetClick = this._handleWidgetClick.bind(this);
             this._handleSurfaceWrapperClick = this._handleSurfaceWrapperClick.bind(this);
+
+            this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
+            this._closePreviewDialog = this._closePreviewDialog.bind(this);
+
+            this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
+            this._handleCloseDescriptionDialog = this._handleCloseDescriptionDialog.bind(this);
 
             this.surfaceWrapperRef = React.createRef();
 
             this.state = {
+                isOpenedPreviewDialog: false,
                 isOpenedConfirmDialog: false,
+                isOpenedPlaceDescriptionDialog: false,
                 uploadImageDialogOpened: false,
                 textureIsLoaded: false,
             };
@@ -225,7 +237,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                 <Texture
                     onClick={() => this.placeEditStore.completeEditWidget()}
                     imageUrl={this.editingPlace.mapImage360Url}
-                    onLoaded={this._handleTextureLoaded} />
+                    onLoaded={this._handleTextureLoaded}
+                    onLoading={this._hanldeTextureLoading} />
                 {textureIsLoaded && <div className={classes.widgetArea}>
                     <CoordinateSystem
                         width={WIDTH}
@@ -242,12 +255,24 @@ const PlaceDesigner = inject("rootStore")(observer(
             this.setState({ textureIsLoaded: true });
         }
 
+        _hanldeTextureLoading() {
+            this.setState({ textureIsLoaded: false });
+        }
+
         _handlePreviewPlaceClick() {
-            throw new Error("Method is not implemented!");
+            this.setState({ isOpenedPreviewDialog: true });
+        }
+
+        _closePreviewDialog() {
+            this.setState({ isOpenedPreviewDialog: false });
         }
 
         _handleOpenDescriptionDialog() {
-            throw new Error("Method is not implemented!");
+            this.setState({ isOpenedPlaceDescriptionDialog: true });
+        }
+
+        _handleCloseDescriptionDialog() {
+            this.setState({ isOpenedPlaceDescriptionDialog: false });
         }
 
         _handleSurfaceWrapperClick(e) {
@@ -267,7 +292,12 @@ const PlaceDesigner = inject("rootStore")(observer(
 
             const { isDirty, saveLoading } = this.placeEditStore;
             const { classes } = this.props;
-            const { uploadImageDialogOpened, isOpenedConfirmDialog } = this.state;
+            const {
+                uploadImageDialogOpened,
+                isOpenedPreviewDialog,
+                isOpenedConfirmDialog,
+                isOpenedPlaceDescriptionDialog,
+            } = this.state;
 
             return <Dialog
                 open={true}
@@ -318,6 +348,12 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onFileSelected={this._handleFileSelected}
                     onClose={() => this.setState({ uploadImageDialogOpened: false })}
                 />
+                <ViewUrlDialog
+                    title={formatMessage(messages.tourDesignerPreviewPlace)}
+                    url={this.placeEditStore.getPlaceImage360Url(this.editingPlace.id)}
+                    isOpened={isOpenedPreviewDialog}
+                    onClose={this._closePreviewDialog}
+                />
                 <ConfirmDialog
                     title={formatMessage(messages.placeDesignerSaveDialogTitle)}
                     okButtonText={formatMessage(messages.save)}
@@ -327,6 +363,16 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onCancelClick={this._handleCancelConfigrmClick}
                     isOpened={isOpenedConfirmDialog}
                     onClose={this._handleCloseConfirmDialog}
+                />
+                <HtmlEditDialog
+                    title={formatMessage(messages.tourDesignerEditPlaceDescription)}
+                    htmlContent={this.editingPlace.description}
+                    isOpened={isOpenedPlaceDescriptionDialog}
+                    onClose={this._handleCloseDescriptionDialog}
+                    onSaveClick={(e) => {
+                        this.editingPlace.description = e.htmlContent;
+                        this._handleCloseDescriptionDialog();
+                    }}
                 />
             </Dialog>
         }

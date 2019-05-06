@@ -16,11 +16,15 @@ import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
 import MapEditMode from './MapEditMode';
 import { PlaceholderButton, LoadingButton } from './../';
-import { UploadImageDialog, ConfirmDialog, HtmlEditDialog } from './../Dialogs';
+import {
+    UploadImageDialog,
+    ConfirmDialog,
+    HtmlEditDialog,
+    ViewUrlDialog,
+} from './../Dialogs';
 import { TourMap } from './';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
-import ViewUrlDialog from '../Dialogs/ViewUrlDialog';
 import { grey } from '@material-ui/core/colors';
 
 const styles = (theme) => ({
@@ -385,7 +389,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                     </div>}
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
-                            showConnections={false}                            
+                            showConnections={false}
                             place={this.editingPlace}
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}

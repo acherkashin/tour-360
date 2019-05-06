@@ -45,43 +45,56 @@ class Texture extends React.Component {
         this._handleClick = this._handleClick.bind(this);
     }
 
-    componentDidMount() {
-        const { imageUrl, onLoaded } = this.props;
+    _updateImage() {
+        const { imageUrl, onLoaded, onLoading } = this.props;
 
-        loadImage(imageUrl)
-            .then((i) => {
-                const cs = equirectToCubemapFaces(i, CUBE_SIZE);
+        this.setState({ isLoaded: false }, () => {
+            onLoading && onLoading({ origin: this });
+            loadImage(imageUrl)
+                .then((i) => {
+                    const cs = equirectToCubemapFaces(i, CUBE_SIZE);
 
-                this.setState({ isLoaded: true }, () => {
-                    const context = this.canvasRef.current.getContext('2d');
-                    context.drawImage(cs[5],
-                        CUBE_SIZE / 2, // source x
-                        0, // source y
-                        CUBE_SIZE / 2, // source width
-                        CUBE_SIZE, // source height
-                        0, // destination x
-                        0, // destination y
-                        CUBE_SIZE / 2, // destination width
-                        CUBE_SIZE // destination height
-                    );
-                    context.drawImage(cs[1], 0.5 * CUBE_SIZE, 0);
-                    context.drawImage(cs[4], 1.5 * CUBE_SIZE, 0);
-                    context.drawImage(cs[0], 2.5 * CUBE_SIZE, 0);
+                    this.setState({ isLoaded: true }, () => {
+                        const context = this.canvasRef.current.getContext('2d');
+                        context.drawImage(cs[5],
+                            CUBE_SIZE / 2, // source x
+                            0, // source y
+                            CUBE_SIZE / 2, // source width
+                            CUBE_SIZE, // source height
+                            0, // destination x
+                            0, // destination y
+                            CUBE_SIZE / 2, // destination width
+                            CUBE_SIZE // destination height
+                        );
+                        context.drawImage(cs[1], 0.5 * CUBE_SIZE, 0);
+                        context.drawImage(cs[4], 1.5 * CUBE_SIZE, 0);
+                        context.drawImage(cs[0], 2.5 * CUBE_SIZE, 0);
 
-                    context.drawImage(cs[5],
-                        0, // source x
-                        0, // source y
-                        CUBE_SIZE / 2, // source width
-                        CUBE_SIZE, // source height
-                        3.5 * CUBE_SIZE, // destination x
-                        0, // destination y
-                        CUBE_SIZE / 2, // destination width
-                        CUBE_SIZE // destination height
-                    );
+                        context.drawImage(cs[5],
+                            0, // source x
+                            0, // source y
+                            CUBE_SIZE / 2, // source width
+                            CUBE_SIZE, // source height
+                            3.5 * CUBE_SIZE, // destination x
+                            0, // destination y
+                            CUBE_SIZE / 2, // destination width
+                            CUBE_SIZE // destination height
+                        );
 
-                    onLoaded && onLoaded({ origin: this });
+                        onLoaded && onLoaded({ origin: this });
+                    });
                 });
-            });
+        });
+    }
+
+    componentDidMount() {
+        this._updateImage();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.imageUrl !== this.props.imageUrl) {
+            this._updateImage();
+        }
     }
 
     _handleClick() {
@@ -108,6 +121,7 @@ Texture.propTypes = {
     classes: PropTypes.object.isRequired,
     imageUrl: PropTypes.string.isRequired,
 
+    onLoading: PropTypes.func,
     onLoaded: PropTypes.func,
     onClick: PropTypes.func,
 }
