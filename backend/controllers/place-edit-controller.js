@@ -58,6 +58,8 @@ exports.addWidget = (req, res) => {
             y: 0,
             content: '[Enter your text]',
             type: 'text',
+            color: '#000000',
+            backgroundColor: '#ffffff',
         };
         place.widgets.push(textWidget);
 

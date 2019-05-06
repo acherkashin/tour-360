@@ -202,10 +202,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                     widget={widget}
                     onXChanged={e => this.editingWidget.x = e.x}
                     onYChanged={e => this.editingWidget.y = e.y}
-                    onContentChanged={e => {
-                        this.editingWidget.content = e.content;
-                        console.log(e);
-                    }}
+                    onContentChanged={e => this.editingWidget.content = e.content}
                     onTextColorChanged={color => this.editingWidget.color = color}
                     onTextBackgroundColorChanged={color => this.editingWidget.backgroundColor = color}
                 />
