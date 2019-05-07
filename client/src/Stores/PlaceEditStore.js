@@ -64,7 +64,7 @@ export default class PlaceEditStore {
     completeEditing() {
         this.saveResult = fromPromise(PlaceEditService.saveChanges(this.sessionId, this.editingPlace.asJson));
 
-        this.saveResult.then(action((result) => {
+        return this.saveResult.then(action((result) => {
             const place = result.data.place;
             this.editingPlace.updateFromJson(place);
 
@@ -113,6 +113,11 @@ export default class PlaceEditStore {
         }));
     }
 
+    deleteWidget(id) {
+        this.editingWidget && this.editingWidget.id === id && this.completeEditWidget();
+        this._deleteWidget(id);
+    }
+
     editWidget(id) {
         this.completeEditWidget();
         this.editingWidget = this.editingPlace.widgets.find((value) => value.id === id);
@@ -122,6 +127,12 @@ export default class PlaceEditStore {
     completeEditWidget() {
         this.editingWidgetDisposer && this.editingWidgetDisposer();
         this.editingWidget = null;
+    }
+
+    _deleteWidget(id) {
+        if (this.editingPlace.widgets && this.editingPlace.widgets.length) {
+            this.editingPlace.widgets = this.editingPlace.widgets.filter(widget => widget.id !== id);
+        }
     }
 
     _updateEditingWidget = action((widget) => {

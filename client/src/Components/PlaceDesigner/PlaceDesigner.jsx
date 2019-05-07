@@ -86,6 +86,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._hanldeTextureLoading = this._hanldeTextureLoading.bind(this);
             this._handleWidgetClick = this._handleWidgetClick.bind(this);
             this._handleSurfaceWrapperClick = this._handleSurfaceWrapperClick.bind(this);
+            this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
 
             this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
             this._closePreviewDialog = this._closePreviewDialog.bind(this);
@@ -164,6 +165,7 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _handleSave() {
+            // rename to save changes and create method to complete editing where designer will be closed
             this.placeEditStore.completeEditing();
         }
 
@@ -205,6 +207,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onContentChanged={e => this.editingWidget.content = e.content}
                     onTextColorChanged={color => this.editingWidget.color = color}
                     onTextBackgroundColorChanged={color => this.editingWidget.backgroundColor = color}
+                    onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                 />
             }
 
