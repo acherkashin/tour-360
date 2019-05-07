@@ -19,7 +19,7 @@ export default class EditTour {
             isPublic: false,
             get mapImageUrl() {
                 return this.hasMapImage ? `/${this.filename}?${this.imageHash}` : null;
-            }
+            },
         });
 
         this.updateFromJson(json);

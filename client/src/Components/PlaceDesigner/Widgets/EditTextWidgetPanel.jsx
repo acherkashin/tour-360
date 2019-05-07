@@ -1,34 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import {
-    Button,
-    TextField,
-    ClickAwayListener,
-} from '@material-ui/core';
-import { ChromePicker } from 'react-color';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { TextField } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import TextWidgetShape from './TextWidgetShape';
 import { HEIGHT, WIDTH } from './../utils';
+import { ColorPicker } from './../../Common';
 
 const styles = theme => ({
     root: {
         padding: theme.spacing.unit * 2,
-    },
-    buttonsGroup: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        margin: '20px 0',
-    },
-    buttonRoot: {
-        position: 'relative',
-        maxWidth: '50%',
-        height: '100%',
-    },
-    colorPicker: {
-        position: 'absolute',
-        top: '100%',
-        right: 0,
     },
 });
 
@@ -47,8 +28,6 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
         this._handleContentChanged = this._handleContentChanged.bind(this);
         this._handleChangeTextColor = this._handleChangeTextColor.bind(this);
         this._handleChangeTextBackgroundColor = this._handleChangeTextBackgroundColor.bind(this);
-        this._handleTextColorButtonClick = this._handleTextColorButtonClick.bind(this);
-        this._handleTextBackgroundColorButtonClick = this._handleTextBackgroundColorButtonClick.bind(this);
     }
 
     _handleXChanged(e) {
@@ -63,28 +42,16 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
         this.props.onContentChanged({ origin: this, content: e.target.value });
     }
 
-    _handleChangeTextColor(color) {
-        this.props.onTextColorChanged(color.hex);
-    }
-    _handleChangeTextBackgroundColor(color) {
-        this.props.onTextBackgroundColorChanged(color.hex);
+    _handleChangeTextColor(e) {
+        this.props.onTextColorChanged(e.color);
     }
 
-    _handleTextColorButtonClick() {
-        const { isTextColorPickerActive } = this.state;
-
-        this.setState({ isTextColorPickerActive: !isTextColorPickerActive })
+    _handleChangeTextBackgroundColor(e) {
+        this.props.onTextBackgroundColorChanged(e.color);
     }
-    _handleTextBackgroundColorButtonClick() {
-        const { isTextBackgroundColorPickerActive } = this.state;
-
-        this.setState({ isTextBackgroundColorPickerActive: !isTextBackgroundColorPickerActive })
-    }
-
 
     render() {
-        const { classes, widget, textColor, textBackgroundColor } = this.props;
-        const { isTextColorPickerActive, isTextBackgroundColorPickerActive } = this.state;
+        const { classes, widget } = this.props;
 
         return <div className={classes.root}>
             <TextField
@@ -127,48 +94,16 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
                 margin="normal"
                 fullWidth
             />
-
-            <div className={classes.buttonsGroup}>
-                <MuiThemeProvider theme={this.state.theme}>
-                    <div className={classes.buttonRoot}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            onClick={this._handleTextColorButtonClick}
-                        >Text Color</Button>
-                        {isTextColorPickerActive &&
-                            <ClickAwayListener onClickAway={() => this.setState({ isTextColorPickerActive: false })}>
-                                <ChromePicker
-                                    color={textColor}
-                                    onChange={this._handleChangeTextColor}
-                                    className={classes.colorPicker}
-                                    disableAlpha
-                                />
-                            </ClickAwayListener>
-                        }
-                    </div>
-
-                    <div className={classes.buttonRoot}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            size="medium"
-                            onClick={this._handleTextBackgroundColorButtonClick}
-                        >Text Background Color</Button>
-                        {isTextBackgroundColorPickerActive &&
-                            <ClickAwayListener onClickAway={() => this.setState({ isTextBackgroundColorPickerActive: false })}>
-                                <ChromePicker
-                                    color={textBackgroundColor}
-                                    onChange={this._handleChangeTextBackgroundColor}
-                                    className={classes.colorPicker}
-                                    disableAlpha
-                                />
-                            </ClickAwayListener>
-                        }
-                    </div>
-                </MuiThemeProvider>
-            </div>
+            <ColorPicker
+                label="Text Color"
+                onChanged={this._handleChangeTextColor}
+                color={widget.color}
+            />
+            <ColorPicker
+                label="Text Background Color"
+                onChanged={this._handleChangeTextBackgroundColor}
+                color={widget.backgroundColor}
+            />
         </div>;
     }
 });
