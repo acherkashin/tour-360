@@ -120,6 +120,14 @@ const en = defineMessages({
         id: 'common.fillOut',
         defaultMessage: 'please fill out this field',
     },
+    widgets: {
+        id: 'common.widgets',
+        defaultMessage: 'Widgets',
+    },
+    noWidgets: {
+        id: 'common.no-widgets',
+        defaultMessage: 'No widgets',
+    },
 
     headerTitle: {
         id: 'header.title',

@@ -390,6 +390,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
                             showConnections={true}
+                            showWidgets={false}
                             place={this.editingPlace}
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}

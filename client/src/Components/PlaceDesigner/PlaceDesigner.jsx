@@ -327,8 +327,9 @@ const PlaceDesigner = inject("rootStore")(observer(
                     </div>}
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
-                            place={this.editingPlace}
+                            showWidgets={true}
                             showConnections={false}
+                            place={this.editingPlace}
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleUploadImage}
                             onViewImage360Click={this._handleViewImage360Click}
@@ -340,6 +341,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                                 this.placeEditStore.removePlaceSound();
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
+                            onWidgetClick={e => console.log(e)}
+                            onRemoveWidgetClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                         />
                     </div>}
                 </div>

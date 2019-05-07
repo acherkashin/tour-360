@@ -113,6 +113,14 @@ const ru = defineMessages({
         id: 'common.fillOut',
         defaultMessage: 'пожалуйста, заполните это поле',
     },
+    widgets: {
+        id: 'common.widgets',
+        defaultMessage: 'Виджеты',
+    },
+    noWidgets: {
+        id: 'common.no-widgets',
+        defaultMessage: 'Виджеты отсутствуют',
+    },
 
     headerTitle: {
         id: 'header.title',
@@ -239,7 +247,7 @@ const ru = defineMessages({
         id: 'sound-editor.tours-sound',
         defaultMessage: 'Звук экскурсии',
     },
-    
+
     tourDesignerMapTypeError: {
         id: 'tour-designer.map-type-error',
         defaultMessage: 'Тип карты не определён',
@@ -307,7 +315,7 @@ const ru = defineMessages({
         id: 'place-list.no-places',
         defaultMessage: 'Нет локаций',
     },
-    
+
     previewImage360PreviewPlace: {
         id: 'preview-image-360.preview-place',
         defaultMessage: 'Предпросмотр локации',

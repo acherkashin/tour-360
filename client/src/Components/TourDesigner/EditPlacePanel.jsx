@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ConnectionList from './ConnectionList';
 import { EditImage } from './../';
 import SoundEditor from './SoundEditor';
+import { WidgetList } from './../Common';
 import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
@@ -33,6 +34,8 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
         this._handleRemoveConnectionClick = this._handleRemoveConnectionClick.bind(this);
         this._handleEditConnectionClick = this._handleEditConnectionClick.bind(this);
         this._handleDescriptionChanged = this._handleDescriptionChanged.bind(this);
+        this._handleWidgetClick = this._handleWidgetClick.bind(this);
+        this._handleRemoveWidgetClick = this._handleRemoveWidgetClick.bind(this);
     }
 
     get _canDelete() {
@@ -87,8 +90,16 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
         this.props.onDescriptionClick({ origin: this });
     }
 
+    _handleWidgetClick(e) {
+        this.props.onWidgetClick({ origin: this, widget: e.widget });
+    }
+
+    _handleRemoveWidgetClick(e) {
+        this.props.onRemoveWidgetClick({ origin: this, widget: e.widget });
+    }
+
     render() {
-        const { classes, place, showConnections } = this.props;
+        const { classes, place, showConnections, showWidgets } = this.props;
         const { messages, formatMessage } = this.props.intl;
 
         return <div className={classes.root}>
@@ -123,6 +134,11 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 onSoundChanged={this._handleSoundChanged}
                 onSoundRemoved={this._handleSoundRemoved}
             />
+            {showWidgets && <WidgetList
+                widgets={place.widgets}
+                onClick={(e) => this._handleWidgetClick}
+                onRemoveClick={this._handleRemoveWidgetClick}
+            />}
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImage360Click} >
                 {formatMessage(messages.editPlacePanelChangePano)}
             </Button>
@@ -162,6 +178,9 @@ EditPlacePanel.propTypes = {
     onRemoveConnectionClick: PropTypes.func,
     onEditConnectionClick: PropTypes.func,
 
+    showWidgets: PropTypes.bool.isRequired,
+    onWidgetClick: PropTypes.func,
+    onRemoveWidgetClick: PropTypes.func,
 
     intl: intlShape.isRequired,
 }
