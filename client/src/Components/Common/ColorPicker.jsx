@@ -9,7 +9,19 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     root: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         position: 'relative',
+        //TODO: pass width and marginBottom via props here
+        width: '100%',
+        marginBottom: 10,
+    },
+    button: {
+        width: '64px',
+        height: '40px',
+        border: '1px dashed grey',
     },
     colorPickerLayer: {
         position: 'absolute',
@@ -45,13 +57,15 @@ class ColorPicker extends React.Component {
         const { classes, color, label } = this.props;
 
         return <div className={classes.root}>
+            <span>{label}</span>
             <Button
+                className={classes.button}
                 style={{ backgroundColor: color }}
                 color="inherit"
                 fullWidth
                 onClick={this._handleTextColorButtonClick}
             >
-                {label}
+                <div></div>
             </Button>
             {isTextColorPickerActive &&
                 <ClickAwayListener onClickAway={() => this.setState({ isTextColorPickerActive: false })}>
