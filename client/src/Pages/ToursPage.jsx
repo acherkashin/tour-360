@@ -56,7 +56,7 @@ const ToursPage = requireAuth(inject("rootStore")(observer(
                 isOpenedUploadImageDialog: false,
                 newTourName: '',
                 newTourMapType: 'Image',
-                mapTypes: [formatMessage(messages.toursPageEarth), formatMessage(messages.toursPageImage)],
+                mapTypes: ['Earth', 'Image']
             };
 
             this.loadAllServices = this.loadAllTours.bind(this);

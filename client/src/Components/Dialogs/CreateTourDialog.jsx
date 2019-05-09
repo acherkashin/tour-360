@@ -41,6 +41,19 @@ class CreateTourDialog extends React.Component {
         this.props.onMapTypeChanged && this.props.onMapTypeChanged({ origin: this, mapType: e.target });
     }
 
+    _translateType(type) {
+        const { messages, formatMessage } = this.props.intl;
+
+        switch (type) {
+            case 'Earth': 
+                return formatMessage(messages.toursPageEarth)
+            case 'Image': 
+                return formatMessage(messages.toursPageImage)
+            default: 
+                throw new Error('There are not such type')
+        }
+    }
+
     render() {
         const { name, mapTypes, mapTypeValue, isOpened } = this.props;
         const { messages, formatMessage } = this.props.intl;
@@ -69,7 +82,7 @@ class CreateTourDialog extends React.Component {
                             onChange={this._handleMapTypeChanged}
                             input={<Input name="name"/>}
                             value={mapTypeValue}>
-                            {mapTypes.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                            {mapTypes.map(type => <MenuItem key={type} value={type}>{this._translateType(type)}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </DialogContent>
