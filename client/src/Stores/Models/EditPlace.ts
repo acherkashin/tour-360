@@ -1,6 +1,23 @@
 import { extendObservable } from "mobx";
 
 export default class EditPlace {
+    readonly id: string;
+    name: string;
+    longitude: string;
+    latitude: string;
+    hasImage360: string;
+    image360Width: string;
+    image360Height: string;
+    image360Name: string;
+    connections: any[];
+    startPlaceId: string;
+    description: string;
+    widgets: any[];
+    soundName: string;
+
+    private soundHash: number;
+    private image360Hash: number;
+
     constructor(json) {
         this.id = json.id;
 
@@ -22,7 +39,8 @@ export default class EditPlace {
             widgets: [],
 
             get viewImage360Url() {
-                return this.hasImage360 ? this.store.getPlaceImage360Url(this.id) : null;
+                throw new Error('not implemented');
+                // return this.hasImage360 ? this.store.getPlaceImage360Url(this.id) : null;
             },
             get mapImage360Url() {
                 return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;

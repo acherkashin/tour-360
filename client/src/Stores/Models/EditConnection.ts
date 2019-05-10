@@ -1,7 +1,15 @@
 import { extendObservable } from "mobx";
 
 export default class EditConnection {
-    constructor(store, sessionId, json) {
+    readonly id: string;
+    readonly store: any;
+    readonly sessionId: string;
+    startPlacePosition: string;
+    endPlacePosition: string;
+    startPlace: string;
+    endPlace: string;
+
+    constructor(store: any, sessionId: string, json) {
         this.store = store;
         this.sessionId = sessionId;
         this.id = json.id;

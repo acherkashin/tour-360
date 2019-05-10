@@ -1,6 +1,15 @@
 import { extendObservable } from "mobx";
 
 export default class PlaceDesignerModel {
+    readonly id: string;
+    name: string;
+    hasImage360: false;
+    image360Width: number;
+    image360Height: number;
+    image360Name: string;
+    
+    private image360Hash: number;
+
     constructor(json) {
         this.id = json.id;
 

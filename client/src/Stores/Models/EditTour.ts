@@ -1,6 +1,22 @@
 import { extendObservable } from "mobx";
 
 export default class EditTour {
+    readonly id: string;
+    readonly store: any;
+    name: string;
+    filename: string;
+    mapType: any;
+    hasMapImage: boolean;
+    imageWidth: number;
+    imageHeight: number;
+    places: any[];
+    connections: any[];
+    startPlaceId: string;
+    isPublic: boolean;
+    connection: any[];
+    
+    private imageHash: number;
+
     constructor(store, json) {
         this.store = store;
         this.id = json.id;
