@@ -1,4 +1,7 @@
 import { decorate, observable, computed, action } from "mobx";
+import {
+    TourDto,
+} from "./../../../../backend/src/models/interfaces";
 
 class Tour {
     readonly id: string;
@@ -19,7 +22,7 @@ class Tour {
         return this.hasImage ? `/${this.filename}?${this.imageHash}` : `/src/no-image.png`;
     }
 
-    updateFromJson(json) {
+    updateFromJson(json: TourDto) {
         this.name = json.name;
         this.hasImage = json.hasImage;
         this.filename = json.filename;
@@ -38,7 +41,8 @@ decorate(Tour, <any>{
     filename: observable,
     imageHash: observable,
     imageUrl: computed,
-    refreshCover: action
+    updateFromJson: action,
+    refreshCover: action,
 });
 
 export default Tour;

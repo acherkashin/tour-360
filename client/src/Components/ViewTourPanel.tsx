@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { withStyles, } from '@material-ui/core/styles';
+import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { observer } from 'mobx-react';
 import {
     EditImage,
     PlaceList,
 } from './';
+import { TourDetail } from './../Stores';
 
-const styles = theme => ({
+const styles = createStyles(theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -25,13 +26,33 @@ const styles = theme => ({
     places: {
         marginTop: 20,
     }
-});
+}));
 
-const ViewTourPanel = observer(class ViewTourPanel extends React.Component {
+interface ViewTourProps extends WithStyles<typeof styles> {
+    tour: TourDetail;
+    width: string;
+    onImageChangeClick: ({ origin: ViewTourPanel, tour: TourDetail }) => void;
+    onViewPlaceClick: ({ origin: ViewTourPanel, tour: TourDetail, place, }) => void;
+    onEditPlaceClick: ({ origin: ViewTourPanel, tour: TourDetail, place, }) => void;
+}
+
+class ViewTourPanel extends React.Component<ViewTourProps> {
     constructor(props) {
         super(props);
 
         this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
+    }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        tour: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            places: PropTypes.arrayOf(PropTypes.object),
+        }).isRequired,
+        width: PropTypes.string,
+        onImageChangeClick: PropTypes.func.isRequired,
+        onViewPlaceClick: PropTypes.func.isRequired,
+        onEditPlaceClick: PropTypes.func.isRequired,
     }
 
     _handleImageChangeClick() {
@@ -39,7 +60,8 @@ const ViewTourPanel = observer(class ViewTourPanel extends React.Component {
     }
 
     render() {
-        const { classes, width, tour } = this.props;
+        const classes: any = this.props.classes;
+        const { width, tour } = this.props;
 
         return (
             <div className={classes.root} style={{ width: width || '250px' }}>
@@ -70,17 +92,6 @@ const ViewTourPanel = observer(class ViewTourPanel extends React.Component {
             </div>
         );
     }
-});
+}
 
-ViewTourPanel.propTypes = {
-    classes: PropTypes.object.isRequired,
-    tour: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-    }).isRequired,
-    width: PropTypes.string,
-    onImageChangeClick: PropTypes.func.isRequired,
-    onViewPlaceClick: PropTypes.func.isRequired,
-    onEditPlaceClick: PropTypes.func.isRequired,
-};
-
-export default withStyles(styles)(ViewTourPanel);
+export default withStyles(styles)(observer(ViewTourPanel));

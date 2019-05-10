@@ -1,5 +1,5 @@
 import Tour from "./Models/Tour";
-import EditTour from "./Models/EditTour";
+import TourDetail from "./Models/TourDetail";
 import EditPlace from "./Models/EditPlace";
 import EditConnection from "./Models/EditConnection";
 
@@ -12,7 +12,7 @@ import PlaceEditStore from './PlaceEditStore';
 
 export {
     Tour,
-    EditTour,
+    TourDetail,
     EditPlace,
     EditConnection,
 

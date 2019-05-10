@@ -7,7 +7,7 @@
     "start": "cd backend/ && node server.js",
     "build": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "frontend": "concurrently \"cd client && npm start\" \"cd vr && npm run start\"",
-    "dev": "concurrently \"cd backend && nodemon server.js\" \"npm run frontend\" \"start mongod\"",
+    "dev": "concurrently \"cd backend && npm run dev\" \"npm run frontend\" \"start mongod\"",
     "log": "heroku logs -a tour-360 --tail"
   },
   "keywords": [],

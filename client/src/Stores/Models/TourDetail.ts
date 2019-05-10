@@ -1,44 +1,40 @@
-import { extendObservable } from "mobx";
+import { decorate, observable, action, computed } from "mobx";
+import {
+    ImageFile,
+    ConnectionDto,
+    PlaceDetailDto,
+    MapType,
+} from "./../../../../backend/src/models/interfaces";
 
-export default class EditTour {
+class TourDetail {
     readonly id: string;
-    readonly store: any;
     name: string;
     filename: string;
-    mapType: any;
+    mapType: MapType;
     hasMapImage: boolean;
     imageWidth: number;
     imageHeight: number;
-    places: any[];
-    connections: any[];
+    places: PlaceDetailDto[];
+    connections: ConnectionDto[];
     startPlaceId: string;
     isPublic: boolean;
-    connection: any[];
-    
-    private imageHash: number;
 
-    constructor(store, json) {
-        this.store = store;
+    imageHash: number;
+    coverImageHash: number;
+    cover: ImageFile;
+
+    constructor(json) {
         this.id = json.id;
 
-        extendObservable(this, {
-            name: '',
-            mapType: '',
-            filename: '',
-            places: [],
-            connections: [],
-            hasMapImage: false,
-            imageHash: Date.now(),
-            imageWidth: 0,
-            imageHeight: 0,
-            startPlaceId: '',
-            isPublic: false,
-            get mapImageUrl() {
-                return this.hasMapImage ? `/${this.filename}?${this.imageHash}` : null;
-            },
-        });
-
         this.updateFromJson(json);
+    }
+
+    get mapImageUrl() {
+        return this.hasMapImage ? `/${this.filename}?${this.imageHash}` : null;
+    }
+
+    get imageUrl() {
+        return this.cover.filename ? `/${this.cover.filename}?${this.coverImageHash}` : null;
     }
 
     updateFromJson(json) {
@@ -67,7 +63,7 @@ export default class EditTour {
     }
 
     updateConnectionFromJson(json) {
-        const connection = (this.connection || []).find(c => c.id === json.id);
+        const connection = (this.connections || []).find(c => c.id === json.id);
 
         if (connection) {
             connection.startPlacePosition = json.startPlacePosition;
@@ -86,7 +82,34 @@ export default class EditTour {
         return connection;
     }
 
+    refreshImageMap() {
+        this.imageHash = Date.now();
+    }
+
     refreshCover() {
         this.imageHash = Date.now();
     }
 }
+
+decorate(TourDetail, {
+    name: observable,
+    filename: observable,
+    mapType: observable,
+    hasMapImage: observable,
+    imageWidth: observable,
+    imageHeight: observable,
+    places: observable,
+    connections: observable,
+    startPlaceId: observable,
+    isPublic: observable,
+    imageHash: observable,
+    cover: observable,
+
+    updateFromJson: action,
+    updateConnectionFromJson: action,
+    updatePlaceFromJson: action,
+
+    mapImageUrl: computed,
+});
+
+export default TourDetail;
