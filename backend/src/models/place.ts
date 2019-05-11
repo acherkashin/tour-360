@@ -64,6 +64,7 @@ PlaceSchema.methods.toDetailDto = function (tour) {
         soundName: this.sound && this.sound.filename,
         connections: [...starts, ...ends],
         widgets: this.widgets || temporWidgets,
+        description: this.description,
     };
 
     return dto;

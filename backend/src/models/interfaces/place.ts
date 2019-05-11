@@ -24,6 +24,7 @@ interface PlaceDetailDto {
     soundName: string;
     connections: ConnectionDetailDto[];
     widgets: any[];
+    description: string;
 }
 
 interface Place {

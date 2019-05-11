@@ -1,59 +1,45 @@
-import { extendObservable } from "mobx";
+import { extendObservable, decorate, observable, computed } from "mobx";
+import {
+    ConnectionDetailDto,
+    PlaceDetailDto,
+} from "./../../../../backend/src/models/interfaces";
 
-export default class EditPlace {
+class EditPlace {
     readonly id: string;
     name: string;
-    longitude: string;
-    latitude: string;
-    hasImage360: string;
-    image360Width: string;
-    image360Height: string;
+    longitude: number;
+    latitude: number;
+    hasImage360: boolean;
+    image360Width: number;
+    image360Height: number;
     image360Name: string;
-    connections: any[];
-    startPlaceId: string;
+    connections: ConnectionDetailDto[] = [];
+
     description: string;
     widgets: any[];
     soundName: string;
 
-    private soundHash: number;
-    private image360Hash: number;
+    soundHash: number;
+    image360Hash: number;
 
     constructor(json) {
         this.id = json.id;
-
-        extendObservable(this, {
-            longitude: null,
-            latitude: null,
-            name: '',
-
-            hasImage360: false,
-            image360Hash: Date.now(),
-            soundHash: Date.now(),
-            image360Width: 0,
-            image360Height: 0,
-            image360Name: '',
-            connections: [],
-            startPlaceId: null,
-            soundName: '',
-            description: '',
-            widgets: [],
-
-            get viewImage360Url() {
-                throw new Error('not implemented');
-                // return this.hasImage360 ? this.store.getPlaceImage360Url(this.id) : null;
-            },
-            get mapImage360Url() {
-                return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
-            },
-            get soundUrl() {
-                return this.soundName ? `/${this.soundName}?${this.soundHash}` : null;
-            }
-        });
-
-        this.updateFromJson(json);
+    
+    this.updateFromJson(json);
     }
 
-    updateFromJson(json) {
+    get viewImage360Url() {
+        throw new Error('not implemented');
+        // return this.hasImage360 ? this.store.getPlaceImage360Url(this.id) : null;
+    }
+    get mapImage360Url() {
+        return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
+    }
+    get soundUrl() {
+        return this.soundName ? `/${this.soundName}?${this.soundHash}` : null;
+    }
+
+    updateFromJson(json: PlaceDetailDto) {
         this.name = json.name;
         this.longitude = json.longitude;
         this.latitude = json.latitude;
@@ -62,7 +48,6 @@ export default class EditPlace {
         this.image360Height = json.image360Height;
         this.image360Name = json.image360Name;
         this.connections = json.connections;
-        this.startPlaceId = json.startPlaceId;
         this.description = json.description;
         this.widgets = json.widgets;
 
@@ -80,7 +65,6 @@ export default class EditPlace {
             longitude: this.longitude,
             latitude: this.latitude,
             name: this.name,
-            startPlaceId: this.startPlaceId,
             soundName: this.soundName,
             description: this.description,
             widgets: this.widgets,
@@ -91,3 +75,26 @@ export default class EditPlace {
         this.soundHash = Date.now();
     }
 }
+
+decorate(EditPlace, <any>{
+    name: observable,
+    longitude: observable,
+    latitude: observable,
+    hasImage360: observable,
+    image360Width: observable,
+    image360Height: observable,
+    image360Name: observable,
+    connections: observable,
+    description: observable,
+    widgets: observable,
+    soundName: observable,
+
+    soundHash: observable,
+    image360Hash: observable,
+    
+    viewImage360Url: computed,
+    mapImage360Url: computed,
+    soundUrl: computed,
+});
+
+export default EditPlace;
