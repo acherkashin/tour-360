@@ -154,18 +154,18 @@ const en = defineMessages({
         id: 'create-tour-dialog.title',
         defaultMessage: 'Map Type',
     },
+    createTourDialogEarth: {
+        id: 'tours-page.earth',
+        defaultMessage: 'Earth',
+    },
+    createTourDialogImage: {
+        id: 'tours-page.image',
+        defaultMessage: 'Image',
+    },
 
     toursPageTourMap: {
         id: 'tours-page.tour-map',
         defaultMessage: 'Tour Map',
-    },
-    toursPageEarth: {
-        id: 'tours-page.earth',
-        defaultMessage: 'Earth',
-    },
-    toursPageImage: {
-        id: 'tours-page.image',
-        defaultMessage: 'Image',
     },
 
     placeDesignerSaveDialogTitle: {

@@ -285,7 +285,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     _renderMap() {
-        if ((this.editingTour.hasMapImage && this.editingTour.mapType === 'Image') || this.editingTour.mapType === 'Earth') {
+        if ((this.editingTour.hasMapImage && this.editingTour.mapType === 2) || this.editingTour.mapType === 1) {
             const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
             const selectedPlaceId = this._getSelectedPlaceId();
 

@@ -147,18 +147,18 @@ const ru = defineMessages({
         id: 'create-tour-dialog.title',
         defaultMessage: 'Тип Карты',
     },
+    createTourDialogEarth: {
+        id: 'tours-page.earth',
+        defaultMessage: 'Земля',
+    },
+    createTourDialogImage: {
+        id: 'tours-page.image',
+        defaultMessage: 'Изображение',
+    },
 
     toursPageTourMap: {
         id: 'tours-page.tour-map',
         defaultMessage: 'Карта Экскурсии',
-    },
-    toursPageEarth: {
-        id: 'tours-page.earth',
-        defaultMessage: 'Земля',
-    },
-    toursPageImage: {
-        id: 'tours-page.image',
-        defaultMessage: 'Изображение',
     },
 
     placeDesignerSaveDialogTitle: {
@@ -284,11 +284,11 @@ const ru = defineMessages({
         id: 'tour-designer.edit-place-description',
         defaultMessage: 'Изменить описание локации',
     },
-    tourDesignernoImageMapPlaceholderFirstPart: {
+    tourDesignerNoImageMapPlaceholderFirstPart: {
         id: 'tour-designer.no-image-map-placeholder-first-part',
         defaultMessage: 'Изображение для карты еще не выбрано. Нажмите',
     },
-    tourDesignernoImageMapPlaceholderSecondPart: {
+    tourDesignerNoImageMapPlaceholderSecondPart: {
         id: 'tour-designer.no-image-map-placeholder-second-part',
         defaultMessage: 'чтобы выбрать изображение',
     },
