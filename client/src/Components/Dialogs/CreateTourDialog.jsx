@@ -46,7 +46,7 @@ class CreateTourDialog extends React.Component {
 
         switch (type) {
             case 1:
-                return formatMessage(messages.createTourDialogEarth)
+                return formatMessage(messages.createTourDialogEarth);
             case 2:
                 return formatMessage(messages.createTourDialogImage)
             default:
@@ -101,7 +101,7 @@ CreateTourDialog.propTypes = {
     onMapTypeChanged: PropTypes.func.isRequired,
     onClose: PropTypes.func,
     name: PropTypes.string,
-    mapTypeValue: PropTypes.string.isRequired,
+    mapTypeValue: PropTypes.number.isRequired,
     mapTypes: PropTypes.arrayOf(PropTypes.number).isRequired,
 
     intl: intlShape.isRequired,

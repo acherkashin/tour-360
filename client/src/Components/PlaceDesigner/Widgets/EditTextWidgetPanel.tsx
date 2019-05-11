@@ -3,18 +3,30 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { intlShape, injectIntl } from 'react-intl';
 import { TextField, Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import TextWidgetShape from './TextWidgetShape';
-import { HEIGHT, WIDTH } from './../utils';
-import { ColorPicker } from './../../Common';
+import { HEIGHT, WIDTH } from '../utils';
+import { ColorPicker } from '../../Common';
+import { TextWidget as TextWidgetModel } from "./../../../../../backend/src/models/interfaces";
 
-const styles = theme => ({
+const styles = createStyles(theme => ({
     root: {
         padding: theme.spacing.unit * 2,
     },
-});
+}));
 
-const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Component {
+interface TextWidgetEditPanelProps extends WithStyles<typeof styles> {
+    widget: TextWidgetModel,
+    intl: any;
+    onXChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, x: number }) => void;
+    onYChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, y: number }) => void;
+    onContentChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, content: string }) => void;
+    onTextColorChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, color: string }) => void;
+    onTextBackgroundColorChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, color: string }) => void;
+    onDeleteClick: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel }) => void;
+}
+
+class TextWidgetEditPanel extends React.Component<TextWidgetEditPanelProps> {
     constructor(props) {
         super(props);
 
@@ -22,7 +34,7 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
             isTextColorPickerActive: false,
             isTextBackgroundColorPickerActive: false,
             theme: null,
-        }
+        };
 
         this._handleXChanged = this._handleXChanged.bind(this);
         this._handleYChanged = this._handleYChanged.bind(this);
@@ -31,6 +43,18 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
         this._handleChangeTextBackgroundColor = this._handleChangeTextBackgroundColor.bind(this);
         this._handleDeleteClick = this._handleDeleteClick.bind(this);
     }
+
+    static propTypes = {
+        widget: TextWidgetShape,
+        onDeleteClick: PropTypes.func.isRequired,
+        onXChanged: PropTypes.func.isRequired,
+        onYChanged: PropTypes.func.isRequired,
+        onContentChanged: PropTypes.func.isRequired,
+        onTextBackgroundColorChanged: PropTypes.func.isRequired,
+        onTextColorChanged: PropTypes.func.isRequired,
+
+        intl: intlShape,
+    };
 
     _handleXChanged(e) {
         this.props.onXChanged({
@@ -80,7 +104,8 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
     }
 
     render() {
-        const { classes, widget } = this.props;
+        const classes: any = this.props.classes;
+        const { widget } = this.props;
         const { messages, formatMessage } = this.props.intl;
 
         return <div className={classes.root}>
@@ -118,7 +143,7 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
                 fullWidth
             />
             <TextField
-                lable="Content"
+                label="Content"
                 value={widget.content}
                 onChange={this._handleContentChanged}
                 margin="normal"
@@ -139,18 +164,6 @@ const TextWidgetEditPanel = observer(class TextWidgetEditPanel extends React.Com
             </Button>
         </div>;
     }
-});
+}
 
-TextWidgetEditPanel.propTypes = {
-    widget: TextWidgetShape,
-    onDeleteClick: PropTypes.func.isRequired,
-    onXChanged: PropTypes.func.isRequired,
-    onYChanged: PropTypes.func.isRequired,
-    onContentChanged: PropTypes.func.isRequired,
-    onTextBackgroundColorChanged: PropTypes.func.isRequired,
-    onTextColorChanged: PropTypes.func.isRequired,
-
-    intl: intlShape,
-};
-
-export default withStyles(styles)(injectIntl(TextWidgetEditPanel));
+export default withStyles(styles)(injectIntl(observer((TextWidgetEditPanel))));

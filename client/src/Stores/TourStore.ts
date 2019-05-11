@@ -44,7 +44,7 @@ export default class TourStore {
         return tour;
     });
 
-    create(name: string, mapType: string) {
+    create(name: string, mapType: number) {
         return TourService.create(name, mapType).then(() => this.loadTours());
     }
 
@@ -68,7 +68,7 @@ export default class TourStore {
     }
 
     //TODO: rename to view360 or viewPlace
-    view(tourId, placeId) {
+    view(tourId: string, placeId: string) {
         const tour = this._getById(tourId);
         if (!placeId && tour != null) {
             placeId = tour.startPlaceId;

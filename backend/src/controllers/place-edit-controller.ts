@@ -1,8 +1,15 @@
 import uuidv1 from 'uuidv1';
 import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { cache as _cache } from './tour-edit-controller';
+import { Tour, Place, } from './../models/interfaces';
 
-const cache = {};
+interface PlaceEditCache {
+    tourSessionId: string;
+    place: Place;
+    userId: string;
+}
+
+const cache: { [key: string]: PlaceEditCache } = {};
 
 export function get(req, res) {
     const { sessionId } = req.params;

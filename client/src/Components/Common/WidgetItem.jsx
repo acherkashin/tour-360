@@ -27,7 +27,7 @@ class WidgetItem extends React.Component {
     }
 
     _handleClick() {
-        this.props.onClick && this.props.onClick({ origin: this });
+        this.props.onClick && this.props.onClick({ origin: this, widget: this.props.widget });
     }
 
     _handleRemoveClick(e) {

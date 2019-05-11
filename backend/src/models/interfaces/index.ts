@@ -4,6 +4,7 @@ import { Tour, TourDto, TourDetailDto } from './tour';
 import { UserDto } from './user';
 import ImageFile from './image';
 import MapType from "./MapType";
+export * from './widget';
 
 export {
     MapType,

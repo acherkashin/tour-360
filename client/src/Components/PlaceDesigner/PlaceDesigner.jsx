@@ -195,6 +195,10 @@ const PlaceDesigner = inject("rootStore")(observer(
             this.placeEditStore.viewPlaceImage360();
         }
 
+        _handleWidgetItemClick(e) {
+            document.getElementById(e.widget.id).scrollIntoView();
+        }
+
         _renderWidgetEditPanel() {
             const widget = this.editingWidget;
 
@@ -341,7 +345,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                                 this.placeEditStore.removePlaceSound();
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
-                            onWidgetClick={e => console.log(e)}
+                            onWidgetClick={this._handleWidgetItemClick}
                             onRemoveWidgetClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                         />
                     </div>}
