@@ -284,11 +284,11 @@ const ru = defineMessages({
         id: 'tour-designer.edit-place-description',
         defaultMessage: 'Изменить описание локации',
     },
-    tourDesignernoImageMapPlaceholderFirstPart: {
+    tourDesignerNoImageMapPlaceholderFirstPart: {
         id: 'tour-designer.no-image-map-placeholder-first-part',
         defaultMessage: 'Изображение для карты еще не выбрано. Нажмите',
     },
-    tourDesignernoImageMapPlaceholderSecondPart: {
+    tourDesignerNoImageMapPlaceholderSecondPart: {
         id: 'tour-designer.no-image-map-placeholder-second-part',
         defaultMessage: 'чтобы выбрать изображение',
     },

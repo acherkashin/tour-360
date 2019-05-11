@@ -45,9 +45,9 @@ class CreateTourDialog extends React.Component {
         const { messages, formatMessage } = this.props.intl;
 
         switch (type) {
-            case 'Earth': 
+            case 1: 
                 return formatMessage(messages.toursPageEarth)
-            case 'Image': 
+            case 2: 
                 return formatMessage(messages.toursPageImage)
             default: 
                 throw new Error('There are not such type')
@@ -101,8 +101,8 @@ CreateTourDialog.propTypes = {
     onMapTypeChanged: PropTypes.func.isRequired,
     onClose: PropTypes.func,
     name: PropTypes.string,
-    mapTypeValue: PropTypes.string.isRequired,
-    mapTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    mapTypeValue: PropTypes.number.isRequired,
+    mapTypes: PropTypes.arrayOf(PropTypes.number).isRequired,
 
     intl: intlShape.isRequired,
 };

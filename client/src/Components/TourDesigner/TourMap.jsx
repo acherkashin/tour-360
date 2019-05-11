@@ -122,7 +122,7 @@ class TourMap extends React.Component {
     _renderMap() {
         const { classes, tour, mapStyle } = this.props;
 
-        if (tour.mapType === "Image") {
+        if (tour.mapType === 2) {
             const bounds = [[0, 0], [tour.imageHeight, tour.imageWidth]];
 
             return <Map crs={L.CRS.Simple}
@@ -135,7 +135,7 @@ class TourMap extends React.Component {
                 <ImageOverlay url={tour.mapImageUrl} bounds={bounds} />
                 {this._renderMapContent()}
             </Map>;
-        } else if (tour.mapType === "Earth") {
+        } else if (tour.mapType === 1) {
             const state = {
                 position: [0, 0],
                 zoom: 5,
@@ -198,7 +198,7 @@ TourMap.propTypes = {
     tour: PropTypes.shape({
         places: PropTypes.array.isRequired,
         connections: PropTypes.array.isRequired,
-        mapType: PropTypes.oneOf(['Earth', 'Image']).isRequired,
+        mapType: PropTypes.number.isRequired,
     }).isRequired,
     onClick: PropTypes.func,
     onMouseMove: PropTypes.func,

@@ -18,7 +18,7 @@ const Tour = new mongoose.Schema({
         width: { type: Number, default: 0 },
         height: { type: Number, default: 0 },
     },
-    mapType: { type: String, enum: ['Earth', 'Image'], required: true },
+    mapType: { type: Number, required: true },
     places: [Place],
     connections: [Connection],
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
