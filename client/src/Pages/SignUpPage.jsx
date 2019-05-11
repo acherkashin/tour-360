@@ -2,37 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import grey from '@material-ui/core/colors/grey';
 import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
-import { redirectWhenAuth } from '../HOC';
 import { LoadingButton } from './../Components';
+import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
-import ReCAPTCHA from "react-google-recaptcha";
-import {SITEKEY} from "../config";
+import ReCAPTCHA from 'react-google-recaptcha';
+import { SITEKEY } from '../config';
 import { intlShape, injectIntl } from 'react-intl';
-
-const styles = theme => ({
-    root: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    panel: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: '400px',
-        backgroundColor: grey[100],
-        border: `1px solid ${grey[300]}`,
-        padding: 15,
-        borderRadius: 5,
-    },
-    loginLink: {
-        alignSelf: 'flex-end',
-    }
-});
+import styles from '../styles/signInAndUp';
 
 const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
     class SignUpPage extends React.Component {
@@ -152,72 +130,82 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
-                    <Typography align="center" variant="h5" title="Registration">{formatMessage(messages.signUpPageTitle)}</Typography>
-                    <TextField
-                        label={formatMessage(messages.firstName)}
-                        value={firstName}
-                        onChange={this._handleFirstNameChanged}
-                        margin="normal"
-                        error={!isFirstNameValid}
-                        helperText={firstNameError}
-                        fullWidth={true}
-                        required
-                        autoFocus
-                    />
-                    <TextField
-                        label={formatMessage(messages.lastName)}
-                        value={lastName}
-                        onChange={this._handleLastNameChanged}
-                        margin="normal"
-                        error={!isLastNameValid}
-                        helperText={lastNameError}
-                        fullWidth={true}
-                        required
-                        autoFocus
-                    />
+                    <Typography variant="h5" align="center" className={classes.title}>{formatMessage(messages.signUpPageTitle)}</Typography>
+                    <div className={classes.profile}>
+                        <hr className={classes.profileHr} />
+                        <img src={require('../imgs/profile-icon.png')} alt="profile" className={classes.profileImg}/>
+                    </div>
+                    <div className={classes.inputsGroup}>
+                        <TextField
+                            label={formatMessage(messages.firstName)}
+                            value={firstName}
+                            onChange={this._handleFirstNameChanged}
+                            error={!isFirstNameValid}
+                            helperText={firstNameError}
+                            fullWidth={true}
+                            required
+                            autoFocus
+                            className={classes.firstNameInput}
+                        />
+                        <TextField
+                            label={formatMessage(messages.lastName)}
+                            value={lastName}
+                            onChange={this._handleLastNameChanged}
+                            error={!isLastNameValid}
+                            helperText={lastNameError}
+                            fullWidth={true}
+                            required
+                            className={classes.lastNameInput}
+                        />
+                    </div>
                     <TextField
                         label={formatMessage(messages.email)}
                         value={email}
-                        inputProps={{ type: 'email' }}
+                        type="email"
                         onChange={this._handleEmailChanged}
-                        margin="normal"
                         error={!isEmailValid}
                         helperText={emailError}
                         fullWidth={true}
                         required
-                        autoFocus
                     />
-                    <TextField
-                        label={formatMessage(messages.password)}
-                        value={password}
-                        type="password"
-                        onChange={this._handlePasswordChanged}
-                        margin="normal"
-                        error={!isPasswordValid}
-                        helperText={passwordError}
-                        fullWidth={true}
-                    />
-                    <TextField
-                        label={formatMessage(messages.confirmationPassword)}
-                        value={confirmationPassword}
-                        type="password"
-                        onChange={this._handleConfirmationPasswordChanged}
-                        margin="normal"
-                        error={!isConfirmationPasswordValid || !isPasswordValid}
-                        helperText={confirmationPasswordError}
-                        fullWidth={true}
-                        required
-                    />
-                    <ReCAPTCHA
-                        sitekey={SITEKEY}
-                        onChange={this._handleReCAPTCHAChange}
-                    />
-                    <Link className={classes.loginLink} to="/sign-in">{formatMessage(messages.signUpPageToLogin)}</Link>
+                    <div className={classes.inputsGroup}>
+                        <TextField
+                            label={formatMessage(messages.password)}
+                            value={password}
+                            type="password"
+                            onChange={this._handlePasswordChanged}
+                            error={!isPasswordValid}
+                            helperText={passwordError}
+                            fullWidth={true}
+                            required
+                            className={classes.passwordInput}
+                        />
+                        <TextField
+                            label={formatMessage(messages.confirmationPassword)}
+                            value={confirmationPassword}
+                            type="password"
+                            onChange={this._handleConfirmationPasswordChanged}
+                            error={!isConfirmationPasswordValid || !isPasswordValid}
+                            helperText={confirmationPasswordError}
+                            fullWidth={true}
+                            required
+                            className={classes.confirmationPasswordInput}
+                        />
+                    </div>
+                    <div className={classes.ReCAPTCHA}>
+                        <ReCAPTCHA
+                            sitekey={SITEKEY}
+                            onChange={this._handleReCAPTCHAChange}
+                        />
+                    </div>
                     <LoadingButton
-                        style={{ marginTop: '15px' }}
+                        style={{ marginTop: '25px' }}
                         disabled={!isEmailValid || !isPasswordValid || !isConfirmationPasswordValid || !isFirstNameValid || !isLastNameValid}
                         onClick={this._handleRegisterClick}
+                        size="large"
                     >{formatMessage(messages.signUpPageButtonTitle)}</LoadingButton>
+                    <hr className={classes.hr}/>
+                    <Link to="/sign-in" className={classes.link}>{formatMessage(messages.signUpPageToLogin)}</Link>
                 </div>
             </div>;
         }

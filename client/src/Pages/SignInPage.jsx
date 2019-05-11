@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { grey } from '@material-ui/core/colors';
 import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { LoadingButton } from './../Components';
@@ -11,28 +10,7 @@ import { validEmail, validPassword } from '../utils/validate.js';
 import ReCAPTCHA from "react-google-recaptcha";
 import {SITEKEY} from "../config";
 import { intlShape, injectIntl } from 'react-intl';
-
-const styles = theme => ({
-    root: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    panel: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: '400px',
-        backgroundColor: grey[100],
-        border: `1px solid ${grey[300]}`,
-        padding: 15,
-        borderRadius: 5,
-    },
-    registerLink: {
-        alignSelf: 'flex-end',
-    },
-});
+import styles from '../styles/signInAndUp';
 
 const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
     class SignInPage extends React.Component {
@@ -101,7 +79,11 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
             return <div className={classes.root}>
                 <div className={classes.panel}>
-                    <Typography align="center" variant="h5" title="Login">{formatMessage(messages.signInPageTitle)}</Typography>
+                    <Typography align="center" variant="h5" title="Login" className={classes.title}>{formatMessage(messages.signInPageTitle)}</Typography>
+                    <div className={classes.profile}>
+                        <hr className={classes.profileHr} />
+                        <img src={require('../imgs/profile-icon.png')} alt="profile" className={classes.profileImg}/>
+                    </div>
                     <TextField
                         label={formatMessage(messages.email)}
                         value={email}
@@ -125,18 +107,21 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         fullWidth={true}
                         required
                     />
-                    <ReCAPTCHA
-                        sitekey={SITEKEY}
-                        onChange={this._handleReCAPTCHAChange}
-                    />
+                    <div className={classes.ReCAPTCHA}>
+                        <ReCAPTCHA
+                            sitekey={SITEKEY}
+                            onChange={this._handleReCAPTCHAChange}
+                        />
+                    </div>
                     {this.userStore.singInRejected && <Typography color="error">{formatMessage(messages.signInPageInvalidData)}</Typography>}
-                    <Link className={classes.registerLink} to="/sign-up">{formatMessage(messages.signInPageToRegister)}</Link>
                     <LoadingButton
                         style={{ marginTop: '15px' }}
                         isLoading={this.userStore.signInLoading}
                         disabled={this.userStore.signInLoading || !isEmailValid || !isPasswordValid}
                         onClick={this._handleLogin}
                     >{formatMessage(messages.signInPageButtonTitle)}</LoadingButton>
+                    <hr className={classes.hr}/>
+                    <Link className={classes.link} to="/sign-up">{formatMessage(messages.signInPageToRegister)}</Link>
                 </div>
             </div >;
         }
