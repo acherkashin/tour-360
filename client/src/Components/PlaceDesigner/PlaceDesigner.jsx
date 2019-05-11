@@ -196,7 +196,13 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _handleWidgetItemClick(e) {
-            document.getElementById(e.widget.id).scrollIntoView();
+            this._navigateToWidget(e.widget.id);
+            this.placeEditStore.editWidget(e.widget.id);
+        }
+
+        _navigateToWidget(id) {
+            //TODO: reimplement it to show widget in the center of screen
+            document.getElementById(id).scrollIntoView();
         }
 
         _renderWidgetEditPanel() {
