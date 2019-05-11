@@ -53,8 +53,8 @@ interface ToursPageState {
     isOpenedCreateDialog: boolean;
     isOpenedUploadImageDialog: boolean;
     newTourName: string;
-    newTourMapType: 'Image';
-    mapTypes: string[];
+    newTourMapType: 1;
+    mapTypes: number[];
 }
 
 class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
@@ -67,8 +67,8 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
             isOpenedCreateDialog: false,
             isOpenedUploadImageDialog: false,
             newTourName: '',
-            newTourMapType: 'Image',
-            mapTypes: [formatMessage(messages.toursPageEarth), formatMessage(messages.toursPageImage)],
+            newTourMapType: 1,
+            mapTypes: [1, 2],
         } as ToursPageState;
 
         this.loadAllTours = this.loadAllTours.bind(this);
