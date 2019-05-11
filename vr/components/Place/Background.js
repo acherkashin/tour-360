@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Environment, NativeModules } from 'react-360';
 const { AudioModule } = NativeModules;
 
@@ -28,3 +29,8 @@ export default class Background extends React.Component {
         return null;
     }
 }
+
+Background.propTypes = {
+    url: PropTypes.string.isRequired,
+    sound: PropTypes.string,
+};
