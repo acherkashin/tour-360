@@ -1,47 +1,51 @@
 import client from './client';
 import { VR_URL } from '../config';
+import {
+    PlaceDetailDto,
+    ConnectionDetailDto
+} from "./../../../backend/src/models/interfaces";
 
-export function get(sessionId) {
+export function get(sessionId: string) {
     return client.get(`/api/tour-edit/${sessionId}/get`);
 }
-export function beginEditing(tourId) {
+export function beginEditing(tourId: string) {
     //todo: pass tourId in body
     return client.post(`/api/tour-edit/${tourId}`);
 }
-export function saveChanges(sessionId, options) {
+export function saveChanges(sessionId: string, options: any) {
     return client.post(`/api/tour-edit/${sessionId}/save`, options);
 }
-export function cancelChanges(sessionId) {
+export function cancelChanges(sessionId: string) {
     return client.post(`/api/tour-edit/${sessionId}/cancel`);
 }
-export function addPlace(sessionId, place) {
+export function addPlace(sessionId: string, place: PlaceDetailDto) {
     return client.post(`/api/tour-edit/${sessionId}/addPlace`, place);
 }
-export function removePlace(sessionId, placeId) {
+export function removePlace(sessionId: string, placeId: string) {
     return client.delete(`/api/tour-edit/${sessionId}/place/${placeId}`);
 }
-export function getPlace(sessionId, placeId) {
+export function getPlace(sessionId: string, placeId: string) {
     return client.get(`/api/tour-edit/${sessionId}/place/${placeId}`);
 }
-export function updatePlace(sessionId, place) {
+export function updatePlace(sessionId: string, place: PlaceDetailDto) {
     return client.put(`/api/tour-edit/${sessionId}/place`, place);
 }
-export function addConnection(sessionId, startPlaceId, endPlaceId) {
+export function addConnection(sessionId: string, startPlaceId: string, endPlaceId: string) {
     return client.post(`/api/tour-edit/${sessionId}/addConnnection`, {
         startPlaceId,
         endPlaceId,
     });
 }
-export function deleteConnection(sessionId, place1Id, place2Id) {
+export function deleteConnection(sessionId: string, place1Id: string, place2Id: string) {
     return client.delete(`/api/tour-edit/${sessionId}/removeConnection/${place1Id}/${place2Id}`);
 }
-export function getConnection(sessionId, connectionId) {
+export function getConnection(sessionId: string, connectionId: string) {
     return client.get(`/api/tour-edit/${sessionId}/connection/${connectionId}`);
 }
-export function updateConnection(sessionId, connection) {
+export function updateConnection(sessionId: string, connection: ConnectionDetailDto) {
     return client.put(`/api/tour-edit/${sessionId}/connection`, connection);
 }
-export function uploadMapImage(sessionId, file, width, height) {
+export function uploadMapImage(sessionId: string, file, width: string, height: string) {
     const formData = new FormData();
     formData.append('mapImage', file);
     formData.append('width', width);
@@ -54,7 +58,7 @@ export function uploadMapImage(sessionId, file, width, height) {
     });
 }
 
-export function updateImage360(sessionId, placeId, file, width, height) {
+export function updateImage360(sessionId: string, placeId: string, file, width: string, height: string) {
     const formData = new FormData();
     formData.append('mapImage', file);
     formData.append('width', width);
@@ -67,7 +71,7 @@ export function updateImage360(sessionId, placeId, file, width, height) {
     });
 }
 
-export function uploadPlaceSound(sessionId, placeId, file) {
+export function uploadPlaceSound(sessionId: string, placeId: string, file) {
     const formData = new FormData();
     formData.append('sound', file);
 
@@ -78,10 +82,10 @@ export function uploadPlaceSound(sessionId, placeId, file) {
     })
 }
 
-export function removePlaceSound(sessionId, placeId) {
+export function removePlaceSound(sessionId: string, placeId: string) {
     return client.delete(`/api/tour-edit/${sessionId}/place/${placeId}/sound`);
 }
 
-export function getPanoUrl(sessionId, placeId, token) {
+export function getPanoUrl(sessionId: string, placeId: string, token: string) {
     return `${VR_URL}?sessionId=${sessionId}&placeId=${placeId}&token=${token}`;
 }

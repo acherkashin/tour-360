@@ -28,6 +28,7 @@ class LoadingButton extends React.Component {
             isLoading = false,
             children,
             color = "primary",
+            size = "medium"
         } = this.props;
 
         return <div className={classes.root} style={style || {}}>
@@ -36,6 +37,7 @@ class LoadingButton extends React.Component {
                 disabled={disabled}
                 color={color}
                 onClick={onClick}
+                size={size}
             >
                 {children}
             </Button>
@@ -52,6 +54,7 @@ LoadingButton.propTypes = {
     isLoading: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     onClick: PropTypes.func.isRequired,
+    size: PropTypes.string,
 };
 
 export default withStyles(styles)(LoadingButton);
