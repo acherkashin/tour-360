@@ -1,7 +1,7 @@
 import { extendObservable, action, runInAction } from 'mobx';
 import { deepObserve, fromPromise } from 'mobx-utils';
 import { TourEditService } from './../api';
-import { EditTour, EditPlace, EditConnection } from './';
+import { TourDetail, EditPlace, EditConnection } from './';
 import UserStore from './UserStore'
 
 export default class TourEditStore {
@@ -211,7 +211,7 @@ export default class TourEditStore {
     }
 
     _updateEditingTour = action((sessionId, tour) => {
-        this.editingTour = new EditTour(this, tour);
+        this.editingTour = new TourDetail(tour);
         this.isDirty = false;
 
         this.editingTourDisposer = deepObserve(this.editingTour, () => this.isDirty = true);
