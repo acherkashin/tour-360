@@ -340,7 +340,7 @@ const ru = defineMessages({
     },
     signInPageTitle: {
         id: 'sign-in-page.title',
-        defaultMessage: 'ВХОД',
+        defaultMessage: 'Вход',
     },
     signInPageButtonTitle: {
         id: 'sign-in-page.button-title',
@@ -349,7 +349,7 @@ const ru = defineMessages({
 
     signUpPageTitle: {
         id: 'sign-in-page.title',
-        defaultMessage: 'РЕГИСТРАЦИЯ',
+        defaultMessage: 'Регистрация',
     },
     signUpPageButtonTitle: {
         id: 'sign-in-page.button-title',

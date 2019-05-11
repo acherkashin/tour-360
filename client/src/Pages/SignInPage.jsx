@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { grey, blue } from '@material-ui/core/colors';
 import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { LoadingButton } from './../Components';
@@ -11,68 +10,7 @@ import { validEmail, validPassword } from '../utils/validate.js';
 import ReCAPTCHA from "react-google-recaptcha";
 import {SITEKEY} from "../config";
 import { intlShape, injectIntl } from 'react-intl';
-
-const styles = theme => ({
-    root: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: grey[100],
-    },
-    panel: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: '450px',
-        backgroundColor: '#fff',
-        border: `1px solid ${grey[300]}`,
-        padding: '40px 15px',
-        borderRadius: 5,
-    },
-    title: {
-        color: blue[500],
-        fontWeight: 'bold',
-    },
-    registerLink: {
-        alignSelf: 'center',
-        textDecoration: 'none',
-        color: blue[500],
-        textTransform: 'uppercase',
-        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
-    },
-    profile: {
-        position: 'relative',
-    },
-    hr: {
-        backgroundColor: grey[300],
-        border: 'none',
-        height: 1,
-        width: '100%',
-        margin: '20px 0'
-    },
-    profileHr: {
-        backgroundColor: grey[300],
-        border: 'none',
-        height: 1,
-        width: '100%',
-        position: 'absolute',
-        top: 'calc(50% - 5px)',
-    },
-    profileImg: {
-        width: '25%',
-        display: 'block',
-        margin: 'auto',
-        borderRadius: '50%',
-        backgroundColor: '#fff',
-        zIndex: 2,
-        position: 'relative',
-        border: '10px solid white'
-    },
-    ReCAPTCHA: {
-        margin: '20px auto 0'
-    }
-});
+import styles from '../styles/signInAndUp';
 
 const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
     class SignInPage extends React.Component {
@@ -183,7 +121,7 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
                         onClick={this._handleLogin}
                     >{formatMessage(messages.signInPageButtonTitle)}</LoadingButton>
                     <hr className={classes.hr}/>
-                    <Link className={classes.registerLink} to="/sign-up">{formatMessage(messages.signInPageToRegister)}</Link>
+                    <Link className={classes.link} to="/sign-up">{formatMessage(messages.signInPageToRegister)}</Link>
                 </div>
             </div >;
         }

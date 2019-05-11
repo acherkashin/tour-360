@@ -347,7 +347,7 @@ const en = defineMessages({
     },
     signInPageTitle: {
         id: 'sign-in-page.title',
-        defaultMessage: 'LOGIN',
+        defaultMessage: 'Login',
     },
     signInPageButtonTitle: {
         id: 'sign-in-page.button-title',
@@ -356,7 +356,7 @@ const en = defineMessages({
 
     signUpPageTitle: {
         id: 'sign-in-page.title',
-        defaultMessage: 'REGISTRATION',
+        defaultMessage: 'Registration',
     },
     signUpPageButtonTitle: {
         id: 'sign-in-page.button-title',

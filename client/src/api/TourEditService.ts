@@ -45,11 +45,11 @@ export function getConnection(sessionId: string, connectionId: string) {
 export function updateConnection(sessionId: string, connection: ConnectionDetailDto) {
     return client.put(`/api/tour-edit/${sessionId}/connection`, connection);
 }
-export function uploadMapImage(sessionId: string, file, width: string, height: string) {
+export function uploadMapImage(sessionId: string, file, width: number, height: number) {
     const formData = new FormData();
     formData.append('mapImage', file);
-    formData.append('width', width);
-    formData.append('height', height);
+    formData.append('width', String(width));
+    formData.append('height', String(height));
 
     return client.post(`/api/tour-edit/${sessionId}/uploadMapImage`, formData, {
         headers: {
@@ -58,11 +58,11 @@ export function uploadMapImage(sessionId: string, file, width: string, height: s
     });
 }
 
-export function updateImage360(sessionId: string, placeId: string, file, width: string, height: string) {
+export function updateImage360(sessionId: string, placeId: string, file, width: number, height: number) {
     const formData = new FormData();
     formData.append('mapImage', file);
-    formData.append('width', width);
-    formData.append('height', height);
+    formData.append('width', String(width));
+    formData.append('height', String(height));
 
     return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadImage360`, formData, {
         headers: {
