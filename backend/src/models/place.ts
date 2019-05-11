@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Place } from "./interfaces/place";
+import { Place, Tour } from "./interfaces";
 // const Widget = new mongoose.Schema({
 //     type: { type: String, required: true },
 // });
@@ -34,7 +34,7 @@ PlaceSchema.methods.toClient = function () {
     return dto;
 };
 
-PlaceSchema.methods.toDetailDto = function (tour) {
+PlaceSchema.methods.toDetailDto = function (tour: Tour) {
     const starts = (tour.connections || []).filter(c => c.startPlaceId === this.id).map(c => c.endAsDestination(tour));
     const ends = (tour.connections || []).filter(c => c.endPlaceId === this.id).map(c => c.startAsDestination(tour));
 

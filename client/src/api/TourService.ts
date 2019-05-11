@@ -10,7 +10,7 @@ export function getAll() {
 export function getById(id) {
     return client.get<{tour: TourDetailDto}>(`/api/tour/${id}`);
 }
-export function create(name: string, mapType: string) {
+export function create(name: string, mapType: number) {
     return client.post<{ tour: TourDetailDto }>('/api/tour', { name, mapType });
 }
 export function deleteById(id: string) {

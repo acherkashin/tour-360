@@ -91,7 +91,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     }
 
     _handleWidgetClick(e) {
-        this.props.onWidgetClick({ origin: this, widget: e.widget });
+        this.props.onWidgetClick && this.props.onWidgetClick({ origin: this, widget: e.widget });
     }
 
     _handleRemoveWidgetClick(e) {
@@ -136,7 +136,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
             />
             {showWidgets && <WidgetList
                 widgets={place.widgets}
-                onClick={(e) => this._handleWidgetClick}
+                onClick={this._handleWidgetClick}
                 onRemoveClick={this._handleRemoveWidgetClick}
             />}
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImage360Click} >

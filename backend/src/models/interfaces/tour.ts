@@ -1,7 +1,7 @@
 import { ImageFile, Place, PlaceDto, PlaceDetailDto, Connection, ConnectionDto, MapType } from './';
 import { Document } from "mongoose";
 
-interface TourDto {
+export interface TourDto {
     readonly id: string;
     name: string;
     mapType: MapType;
@@ -12,7 +12,7 @@ interface TourDto {
     places: PlaceDto[],
 }
 
-interface TourDetailDto {
+export interface TourDetailDto {
     id: string;
     name: string;
     places: PlaceDetailDto[];
@@ -27,7 +27,7 @@ interface TourDetailDto {
     cover: ImageFile;
 }
 
-interface Tour extends Document {
+export interface Tour extends Document {
     name: string;
     startPlaceId: string;
     cover: ImageFile;
@@ -45,9 +45,3 @@ interface Tour extends Document {
     getPlace: (id: string) => Place;
     toDetailDto: () => TourDetailDto;
 }
-
-export {
-    Tour,
-    TourDto,
-    TourDetailDto,
-};

@@ -1,7 +1,8 @@
-import { extendObservable, decorate, observable, computed } from "mobx";
+import { decorate, observable, computed } from "mobx";
 import {
     ConnectionDetailDto,
     PlaceDetailDto,
+    BaseWidget,
 } from "./../../../../backend/src/models/interfaces";
 
 class EditPlace {
@@ -16,7 +17,7 @@ class EditPlace {
     connections: ConnectionDetailDto[] = [];
 
     description: string;
-    widgets: any[];
+    widgets: BaseWidget[];
     soundName: string;
 
     soundHash: number;
@@ -69,6 +70,11 @@ class EditPlace {
             description: this.description,
             widgets: this.widgets,
         };
+    }
+
+    getWidget(id: string) {
+        const widget = this.widgets.find(w => w.id === id);
+        return widget;
     }
 
     refreshSound() {

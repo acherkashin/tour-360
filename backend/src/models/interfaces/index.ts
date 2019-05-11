@@ -4,7 +4,7 @@ import { Tour, TourDto, TourDetailDto } from './tour';
 import { UserDto } from './user';
 import ImageFile from './image';
 import MapType from "./MapType";
-import { TextWidget } from './widget';
+export * from './widget';
 
 export {
     MapType,
@@ -19,5 +19,4 @@ export {
     TourDetailDto,
     UserDto,
     ImageFile,
-    TextWidget,
 };

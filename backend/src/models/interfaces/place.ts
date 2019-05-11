@@ -1,7 +1,11 @@
-import { Tour } from './../interfaces/tour';
-import { Connection, ConnectionDetailDto } from './../interfaces/connection';
+import {
+    BaseWidget,
+    ConnectionDetailDto,
+    Tour,
+} from './../interfaces';
+import { Document } from 'mongoose';
 
-interface PlaceDto {
+export interface PlaceDto {
     readonly id: string;
     name: string;
     latitude: number;
@@ -12,7 +16,7 @@ interface PlaceDto {
     image360Name: string;
 }
 
-interface PlaceDetailDto {
+export interface PlaceDetailDto {
     readonly id: string;
     name: string;
     latitude: number;
@@ -23,11 +27,11 @@ interface PlaceDetailDto {
     image360Name: string;
     soundName: string;
     connections: ConnectionDetailDto[];
-    widgets: any[];
+    widgets: BaseWidget[];
     description: string;
 }
 
-interface Place {
+export interface Place extends Document {
     id: string;
     name: string;
     longitude: number;
@@ -36,13 +40,9 @@ interface Place {
         filename: string,
         contentType: string,
     },
+    widgets: BaseWidget[];
+    description: string;
 
     toClient: () => PlaceDto;
     toDetailDto: (tour: Tour) => PlaceDetailDto;
 }
-
-export {
-    Place,
-    PlaceDto,
-    PlaceDetailDto,
-};
