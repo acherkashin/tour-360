@@ -46,9 +46,9 @@ class CreateTourDialog extends React.Component {
 
         switch (type) {
             case 1:
-                return formatMessage(messages.createTourDialogTitle)
+                return formatMessage(messages.createTourDialogEarth)
             case 2:
-                return formatMessage(messages.createTourDialogTitle)
+                return formatMessage(messages.createTourDialogImage)
             default:
                 throw new Error('There are no such map type!')
         }

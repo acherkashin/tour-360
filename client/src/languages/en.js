@@ -291,11 +291,11 @@ const en = defineMessages({
         id: 'tour-designer.edit-place-description',
         defaultMessage: 'Edit Place Description',
     },
-    tourDesignernoImageMapPlaceholderFirstPart: {
+    tourDesignerNoImageMapPlaceholderFirstPart: {
         id: 'tour-designer.no-image-map-placeholder-first-part',
         defaultMessage: 'Image for map is not selected. Click',
     },
-    tourDesignernoImageMapPlaceholderSecondPart: {
+    tourDesignerNoImageMapPlaceholderSecondPart: {
         id: 'tour-designer.no-image-map-placeholder-second-part',
         defaultMessage: 'to select one',
     },

@@ -1,5 +1,5 @@
 import client from './client';
-import { VR_URL } from './../config';
+import { VR_URL } from '../config';
 
 export function get(sessionId) {
     return client.get(`/api/tour-edit/${sessionId}/get`);

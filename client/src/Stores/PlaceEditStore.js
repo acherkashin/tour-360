@@ -1,6 +1,6 @@
 import { extendObservable, action, runInAction } from 'mobx';
 import { deepObserve, fromPromise } from 'mobx-utils';
-import { PlaceEditService, PlaceService, TourEditService } from './../api';
+import { PlaceEditService, PlaceService, TourEditService } from './../api/index.ts';
 import { UserStore } from './../Stores';
 import EditPlace from './../Stores/Models/EditPlace';
 
