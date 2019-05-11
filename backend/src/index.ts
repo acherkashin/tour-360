@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 //TODO: figure out with typing here
 app.use(<any>logger("dev"));
 app.use(fileUpload());
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/../public'));
 
 // append /api for our http requests
 app.use("/api", TourRouter, TourEditRouter, UserRouter, PlaceEditRouter);

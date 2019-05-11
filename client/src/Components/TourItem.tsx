@@ -1,20 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
-import Popover from '@material-ui/core/Popover';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { observer } from 'mobx-react';
+import {
+    GridListTile,
+    GridListTileBar,
+    IconButton,
+    MenuList,
+    MenuItem,
+    Popover,
+    ListItemIcon,
+    ListItemText,
+} from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TourCover } from '.';
-import { observer } from 'mobx-react';
+import { Tour } from './../Stores';
 
-const styles = theme => ({
+const styles = createStyles(theme => ({
     moreIcon: {
         color: 'white',
     },
@@ -31,6 +34,7 @@ const styles = theme => ({
         height: '300px',
         backgroundColor: 'white',
         border: `1px solid ${grey[300]}`,
+        listStyle: 'none',
         '&:hover': {
             borderColor: theme.palette.primary.light,
             '& $tileItemBar': {
@@ -41,9 +45,21 @@ const styles = theme => ({
     tileItemBar: {
         borderColor: theme.palette.primary.light,
     },
-});
+}));
 
-const Tour = observer(class Tour extends React.Component {
+export interface TourItemAction {
+    text: string;
+    icon: React.ReactElement;
+    action: (event: { origin: TourItem, tour: Tour }) => void;
+}
+
+export interface TourItemProps extends WithStyles<typeof styles> {
+    tour: Tour;
+    onItemClick: (event: { origin: TourItem, tour: Tour }) => void;
+    getActions: (event: { origin: TourItem, tour: Tour }) => TourItemAction[];
+}
+
+class TourItem extends React.Component<TourItemProps> {
     constructor(props) {
         super(props);
 
@@ -52,6 +68,17 @@ const Tour = observer(class Tour extends React.Component {
         this._handleClick = this._handleClick.bind(this);
         this._handleActionClick = this._handleActionClick.bind(this);
     }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        tour: PropTypes.shape({
+            id: PropTypes.string,
+            img: PropTypes.string,
+            name: PropTypes.string,
+        }),
+        onItemClick: PropTypes.func,
+        getActions: PropTypes.func.isRequired,
+    };
 
     state = {
         anchorEl: null,
@@ -74,7 +101,7 @@ const Tour = observer(class Tour extends React.Component {
         this.props.onItemClick && this.props.onItemClick({ origin: this, tour: this.props.tour });
     }
 
-    _handleActionClick(action) {
+    _handleActionClick(action: TourItemAction) {
         action.action({
             origin: this,
             tour: this.props.tour,
@@ -83,13 +110,13 @@ const Tour = observer(class Tour extends React.Component {
     }
 
     render() {
-        const { tour, classes, getActions } = this.props;
+        const classes: any = this.props.classes;
+        const { tour, getActions } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
         return (<>
             <GridListTile
-                component='div'
                 key={tour.id}
                 className={classes.tileItem}
                 onClick={this._handleItemClick}>
@@ -101,7 +128,6 @@ const Tour = observer(class Tour extends React.Component {
                         <IconButton className={classes.moreIcon}
                             aria-owns={open ? 'simple-popper' : undefined}
                             aria-haspopup="true"
-                            variant="contained"
                             onClick={this._handleClick}>
                             <MoreVertIcon />
                         </IconButton>
@@ -138,17 +164,6 @@ const Tour = observer(class Tour extends React.Component {
             </Popover>
         </>);
     }
-});
+}
 
-Tour.propTypes = {
-    classes: PropTypes.object.isRequired,
-    tour: PropTypes.shape({
-        id: PropTypes.string,
-        img: PropTypes.string,
-        name: PropTypes.string,
-    }),
-    onItemClick: PropTypes.func,
-    getActions: PropTypes.func.isRequired,
-};
-
-export default withStyles(styles)(Tour);
+export default withStyles(styles)(observer(TourItem));

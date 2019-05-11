@@ -4,6 +4,7 @@ import {
     ConnectionDto,
     PlaceDetailDto,
     MapType,
+    TourDetailDto,
 } from "./../../../../backend/src/models/interfaces";
 
 class TourDetail {
@@ -23,7 +24,7 @@ class TourDetail {
     coverImageHash: number;
     cover: ImageFile;
 
-    constructor(json) {
+    constructor(json: TourDetailDto) {
         this.id = json.id;
 
         this.updateFromJson(json);
@@ -34,10 +35,10 @@ class TourDetail {
     }
 
     get imageUrl() {
-        return this.cover.filename ? `/${this.cover.filename}?${this.coverImageHash}` : null;
+        return  this.cover && this.cover.filename ? `/${this.cover.filename}?${this.coverImageHash}` : null;
     }
 
-    updateFromJson(json) {
+    updateFromJson(json: TourDetailDto) {
         this.name = json.name;
         this.filename = json.filename;
         this.mapType = json.mapType;
@@ -48,9 +49,10 @@ class TourDetail {
         this.connections = json.connections || [];
         this.startPlaceId = json.startPlaceId;
         this.isPublic = json.isPublic;
+        this.cover = json.cover;
     }
 
-    updatePlaceFromJson(json) {
+    updatePlaceFromJson(json: PlaceDetailDto) {
         const place = (this.places || []).find(place => place.id === json.id);
 
         if (place) {
@@ -62,7 +64,7 @@ class TourDetail {
         return place;
     }
 
-    updateConnectionFromJson(json) {
+    updateConnectionFromJson(json: ConnectionDto) {
         const connection = (this.connections || []).find(c => c.id === json.id);
 
         if (connection) {
@@ -73,7 +75,7 @@ class TourDetail {
         return connection;
     }
 
-    hasConnection(startPlaceId, endPlaceId) {
+    hasConnection(startPlaceId: string, endPlaceId: string) {
         const connection = (this.connections || []).some(c =>
             (c.startPlace.id === startPlaceId && c.endPlace.id === endPlaceId) ||
             (c.startPlace.id === endPlaceId && c.endPlace.id === startPlaceId)

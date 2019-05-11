@@ -10,8 +10,11 @@ function addFile(filename: string, file) {
 
 function removeFile(filename: string) {
     const filepath = getFilePath(filename);
-
-    return fs.unlink(filepath);
+    return fs.pathExists(filename).then((isExists) => {
+        if (isExists) {
+            return fs.unlink(filepath);
+        }
+    })
 }
 
 function getFilePath(filename: string) {

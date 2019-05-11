@@ -8,7 +8,7 @@ export function getAll(req, res) {
     Tour.find({ createdBy: req.userId })
         .then((tours) => {
             const result = tours.map(tour => tour.toClient());
-            return res.json({ result });
+            return res.json({ tours: result });
         }).catch(err => {
             return res.json({ error: err });
         })
@@ -23,8 +23,7 @@ export function getById(req, res) {
 
     Tour.findById(id)
         .then(tour => {
-            const result = tour.toDetailDto();
-            return res.json({ result });
+            return res.json({ tour: tour.toDetailDto() });
         })
         .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
@@ -86,7 +85,7 @@ export function uploadCover(req, res) {
     Tour.findById(id)
         .then((t) => {
             tour = t;
-            const removePromise = t.cover.filename != null ? removeFile(t.cover.filename) : Promise.resolve();
+            const removePromise = t.cover && t.cover.filename != null ? removeFile(t.cover.filename) : Promise.resolve();
             return removePromise;
         }).then(() => {
             const extension = path.extname(cover.name);
@@ -103,7 +102,7 @@ export function uploadCover(req, res) {
                 }
             }, { new: true });
         }).then((tour) => {
-            return res.json({ tour: tour.toClient() });
+            return res.json({ tour: tour.toDetailDto() });
         }).catch((error) => {
             return res.json({ error });
         });
