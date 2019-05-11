@@ -7,7 +7,7 @@ import {
 export function getAll() {
     return client.get<{tours: TourDto[]}>("/api/tour");
 }
-export function getById(id) {
+export function getById(id: string) {
     return client.get<{tour: TourDetailDto}>(`/api/tour/${id}`);
 }
 export function create(name: string, mapType: number) {
