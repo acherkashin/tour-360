@@ -123,7 +123,15 @@ const ru = defineMessages({
     },
     volume: {
         id: 'common.volume',
-        defaultMessage: 'Volume',
+        defaultMessage: 'Громкость',
+    },
+    name: {
+        id: 'common.name',
+        defaultMessage: 'Имя',
+    },
+    muted: {
+        id: 'common.muted',
+        defaultMessage: 'Без звука',
     },
 
     headerTitle: {

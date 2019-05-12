@@ -2,7 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { intlShape, injectIntl } from 'react-intl';
-import { Typography } from '@material-ui/core';
+import {
+    Button,
+    Checkbox,
+    TextField,
+    Typography,
+    FormControlLabel,
+} from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider';
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import { PositionEditor } from './../../../Common';
@@ -19,6 +25,9 @@ const styles = createStyles(theme => ({
     thumb: {
         width: 20,
         height: 20,
+    },
+    sliderContainer: {
+        overflow: 'hidden',
     }
 }));
 
@@ -26,10 +35,12 @@ interface RunVideoEditPanelProps extends WithStyles<typeof styles> {
     //TODO: install typings for react-intl
     intl: any;
     widget: RunVideoWidget;
-    onNameChanged: (e: { origin: RunVideoEditPanel, value: string }) => void;
-    onVolumeChanged: (e: { origin: RunVideoEditPanel, value: number }) => void;
-    onXChanged: (e: { origin: RunVideoEditPanel, value: number }) => void;
-    onYChanged: (e: { origin: RunVideoEditPanel, value: number }) => void;
+    onNameChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget,  value: string }) => void;
+    onVolumeChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, value: number }) => void;
+    onMutedChanged: (e: { origin: RunVideoEditPanel,widget: RunVideoWidget, value: boolean }) => void;
+    onXChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget,value: number }) => void;
+    onYChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, value: number }) => void;
+    onDeleteClick: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget }) => void
 }
 
 class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
@@ -50,9 +61,22 @@ class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
         const classes: any = this.props.classes;
         const { widget } = this.props;
         const { messages, formatMessage } = this.props.intl;
-        const volume = widget.volume * 100;
+        const volume = Math.trunc(widget.volume * 100);
 
         return <div className={classes.root}>
+            <TextField
+                label="Name"
+                value={widget.name}
+                onChange={(e) => {
+                    this.props.onNameChanged({
+                        origin: this,
+                        value: e.target.value,
+                        widget: this.props.widget,
+                    });
+                }}
+                margin="normal"
+                fullWidth
+            />
             <PositionEditor
                 x={widget.x}
                 y={widget.y}
@@ -60,16 +84,18 @@ class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
                     this.props.onXChanged({
                         origin: this,
                         value: e.value,
+                        widget: this.props.widget,
                     });
                 }}
                 onYChanged={(e) => {
                     this.props.onYChanged({
                         origin: this,
                         value: e.value,
+                        widget: this.props.widget,
                     });
                 }}
             />
-            <div style={{ overflow: 'none' }}>
+            <div className={classes.sliderContainer}>
                 <Typography>{formatMessage(messages.volume)}</Typography>
                 <Slider
                     classes={{ container: classes.slider, thumb: classes.thumb }}
@@ -81,12 +107,35 @@ class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
                         this.props.onVolumeChanged({
                             origin: this,
                             value: value / 100,
+                            widget: this.props.widget,
                         });
                     }}
                 />
                 <Typography variant="caption" align="right">{volume}</Typography>
             </div>
-        </div>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={widget.muted}
+                        onChange={(e) => {
+                            this.props.onMutedChanged({
+                                origin: this,
+                                widget: this.props.widget,
+                                value: e.target.checked,
+                            });
+                        }}
+                        value="isPublic"
+                    />
+                }
+                label={formatMessage(messages.muted)}
+            />
+            <Button fullWidth variant="text" color="primary" onClick={() => this.props.onDeleteClick({
+                origin: this,
+                widget: this.props.widget,
+            })}>
+                {formatMessage(messages.delete)}
+            </Button>
+        </div >
     }
 }
 

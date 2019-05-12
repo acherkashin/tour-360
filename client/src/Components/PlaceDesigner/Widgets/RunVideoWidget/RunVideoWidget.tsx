@@ -8,16 +8,24 @@ import { getScreenCoordinates } from '../../utils';
 import RunVideoShape from "./RunVideoShape";
 import { RunVideoWidget as RunVideoWidgetModel } from "../../../../../../backend/src/models/interfaces";
 
+const size = 30;
 const styles = createStyles({
     root: {
         position: 'absolute',
         cursor: 'pointer',
+        width: size,
+        height: size,
     },
     isSelected: {
         backgroundColor: 'rgba(255,255,255, 0.3)',
         border: '1px dashed rgba(255,0,0, 0.3)',
     },
+    icon: {
+        width: size,
+        height: size,
+    }
 });
+
 
 interface RunVideoWidgetProps extends WithStyles<typeof styles> {
     isSelected: boolean;
@@ -61,10 +69,9 @@ class RunVideoWidget extends React.Component<RunVideoWidgetProps> {
             style={{
                 left,
                 top,
-            }} 
-            >
-                <PlayCircleFilledOutlined />
-            </div>;
+            }}>
+            <PlayCircleFilledOutlined className={classes.icon} />
+        </div>;
     }
 };
 

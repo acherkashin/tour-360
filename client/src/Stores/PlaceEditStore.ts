@@ -3,7 +3,7 @@ import { deepObserve, fromPromise, IDisposer } from 'mobx-utils';
 import { PlaceEditService, PlaceService, TourEditService } from './../api/';
 import { UserStore, RootStore } from '.';
 import EditPlace from './Models/EditPlace';
-import { BaseWidget, TextWidget, WidgetType } from '../../../backend/src/models/interfaces';
+import { BaseWidget, TextWidget, WidgetType, RunVideoWidget } from '../../../backend/src/models/interfaces';
 
 export default class PlaceEditStore {
     saveResult: any;
@@ -70,14 +70,24 @@ export default class PlaceEditStore {
         return this.saveResult.then(action((result) => {
             const place = result.data.place;
             this.editingPlace.updateFromJson(place);
-
+            
             if (this.editingWidget) {
+                const widget = place.widgets.find(w => w.id = this.editingWidget.id);
+
                 if (this.editingWidget.type === 'text') {
                     // todo: refactor it!!!
-                    const widget: TextWidget = place.widgets.find(w => w.id = this.editingWidget.id);
-                    (<TextWidget>this.editingWidget).x = widget.x;
-                    (<TextWidget>this.editingWidget).y = widget.y;
-                    (<TextWidget>this.editingWidget).content = widget.content;
+                    const textWidget: TextWidget = widget;
+                    (<TextWidget>this.editingWidget).x = textWidget.x;
+                    (<TextWidget>this.editingWidget).y = textWidget.y;
+                    (<TextWidget>this.editingWidget).content = textWidget.content;
+                    (<TextWidget>this.editingWidget).padding = textWidget.padding;
+                } else if (this.editingWidget.type === 'run-video') { 
+                    const videoWidget: RunVideoWidget = widget;
+                    (<RunVideoWidget>this.editingWidget).x = videoWidget.x;
+                    (<RunVideoWidget>this.editingWidget).y = videoWidget.y; 
+                    (<RunVideoWidget>this.editingWidget).muted = videoWidget.muted;
+                    (<RunVideoWidget>this.editingWidget).name = videoWidget.name;
+                    (<RunVideoWidget>this.editingWidget).volume = videoWidget.volume;
                 } else {
                     throw new Error('Unknown widget type');
                 }

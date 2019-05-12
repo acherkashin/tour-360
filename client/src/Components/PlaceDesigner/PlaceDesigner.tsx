@@ -29,7 +29,7 @@ import { CoordinateSystem } from '.';
 import { TextWidget, EditTextWidgetPanel, RunVideoEditPanel, RunVideoWidget } from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
 import { RootStore, EditPlace } from "./../../Stores";
-import { 
+import {
     BaseWidget,
     TextWidget as ITextWidget,
     RunVideoWidget as IRunVideoWidget
@@ -239,7 +239,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onPaddingChanged={e => widget.padding = e.padding}
                     onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                 />
-            } else if(this.editingWidget.type === 'run-video') {
+            } else if (this.editingWidget.type === 'run-video') {
                 const widget = this.editingWidget as IRunVideoWidget;
 
                 return <RunVideoEditPanel
@@ -249,6 +249,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onYChanged={e => widget.y = e.value}
                     onNameChanged={e => widget.name = e.value}
                     onVolumeChanged={e => widget.volume = e.value}
+                    onMutedChanged={e => widget.muted = e.value}
+                    onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                 />;
             }
 

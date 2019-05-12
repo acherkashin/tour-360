@@ -132,6 +132,14 @@ const en = defineMessages({
         id: 'common.volume',
         defaultMessage: 'Volume',
     },
+    name: {
+        id: 'common.name',
+        defaultMessage: 'Name',
+    },
+    muted: {
+        id: 'common.muted',
+        defaultMessage: 'Muted',
+    },
 
     headerTitle: {
         id: 'header.title',
