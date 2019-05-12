@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, staticAssetURL } from 'react-360';
-import Background from './Background';
-import VideoBackground from './VideoBackground';
+import PanoBackground from '../Background/PanoBackground';
+import VideoBackground from '../Background/VideoBackground';
 import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';
 import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';
@@ -59,15 +59,10 @@ export default class Place extends React.Component {
 
         return (
             <View style={styles.place}>
-                <Background
+                <PanoBackground
                     url={url}
                     sound={this.state.currentPlace.sound}
                 />
-                {/* <VideoBackground
-                    url={staticAssetURL('video/room.mp4')}
-                    muted={false}
-                    volume={1}
-                /> */}
                 {coordinates && <CoordinateSystem width={WIDTH} height={HEIGHT} stepX={200} stepY={100} />}
                 {this._renderConnections()}
                 {this._renderWidgets()}

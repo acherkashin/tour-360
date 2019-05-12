@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, StyleSheet, staticAssetURL } from "react-360";
-import VideoBackground from "./../Place/VideoBackground";
+import VideoBackground from "../Background/VideoBackground";
 import LabelButton from "./../Label/LabelButton";
+import BackgroundManager from "./../Background/BackgroundManager";
 
 const styles = StyleSheet.create({
     root: {
@@ -17,30 +18,22 @@ const styles = StyleSheet.create({
 export default class RunVideoWidget extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            isPlaying: false,
-        };
     }
 
     render() {
         const { widget } = this.props;
-        const { isPlaying } = this.state;
 
         return <View style={[styles.root, { transform: [{ translate: [widget.x, widget.y], }] }]}>
             <LabelButton
                 icon={'icons/play.png'}
-                onClick={(e) => this.setState({ isPlaying: true })}
+                onClick={(e) => {
+                    BackgroundManager.pushVideoBackground({
+                        muted: widget.muted,
+                        volume: widget.volume,
+                        url: staticAssetURL('video/room.mp4'),
+                    });
+                }}
             />
-            {/* <Image
-                source={asset('icons/play.png')}
-                style={{ width: 30, height: 30 }}
-            /> */}
-            {isPlaying && <VideoBackground
-                muted={widget.muted}
-                volume={widget.volume}
-                url={staticAssetURL('video/room.mp4')}
-            />}
         </View>
     }
 }

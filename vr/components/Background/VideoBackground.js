@@ -2,23 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Environment } from 'react-360';
 import VideoModule from 'VideoModule';
+import BackgroundManager from './BackgroundManager';
 
 export default class VideoBackground extends React.Component {
     constructor(props) {
         super();
 
-        const player = VideoModule.createPlayer('myplayer');
-        player.play({
-            source: { url: props.url }, // provide the path to the video
+        BackgroundManager.pushVideoBackground({
+            url: props.url,
             volume: props.volume,
             muted: props.muted,
         });
-
-        this.state = {
-            player,
-        };
-
-        Environment.setBackgroundVideo('myplayer'); // or you can use player._player which is same value
     }
 
     render() {
@@ -27,7 +21,12 @@ export default class VideoBackground extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.url !== this.props.url) {
-            console.log("Implement it!!!");
+            BackgroundManager.popBackground();
+            BackgroundManager.pushBackground({
+                url: props.url,
+                volume: props.volume,
+                muted: props.muted,
+            });
         }
     }
 }
