@@ -54,7 +54,7 @@ export default class Place extends React.Component {
 
     render() {
         //https://stackoverflow.com/questions/43437907/vr-view-360-photo-sphere-images-possible-cors-issue?rq=1
-        const { place } = this.props;
+        const { place, coordinates } = this.props;
         const url = `${BACKEND_URL}/${place.image360Name}`;
 
         return (
@@ -68,7 +68,7 @@ export default class Place extends React.Component {
                     muted={false}
                     volume={1}
                 /> */}
-                <CoordinateSystem width={WIDTH} height={HEIGHT} stepX={200} stepY={100} />
+                {coordinates && <CoordinateSystem width={WIDTH} height={HEIGHT} stepX={200} stepY={100} />}
                 {this._renderConnections()}
                 {this._renderWidgets()}
                 {/* <Label
@@ -106,5 +106,6 @@ Place.propTypes = {
             type: PropTypes.string.isRequired,
         })),
     }).isRequired,
+    coordinates: PropTypes.bool.isRequired,
     onPortalClick: PropTypes.func.isRequired,
 };

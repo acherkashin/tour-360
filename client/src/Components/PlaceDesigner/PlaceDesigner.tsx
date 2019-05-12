@@ -213,7 +213,7 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _handleViewImage360Click() {
-            this.placeEditStore.viewPlaceImage360();
+            this.placeEditStore.viewPlaceImage360(true);
         }
 
         _handleWidgetItemClick(e: { widget: BaseWidget }) {

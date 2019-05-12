@@ -27,7 +27,12 @@ export default class Hello360 extends React.Component {
     componentDidMount() {
         const options = getUrlParams();
 
-        this.setState({ sessionId: options.sessionId, tourId: options.tourId, token: options.token }, () => {
+        this.setState({
+            sessionId: options.sessionId,
+            tourId: options.tourId,
+            token: options.token,
+            coordinates: options.coordinates == '1',
+        }, () => {
             this._fetchPlaceById(options.placeId);
         })
     }
@@ -57,7 +62,11 @@ export default class Hello360 extends React.Component {
 
     render() {
         if (this.state.currentPlace) {
-            return (<Place place={this.state.currentPlace} onPortalClick={this._handlePortalClick} />);
+            return (<Place
+                place={this.state.currentPlace}
+                coordinates={this.state.coordinates}
+                onPortalClick={this._handlePortalClick}
+            />);
         } else {
             return <View></View>;
         }

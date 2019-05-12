@@ -8,7 +8,7 @@ export function getUrlParams() {
     const tokens = rawParams.split(new RegExp(separators, 'g'));
 
     const params = {};
-    const fields = ['sessionId', 'placeId', 'tourId', 'token'];
+    const fields = ['sessionId', 'placeId', 'tourId', 'token', 'coordinates'];
     fields.forEach((field) => {
         const fieldIndex = tokens.indexOf(field);
         if (fieldIndex !== -1) {

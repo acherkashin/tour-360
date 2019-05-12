@@ -86,6 +86,6 @@ export function removePlaceSound(sessionId: string, placeId: string) {
     return client.delete(`/api/tour-edit/${sessionId}/place/${placeId}/sound`);
 }
 
-export function getPanoUrl(sessionId: string, placeId: string, token: string) {
-    return `${VR_URL}?sessionId=${sessionId}&placeId=${placeId}&token=${token}`;
+export function getPanoUrl(sessionId: string, placeId: string, token: string, coordinates: boolean = false) {
+    return `${VR_URL}?sessionId=${sessionId}&placeId=${placeId}&token=${token}${coordinates ? '&coordinates=1' : ''}`;
 }

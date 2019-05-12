@@ -111,12 +111,12 @@ export default class PlaceEditStore {
         });
     }
 
-    viewPlaceImage360() {
-        window.open(this.getPlaceImage360Url());
+    viewPlaceImage360(coordinates = false) {
+        window.open(this.getPlaceImage360Url(coordinates));
     }
 
-    getPlaceImage360Url() {
-        return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken());
+    getPlaceImage360Url(coordinates = false) {
+        return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken(), coordinates);
     }
 
     updateImage360(file, width, height) {

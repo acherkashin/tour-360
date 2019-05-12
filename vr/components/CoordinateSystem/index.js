@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 2,
         borderBottomWidth: 2,
         borderColor: 'black',
-        backgroundColor: 'rgba(255,255,255, 0.8)'
+        backgroundColor: 'rgba(255,255,255, 0.8)',
     },
     axis: {
         borderColor: 'black',
