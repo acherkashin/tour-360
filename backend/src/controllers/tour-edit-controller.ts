@@ -1,13 +1,15 @@
 import uuidv1 from 'uuidv1';
 import { NOT_FOUND, INTERNAL_SERVER_ERROR, OK, NO_CONTENT, CONFLICT } from 'http-status-codes';
+import { Request, Response } from 'express';
 import { Tour } from '../models';
+import { Tour as ITour, Place as IPlace, Connection } from '../models/interfaces';
 import { addFile, removeFile, generatePlaceImage360Name, generateTourImageName, generatePlaceSoundName } from '../utils/fileutils';
 
-const cache = {}
+const cache: { [key: string]: ITour } = {}
 const _cache = cache;
 export { _cache as cache };
 
-export function get(req, res) {
+export function get(req: Request, res: Response) {
     const { sessionId } = req.params;
     const tour = cache[sessionId];
 
@@ -18,7 +20,7 @@ export function get(req, res) {
     }
 }
 
-export function startEditing(req, res) {
+export function startEditing(req: Request, res: Response) {
     const { id } = req.params;
 
     Tour.findById(id)
@@ -34,7 +36,7 @@ export function startEditing(req, res) {
         });
 }
 
-export function saveChanges(req, res) {
+export function saveChanges(req: Request, res: Response) {
     const { sessionId } = req.params;
     const { startPlaceId, name, isPublic } = req.body;
 
@@ -44,21 +46,21 @@ export function saveChanges(req, res) {
     tour.isPublic = isPublic;
 
     tour.save().then(() => {
-        tour = cache[sessionId].toDetailDto();
-        res.json({ tour });
+        const dto = cache[sessionId].toDetailDto();
+        res.json({ tour: dto });
     }).catch((error) => {
         res.status(INTERNAL_SERVER_ERROR).json({ error });
     });
 }
 
-export function cancelChanges(req, res) {
+export function cancelChanges(req: Request, res: Response) {
     const { sessionId } = req.params;
     delete cache[sessionId];
 
     res.json({});
 }
 
-export function uploadMapImage(req, res) {
+export function uploadMapImage(req: Request, res: Response) {
     //TODO: check extensions for images
     const { sessionId } = req.params;
     const { width, height } = req.body;
@@ -69,7 +71,8 @@ export function uploadMapImage(req, res) {
 
     addFile(newFileName, mapImage).then(() => {
         tour.mapImage.filename = newFileName;
-        tour.mapImage.contentType = mapImage.mimetype;
+        //TODO: remove <any>
+        tour.mapImage.contentType = (<any>mapImage).mimetype;
         tour.mapImage.height = parseInt(height);
         tour.mapImage.width = parseInt(width);
 
@@ -79,7 +82,7 @@ export function uploadMapImage(req, res) {
     });
 }
 
-export function uploadSound(req, res) {
+export function uploadSound(req: Request, res: Response) {
     //TODO: add checking extension for uploaded file
     const { sessionId, placeId } = req.params;
     const sound = req.files.sound;
@@ -91,7 +94,7 @@ export function uploadSound(req, res) {
     addFile(newFileName, sound)
         .then(() => {
             place.sound.filename = newFileName;
-            place.sound.contentType = sound.mimetype;
+            place.sound.contentType = (<any>sound).mimetype;
 
             res.json({ place: place.toDetailDto(tour) });
         }).catch(error => {
@@ -99,7 +102,7 @@ export function uploadSound(req, res) {
         });
 }
 
-export function removeSound(req, res) {
+export function removeSound(req: Request, res: Response) {
     const { sessionId, placeId } = req.params;
 
     const tour = cache[sessionId];
@@ -118,17 +121,17 @@ export function removeSound(req, res) {
     }
 }
 
-export function addPlace(req, res) {
+export function addPlace(req: Request, res: Response) {
     const { sessionId } = req.params;
     const tour = cache[sessionId];
     const { name = findFreeNameForPlace(tour), longitude, latitude } = req.body;
 
-    const place = {
+    const place = <IPlace>{
         name,
         longitude,
         latitude,
         sound: null,
-        image: null,
+        image360: null,
     };
 
     tour.places.push(place);
@@ -137,7 +140,7 @@ export function addPlace(req, res) {
     res.json({ tour: dto });
 }
 
-export function removePlace(req, res) {
+export function removePlace(req: Request, res: Response) {
     const { sessionId, placeId } = req.params;
 
     const tour = cache[sessionId];
@@ -147,7 +150,7 @@ export function removePlace(req, res) {
     res.json({ tour: dto });
 }
 
-export function getPlace(req, res) {
+export function getPlace(req: Request, res: Response) {
     const { sessionId, placeId } = req.params;
 
     const tour = cache[sessionId];
@@ -156,7 +159,7 @@ export function getPlace(req, res) {
     res.json({ place: place.toDetailDto(tour) });
 }
 
-export function updatePlace(req, res) {
+export function updatePlace(req: Request, res: Response) {
     const { sessionId } = req.params;
     const placeUpdate = req.body;
     const tour = cache[sessionId];
@@ -172,7 +175,7 @@ export function updatePlace(req, res) {
     res.json({ place: place.toDetailDto(tour) });
 }
 
-export function uploadImage360(req, res) {
+export function uploadImage360(req: Request, res: Response) {
     const { sessionId, placeId } = req.params;
     const { width, height } = req.body;
     const mapImage = req.files.mapImage;
@@ -183,7 +186,7 @@ export function uploadImage360(req, res) {
 
     addFile(image360Name, mapImage).then(() => {
         place.image360.filename = image360Name;
-        place.image360.contentType = mapImage.mimetype;
+        place.image360.contentType = (<any>mapImage).mimetype;
         place.image360.height = parseInt(height);
         place.image360.width = parseInt(width);
 
@@ -193,7 +196,7 @@ export function uploadImage360(req, res) {
     });
 }
 
-export function getConnection(req, res) {
+export function getConnection(req: Request, res: Response) {
     const { sessionId, id } = req.params;
     const tour = cache[sessionId];
 
@@ -205,7 +208,7 @@ export function getConnection(req, res) {
     res.status(OK).json({ connection: connection.toClient(tour) });
 }
 
-export function addConnection(req, res) {
+export function addConnection(req: Request, res: Response) {
     const { sessionId } = req.params;
     const { startPlaceId, endPlaceId } = req.body;
     const tour = cache[sessionId];
@@ -215,7 +218,7 @@ export function addConnection(req, res) {
         return;
     }
 
-    const connection = {
+    const connection = <Connection>{
         startPlaceId,
         endPlaceId,
     };
@@ -225,7 +228,7 @@ export function addConnection(req, res) {
     res.status(OK).json({ tour: tour.toDetailDto() });
 }
 
-export function updateConnection(req, res) {
+export function updateConnection(req: Request, res: Response) {
     const { sessionId } = req.params;
     const connectionUpdate = req.body;
     const tour = cache[sessionId];
@@ -237,7 +240,7 @@ export function updateConnection(req, res) {
     res.json({ connection: connection.toClient(tour) });
 }
 
-export function deleteConnection(req, res) {
+export function deleteConnection(req: Request, res: Response) {
     const { sessionId, place1Id, place2Id } = req.params;
     const tour = cache[sessionId];
 
@@ -250,7 +253,7 @@ export function deleteConnection(req, res) {
     res.status(OK).json({ tour: tour.toDetailDto() })
 }
 
-function findFreeNameForPlace(tour) {
+function findFreeNameForPlace(tour: ITour) {
     const length = tour.places.length;
 
     if (length === 0) {

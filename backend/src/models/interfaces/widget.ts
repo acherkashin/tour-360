@@ -9,4 +9,5 @@ export interface TextWidget extends BaseWidget {
     content: string;
     color: string;
     backgroundColor: string;
+    padding: number;
 }

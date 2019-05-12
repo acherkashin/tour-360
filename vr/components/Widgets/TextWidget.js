@@ -18,10 +18,12 @@ export default class TextWidget extends React.Component {
     }
 
     render() {
-        const { x, y, content, color, backgroundColor } = this.props.options;
+        const { x, y, content, color, backgroundColor, padding } = this.props.options;
 
-        return <View style={[styles.root, { transform: [{ translate: [x, y], }] }]}>
-            <Text style={[styles.text, { color, backgroundColor }]}>{content}</Text>
+        return <View style={[styles.root, { transform: [{ translate: [x, y], }], padding, backgroundColor }]}>
+            <Text style={[styles.text, {
+                color,
+            }]}>{content}</Text>
         </View>
     }
 }
@@ -31,5 +33,8 @@ TextWidget.propTypes = {
         x: PropTypes.number.isRequired,
         y: PropTypes.number.isRequired,
         content: PropTypes.string.isRequired,
+        color: PropTypes.string.isRequired,
+        backgroundColor: PropTypes.string.isRequired,
+        padding: PropTypes.number,
     }),
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import {
     AppBar,
     Dialog,
@@ -15,21 +15,23 @@ import {
     Add as AddIcon,
 } from '@material-ui/icons';
 import { intlShape, injectIntl } from 'react-intl';
-import { LoadingButton } from './../'
-import { Texture, NoPlacePlaceholder } from './';
+import { LoadingButton } from '..'
+import { Texture, NoPlacePlaceholder } from '.';
 import {
     ConfirmDialog,
     UploadImageDialog,
     ViewUrlDialog,
     HtmlEditDialog,
-} from './../Dialogs';
-import EditPlacePanel from './../TourDesigner/EditPlacePanel';
+} from '../Dialogs';
+import EditPlacePanel from '../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
-import { CoordinateSystem } from './';
+import { CoordinateSystem } from '.';
 import { TextWidget, EditTextWidgetPanel } from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
+import { RootStore, EditPlace } from "./../../Stores";
+import { BaseWidget, TextWidget as ITextWidget } from '../../../../backend/src/models/interfaces';
 
-const styles = theme => ({
+const styles = createStyles(theme => ({
     root: {},
     addWidget: {
         position: 'fixed',
@@ -67,10 +69,26 @@ const styles = theme => ({
         position: 'absolute',
         top: 285,
     }
-});
+}));
+
+interface PlaceDesignerProps extends WithStyles<typeof styles> {
+    rootStore: RootStore;
+    match: { params: { sessionId: string } };
+    intl: any;
+}
+
+interface PlaceDesignerState {
+    isOpenedPreviewDialog: boolean;
+    isOpenedConfirmDialog: boolean;
+    isOpenedPlaceDescriptionDialog: boolean;
+    uploadImageDialogOpened: boolean;
+    textureIsLoaded: boolean;
+}
 
 const PlaceDesigner = inject("rootStore")(observer(
-    class PlaceDesigner extends React.Component {
+    class PlaceDesigner extends React.Component<PlaceDesignerProps, PlaceDesignerState> {
+        surfaceWrapperRef = React.createRef<HTMLDivElement>();
+
         constructor(props) {
             super(props);
 
@@ -94,8 +112,6 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
             this._handleCloseDescriptionDialog = this._handleCloseDescriptionDialog.bind(this);
 
-            this.surfaceWrapperRef = React.createRef();
-
             this.state = {
                 isOpenedPreviewDialog: false,
                 isOpenedConfirmDialog: false,
@@ -109,7 +125,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             return this.props.rootStore.placeEditStore;
         }
 
-        get editingPlace() {
+        get editingPlace(): EditPlace {
             return this.placeEditStore.editingPlace;
         }
 
@@ -176,7 +192,8 @@ const PlaceDesigner = inject("rootStore")(observer(
         _handleOkConfirmClick() {
             this.placeEditStore.completeEditing().then(() => {
                 this.placeEditStore.cancelEditing();
-            }).finally(() => {
+                this._handleCloseConfirmDialog();
+            }, () => {
                 this._handleCloseConfirmDialog();
             });
         }
@@ -195,28 +212,27 @@ const PlaceDesigner = inject("rootStore")(observer(
             this.placeEditStore.viewPlaceImage360();
         }
 
-        _handleWidgetItemClick(e) {
-            this._navigateToWidget(e.widget.id);
-            this.placeEditStore.editWidget(e.widget.id);
-        }
-
-        _navigateToWidget(id) {
-            //TODO: reimplement it to show widget in the center of screen
-            document.getElementById(id).scrollIntoView();
+        _handleWidgetItemClick(e: { widget: BaseWidget }) {
+            if (e.widget != null && e.widget.id) {
+                //TODO: reimplement it to show widget in the center of screen
+                document.getElementById(e.widget.id).scrollIntoView();
+                this.placeEditStore.editWidget(e.widget.id);
+            }
         }
 
         _renderWidgetEditPanel() {
-            const widget = this.editingWidget;
+            const widget = this.editingWidget as ITextWidget;
 
             if (widget.type === 'text') {
                 return <EditTextWidgetPanel
                     key={widget.id}
                     widget={widget}
-                    onXChanged={e => this.editingWidget.x = e.x}
-                    onYChanged={e => this.editingWidget.y = e.y}
-                    onContentChanged={e => this.editingWidget.content = e.content}
-                    onTextColorChanged={color => this.editingWidget.color = color}
-                    onTextBackgroundColorChanged={color => this.editingWidget.backgroundColor = color}
+                    onXChanged={e => widget.x = e.x}
+                    onYChanged={e => widget.y = e.y}
+                    onContentChanged={e => widget.content = e.content}
+                    onTextColorChanged={e => widget.color = e.color}
+                    onTextBackgroundColorChanged={e => widget.backgroundColor = e.color}
+                    onPaddingChanged={e => widget.padding = e.padding}
                     onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                 />
             }
@@ -242,13 +258,13 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _renderSurface() {
-            const { classes } = this.props;
+            const classes: any = this.props.classes;
             const { textureIsLoaded } = this.state;
 
             return <>
                 <Texture
                     onClick={() => this.placeEditStore.completeEditWidget()}
-                    imageUrl={this.editingPlace.mapImage360Url}
+                    imageUrl={this.editingPlace && this.editingPlace.mapImage360Url}
                     onLoaded={this._handleTextureLoaded}
                     onLoading={this._hanldeTextureLoading} />
                 {textureIsLoaded && <div className={classes.widgetArea}>
@@ -303,7 +319,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             }
 
             const { isDirty, saveLoading } = this.placeEditStore;
-            const { classes } = this.props;
+            const classes: any = this.props.classes;
             const {
                 uploadImageDialogOpened,
                 isOpenedPreviewDialog,
@@ -329,7 +345,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                         {this.editingPlace.mapImage360Url && this._renderSurface()}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>
-                    {this.editingPlace.mapImage360Url && <Fab color="secondary" className={classes.addWidget} onClick={() => this._addWidget()}>
+                    {this.editingPlace.mapImage360Url && <Fab color="secondary" className={classes.addWidget} onClick={(e) => this._addWidget(e)}>
                         <AddIcon />
                     </Fab>}
                     {this.showEditWidget && <div className={classes.rightPanel}>
@@ -365,7 +381,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 />
                 <ViewUrlDialog
                     title={formatMessage(messages.tourDesignerPreviewPlace)}
-                    url={this.placeEditStore.getPlaceImage360Url(this.editingPlace.id)}
+                    url={this.placeEditStore.getPlaceImage360Url()}
                     isOpened={isOpenedPreviewDialog}
                     onClose={this._closePreviewDialog}
                 />
@@ -393,10 +409,5 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
     }));
 
-PlaceDesigner.propTypes = {
-    classes: PropTypes.object.isRequired,
-
-    intl: intlShape.isRequired,
-};
 
 export default withStyles(styles)(injectIntl(PlaceDesigner));

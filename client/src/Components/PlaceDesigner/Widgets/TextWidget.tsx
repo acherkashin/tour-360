@@ -44,8 +44,8 @@ class TextWidget extends React.Component<TextWidgetProps> {
     }
 
     render() {
-        const { classes, isSelected, widget: { id, x, y, content, color, backgroundColor } } = this.props;
-        const { left, top } = getScreenCoordinates(x, y);
+        const { classes, isSelected, widget } = this.props;
+        const { left, top } = getScreenCoordinates(widget.x, widget.y);
 
         const className = classNames({
             [classes.root]: true,
@@ -53,15 +53,16 @@ class TextWidget extends React.Component<TextWidgetProps> {
         })
 
         return <span
-            id={id}
+            id={widget.id}
             className={className}
             onClick={this._handleClick}
             style={{
                 left,
                 top,
-                color,
-                backgroundColor,
-            }}>{content || '[No Content]'}</span>;
+                color: widget.color,
+                backgroundColor: widget.backgroundColor,
+                padding: widget.padding,
+            }}>{widget.content || '[No Content]'}</span>;
     }
 };
 

@@ -2,6 +2,7 @@ import uuidv1 from 'uuidv1';
 import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { cache as _cache } from './tour-edit-controller';
 import { Tour, Place, } from './../models/interfaces';
+import { Request, Response } from 'express';
 
 interface PlaceEditCache {
     tourSessionId: string;
@@ -52,7 +53,7 @@ export function startEditing(req, res) {
     }
 }
 
-export function addWidget(req, res) {
+export function addWidget(req: Request, res: Response) {
     const { sessionId } = req.params;
     const { type } = req.body;
     let { place, tourSessionId } = cache[sessionId];
@@ -80,7 +81,7 @@ export function addWidget(req, res) {
     }
 }
 
-export function cancelChanges(req, res) {
+export function cancelChanges(req: Request, res: Response) {
     const { sessionId } = req.params;
     const placeEditSession = cache[sessionId];
 
@@ -95,7 +96,7 @@ export function cancelChanges(req, res) {
     }
 }
 
-export function saveChanges(req, res) {
+export function saveChanges(req: Request, res: Response) {
     const { sessionId } = req.params;
     let { tourSessionId, place } = cache[sessionId];
     const tour = _cache[tourSessionId];

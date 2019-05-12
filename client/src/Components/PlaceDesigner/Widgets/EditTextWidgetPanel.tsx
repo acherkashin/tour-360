@@ -20,6 +20,7 @@ interface TextWidgetEditPanelProps extends WithStyles<typeof styles> {
     intl: any;
     onXChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, x: number }) => void;
     onYChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, y: number }) => void;
+    onPaddingChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, padding: number }) => void;
     onContentChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, content: string }) => void;
     onTextColorChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, color: string }) => void;
     onTextBackgroundColorChanged: (event: { origin: TextWidgetEditPanel, widget: TextWidgetModel, color: string }) => void;
@@ -38,6 +39,7 @@ class TextWidgetEditPanel extends React.Component<TextWidgetEditPanelProps> {
 
         this._handleXChanged = this._handleXChanged.bind(this);
         this._handleYChanged = this._handleYChanged.bind(this);
+        this._handlePaddingChanged= this._handlePaddingChanged.bind(this);
         this._handleContentChanged = this._handleContentChanged.bind(this);
         this._handleChangeTextColor = this._handleChangeTextColor.bind(this);
         this._handleChangeTextBackgroundColor = this._handleChangeTextBackgroundColor.bind(this);
@@ -70,6 +72,14 @@ class TextWidgetEditPanel extends React.Component<TextWidgetEditPanelProps> {
             y: parseInt(e.target.value),
             widget: this.props.widget,
         });
+    }
+
+    _handlePaddingChanged(e) {
+        this.props.onPaddingChanged({
+            origin: this,
+            padding: parseInt(e.target.value),
+            widget: this.props.widget,
+        })
     }
 
     _handleContentChanged(e) {
@@ -146,6 +156,14 @@ class TextWidgetEditPanel extends React.Component<TextWidgetEditPanelProps> {
                 label="Content"
                 value={widget.content}
                 onChange={this._handleContentChanged}
+                margin="normal"
+                fullWidth
+            />
+            <TextField
+                label="Padding"
+                value={widget.padding || 0}
+                onChange={this._handlePaddingChanged}
+                type="number"
                 margin="normal"
                 fullWidth
             />

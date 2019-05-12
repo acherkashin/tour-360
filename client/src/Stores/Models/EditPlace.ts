@@ -60,7 +60,7 @@ class EditPlace {
         return this;
     }
 
-    get asJson() {
+    get asJson(): PlaceDetailDto {
         return {
             id: this.id,
             longitude: this.longitude,
@@ -69,6 +69,11 @@ class EditPlace {
             soundName: this.soundName,
             description: this.description,
             widgets: this.widgets,
+            connections: this.connections,
+            hasImage360: this.hasImage360,
+            image360Name: this.image360Name,
+            image360Height: this.image360Height,
+            image360Width: this.image360Width,
         };
     }
 

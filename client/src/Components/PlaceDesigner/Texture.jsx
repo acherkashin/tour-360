@@ -23,9 +23,9 @@ const styles = theme => ({
 });
 
 function loadImage(src) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         var i = new Image();
-        i.onload = function () { resolve(i); }
+        i.onload = () => resolve(i);
         i.onerror = reject;
         i.src = src;
     });
@@ -37,7 +37,7 @@ class Texture extends React.Component {
 
         this.state = {
             isLoaded: false,
-        }
+        };
 
         this.rootRef = React.createRef();
         this.canvasRef = React.createRef();

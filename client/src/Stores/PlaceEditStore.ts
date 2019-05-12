@@ -1,56 +1,63 @@
-import { extendObservable, action, runInAction } from 'mobx';
-import { deepObserve, fromPromise } from 'mobx-utils';
-import { PlaceEditService, PlaceService, TourEditService } from './../api/index.ts';
-import { UserStore } from './../Stores';
-import EditPlace from './../Stores/Models/EditPlace';
+import { extendObservable, action, runInAction, decorate, observable, computed } from 'mobx';
+import { deepObserve, fromPromise, IDisposer } from 'mobx-utils';
+import { PlaceEditService, PlaceService, TourEditService } from './../api/';
+import { UserStore, RootStore } from '.';
+import EditPlace from './Models/EditPlace';
+import { BaseWidget, TextWidget } from '../../../backend/src/models/interfaces';
 
 export default class PlaceEditStore {
-    constructor(rootStore) {
+    saveResult: any;
+    editingPlace: EditPlace;
+    editingWidget: BaseWidget;
+    isDirty = false;
+    tourSessionId: string;
+    sessionId: string;
+
+    rootStore: RootStore;
+    editingPlaceDisposer: IDisposer;
+    editingWidgetDisposer: IDisposer;
+
+    constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
         this.editingPlaceDisposer = null;
         this.editingWidgetDisposer = null;
+    }
 
-        extendObservable(this, {
-            saveResult: null,
-            editingPlace: null,
-            editingWidget: null,
-            isDirty: false,
-            tourSessionId: null,
-            get panoUrl() {
-                return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken());
-            },
-            get saveLoading() {
-                return this.saveResult && this.saveResult.state === "pending";
-            },
-        });
+    get panoUrl() {
+        return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken());
+    }
+
+    get saveLoading() {
+        return this.saveResult && this.saveResult.state === "pending";
     }
 
     addWidget(type) {
         if (type === "text") {
-            PlaceEditService.addWidget(this.sessionId, type).then(action((resp) => {
+            PlaceEditService.addWidget(this.sessionId, type).then((resp) => {
                 const { place } = resp.data;
-                this.editingPlace.updateFromJson(place);
-            }))
+                runInAction(() => this.editingPlace.updateFromJson(place));
+            });
         } else {
             throw new Error("Unknown widget type");
         }
     }
 
     beginEditing(tourId, placeId) {
-        return PlaceEditService.beginEditing(tourId, placeId).then(action((resp) => {
+        return PlaceEditService.beginEditing(tourId, placeId).then((resp) => {
             const { sessionId, place, tourSessionId } = resp.data;
-            this._updateEditingPlace(sessionId, tourSessionId, place);
+            runInAction(() => this._updateEditingPlace(sessionId, tourSessionId, place));
             return sessionId;
-        }));
+        });
     }
 
     getFromSession(sessionId) {
-        return PlaceEditService.get(sessionId).then(action((resp) => {
+        return PlaceEditService.get(sessionId).then((resp) => {
             const { sessionId, place, tourSessionId } = resp.data;
-            this._updateEditingPlace(sessionId, tourSessionId, place);
+
+            runInAction(() => this._updateEditingPlace(sessionId, tourSessionId, place));
 
             return this.editingPlace;
-        }));
+        });
     }
 
     cancelEditing() {
@@ -71,10 +78,10 @@ export default class PlaceEditStore {
             if (this.editingWidget) {
                 if (this.editingWidget.type === 'text') {
                     // todo: refactor it!!!
-                    const widget = place.widgets.find(w => w.id = this.editingWidget.id);
-                    this.editingWidget.x = widget.x;
-                    this.editingWidget.y = widget.y;
-                    this.editingWidget.content = widget.content;
+                    const widget: TextWidget = place.widgets.find(w => w.id = this.editingWidget.id);
+                    (<TextWidget>this.editingWidget).x = widget.x;
+                    (<TextWidget>this.editingWidget).y = widget.y;
+                    (<TextWidget>this.editingWidget).content = widget.content;
                 } else {
                     throw new Error('Unknown widget type');
                 }
@@ -85,17 +92,17 @@ export default class PlaceEditStore {
     }
 
     updatePlaceSound(soundFile) {
-        return TourEditService.uploadPlaceSound(this.tourSessionId, this.editingPlace.id, soundFile).then(action((resp) => {
+        return TourEditService.uploadPlaceSound(this.tourSessionId, this.editingPlace.id, soundFile).then((resp) => {
             const place = resp.data.place;
-            this.editingPlace.updateFromJson(place);
-        }));
+            runInAction(() => this.editingPlace.updateFromJson(place));
+        });
     }
 
     removePlaceSound() {
-        return TourEditService.removePlaceSound(this.tourSessionId, this.editingPlace.id).then(action((resp) => {
+        return TourEditService.removePlaceSound(this.tourSessionId, this.editingPlace.id).then((resp) => {
             const place = resp.data.place;
-            this.editingPlace.updateFromJson(place);
-        }));
+            runInAction(() => this.editingPlace.updateFromJson(place));
+        });
     }
 
     viewPlaceImage360() {
@@ -107,10 +114,10 @@ export default class PlaceEditStore {
     }
 
     updateImage360(file, width, height) {
-        return TourEditService.updateImage360(this.tourSessionId, this.editingPlace.id, file, width, height).then(action((resp) => {
+        return TourEditService.updateImage360(this.tourSessionId, this.editingPlace.id, file, width, height).then((resp) => {
             const place = resp.data.place;
             this.editingPlace.updateFromJson(place);
-        }));
+        });
     }
 
     deleteWidget(id) {
@@ -135,7 +142,7 @@ export default class PlaceEditStore {
         }
     }
 
-    _updateEditingWidget = action((widget) => {
+    _updateEditingWidget = action((widget: BaseWidget) => {
         this.editingWidgetDisposer && this.editingWidgetDisposer();
         this.editingWidget = widget;
         this.editingWidgetDisposer = deepObserve(this.editingWidget, () => this.isDirty = true);
@@ -151,3 +158,12 @@ export default class PlaceEditStore {
         this.sessionId = sessionId;
     });
 }
+
+decorate(PlaceEditStore, {
+    saveResult: observable,
+    editingPlace: observable,
+    editingWidget: observable,
+    isDirty: observable,
+    tourSessionId: observable,
+    sessionId: observable,
+});
