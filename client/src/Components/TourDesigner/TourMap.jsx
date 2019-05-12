@@ -39,12 +39,16 @@ class TourMap extends React.Component {
         this._handleZoomChanged = this._handleZoomChanged.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
+        this._turnOnMapDragging = this._turnOnMapDragging.bind(this);
+        this._turnOffMapDragging = this._turnOffMapDragging.bind(this);
     }
 
     state = {
         currentLat: 0,
         currentLng: 0,
         currentZoom: 0,
+        draggableMap: true,
+        draggablePlaceId: null,
     }
 
     _handleMapClick(e) {
@@ -55,12 +59,20 @@ class TourMap extends React.Component {
     }
 
     _handleMouseMove(e) {
+        const { draggablePlaceId } = this.state;
+
         this.setState({ currentLat: e.latlng.lat, currentLng: e.latlng.lng });
 
         this.props.onMouseMove && this.props.onMouseMove({
             origin: this,
             latlng: e.latlng,
         });
+
+        if (draggablePlaceId) {
+            const draggablePlace = this.props.tour.places.find((place) => place.id === draggablePlaceId);
+            draggablePlace.longitude = e.latlng.lng;
+            draggablePlace.latitude = e.latlng.lat;
+        }
     }
 
     _handleZoomChanged(e) {
@@ -90,6 +102,13 @@ class TourMap extends React.Component {
         });
     }
 
+    _turnOnMapDragging() {
+        this.setState({draggableMap: true, draggablePlaceId: null})
+    }
+    _turnOffMapDragging(id) {
+        this.setState({draggableMap: false, draggablePlaceId: id})
+    }
+
     _renderMapContent() {
         const { tour, selectedPlaceId } = this.props;
         const places = tour.places || [];
@@ -100,41 +119,48 @@ class TourMap extends React.Component {
                 const isSelected = ((this.editingConnection) && c.id === this.editingConnection.id) || false;
 
                 return <Connection
-                    key={c.id}
-                    isSelected={isSelected}
-                    connection={c}
-                    onClick={this._handleConnectionClick}
-                />;
+                            key={c.id}
+                            isSelected={isSelected}
+                            connection={c}
+                            onClick={this._handleConnectionClick}
+                        />;
             })}
             {places.map(place => {
                 const isSelected = place.id === selectedPlaceId;
                 const isStart = tour.startPlaceId === place.id;
 
-                return <Place key={place.id}
-                    place={place}
-                    isSelected={isSelected}
-                    isStart={isStart}
-                    onClick={this._handlePlaceClick} />;
+                return <Place 
+                            key={place.id}
+                            place={place}
+                            isSelected={isSelected}
+                            isStart={isStart}
+                            onClick={this._handlePlaceClick}
+                            turnOnMapDragging={this._turnOnMapDragging}
+                            turnOffMapDragging={this._turnOffMapDragging}
+                        />;
             })}
         </>;
     }
 
     _renderMap() {
         const { classes, tour, mapStyle } = this.props;
+        const { draggableMap } = this.state;
 
         if (tour.mapType === 2) {
             const bounds = [[0, 0], [tour.imageHeight, tour.imageWidth]];
 
             return <Map crs={L.CRS.Simple}
-                bounds={bounds}
-                className={classes.map}
-                style={mapStyle}
-                onclick={this._handleMapClick}
-                onmousemove={this._handleMouseMove}
-                onzoomend={this._handleZoomChanged}>
-                <ImageOverlay url={tour.mapImageUrl} bounds={bounds} />
-                {this._renderMapContent()}
-            </Map>;
+                        bounds={bounds}
+                        className={classes.map}
+                        style={mapStyle}
+                        onclick={this._handleMapClick}
+                        onmousemove={this._handleMouseMove}
+                        onzoomend={this._handleZoomChanged}
+                        dragging={draggableMap}
+                    >
+                        <ImageOverlay url={tour.mapImageUrl} bounds={bounds} />
+                        {this._renderMapContent()}
+                    </Map>;
         } else if (tour.mapType === 1) {
             const state = {
                 position: [0, 0],
@@ -148,7 +174,9 @@ class TourMap extends React.Component {
                     style={mapStyle}
                     onclick={this._handleMapClick}
                     onmousemove={this._handleMouseMove}
-                    onzoomend={this._handleZoomChanged}>
+                    onzoomend={this._handleZoomChanged}
+                    dragging={draggableMap}
+                >
                     <TileLayer
                         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -308,7 +308,11 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         const { messages, formatMessage } = this.props.intl;
 
         return (<div className={classes.noImageMap}>
-            <Typography className={classes.noImageMapPlaceholder}>{formatMessage(messages.tourDesignerNoImageMapPlaceholderFirstPart)} <PlaceholderButton onClick={this._handleChangeImageMapClick} text={formatMessage(messages.here)} /> {formatMessage(messages.tourDesignerNoImageMapPlaceholderSecondPart)}</Typography>
+            <Typography className={classes.noImageMapPlaceholder}>
+                {formatMessage(messages.tourDesignerNoImageMapPlaceholderFirstPart)} 
+                <PlaceholderButton onClick={this._handleChangeImageMapClick} text={formatMessage(messages.here)} /> 
+                {formatMessage(messages.tourDesignerNoImageMapPlaceholderSecondPart)}
+            </Typography>
         </div>);
     }
 
