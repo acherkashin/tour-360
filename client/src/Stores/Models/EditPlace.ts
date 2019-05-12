@@ -26,7 +26,7 @@ class EditPlace {
     constructor(json) {
         this.id = json.id;
     
-    this.updateFromJson(json);
+        this.updateFromJson(json);
     }
 
     get viewImage360Url() {

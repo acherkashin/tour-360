@@ -92,16 +92,15 @@ export default class TourEditStore {
     }
 
     saveEditingPlace(cancel = false) {
-        return TourEditService.updatePlace(this.sessionId, this.editingPlace.asJson).then(action((resp) => {
-            const { place } = resp.data;
-            this.editingTour.updatePlaceFromJson(place);
+        return this._updatePlaceOnServer(this.editingPlace.asJson, cancel);
+    }
 
-            if (cancel) {
-                this._clearEditingPlace();
-            } else {
-                this.editingPlace.updateFromJson(place);
-            }
-        }));
+    movePlace(placeId, latitude, longitude) {
+        const place = this.editingTour.getPlace(placeId);
+        place.latitude = latitude;
+        place.longitude = longitude;
+        
+        this._updatePlaceOnServer(place, false);
     }
 
     cancelEditingPlace() {
@@ -218,4 +217,17 @@ export default class TourEditStore {
 
         this.sessionId = sessionId;
     });
+
+    _updatePlaceOnServer(json, cancel = false) {
+        return TourEditService.updatePlace(this.sessionId, json).then(action((resp) => {
+            const { place } = resp.data;
+            this.editingTour.updatePlaceFromJson(place);
+
+            if (cancel) {
+                this._clearEditingPlace();
+            } else {
+                this.editingPlace && this.editingPlace.updateFromJson(place);
+            }
+        }));
+    }
 }

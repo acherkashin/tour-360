@@ -39,6 +39,7 @@ class TourMap extends React.Component {
         this._handleZoomChanged = this._handleZoomChanged.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
+        this._handlePlaceDragend = this._handlePlaceDragend.bind(this);
     }
 
     state = {
@@ -90,6 +91,15 @@ class TourMap extends React.Component {
         });
     }
 
+    _handlePlaceDragend(e) {
+        this.props.onPlaceDragend && this.props.onPlaceDragend({
+            origin: this,
+            place: e.place,
+            latitude: e.latitude,
+            longitude: e.longitude,
+        });
+    }
+
     _renderMapContent() {
         const { tour, selectedPlaceId } = this.props;
         const places = tour.places || [];
@@ -114,7 +124,9 @@ class TourMap extends React.Component {
                     place={place}
                     isSelected={isSelected}
                     isStart={isStart}
-                    onClick={this._handlePlaceClick} />;
+                    onClick={this._handlePlaceClick} 
+                    onDragend={this._handlePlaceDragend}
+                />;
             })}
         </>;
     }
@@ -204,6 +216,7 @@ TourMap.propTypes = {
     onMouseMove: PropTypes.func,
     onZoomChanged: PropTypes.func,
     onPlaceClick: PropTypes.func,
+    onPlaceDragend: PropTypes.func,
     onConnectionClick: PropTypes.func,
 }
 

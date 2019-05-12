@@ -84,6 +84,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this._handleFileSelected = this._handleFileSelected.bind(this);
         this._handleModeChanged = this._handleModeChanged.bind(this);
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
+        this._handlePlaceDragend = this._handlePlaceDragend.bind(this);
         this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
@@ -278,6 +279,10 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         }
     }
 
+    _handlePlaceDragend(e) {
+        this.tourStore.movePlace(e.place.id, e.latitude, e.longitude);
+    }
+
     _handleConnectionClick(e) {
         if (this.state.mapEditMode === DRAG_MAP) {
             this.tourStore.editConnection(e.connection.id);
@@ -296,6 +301,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 onClick={this._handleMapClick}
                 onConnectionClick={this._handleConnectionClick}
                 onPlaceClick={this._handlePlaceClick}
+                onPlaceDragend={this._handlePlaceDragend}
                 onZoomChanged={this._handleZoomChanged}
             />;
         } else {

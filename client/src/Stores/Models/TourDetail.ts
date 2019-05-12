@@ -35,7 +35,12 @@ class TourDetail {
     }
 
     get imageUrl() {
-        return  this.cover && this.cover.filename ? `/${this.cover.filename}?${this.coverImageHash}` : null;
+        return this.cover && this.cover.filename ? `/${this.cover.filename}?${this.coverImageHash}` : null;
+    }
+
+    getPlace(placeId: string): PlaceDetailDto {
+        const place = (this.places || []).find(place => place.id === placeId);
+        return place;
     }
 
     updateFromJson(json: TourDetailDto) {
@@ -53,7 +58,7 @@ class TourDetail {
     }
 
     updatePlaceFromJson(json: PlaceDetailDto) {
-        const place = (this.places || []).find(place => place.id === json.id);
+        const place = this.getPlace(json.id);
 
         if (place) {
             place.longitude = json.longitude;
