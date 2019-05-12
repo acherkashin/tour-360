@@ -8,7 +8,12 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
-import { WidgetItem } from './';
+import { WidgetItem } from '.';
+import {
+    BaseWidget,
+    TextWidget as ITextWidget,
+    RunVideoWidget as IRunVideoWidget
+} from '../../../../backend/src/models/interfaces';
 
 const styles = theme => ({
     root: {
@@ -18,10 +23,29 @@ const styles = theme => ({
     }
 });
 
-class WidgetList extends React.Component {
-    _getTitle(widget) {
+interface WidgetListProps {
+    intl: any;
+    classes: any;
+    widgets: BaseWidget[];
+    onClick: (e: { origin: any, widget: BaseWidget }) => void;
+    onRemoveClick: (e: { origin: any, widget: BaseWidget }) => void;
+}
+
+class WidgetList extends React.Component<WidgetListProps> {
+    static propTypes = {
+        widgets: PropTypes.arrayOf(PropTypes.object).isRequired,
+        onClick: PropTypes.func.isRequired,
+        onRemoveClick: PropTypes.func.isRequired,
+    
+        classes: PropTypes.object.isRequired,
+        intl: intlShape.isRequired,
+    };
+
+    _getTitle(widget: BaseWidget) {
         if (widget.type === 'text') {
-            return widget.content;
+            return (widget as ITextWidget).content;
+        } if (widget.type === 'run-video') {
+            return (widget as IRunVideoWidget).name;
         } else {
             throw new Error('Unknown widget type');
         }
@@ -46,14 +70,5 @@ class WidgetList extends React.Component {
         </List>;
     }
 }
-
-WidgetList.propTypes = {
-    widgets: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onClick: PropTypes.func.isRequired,
-    onRemoveClick: PropTypes.func.isRequired,
-
-    classes: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
-};
 
 export default withStyles(styles)(injectIntl(WidgetList));

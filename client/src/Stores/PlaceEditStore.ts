@@ -3,7 +3,7 @@ import { deepObserve, fromPromise, IDisposer } from 'mobx-utils';
 import { PlaceEditService, PlaceService, TourEditService } from './../api/';
 import { UserStore, RootStore } from '.';
 import EditPlace from './Models/EditPlace';
-import { BaseWidget, TextWidget } from '../../../backend/src/models/interfaces';
+import { BaseWidget, TextWidget, WidgetType } from '../../../backend/src/models/interfaces';
 
 export default class PlaceEditStore {
     saveResult: any;
@@ -31,15 +31,11 @@ export default class PlaceEditStore {
         return this.saveResult && this.saveResult.state === "pending";
     }
 
-    addWidget(type) {
-        if (type === "text") {
-            PlaceEditService.addWidget(this.sessionId, type).then((resp) => {
-                const { place } = resp.data;
-                runInAction(() => this.editingPlace.updateFromJson(place));
-            });
-        } else {
-            throw new Error("Unknown widget type");
-        }
+    addWidget(type: WidgetType) {
+        PlaceEditService.addWidget(this.sessionId, type).then((resp) => {
+            const { place } = resp.data;
+            runInAction(() => this.editingPlace.updateFromJson(place));
+        });
     }
 
     beginEditing(tourId, placeId) {

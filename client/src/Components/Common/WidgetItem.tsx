@@ -12,18 +12,47 @@ import {
     Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
+import { BaseWidget } from '../../../../backend/src/models/interfaces';
+import { PlayCircleFilledOutlined } from '@material-ui/icons'
 
 const styles = theme => ({
     root: {
     }
 });
 
-class WidgetItem extends React.Component {
-    constructor(props) {
+interface WidgetItemProps {
+    title: string;
+    widget: BaseWidget;
+    onClick: (e: { origin: WidgetItem, widget: BaseWidget }) => void;
+    onRemoveClick: (e: { origin: WidgetItem, widget: BaseWidget }) => void;
+}
+
+class WidgetItem extends React.Component<WidgetItemProps> {
+    constructor(props: WidgetItemProps) {
         super(props);
 
         this._handleClick = this._handleClick.bind(this);
         this._handleRemoveClick = this._handleRemoveClick.bind(this);
+    }
+
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        widget: PropTypes.object.isRequired,
+        onClick: PropTypes.func.isRequired,
+        onRemoveClick: PropTypes.func.isRequired,
+
+        classes: PropTypes.object.isRequired,
+        intl: intlShape.isRequired,
+    };
+
+    _getIcon(widget: BaseWidget) {
+        if(widget.type === 'text') {
+            return <TitleIcon/>
+        } else if(widget.type === 'run-video') {
+            return <PlayCircleFilledOutlined/>;
+        }
+
+        throw new Error("Unknown widget type");
     }
 
     _handleClick() {
@@ -36,14 +65,14 @@ class WidgetItem extends React.Component {
     }
 
     render() {
-        const { title } = this.props;
+        const { title, widget } = this.props;
 
         return (
             <ListItem
                 button
                 onClick={this._handleClick}>
                 <ListItemIcon>
-                    <TitleIcon />
+                    {this._getIcon(widget)}
                 </ListItemIcon>
                 <ListItemText primary={title} />
                 <IconButton onClick={this._handleRemoveClick}>
@@ -52,16 +81,6 @@ class WidgetItem extends React.Component {
             </ListItem>
         );
     }
-}
-
-WidgetItem.propTypes = {
-    title: PropTypes.string.isRequired,
-    widget: PropTypes.object.isRequired,
-    onClick: PropTypes.func.isRequired,
-    onRemoveClick: PropTypes.func.isRequired,
-
-    classes: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
 }
 
 export default withStyles(styles)(injectIntl(WidgetItem));

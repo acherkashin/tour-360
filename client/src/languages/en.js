@@ -128,6 +128,10 @@ const en = defineMessages({
         id: 'common.no-widgets',
         defaultMessage: 'No widgets',
     },
+    volume: {
+        id: 'common.volume',
+        defaultMessage: 'Volume',
+    },
 
     headerTitle: {
         id: 'header.title',

@@ -1,7 +1,7 @@
 import uuidv1 from 'uuidv1';
 import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { cache as _cache } from './tour-edit-controller';
-import { Tour, Place, } from './../models/interfaces';
+import { Tour, Place, WidgetType, TextWidget, RunVideoWidget } from './../models/interfaces';
 import { Request, Response } from 'express';
 
 interface PlaceEditCache {
@@ -59,26 +59,14 @@ export function addWidget(req: Request, res: Response) {
     let { place, tourSessionId } = cache[sessionId];
     const tour = _cache[tourSessionId];
 
-    if (type === 'text') {
-        const textWidget = {
-            id: uuidv1(),
-            x: 0,
-            y: 0,
-            content: '[Enter your text]',
-            type: 'text',
-            color: '#000000',
-            backgroundColor: '#ffffff',
-        };
-        place.widgets.push(textWidget);
+    const widget = createWidget(type);
+    place.widgets.push(widget);
 
-        res.json({
-            sessionId,
-            tourSessionId,
-            place: place.toDetailDto(tour),
-        });
-    } else {
-        throw new Error('Unknown widget type');
-    }
+    res.json({
+        sessionId,
+        tourSessionId,
+        place: place.toDetailDto(tour),
+    });
 }
 
 export function cancelChanges(req: Request, res: Response) {
@@ -121,3 +109,31 @@ export function saveChanges(req: Request, res: Response) {
     });
 }
 
+function createWidget(type: WidgetType) {
+    if (type === 'text') {
+        const textWidget: TextWidget = {
+            id: uuidv1(),
+            x: 0,
+            y: 0,
+            content: '[Enter your text]',
+            type,
+            color: '#000000',
+            backgroundColor: '#ffffff',
+            padding: 0,
+        };
+        return textWidget;
+    } if (type === 'run-video') {
+        const runVideo: RunVideoWidget = {
+            id: uuidv1(),
+            x: 0,
+            y: 0,
+            name: 'Video Widget',
+            muted: false,
+            type,
+            volume: 0.5,
+        };
+        return runVideo;
+    } else {
+        throw new Error('Unknown widget type');
+    }
+}

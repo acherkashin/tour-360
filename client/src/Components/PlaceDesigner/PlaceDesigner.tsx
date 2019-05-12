@@ -26,10 +26,14 @@ import {
 import EditPlacePanel from '../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { CoordinateSystem } from '.';
-import { TextWidget, EditTextWidgetPanel } from './Widgets';
+import { TextWidget, EditTextWidgetPanel, RunVideoEditPanel, RunVideoWidget } from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
 import { RootStore, EditPlace } from "./../../Stores";
-import { BaseWidget, TextWidget as ITextWidget } from '../../../../backend/src/models/interfaces';
+import { 
+    BaseWidget,
+    TextWidget as ITextWidget,
+    RunVideoWidget as IRunVideoWidget
+} from '../../../../backend/src/models/interfaces';
 
 const styles = createStyles(theme => ({
     root: {},
@@ -221,9 +225,9 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _renderWidgetEditPanel() {
-            const widget = this.editingWidget as ITextWidget;
+            if (this.editingWidget.type === 'text') {
+                const widget = this.editingWidget as ITextWidget;
 
-            if (widget.type === 'text') {
                 return <EditTextWidgetPanel
                     key={widget.id}
                     widget={widget}
@@ -235,19 +239,39 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onPaddingChanged={e => widget.padding = e.padding}
                     onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                 />
+            } else if(this.editingWidget.type === 'run-video') {
+                const widget = this.editingWidget as IRunVideoWidget;
+
+                return <RunVideoEditPanel
+                    key={widget.id}
+                    widget={widget}
+                    onXChanged={e => widget.x = e.value}
+                    onYChanged={e => widget.y = e.value}
+                    onNameChanged={e => widget.name = e.value}
+                    onVolumeChanged={e => widget.volume = e.value}
+                />;
             }
 
             throw new Error("Unknown type of widget");
         }
 
-        _renderWidget(widget) {
+        _renderWidget(widget: BaseWidget) {
+            const isSelected = Boolean(this.editingWidget && this.editingWidget.id === widget.id);
+
             if (widget.type === 'text') {
                 return <TextWidget
                     key={widget.id}
                     widget={widget}
-                    isSelected={Boolean(this.editingWidget && this.editingWidget.id === widget.id)}
+                    isSelected={isSelected}
                     onClick={this._handleWidgetClick}
                 />;
+            } else if (widget.type === 'run-video') {
+                return <RunVideoWidget
+                    key={widget.id}
+                    widget={widget}
+                    isSelected={isSelected}
+                    onClick={this._handleWidgetClick}
+                />
             }
 
             throw new Error("Unknown type of widget");
@@ -308,7 +332,8 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _addWidget(e) {
-            this.placeEditStore.addWidget('text');
+            this.placeEditStore.addWidget('run-video');
+            // this.placeEditStore.addWidget('text');
         }
 
         render() {

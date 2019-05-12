@@ -121,6 +121,10 @@ const ru = defineMessages({
         id: 'common.no-widgets',
         defaultMessage: 'Виджеты отсутствуют',
     },
+    volume: {
+        id: 'common.volume',
+        defaultMessage: 'Volume',
+    },
 
     headerTitle: {
         id: 'header.title',

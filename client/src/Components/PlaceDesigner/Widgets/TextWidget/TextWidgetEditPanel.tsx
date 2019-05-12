@@ -5,9 +5,9 @@ import { intlShape, injectIntl } from 'react-intl';
 import { TextField, Button } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import TextWidgetShape from './TextWidgetShape';
-import { HEIGHT, WIDTH } from '../utils';
-import { ColorPicker } from '../../Common';
-import { TextWidget as TextWidgetModel } from "./../../../../../backend/src/models/interfaces";
+import { HEIGHT, WIDTH } from '../../utils';
+import { ColorPicker } from '../../../Common';
+import { TextWidget as TextWidgetModel } from "../../../../../../backend/src/models/interfaces";
 
 const styles = createStyles(theme => ({
     root: {
@@ -184,4 +184,4 @@ class TextWidgetEditPanel extends React.Component<TextWidgetEditPanelProps> {
     }
 }
 
-export default withStyles(styles)(injectIntl(observer((TextWidgetEditPanel))));
+export default withStyles(styles)(injectIntl(observer(TextWidgetEditPanel)));
