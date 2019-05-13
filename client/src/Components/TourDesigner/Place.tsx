@@ -12,8 +12,16 @@ interface PlaceProps {
     isStart: boolean;
 }
 
-const icon = L.icon({
-    iconUrl: '/src/marker-icon.png',
+const defaultIcon = L.icon({
+    iconUrl: '/src/markers/default.svg',
+    iconSize: [25, 41],
+});
+const selectedIcon = L.icon({
+    iconUrl: '/src/markers/selected.svg',
+    iconSize: [25, 41],
+});
+const startIcon = L.icon({
+    iconUrl: '/src/markers/start.svg',
     iconSize: [25, 41],
 });
 
@@ -34,40 +42,38 @@ export default class Place extends Component<PlaceProps, any> {
         const { place, isSelected, isStart, onClick, onDragend } = this.props;
         const radius = 20;
 
-        const startFillColor = green[500];
-        const defaultFillColor = blue[500];
-        const fillColor = isStart ? startFillColor : defaultFillColor;
+        const icon = isSelected ? selectedIcon : isStart ? startIcon : defaultIcon;
 
-        const selectedColor = red[500];
+        return (
+            <Marker
+                draggable={true}
+                icon={icon}
+                key={place.id}
+                position={[place.latitude, place.longitude]}
+                onclick={(e) => {
+                    onClick && onClick({
+                        origin: this,
+                        place,
+                        lEvent: e,
+                    });
+                }}
+                onDragend={e => {
+                    const marker = this.refmarker.current
+                    const position = marker.leafletElement.getLatLng();
 
-        return (<Marker
-            draggable={true}
-            icon={icon}
-            key={place.id}
-            position={[place.latitude, place.longitude]}
-            onclick={(e) => {
-                onClick && onClick({
-                    origin: this,
-                    place,
-                    lEvent: e,
-                });
-            }}
-            onDragend={e => {
-                const marker = this.refmarker.current
-                const position = marker.leafletElement.getLatLng();
-
-                onDragend && onDragend({
-                    origin: this,
-                    place,
-                    latitude: position.lat,
-                    longitude: position.lng,
-                });
-            }}
-            ref={this.refmarker}
-        >
-            <Tooltip permanent direction='bottom' offset={[0, radius]}>
-                <span>{place.name}</span>
-            </Tooltip>
-        </Marker>);
+                    onDragend && onDragend({
+                        origin: this,
+                        place,
+                        latitude: position.lat,
+                        longitude: position.lng,
+                    });
+                }}
+                ref={this.refmarker}
+            >
+                <Tooltip permanent direction='bottom' offset={[0, radius]}>
+                    <span>{place.name}</span>
+                </Tooltip>
+            </Marker>
+        );
     }
 }
