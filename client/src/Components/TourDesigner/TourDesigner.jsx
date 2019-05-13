@@ -112,6 +112,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         isOpenedPreviewDialog: false,
         isOpenedPlaceDescriptionDialog: false,
         mapEditMode: 0,
+        placeToDeleteId: null,
     };
 
     componentDidMount() {
@@ -184,19 +185,26 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this.setState({ isOpenedConfirmDialog: false });
     }
 
+    _deletePlaceClick(placeId) {
+        this.setState({
+            placeToDeleteId: placeId,
+            isOpenedDeleteDialog: true,
+        });
+    }
+
     /* Delete dialog */
-    _handleDeletePlaceClick() {
-        this.setState({ isOpenedDeleteDialog: true });
+    _handleDeletePlaceClick(e) {
+        this._deletePlaceClick(e.place.id);
     }
 
     _handleOkDeletePlaceClick() {
-        this.tourStore.removePlace(this.editingPlace.id).finally(() => {
+        this.tourStore.removePlace(this.state.placeToDeleteId).finally(() => {
             this._closeDeleteDialog();
             this.tourStore.cancelEditingPlace();
         });
     }
     _closeDeleteDialog() {
-        this.setState({ isOpenedDeleteDialog: false });
+        this.setState({ isOpenedDeleteDialog: false, placeToDeleteId: null });
     }
 
     /* Preview Dialog */
@@ -388,6 +396,9 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             onChangeImageMapClick={this._handleChangeImageMapClick}
                             onStartPlaceChanged={this._handleStartPlaceChanged}
                             onIsPublicChanged={this._handleIsPublicChanged}
+                            onViewPlaceClick={this._handleViewImage360Click}
+                            onEditPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
+                            onDeletePlaceClick={(e) => this._deletePlaceClick(e.place.id)}
                         />
                         <MapEditMode
                             value={mapEditMode}

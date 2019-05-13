@@ -14,6 +14,7 @@ import {
     Checkbox,
 } from '@material-ui/core';
 import { intlShape, injectIntl } from 'react-intl';
+import { PlaceList } from './../';
 
 const styles = theme => ({
     root: {
@@ -30,10 +31,16 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
         this._handleIsPublicChanged = this._handleIsPublicChanged.bind(this);
+        this._handleViewPlaceClick = this._handleViewPlaceClick.bind(this);
+        this._handleEditPlaceClick = this._handleEditPlaceClick.bind(this);
+        this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
     }
 
     _handleNameChanged(e) {
-        this.props.onNameChanged({ origin: this, name: e.target.value });
+        this.props.onNameChanged({
+            origin: this,
+            name: e.target.value,
+        });
     }
 
     _handleChangeImageMapClick(e) {
@@ -46,6 +53,18 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
 
     _handleIsPublicChanged(e) {
         this.props.onIsPublicChanged({ origin: this, isPublic: e.target.checked });
+    }
+
+    _handleViewPlaceClick(e) {
+        this.props.onViewPlaceClick({ origin: this, place: e.place, });
+    }
+
+    _handleEditPlaceClick(e) {
+        this.props.onEditPlaceClick({ origin: this, place: e.place, });
+    }
+
+    _handleDeletePlaceClick(e) {
+        this.props.onDeletePlaceClick({ origin: this, place: e.place });
     }
 
     render() {
@@ -88,6 +107,13 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
                 label={formatMessage(messages.editTourPanelIsPublic)}
                 title={formatMessage(messages.editTourPanelIsPublicDescription)}
             />
+            <PlaceList
+                places={places}
+                canDelete={true}
+                onViewClick={this._handleViewPlaceClick}
+                onEditClick={this._handleEditPlaceClick}
+                onDeleteClick={this._handleDeletePlaceClick}
+            />
         </div>);
     }
 });
@@ -106,7 +132,10 @@ EditTourPanel.propTypes = {
     onChangeImageMapClick: PropTypes.func.isRequired,
     onStartPlaceChanged: PropTypes.func.isRequired,
     onIsPublicChanged: PropTypes.func.isRequired,
-    
+    onViewPlaceClick: PropTypes.func.isRequired,
+    onEditPlaceClick: PropTypes.func.isRequired,
+    onDeletePlaceClick: PropTypes.func.isRequired,
+
     intl: intlShape.isRequired,
 }
 
