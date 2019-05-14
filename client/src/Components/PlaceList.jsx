@@ -17,7 +17,7 @@ const styles = theme => ({
 
 class PlaceList extends React.Component {
     render() {
-        const { classes, canDelete, places, onClick, onViewClick, onDeleteClick, onEditClick, className } = this.props;
+        const { classes, canDelete, places, onClick, onViewClick, onDeleteClick, onEditClick, className, canClick } = this.props;
         const hasPlaces = places && places.length > 0;
         const { messages, formatMessage } = this.props.intl;
 
@@ -31,7 +31,8 @@ class PlaceList extends React.Component {
                 {hasPlaces && (places || []).map(place => <PlaceItem
                     key={place.id}
                     place={place}
-                    canDelete={true}
+                    canClick={canClick}
+                    canDelete={canDelete}
                     onClick={onClick}
                     onViewClick={onViewClick}
                     onDeleteClick={onDeleteClick}
@@ -50,10 +51,12 @@ PlaceList.propTypes = {
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
     })).isRequired,
+    canClick: PropTypes.bool.isRequired,
     canDelete: PropTypes.bool.isRequired,
+    onClick: PropTypes.func,
     onViewClick: PropTypes.func.isRequired,
     onEditClick: PropTypes.func.isRequired,
-    onDeleteClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func,
 
     intl: intlShape.isRequired,
 };

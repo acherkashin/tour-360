@@ -397,6 +397,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             onStartPlaceChanged={this._handleStartPlaceChanged}
                             onIsPublicChanged={this._handleIsPublicChanged}
                             onViewPlaceClick={this._handleViewImage360Click}
+                            onPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onEditPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onDeletePlaceClick={(e) => this._deletePlaceClick(e.place.id)}
                         />

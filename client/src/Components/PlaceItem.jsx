@@ -15,27 +15,39 @@ class PlaceItem extends React.Component {
     constructor(props) {
         super(props);
 
+        this._handleClick = this._handleClick.bind(this);
         this._handleViewClick = this._handleViewClick.bind(this);
         this._handleEditClick = this._handleEditClick.bind(this);
         this._handleDeleteClick = this._handleDeleteClick.bind(this);
     }
 
-    _handleViewClick() {
+    _handleClick(e) {
+        e.stopPropagation();
+        this.props.onClick && this.props.onClick({ origin: this, place: this.props.place });
+    }
+
+    _handleViewClick(e) {
+        e.stopPropagation();
         this.props.onViewClick && this.props.onViewClick({ origin: this, place: this.props.place });
     }
 
-    _handleEditClick() {
+    _handleEditClick(e) {
+        e.stopPropagation();
         this.props.onEditClick && this.props.onEditClick({ origin: this, place: this.props.place });
     }
 
-    _handleDeleteClick() {
+    _handleDeleteClick(e) {
+        e.stopPropagation();
         this.props.onDeleteClick && this.props.onDeleteClick({ origin: this, place: this.props.place });
     }
 
     render() {
-        const { place, canDelete } = this.props;
+        const { place, canDelete, canClick } = this.props;
 
-        return <ListItem>
+        return <ListItem
+            button={canClick}
+            onClick={this._handleClick}
+        >
             <IconButton onClick={this._handleViewClick}>
                 <VisibilityIcon />
             </IconButton>
@@ -57,9 +69,11 @@ PlaceItem.propTypes = {
         name: PropTypes.string.isRequired,
     }).isRequired,
     canDelete: PropTypes.bool.isRequired,
+    canClick: PropTypes.bool.isRequired,
+    onClick: PropTypes.func,
     onViewClick: PropTypes.func.isRequired,
     onEditClick: PropTypes.func.isRequired,
-    onDeleteClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func,
 };
 
 export default withStyles(styles)(PlaceItem);

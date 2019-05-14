@@ -78,6 +78,7 @@ class ViewTourPanel extends React.Component<ViewTourProps> {
                 <PlaceList
                     className={classes.places}
                     places={tour.places}
+                    canClick={false}
                     canDelete={false}
                     onViewClick={(e) => this.props.onViewPlaceClick({
                         origin: this,

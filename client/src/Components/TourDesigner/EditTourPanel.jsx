@@ -31,6 +31,7 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
         this._handleIsPublicChanged = this._handleIsPublicChanged.bind(this);
+        this._handlePlaceClick = this._handlePlaceClick.bind(this);
         this._handleViewPlaceClick = this._handleViewPlaceClick.bind(this);
         this._handleEditPlaceClick = this._handleEditPlaceClick.bind(this);
         this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
@@ -53,6 +54,10 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
 
     _handleIsPublicChanged(e) {
         this.props.onIsPublicChanged({ origin: this, isPublic: e.target.checked });
+    }
+
+    _handlePlaceClick(e) {
+        this.props.onPlaceClick({ origin: this, place: e.place });
     }
 
     _handleViewPlaceClick(e) {
@@ -109,7 +114,9 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
             />
             <PlaceList
                 places={places}
+                canClick={true}
                 canDelete={true}
+                onClick={this._handlePlaceClick}
                 onViewClick={this._handleViewPlaceClick}
                 onEditClick={this._handleEditPlaceClick}
                 onDeleteClick={this._handleDeletePlaceClick}
@@ -135,6 +142,7 @@ EditTourPanel.propTypes = {
     onViewPlaceClick: PropTypes.func.isRequired,
     onEditPlaceClick: PropTypes.func.isRequired,
     onDeletePlaceClick: PropTypes.func.isRequired,
+    onPlaceClick: PropTypes.func.isRequired,
 
     intl: intlShape.isRequired,
 }
