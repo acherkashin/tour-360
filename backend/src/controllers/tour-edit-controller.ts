@@ -144,7 +144,7 @@ export function removePlace(req: Request, res: Response) {
     const { sessionId, placeId } = req.params;
 
     const tour = cache[sessionId];
-    tour.places = tour.places.filter(item => item.id !== placeId);
+    tour.deletePlace(placeId);
 
     const dto = tour.toDetailDto();
     res.json({ tour: dto });

@@ -90,6 +90,11 @@ TourSchema.methods.getPlace = function (id: string) {
     return place;
 };
 
+TourSchema.methods.deletePlace = function(placeId: string) {
+    this.places = this.places.filter(item => item.id !== placeId);
+    this.connections = this.connections.filter(item => item.startPlaceId !== placeId && item.endPlaceId !== placeId);
+};
+
 const TourModel = mongoose.model<Tour>("Tour", TourSchema);
 
 export default TourModel;

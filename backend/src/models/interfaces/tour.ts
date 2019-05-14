@@ -43,5 +43,6 @@ export interface Tour extends Document {
     deleteConnection: (place1Id: string, place2Id: string) => void;
     getConnectionById: (id: string) => Connection;
     getPlace: (id: string) => Place;
+    deletePlace: (placeId: string) => void;
     toDetailDto: () => TourDetailDto;
 }
