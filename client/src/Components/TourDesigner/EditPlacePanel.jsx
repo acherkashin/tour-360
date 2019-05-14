@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ConnectionList from './ConnectionList';
 import { EditImage } from './../';
 import SoundEditor from './SoundEditor';
-import { WidgetList } from './../Common';
+import { WidgetList, IconEditor } from './../Common';
 import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
@@ -17,6 +17,9 @@ const styles = theme => ({
     panelItem: {
         marginTop: theme.spacing.unit,
     },
+    markerEditor: {
+        marginTop: theme.spacing.unit,
+    }
 });
 
 const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
@@ -116,6 +119,11 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 hasImage={place.hasImage}
                 imageUrl={place.mapImage360Url}
                 onImageChangeClick={this._handleChangeImage360Click}
+            />
+            <IconEditor
+                className={classes.markerEditor}
+                onEditClick={(e) => console.log(e)}
+                onClearClick={(e) => console.log(e)}
             />
             {showConnections && <ConnectionList
                 className={classes.panelItem}

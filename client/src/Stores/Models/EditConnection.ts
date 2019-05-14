@@ -1,4 +1,5 @@
-import { extendObservable } from "mobx";
+import { decorate, observable } from "mobx";
+import { ConnectionDto, PlaceDto } from "../../../../backend/src/models/interfaces";
 
 export default class EditConnection {
     readonly id: string;
@@ -6,23 +7,18 @@ export default class EditConnection {
     readonly sessionId: string;
     startPlacePosition: string;
     endPlacePosition: string;
-    startPlace: string;
-    endPlace: string;
+    startPlace: PlaceDto;
+    endPlace: PlaceDto;
 
-    constructor(store: any, sessionId: string, json) {
+    constructor(store: any, sessionId: string, json: ConnectionDto) {
         this.store = store;
         this.sessionId = sessionId;
         this.id = json.id;
 
-        extendObservable(this, {
-            startPlacePosition: json.startPlacePosition,
-            endPlacePosition: json.endPlacePosition,
-            startPlace: json.startPlace,
-            endPlace: json.endPlace,
-        });
+        this.updateFromJson(json);
     }
 
-    updateFromJson(json) {
+    updateFromJson(json: ConnectionDto) {
         this.startPlacePosition = json.startPlacePosition;
         this.endPlacePosition = json.endPlacePosition;
         this.startPlace = json.startPlace;
@@ -37,3 +33,10 @@ export default class EditConnection {
         };
     }
 }
+
+decorate(EditConnection, <any>{
+    startPlacePosition: observable,
+    endPlacePosition: observable,
+    startPlace: observable,
+    endPlace: observable,
+});
