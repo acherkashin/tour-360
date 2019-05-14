@@ -3,7 +3,15 @@ import { NOT_FOUND, INTERNAL_SERVER_ERROR, OK, NO_CONTENT, CONFLICT } from 'http
 import { Request, Response } from 'express';
 import { Tour } from '../models';
 import { Tour as ITour, Place as IPlace, Connection } from '../models/interfaces';
-import { addFile, removeFile, generatePlaceImage360Name, generateTourImageName, generatePlaceSoundName } from '../utils/fileutils';
+import {
+    addFile,
+    removeFile,
+    generatePlaceImage360Name,
+    generateTourImageName,
+    generatePlaceSoundName,
+    generatePlaceMapIconName,
+} from '../utils/fileutils';
+import { UploadedFile } from 'express-fileupload';
 
 const cache: { [key: string]: ITour } = {}
 const _cache = cache;
@@ -64,7 +72,7 @@ export function uploadMapImage(req: Request, res: Response) {
     //TODO: check extensions for images
     const { sessionId } = req.params;
     const { width, height } = req.body;
-    const mapImage = req.files.mapImage;
+    const mapImage = <UploadedFile>req.files.mapImage;
 
     const tour = cache[sessionId];
     const newFileName = generateTourImageName(tour, mapImage);
@@ -85,7 +93,7 @@ export function uploadMapImage(req: Request, res: Response) {
 export function uploadSound(req: Request, res: Response) {
     //TODO: add checking extension for uploaded file
     const { sessionId, placeId } = req.params;
-    const sound = req.files.sound;
+    const sound = <UploadedFile>req.files.sound;
 
     const tour = cache[sessionId];
     const place = tour.getPlace(placeId);
@@ -178,7 +186,7 @@ export function updatePlace(req: Request, res: Response) {
 export function uploadImage360(req: Request, res: Response) {
     const { sessionId, placeId } = req.params;
     const { width, height } = req.body;
-    const mapImage = req.files.mapImage;
+    const mapImage = <UploadedFile>req.files.mapImage;
 
     const tour = cache[sessionId];
     const place = cache[sessionId].getPlace(placeId);
@@ -189,6 +197,27 @@ export function uploadImage360(req: Request, res: Response) {
         place.image360.contentType = (<any>mapImage).mimetype;
         place.image360.height = parseInt(height);
         place.image360.width = parseInt(width);
+
+        res.json({ place: place.toDetailDto(tour) });
+    }).catch(error => {
+        res.status(INTERNAL_SERVER_ERROR).json({ error });
+    });
+}
+
+export function uploadPlaceIcon(req: Request, res: Response) {
+    const { sessionId, placeId } = req.params;
+    const { width, height } = req.body;
+    const mapIcon = <UploadedFile>req.files.mapIcon;
+
+    const tour = cache[sessionId];
+    const place = cache[sessionId].getPlace(placeId);
+    const placeMapName = generatePlaceMapIconName(place, mapIcon);
+
+    addFile(placeMapName, mapIcon).then(() => {
+        place.mapIcon.filename = placeMapName;
+        place.mapIcon.contentType = mapIcon.mimetype;
+        place.mapIcon.height = parseInt(height);
+        place.mapIcon.width = parseInt(width);
 
         res.json({ place: place.toDetailDto(tour) });
     }).catch(error => {

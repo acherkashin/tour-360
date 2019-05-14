@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Place, Tour } from "./interfaces";
+import { Place, Tour, TourDetailDto, PlaceDetailDto } from "./interfaces";
 // const Widget = new mongoose.Schema({
 //     type: { type: String, required: true },
 // });
@@ -12,8 +12,14 @@ const PlaceSchema = new mongoose.Schema<Place>({
     image360: {
         filename: String,
         contentType: String,
-        height: Number,
-        width: Number,
+        width: { type: Number, default: 0 },
+        height: { type: Number, default: 0 },
+    },
+    mapIcon: {
+        filename: String,
+        contentType: String,
+        width: { type: Number, default: 0 },
+        height: { type: Number, default: 0 },
     },
     description: { type: String, default: '' },
     widgets: [Object],
@@ -34,10 +40,11 @@ PlaceSchema.methods.toClient = function () {
     return dto;
 };
 
-PlaceSchema.methods.toDetailDto = function (tour: Tour) {
+PlaceSchema.methods.toDetailDto = function (tour: Tour): PlaceDetailDto {
     const starts = (tour.connections || []).filter(c => c.startPlaceId === this.id).map(c => c.endAsDestination(tour));
     const ends = (tour.connections || []).filter(c => c.endPlaceId === this.id).map(c => c.startAsDestination(tour));
 
+    //TODO: remove it
     const temporWidgets = [{
         id: '1',
         type: 'text',
@@ -61,6 +68,7 @@ PlaceSchema.methods.toDetailDto = function (tour: Tour) {
         image360Width: this.image360 && this.image360.width,
         image360Height: this.image360 && this.image360.height,
         image360Name: this.image360 && this.image360.filename,
+        mapIcon: this.mapIcon,
         soundName: this.sound && this.sound.filename,
         connections: [...starts, ...ends],
         widgets: this.widgets || temporWidgets,

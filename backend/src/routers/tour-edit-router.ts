@@ -40,5 +40,6 @@ router.route('/tour-edit/:sessionId/place')
 
 router.route('/tour-edit/:sessionId/place/:placeId/uploadImage360')
     .post(verifyToken, verifySession, TourEditController.uploadImage360);
-
+router.route('/tour-edit/:sessionId/place/:placeId/uploadImage360')
+    .post(verifyToken, verifySession, TourEditController.uploadPlaceIcon);
 export default router;

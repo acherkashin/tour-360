@@ -1,6 +1,8 @@
 import fs from 'fs-extra';
 import path from 'path';
 import uuidv1 from 'uuidv1';
+import { UploadedFile } from 'express-fileupload';
+import { Place, Tour } from './../models/interfaces';
 
 function addFile(filename: string, file) {
     const filepath = getFilePath(filename);
@@ -21,21 +23,28 @@ function getFilePath(filename: string) {
     return `${__dirname}\\..\\..\\public\\${filename}`;
 }
 
-function generatePlaceImage360Name(place, mapImage): string {
+function generatePlaceImage360Name(place: Place, mapImage: UploadedFile): string {
     const extension = path.extname(mapImage.name);
     const newFileName = `${place.id}-${uuidv1()}-place-360${extension}`;
 
     return newFileName;
 }
 
-function generateTourImageName(tour, mapImage): string {
+function generatePlaceMapIconName(place: Place, mapIcon: UploadedFile) {
+    const extension = path.extname(mapIcon.name);
+    const newFileName = `${place.id}-${uuidv1()}-map-icon${extension}`;
+
+    return newFileName;
+}
+
+function generateTourImageName(tour: Tour, mapImage: UploadedFile): string {
     const extension = path.extname(mapImage.name);
     const newFileName = `${tour.id}-${uuidv1()}-map${extension}`;
 
     return newFileName;
 }
 
-function generatePlaceSoundName(place, sound): string {
+function generatePlaceSoundName(place: Place, sound: UploadedFile): string {
     const extension = path.extname(sound.name);
     const newFileName = `${place.id}-${uuidv1()}-sound${extension}`;
 
@@ -47,6 +56,7 @@ export {
     removeFile,
     getFilePath,
     generatePlaceImage360Name,
+    generatePlaceMapIconName,
     generateTourImageName,
     generatePlaceSoundName,
 }
