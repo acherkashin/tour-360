@@ -4,6 +4,7 @@
 	 viewBox="0 0 370.9 512" style="enable-background:new 0 0 370.9 512;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4CAF50;}
+	.st1{fill:#FFFFFF;}
 </style>
 <g>
 	<g>
@@ -14,4 +15,5 @@
 		</g>
 	</g>
 </g>
+<ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 -76.6815 185.3362)" class="st1" cx="185.4" cy="185.2" rx="93.3" ry="93.3"/>
 </svg>
