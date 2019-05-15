@@ -1,42 +1,50 @@
-import { extendObservable } from 'mobx';
+import { extendObservable, decorate, observable, computed, } from 'mobx';
 import localStorage from 'mobx-localstorage';
-import { fromPromise } from 'mobx-utils';
+import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import decode from 'jwt-decode';
-import { UserService } from './../api';
+import { UserService } from '../api';
+import { RootStore } from "./";
+import {
+    UserDto
+} from "./../../../backend/src/models/interfaces";
 
 export default class UserStore {
-    constructor(rootStore) {
-        extendObservable(this, {
-            signInResult: null,
-            signUpResult: null,
-            editUserResult: null,
-            getCurrentUserResult: null,
-            currentUser: null,
-            get signInLoading() {
-                return this.signInResult && this.signInResult.state === "pending";
-            },
-            get singInRejected() {
-                return this.signInResult && this.signInResult.state === "rejected";
-            },
-            get editUserLoading() {
-                return this.editUserResult && this.editUserResult.state === "pending";
-            },
-            get siggnedIn() {
-                const token = UserStore.getToken();
-                return !!token;
-            }
-        });
+    signInResult: IPromiseBasedObservable<any>;
+    signUpResult: IPromiseBasedObservable<any>;
+    editUserResult: IPromiseBasedObservable<any>;
+    getCurrentUserResult: IPromiseBasedObservable<any>;
+    currentUser: UserDto;
+
+    constructor(rootStore: RootStore) {
     }
 
-    signUp(userData, ReCAPTCHAValue) {
-        this.signUpResult = fromPromise(UserService.signUp(userData, ReCAPTCHAValue)).then((resp) => {
+    get signInLoading(): boolean {
+        return this.signInResult && this.signInResult.state === "pending";
+    }
+
+    get singInRejected(): boolean {
+        return this.signInResult && this.signInResult.state === "rejected";
+    }
+
+    get editUserLoading(): boolean {
+        return this.editUserResult && this.editUserResult.state === "pending";
+    }
+
+    get siggnedIn(): boolean {
+        const token = UserStore.getToken();
+        return !!token;
+    }
+
+    signUp(userData: UserDto, ReCAPTCHAValue: string) {
+        this.signUpResult = fromPromise(UserService.signUp(userData, ReCAPTCHAValue));
+        this.signUpResult.then((resp) => {
             console.log(resp);
         });
 
         return this.signUpResult;
     }
 
-    signIn(email, password, ReCAPTCHAValue) {
+    signIn(email: string, password: string, ReCAPTCHAValue: string) {
         this.signInResult = fromPromise(UserService.signIn(email, password, ReCAPTCHAValue));
         this.signInResult.then((resp) => {
             const { user, token } = resp.data;
@@ -47,9 +55,8 @@ export default class UserStore {
         return this.signInResult;
     }
 
-    editUser(user) {
+    editUser(user: UserDto) {
         this.editUserResult = fromPromise(UserService.editUser(user));
-
         this.editUserResult.then((resp) => {
             this.currentUser = resp.data.user;
         });
@@ -94,3 +101,16 @@ export default class UserStore {
         return decode(this.getToken());
     }
 }
+
+
+decorate(UserStore, <any>{
+    signInResult: observable,
+    signUpResult: observable,
+    editUserResult: observable,
+    getCurrentUserResult: observable,
+    currentUser: observable,
+    signInLoading: computed,
+    singInRejected: computed,
+    editUserLoading: computed,
+    siggnedIn: computed,
+});

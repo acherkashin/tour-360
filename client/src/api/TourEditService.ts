@@ -43,7 +43,8 @@ export function deleteConnection(sessionId: string, place1Id: string, place2Id: 
 export function getConnection(sessionId: string, connectionId: string) {
     return client.get(`/api/tour-edit/${sessionId}/connection/${connectionId}`);
 }
-export function updateConnection(sessionId: string, connection: ConnectionDetailDto) {
+//TODO: use correct type
+export function updateConnection(sessionId: string, connection: any/*ConnectionDetailDto*/) {
     return client.put(`/api/tour-edit/${sessionId}/connection`, connection);
 }
 export function uploadMapImage(sessionId: string, file, width: number, height: number) {
