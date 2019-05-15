@@ -4,8 +4,7 @@ import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import {
     Clear as ClearIcon,
     Edit as EditIcon,
-    Visibility as VisibilityIcon,
-    Place as PlaceIcon,
+    CloudUpload as UploadIcon,
 } from "@material-ui/icons"
 import {
     List,
@@ -47,8 +46,9 @@ interface IconEditorProps extends WithStyles<typeof styles> {
         width: number;
         height: number;
     },
+    onUploadClick: (e: {origin: IconEditor, }) => void;
     onClearClick: (e: { origin: IconEditor, }) => void;
-    onEditClick: (e: { origin: IconEditor }) => void;
+    onEditClick: (e: { origin: IconEditor, }) => void;
 }
 
 class IconEditor extends React.Component<IconEditorProps> {
@@ -66,6 +66,7 @@ class IconEditor extends React.Component<IconEditorProps> {
             width: PropTypes.number.isRequired,
             height: PropTypes.number.isRequired,
         }),
+        onUploadClick: PropTypes.func.isRequired,
         onEditClick: PropTypes.func.isRequired,
         onClearClick: PropTypes.func.isRequired,
     }
@@ -76,6 +77,7 @@ class IconEditor extends React.Component<IconEditorProps> {
             className,
             onEditClick,
             onClearClick,
+            onUploadClick,
         } = this.props;
         const classes: any = this.props.classes;
         const { messages, formatMessage } = this.props.intl;
@@ -106,11 +108,14 @@ class IconEditor extends React.Component<IconEditorProps> {
                         </React.Fragment>
                     } />}
                 {!image && <ListItemText classes={{root: classes.noImageText}} primary={'Icon is not selected'} />}
-                <IconButton onClick={(e) => onEditClick({ origin: this, })}>
+                {image && <IconButton onClick={(e) => onEditClick({ origin: this, })}>
                     <EditIcon />
-                </IconButton>
+                </IconButton>}
                 {image && <IconButton onClick={(e) => onClearClick({ origin: this, })}>
                     <ClearIcon />
+                </IconButton>}
+                {!image && <IconButton onClick={(e) => onUploadClick({ origin: this, })}>
+                    <UploadIcon />
                 </IconButton>}
             </ListItem>
         </List>);

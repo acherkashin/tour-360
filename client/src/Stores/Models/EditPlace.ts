@@ -3,6 +3,7 @@ import {
     ConnectionDetailDto,
     PlaceDetailDto,
     BaseWidget,
+    ImageFile,
 } from "./../../../../backend/src/models/interfaces";
 
 class EditPlace {
@@ -15,6 +16,7 @@ class EditPlace {
     image360Height: number;
     image360Name: string;
     connections: ConnectionDetailDto[] = [];
+    mapIcon: ImageFile;
 
     description: string;
     widgets: BaseWidget[];
@@ -22,10 +24,11 @@ class EditPlace {
 
     soundHash: number;
     image360Hash: number;
+    mapIconHash: number;
 
     constructor(json) {
         this.id = json.id;
-    
+
         this.updateFromJson(json);
     }
 
@@ -39,6 +42,9 @@ class EditPlace {
     get soundUrl() {
         return this.soundName ? `/${this.soundName}?${this.soundHash}` : null;
     }
+    get mapIconUrl() {
+        return this.mapIcon && this.mapIcon.filename ? `/${this.mapIcon.filename}?${this.mapIconHash}` : null;
+    }
 
     updateFromJson(json: PlaceDetailDto) {
         this.name = json.name;
@@ -51,6 +57,7 @@ class EditPlace {
         this.connections = json.connections;
         this.description = json.description;
         this.widgets = json.widgets;
+        this.mapIcon = json.mapIcon;
 
         if (this.soundName !== json.soundName) {
             this.soundName = json.soundName;
@@ -74,6 +81,7 @@ class EditPlace {
             image360Name: this.image360Name,
             image360Height: this.image360Height,
             image360Width: this.image360Width,
+            mapIcon: this.mapIcon,
         };
     }
 
@@ -99,10 +107,12 @@ decorate(EditPlace, <any>{
     description: observable,
     widgets: observable,
     soundName: observable,
+    mapIcon: observable,
 
     soundHash: observable,
     image360Hash: observable,
-    
+    mapIconHash: observable,
+
     viewImage360Url: computed,
     mapImage360Url: computed,
     soundUrl: computed,

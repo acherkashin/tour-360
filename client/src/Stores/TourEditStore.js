@@ -158,6 +158,17 @@ export default class TourEditStore {
         }));
     }
 
+    updateMapIcon(file, width, height) {
+        return TourEditService.uploadPlaceMapIcon(this.sessionId, this.editingPlace.id, file, width, height).then(resp => {
+           const place = resp.data.place;
+
+           runInAction(() => {
+               this.editingTour.updatePlaceFromJson(place);
+               this.editingPlace && this.editingPlace.updateFromJson(place);
+            });
+        });
+    }
+
     updatePlaceSound(soundFile) {
         return TourEditService.uploadPlaceSound(this.sessionId, this.editingPlace.id, soundFile).then(action((resp) => {
             const place = resp.data.place;

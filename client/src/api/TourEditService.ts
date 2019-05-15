@@ -71,6 +71,19 @@ export function updateImage360(sessionId: string, placeId: string, file, width: 
     });
 }
 
+export function uploadPlaceMapIcon(sessionId: string, placeId: string, file, width: number, height: number) {
+    const formData = new FormData();
+    formData.append('mapIcon', file);
+    formData.append('width', String(width));
+    formData.append('height', String(height));
+
+    return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadPlaceIcon`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    });
+}
+
 export function uploadPlaceSound(sessionId: string, placeId: string, file) {
     const formData = new FormData();
     formData.append('sound', file);

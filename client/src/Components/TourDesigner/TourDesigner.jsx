@@ -68,6 +68,7 @@ function Transition(props) {
 const CLOSED = 0;
 const TOUR_MAP = 1;
 const PLACE_360 = 2;
+const PLACE_MAP_ICON = 3;
 
 const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component {
     constructor(props) {
@@ -350,6 +351,12 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             return this.tourStore.updateImage360(e.file, e.width, e.height).then(() => {
                 this.setState({ uploadImageDialogState: CLOSED });
             });
+        } else if (uploadImageDialogState === PLACE_MAP_ICON) {
+            return this.tourStore.updateMapIcon(e.file, e.width, e.height).then(() => {
+                this.setState({ uploadImageDialogState: CLOSED });
+            });
+        } else {
+            throw new Error("Unknown type of dialog state");
         }
     }
 
@@ -436,6 +443,9 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                                 this.tourStore.removePlaceSound();
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
+                            onUploadMapIconClick={(e) => this.setState({ uploadImageDialogState: PLACE_MAP_ICON })}
+                            onEditMapIconClick={(e) => console.log(e)}
+                            onClearMapIconClick={(e) => console.log(e)}
                         />
                     </div>}
                     {this.showEditConnectionPanel && <div className={classes.rightPanel}>
