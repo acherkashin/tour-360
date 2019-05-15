@@ -34,6 +34,11 @@ const styles = createStyles(theme => ({
     },
     noImageText: {
         textAlign: 'center',
+    },
+    imageName: {
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
     }
 }));
 
@@ -46,7 +51,7 @@ interface IconEditorProps extends WithStyles<typeof styles> {
         width: number;
         height: number;
     },
-    onUploadClick: (e: {origin: IconEditor, }) => void;
+    onUploadClick: (e: { origin: IconEditor, }) => void;
     onClearClick: (e: { origin: IconEditor, }) => void;
     onEditClick: (e: { origin: IconEditor, }) => void;
 }
@@ -96,6 +101,7 @@ class IconEditor extends React.Component<IconEditorProps> {
             <ListItem>
                 <img className={classes.icon} src={iconUrl} />
                 {image && <ListItemText
+                    classes={{ primary: classes.imageName }}
                     primary={image.filename}
                     secondary={
                         <React.Fragment>
@@ -107,7 +113,7 @@ class IconEditor extends React.Component<IconEditorProps> {
                             </Typography>
                         </React.Fragment>
                     } />}
-                {!image && <ListItemText classes={{root: classes.noImageText}} primary={'Icon is not selected'} />}
+                {!image && <ListItemText classes={{ root: classes.noImageText }} primary={'Icon is not selected'} />}
                 {image && <IconButton onClick={(e) => onEditClick({ origin: this, })}>
                     <EditIcon />
                 </IconButton>}

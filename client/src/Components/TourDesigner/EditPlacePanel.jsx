@@ -123,7 +123,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
 
         let mapIcon = null;
 
-        if (place.mapIcon != null) {
+        if (place.mapIcon && place.mapIcon.filename) {
             mapIcon = {
                 url: place.mapIconUrl,
                 filename: place.mapIcon.filename,

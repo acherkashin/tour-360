@@ -1,13 +1,13 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
-import { blue, green, red } from '@material-ui/core/colors';
-import { CircleMarker, Tooltip, Marker, Popup } from 'react-leaflet';
+import { Tooltip, Marker } from 'react-leaflet';
 import L from 'leaflet';
+import { PlaceDetailDto } from '../../../../backend/src/models/interfaces';
 
 interface PlaceProps {
-    place: any;
-    onClick: (e: { origin: Place, place: any, lEvent: any }) => void;
-    onDragend: (e: { origin: Place, place: any, latitude: number, longitude: number }) => void;
+    place: PlaceDetailDto;
+    onClick: (e: { origin: Place, place: PlaceDetailDto, lEvent: any }) => void;
+    onDragend: (e: { origin: Place, place: PlaceDetailDto, latitude: number, longitude: number }) => void;
     isSelected: boolean;
     isStart: boolean;
 }
@@ -16,17 +16,36 @@ const defaultIcon = L.icon({
     iconUrl: '/src/markers/default.svg',
     iconSize: [25, 41],
 });
-const selectedIcon = L.icon({
+const defaultSelectedIcon = L.icon({
     iconUrl: '/src/markers/selected.svg',
     iconSize: [25, 41],
 });
-const startIcon = L.icon({
+const defaultStartIcon = L.icon({
     iconUrl: '/src/markers/start.svg',
     iconSize: [25, 41],
 });
 
 export default class Place extends Component<PlaceProps, any> {
-    refmarker = createRef<Marker>()
+    refmarker = createRef<Marker>();
+    state = {
+        icon: null,
+    };
+
+    constructor(props: PlaceProps) {
+        super(props);
+
+        const place = props.place;
+        if (place.mapIcon && place.mapIcon.filename) {
+            this.state.icon = L.icon({
+                iconUrl: `/${place.mapIcon.filename}`,
+                iconSize: [place.mapIcon.width, place.mapIcon.height],
+            })
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        //TODO: update icon
+    }
 
     static propTypes = {
         onClick: PropTypes.func.isRequired,
@@ -38,11 +57,21 @@ export default class Place extends Component<PlaceProps, any> {
         isSelected: PropTypes.bool.isRequired,
     };
 
-    render() {
-        const { place, isSelected, isStart, onClick, onDragend } = this.props;
-        const radius = 20;
+    _getIcon() {
+        if(this.state.icon) {
+            //TODO: add isState and isSelected state for custom icon
+            return this.state.icon;
+        }
+        const { isSelected, isStart } = this.props;
+        const icon = isSelected ? defaultSelectedIcon : isStart ? defaultStartIcon : defaultIcon;
 
-        const icon = isSelected ? selectedIcon : isStart ? startIcon : defaultIcon;
+        return icon;
+    }
+
+    render() {
+        const { place, onClick, onDragend } = this.props;
+        const radius = 20;
+        const icon = this._getIcon();
 
         return (
             <Marker

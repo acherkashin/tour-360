@@ -116,6 +116,7 @@ decorate(EditPlace, <any>{
     viewImage360Url: computed,
     mapImage360Url: computed,
     soundUrl: computed,
+    mapIconUrl: computed,
 });
 
 export default EditPlace;
