@@ -440,12 +440,12 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                                 this.tourStore.updatePlaceSound(e.file);
                             }}
                             onSoundRemoved={(e) => {
-                                this.tourStore.removePlaceSound();
+                                this.tourStore.removePlaceSound(e.place.id);
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
                             onUploadMapIconClick={(e) => this.setState({ uploadImageDialogState: PLACE_MAP_ICON })}
                             onEditMapIconClick={(e) => console.log(e)}
-                            onClearMapIconClick={(e) => console.log(e)}
+                            onClearMapIconClick={(e) => this.tourStore.removeMapIcon(e.place.id)}
                         />
                     </div>}
                     {this.showEditConnectionPanel && <div className={classes.rightPanel}>

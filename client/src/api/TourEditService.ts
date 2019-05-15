@@ -1,4 +1,5 @@
 import client from './client';
+import { AxiosPromise } from "axios";
 import { VR_URL } from '../config';
 import {
     PlaceDetailDto,
@@ -77,11 +78,15 @@ export function uploadPlaceMapIcon(sessionId: string, placeId: string, file, wid
     formData.append('width', String(width));
     formData.append('height', String(height));
 
-    return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadPlaceIcon`, formData, {
+    return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadMapPlaceIcon`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         }
     });
+}
+
+export function removeMapPlaceIcon(sessionId: string, placeId: string): AxiosPromise<{ place: PlaceDetailDto }> {
+    return client.delete(`/api/tour-edit/${sessionId}/place/${placeId}/removeMapPlaceIcon`);
 }
 
 export function uploadPlaceSound(sessionId: string, placeId: string, file) {

@@ -204,7 +204,7 @@ export function uploadImage360(req: Request, res: Response) {
     });
 }
 
-export function uploadPlaceIcon(req: Request, res: Response) {
+export function uploadMapPlaceIcon(req: Request, res: Response) {
     const { sessionId, placeId } = req.params;
     const { width, height } = req.body;
     const mapIcon = <UploadedFile>req.files.mapIcon;
@@ -223,6 +223,25 @@ export function uploadPlaceIcon(req: Request, res: Response) {
     }).catch(error => {
         res.status(INTERNAL_SERVER_ERROR).json({ error });
     });
+}
+
+export function removeMapPlaceIcon(req: Request, res: Response) {
+    const { sessionId, placeId } = req.params;
+
+    const tour = cache[sessionId];
+    const place = cache[sessionId].getPlace(placeId);
+
+    if (place && place.mapIcon && place.mapIcon.filename) {
+        removeFile(place.mapIcon.filename).then(() => {
+            place.mapIcon = null;
+
+            res.status(OK).json({ place: place.toDetailDto(tour) });
+        }).catch((error) => {
+            res.status(INTERNAL_SERVER_ERROR).json({ error });
+        });
+    } else {
+        res.status(NO_CONTENT).json({ place: place.toDetailDto(tour) });
+    }
 }
 
 export function getConnection(req: Request, res: Response) {

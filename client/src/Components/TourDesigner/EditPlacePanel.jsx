@@ -106,15 +106,15 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
     }
 
     _handleUploadMapIconClick(e) {
-        this.props.onUploadMapIconClick({ origin: this, widget: e.widget });
+        this.props.onUploadMapIconClick({ origin: this, place: this.props.place });
     }
 
     _handleEditMapIconClick(e) {
-        this.props.onEditMapIconClick({ origin: this, widget: e.widget });
+        this.props.onEditMapIconClick({ origin: this, place: this.props.place });
     }
 
     _handleClearMapIconClick(e) {
-        this.props.onClearMapIconClick({ origin: this, widget: e.widget });
+        this.props.onClearMapIconClick({ origin: this, place: this.props.place });
     }
 
     render() {

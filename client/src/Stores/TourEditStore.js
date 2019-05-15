@@ -99,7 +99,7 @@ export default class TourEditStore {
         const place = this.editingTour.getPlace(placeId);
         place.latitude = latitude;
         place.longitude = longitude;
-        
+
         this._updatePlaceOnServer(place, false);
     }
 
@@ -160,12 +160,20 @@ export default class TourEditStore {
 
     updateMapIcon(file, width, height) {
         return TourEditService.uploadPlaceMapIcon(this.sessionId, this.editingPlace.id, file, width, height).then(resp => {
-           const place = resp.data.place;
+            const place = resp.data.place;
 
-           runInAction(() => {
-               this.editingTour.updatePlaceFromJson(place);
-               this.editingPlace && this.editingPlace.updateFromJson(place);
+            runInAction(() => {
+                this.editingTour.updatePlaceFromJson(place);
+                this.editingPlace && this.editingPlace.updateFromJson(place);
             });
+        });
+    }
+
+    removeMapIcon(placeId) {
+        return TourEditService.removeMapPlaceIcon(this.sessionId, placeId).then(resp => {
+            const { place } = resp.data;
+            this.editingTour.updatePlaceFromJson(place);
+            this.editingPlace && this.editingPlace.updateFromJson(place);
         });
     }
 
@@ -177,8 +185,8 @@ export default class TourEditStore {
         }));
     }
 
-    removePlaceSound() {
-        return TourEditService.removePlaceSound(this.sessionId, this.editingPlace.id).then(action((resp) => {
+    removePlaceSound(placeId) {
+        return TourEditService.removePlaceSound(this.sessionId, placeId).then(action((resp) => {
             const place = resp.data.place;
             this.editingTour.updatePlaceFromJson(place);
             this.editingPlace && this.editingPlace.updateFromJson(place);
