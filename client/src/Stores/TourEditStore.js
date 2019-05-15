@@ -141,6 +141,8 @@ export default class TourEditStore {
             this.editingTour.updateFromJson(result.data.tour);
             this.isDirty = false;
         }));
+
+        return this.saveResult;
     }
 
     updateImageMap = action((file, width, height) => {
