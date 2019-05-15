@@ -6,13 +6,19 @@ import {
     DialogContent,
     DialogActions,
     DialogContentText,
-    Input
+    Input,
+    TextField
 } from '@material-ui/core';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import DialogTitleWithClose from './DialogTItleWithClose';
 import { injectIntl, intlShape } from 'react-intl';
 
-interface EditIconDialogProps {
+const styles = createStyles(theme => ({
+}));
+
+interface EditIconDialogProps extends WithStyles<typeof styles> {
     intl: any;
+
     title: string;
     okButtonText: string;
     isOpened: boolean;
@@ -24,6 +30,13 @@ interface EditIconDialogProps {
 }
 
 export class EditIconDialog extends React.Component<EditIconDialogProps> {
+    constructor(props: EditIconDialogProps) {
+        super(props);
+
+        this._handleClose = this._handleClose.bind(this);
+        this._handleSaveClick = this._handleSaveClick.bind(this);
+    }
+
     static propTypes = {
         url: PropTypes.string.isRequired,
         width: PropTypes.number.isRequired,
@@ -57,13 +70,44 @@ export class EditIconDialog extends React.Component<EditIconDialogProps> {
                 fullWidth>
                 <DialogTitleWithClose onClose={this._handleClose}>{title}</DialogTitleWithClose>
                 <DialogContent>
-                    <div>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div>
                             <img src={url} />
                         </div>
-                        <div>
-                            <Input value={width} />
-                            <Input value={height} />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <TextField
+                                label="Width"
+                                value={width}
+                                onChange={(e) => console.log(e)}
+                                type="number"
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    max: 128,
+                                    min: 1,
+                                    step: 2,
+                                }}
+                                fullWidth
+                                autoFocus
+                            />
+                            <TextField
+                                label="Height"
+                                value={height}
+                                onChange={(e) => console.log(e)}
+                                type="number"
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    max: 128,
+                                    min: 1,
+                                    step: 2,
+                                }}
+                                fullWidth
+                            />
                         </div>
                     </div>
                 </DialogContent>
@@ -75,4 +119,4 @@ export class EditIconDialog extends React.Component<EditIconDialogProps> {
     }
 }
 
-export default injectIntl(EditIconDialog);
+export default injectIntl(withStyles(styles)(EditIconDialog));

@@ -21,6 +21,7 @@ import {
     ConfirmDialog,
     HtmlEditDialog,
     ViewUrlDialog,
+    EditIconDialog,
 } from './../Dialogs';
 import { TourMap } from './';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
@@ -112,6 +113,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         isOpenedDeleteDialog: false,
         isOpenedPreviewDialog: false,
         isOpenedPlaceDescriptionDialog: false,
+        isOpenedEditIconDialog: false,
         mapEditMode: 0,
         placeToDeleteId: null,
     };
@@ -373,6 +375,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             isOpenedDeleteDialog,
             isOpenedPreviewDialog,
             isOpenedPlaceDescriptionDialog,
+            isOpenedEditIconDialog,
             mapEditMode,
         } = this.state;
         const { saveLoading, isDirty } = this.tourStore;
@@ -444,7 +447,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
                             onUploadMapIconClick={(e) => this.setState({ uploadImageDialogState: PLACE_MAP_ICON })}
-                            onEditMapIconClick={(e) => console.log(e)}
+                            onEditMapIconClick={(e) => this.setState({ isOpenedEditIconDialog: true })}
                             onClearMapIconClick={(e) => this.tourStore.removeMapIcon(e.place.id)}
                         />
                     </div>}
@@ -503,6 +506,17 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                         this._handleCloseDescriptionDialog();
                     }}
                 />
+                {this.editingPlace && this.editingPlace.mapIcon && <EditIconDialog
+                    title={`Edit map marker: ${this.editingPlace.name}`}
+                    isOpened={isOpenedEditIconDialog}
+                    url={this.editingPlace.mapIcon && `/${this.editingPlace.mapIcon.url}`}
+                    width={this.editingPlace.mapIcon && this.editingPlace.mapIcon.width}
+                    height={this.editingPlace.mapIcon && this.editingPlace.mapIcon.height}
+                    onClose={e => this.setState({ isOpenedEditIconDialog: false })}
+                    onSaveClick={e => {
+                        this.setState({ isOpenedEditIconDialog: false });
+                    }}
+                />}
             </Dialog>
         );
     }
