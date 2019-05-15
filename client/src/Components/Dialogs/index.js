@@ -3,6 +3,7 @@ import UploadImageDialog from './UploadImageDialog';
 import ConfirmDialog from './ConfirmDialog';
 import HtmlEditDialog from './HtmlEditDialog';
 import ViewUrlDialog from './ViewUrlDialog';
+import EditIconDialog from './EditIconDialog';
 
 export {
     CreateTourDialog,
@@ -10,4 +11,5 @@ export {
     ConfirmDialog,
     HtmlEditDialog,
     ViewUrlDialog,
+    EditIconDialog,
 };
