@@ -179,6 +179,7 @@ export function updatePlace(req: Request, res: Response) {
     place.description = placeUpdate.description;
     place.widgets = placeUpdate.widgets;
     place.markModified('widgets');
+    place.mapIcon = placeUpdate.mapIcon;
 
     res.json({ place: place.toDetailDto(tour) });
 }

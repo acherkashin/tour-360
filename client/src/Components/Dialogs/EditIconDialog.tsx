@@ -10,11 +10,41 @@ import {
     TextField
 } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import {grey} from '@material-ui/core/colors';
 import DialogTitleWithClose from './DialogTItleWithClose';
 import { injectIntl, intlShape } from 'react-intl';
 
+const MIN_SIZE = 1;
+const MAX_SIZE = 256;
+const BORDER_WIDTH = 2;
+
 const styles = createStyles(theme => ({
+    content: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    iconHolder: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: MAX_SIZE + BORDER_WIDTH,
+        minHeight: MAX_SIZE + BORDER_WIDTH,
+        marginRight: theme.spacing.unit * 2,
+        borderColor: grey[500],
+        borderWidth: BORDER_WIDTH,
+        borderStyle: 'dashed',
+    },
+    inputsHolder: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: 200,
+    }
 }));
+
+interface EditIconDialogState {
+    width: number;
+    height: number;
+}
 
 interface EditIconDialogProps extends WithStyles<typeof styles> {
     intl: any;
@@ -25,13 +55,26 @@ interface EditIconDialogProps extends WithStyles<typeof styles> {
     url: string;
     width: number;
     height: number;
-    onSaveClick: (e: { origin: EditIconDialog }) => void;
-    onClose: (e: { origin: EditIconDialog }) => void;
+    onSaveClick: (e: {
+        origin: EditIconDialog,
+        width: number,
+        height: number,
+    }) => void;
+    onClose: (e: {
+        origin: EditIconDialog,
+    }) => void;
 }
 
-export class EditIconDialog extends React.Component<EditIconDialogProps> {
+export class EditIconDialog extends React.Component<EditIconDialogProps, EditIconDialogState> {
+    state: EditIconDialogState;
+
     constructor(props: EditIconDialogProps) {
         super(props);
+
+        this.state = {
+            width: props.width,
+            height: props.height,
+        };
 
         this._handleClose = this._handleClose.bind(this);
         this._handleSaveClick = this._handleSaveClick.bind(this);
@@ -55,12 +98,18 @@ export class EditIconDialog extends React.Component<EditIconDialogProps> {
     }
 
     _handleSaveClick() {
-        this.props.onSaveClick({ origin: this });
+        this.props.onSaveClick({
+            origin: this,
+            width: this.state.width,
+            height: this.state.height,
+        });
     }
 
     render() {
-        const { isOpened, title, url, width, height } = this.props;
+        const { isOpened, title, url } = this.props;
         const { messages, formatMessage } = this.props.intl;
+        const { width, height } = this.state;
+        const classes: any = this.props.classes;
 
         return (
             <Dialog
@@ -70,23 +119,23 @@ export class EditIconDialog extends React.Component<EditIconDialogProps> {
                 fullWidth>
                 <DialogTitleWithClose onClose={this._handleClose}>{title}</DialogTitleWithClose>
                 <DialogContent>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <div>
-                            <img src={url} />
+                    <div className={classes.content}>
+                        <div className={classes.iconHolder}>
+                            <img src={url} width={width} height={height} />
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div className={classes.inputsHolder}>
                             <TextField
                                 label="Width"
                                 value={width}
-                                onChange={(e) => console.log(e)}
+                                onChange={(e) => this.setState({ width: parseInt(e.target.value) })}
                                 type="number"
                                 margin="normal"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    max: 128,
-                                    min: 1,
+                                    max: MAX_SIZE,
+                                    min: MIN_SIZE,
                                     step: 2,
                                 }}
                                 fullWidth
@@ -95,15 +144,15 @@ export class EditIconDialog extends React.Component<EditIconDialogProps> {
                             <TextField
                                 label="Height"
                                 value={height}
-                                onChange={(e) => console.log(e)}
+                                onChange={(e) => this.setState({ height: parseInt(e.target.value) })}
                                 type="number"
                                 margin="normal"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    max: 128,
-                                    min: 1,
+                                    max: MAX_SIZE,
+                                    min: MIN_SIZE,
                                     step: 2,
                                 }}
                                 fullWidth

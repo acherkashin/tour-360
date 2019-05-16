@@ -509,11 +509,13 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 {this.editingPlace && this.editingPlace.mapIcon && <EditIconDialog
                     title={`Edit map marker: ${this.editingPlace.name}`}
                     isOpened={isOpenedEditIconDialog}
-                    url={this.editingPlace.mapIcon && `/${this.editingPlace.mapIcon.url}`}
+                    url={this.editingPlace.mapIconUrl}
                     width={this.editingPlace.mapIcon && this.editingPlace.mapIcon.width}
                     height={this.editingPlace.mapIcon && this.editingPlace.mapIcon.height}
                     onClose={e => this.setState({ isOpenedEditIconDialog: false })}
                     onSaveClick={e => {
+                        this.editingPlace.mapIcon.width = e.width;
+                        this.editingPlace.mapIcon.height = e.height;
                         this.setState({ isOpenedEditIconDialog: false });
                     }}
                 />}
