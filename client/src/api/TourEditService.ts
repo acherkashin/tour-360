@@ -98,7 +98,7 @@ export function uploadPlaceSound(sessionId: string, placeId: string, file) {
         headers: {
             'Content-Type': 'multipart/form-data',
         }
-    })
+    });
 }
 
 export function removePlaceSound(sessionId: string, placeId: string) {

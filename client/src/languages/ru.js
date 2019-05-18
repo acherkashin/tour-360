@@ -260,6 +260,15 @@ const ru = defineMessages({
         defaultMessage: 'Звук экскурсии',
     },
 
+    panoVideoEditorChangeSound: {
+        id: 'panovideo-editor.change-video',
+        defaultMessage: "Изменить видео"
+    },
+    panoVideoEditorPlaceVideo: {
+        id: 'sound-editor.tours-sound',
+        defaultMessage: "Видео",
+    },
+
     tourDesignerMapTypeError: {
         id: 'tour-designer.map-type-error',
         defaultMessage: 'Тип карты не определён',

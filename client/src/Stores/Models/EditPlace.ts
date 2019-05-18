@@ -100,6 +100,15 @@ class EditPlace {
         return widget;
     }
 
+    deleteWidget(id: string) {
+        this.widgets = this.widgets.filter(widget => widget.id !== id);
+    }
+
+    updateWidget(updateData: BaseWidget) {
+        const widget = this.getWidget(updateData.id);
+        Object.assign(widget, updateData);
+    }
+
     refreshSound() {
         this.soundHash = Date.now();
     }
@@ -137,6 +146,8 @@ decorate(EditPlace, <any>{
     mapIconUrl: computed,
 
     updateFromJson: action,
+    deleteWidget: action,
+    updateWidget: action,
 });
 
 export default EditPlace;

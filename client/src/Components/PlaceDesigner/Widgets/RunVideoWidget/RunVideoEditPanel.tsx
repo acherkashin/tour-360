@@ -11,7 +11,10 @@ import {
 } from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider';
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
-import { PositionEditor } from './../../../Common';
+import {
+    PositionEditor,
+    PanoVideoEditor,
+} from './../../../Common';
 import RunVideoShape from "./RunVideoShape";
 import { RunVideoWidget } from "../../../../../../backend/src/models/interfaces";
 
@@ -35,12 +38,14 @@ interface RunVideoEditPanelProps extends WithStyles<typeof styles> {
     //TODO: install typings for react-intl
     intl: any;
     widget: RunVideoWidget;
-    onNameChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget,  value: string }) => void;
+    onNameChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, value: string }) => void;
     onVolumeChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, value: number }) => void;
-    onMutedChanged: (e: { origin: RunVideoEditPanel,widget: RunVideoWidget, value: boolean }) => void;
-    onXChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget,value: number }) => void;
+    onMutedChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, value: boolean }) => void;
+    onXChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, value: number }) => void;
     onYChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, value: number }) => void;
-    onDeleteClick: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget }) => void
+    onDeleteClick: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget }) => void;
+    onPanoVideoChanged: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget, file: File }) => void;
+    onPanoVideoRemoveClick: (e: { origin: RunVideoEditPanel, widget: RunVideoWidget }) => void;
 }
 
 class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
@@ -113,6 +118,19 @@ class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
                 />
                 <Typography variant="caption" align="right">{volume}</Typography>
             </div>
+            <PanoVideoEditor
+                url={widget.video ? `/${widget.video.filename}` : null}
+                filename={widget.video && widget.video.filename}
+                onPanoVideoChanged={(e) => this.props.onPanoVideoChanged({
+                    origin: this,
+                    file: e.file,
+                    widget: this.props.widget,
+                })}
+                onPanoVideoRemoved={(e) => this.props.onPanoVideoRemoveClick({
+                    origin: this,
+                    widget: this.props.widget,
+                })}
+            />
             <FormControlLabel
                 control={
                     <Checkbox

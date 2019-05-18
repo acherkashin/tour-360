@@ -264,7 +264,16 @@ const en = defineMessages({
     },
     soundEditorToursSound: {
         id: 'sound-editor.tours-sound',
-        defaultMessage: 'Tour\'s sound',
+        defaultMessage: "Tour's sound",
+    },
+
+    panoVideoEditorChangeSound: {
+        id: 'panovideo-editor.change-video',
+        defaultMessage: "Change video"
+    },
+    panoVideoEditorPlaceVideo: {
+        id: 'sound-editor.tours-sound',
+        defaultMessage: "Video",
     },
 
     tourDesignerMapTypeError: {

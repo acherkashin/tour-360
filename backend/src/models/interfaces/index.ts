@@ -3,6 +3,7 @@ import { Place, PlaceDto, PlaceDetailDto } from './place';
 import { Tour, TourDto, TourDetailDto } from './tour';
 import { UserDto } from './user';
 import ImageFile from './image';
+import MediaFile from './media';
 import MapType from "./MapType";
 export * from './widget';
 
@@ -19,4 +20,5 @@ export {
     TourDetailDto,
     UserDto,
     ImageFile,
+    MediaFile,
 };

@@ -23,11 +23,11 @@ export default class PlaceEditStore {
         this.editingWidgetDisposer = null;
     }
 
-    get panoUrl() {
+    get panoUrl(): string {
         return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken());
     }
 
-    get saveLoading() {
+    get saveLoading(): boolean {
         return this.saveResult && this.saveResult.state === "pending";
     }
 
@@ -38,7 +38,7 @@ export default class PlaceEditStore {
         });
     }
 
-    beginEditing(tourId, placeId) {
+    beginEditing(tourId: string, placeId: string) {
         return PlaceEditService.beginEditing(tourId, placeId).then((resp) => {
             const { sessionId, place, tourSessionId } = resp.data;
             runInAction(() => this._updateEditingPlace(sessionId, tourSessionId, place));
@@ -46,7 +46,7 @@ export default class PlaceEditStore {
         });
     }
 
-    getFromSession(sessionId) {
+    getFromSession(sessionId: string) {
         return PlaceEditService.get(sessionId).then((resp) => {
             const { sessionId, place, tourSessionId } = resp.data;
 
@@ -97,7 +97,7 @@ export default class PlaceEditStore {
         }));
     }
 
-    updatePlaceSound(soundFile) {
+    updatePlaceSound(soundFile: File) {
         return TourEditService.uploadPlaceSound(this.tourSessionId, this.editingPlace.id, soundFile).then((resp) => {
             const place = resp.data.place;
             runInAction(() => this.editingPlace.updateFromJson(place));
@@ -140,12 +140,13 @@ export default class PlaceEditStore {
         });
     }
 
-    deleteWidget(id) {
+    deleteWidget(id: string) {
         this.editingWidget && this.editingWidget.id === id && this.completeEditWidget();
+        this.editingPlace.updateFromJson
         this._deleteWidget(id);
     }
 
-    editWidget(id) {
+    editWidget(id: string) {
         this.completeEditWidget();
         this.editingWidget = this.editingPlace.widgets.find((value) => value.id === id);
         this._updateEditingWidget(this.editingWidget);
@@ -156,7 +157,13 @@ export default class PlaceEditStore {
         this.editingWidget = null;
     }
 
-    _deleteWidget(id) {
+    updateRunVideo(widgetId: string, video: File) {
+        return PlaceEditService.updateRunVideo(this.sessionId, widgetId, video).then((resp) => {
+            this.editingPlace.updateWidget(resp.data.widget);
+        });
+    }
+
+    _deleteWidget(id: string) {
         if (this.editingPlace.widgets && this.editingPlace.widgets.length) {
             this.editingPlace.widgets = this.editingPlace.widgets.filter(widget => widget.id !== id);
         }

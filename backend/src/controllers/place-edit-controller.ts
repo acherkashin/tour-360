@@ -3,6 +3,11 @@ import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { cache as _cache } from './tour-edit-controller';
 import { Tour, Place, WidgetType, TextWidget, RunVideoWidget } from './../models/interfaces';
 import { Request, Response } from 'express';
+import {
+    addFile,
+    generateRunVideoName,
+} from '../utils/fileutils';
+import { UploadedFile } from 'express-fileupload';
 
 interface PlaceEditCache {
     tourSessionId: string;
@@ -110,6 +115,24 @@ export function saveChanges(req: Request, res: Response) {
     });
 }
 
+export function updateRunVideo(req: Request, res: Response) {
+    const { sessionId, widgetId } = req.params;
+    let { place } = cache[sessionId];
+    const mapImage = <UploadedFile>req.files.mapImage;
+
+    const widget = place.getWidget<RunVideoWidget>(widgetId);
+
+    const newFileName = generateRunVideoName(place, mapImage);
+    addFile(newFileName, widget.video).then(() => {
+        widget.video.filename = newFileName;
+        widget.video.contentType = mapImage.mimetype;
+
+        res.json({ widget });
+    }).catch(error => {
+        res.status(INTERNAL_SERVER_ERROR).json({ error });
+    });
+}
+
 function createWidget(type: WidgetType) {
     if (type === 'text') {
         const textWidget: TextWidget = {
@@ -132,6 +155,7 @@ function createWidget(type: WidgetType) {
             muted: false,
             type,
             volume: 0.5,
+            video: null,
         };
         return runVideo;
     } else {

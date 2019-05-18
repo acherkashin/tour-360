@@ -25,6 +25,11 @@ const PlaceSchema = new mongoose.Schema<Place>({
     widgets: [Object],
 });
 
+PlaceSchema.methods.getWidget = function (widgetId) {
+    const widget = (this.widgets || []).find(widget => widget.id === widgetId);
+    return widget;
+};
+
 PlaceSchema.methods.toClient = function () {
     const dto = {
         id: this.id,

@@ -3,6 +3,7 @@ import {
     ConnectionDetailDto,
     Tour,
     ImageFile,
+    MediaFile,
 } from './../interfaces';
 import { Document } from 'mongoose';
 
@@ -38,10 +39,7 @@ export interface Place extends Document {
     name: string;
     longitude: number;
     latitude: number,
-    sound?: {
-        filename: string,
-        contentType: string,
-    },
+    sound?: MediaFile,
     image360?: ImageFile;
     mapIcon?: ImageFile;
     widgets?: BaseWidget[];
@@ -49,4 +47,5 @@ export interface Place extends Document {
 
     toClient: () => PlaceDto;
     toDetailDto: (tour: Tour) => PlaceDetailDto;
+    getWidget: <T = BaseWidget>(widgetId: string) => T;
 }

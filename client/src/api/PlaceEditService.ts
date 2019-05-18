@@ -3,6 +3,7 @@ import { TourEditService } from '.';
 import { VR_URL } from '../config';
 import {
     PlaceDetailDto,
+    RunVideoWidget,
 } from "./../../../backend/src/models/interfaces";
 
 export function beginEditing(tourId: string, placeId: string) {
@@ -28,4 +29,14 @@ export function addWidget(sessionId: string, type: string) {
 }
 export function getPanoUrl(sessionId: string, placeId: string, token: string) {
     return `${VR_URL}?placeSessionId=${sessionId}&placeId=${placeId}&token=${token}`;
+}
+export function updateRunVideo(sessionId: string, widgetId: string, video: File) {
+    const formData = new FormData();
+    formData.append('video', video);
+
+    return client.post<{ widget: RunVideoWidget }>(`/place-edit/${sessionId}/updateRunVideo/${widgetId}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    });
 }

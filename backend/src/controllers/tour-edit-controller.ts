@@ -102,7 +102,7 @@ export function uploadSound(req: Request, res: Response) {
     addFile(newFileName, sound)
         .then(() => {
             place.sound.filename = newFileName;
-            place.sound.contentType = (<any>sound).mimetype;
+            place.sound.contentType = sound.mimetype;
 
             res.json({ place: place.toDetailDto(tour) });
         }).catch(error => {
