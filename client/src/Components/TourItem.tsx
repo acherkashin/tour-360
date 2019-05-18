@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classname from 'classnames';
 import { observer } from 'mobx-react';
 import {
     GridListTile,
@@ -12,12 +13,12 @@ import {
     ListItemText,
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TourCover } from '.';
 import { Tour } from './../Stores';
 
-const styles = createStyles(theme => ({
+const styles = createStyles((theme: Theme) => ({
     moreIcon: {
         color: 'white',
     },
@@ -45,6 +46,12 @@ const styles = createStyles(theme => ({
     tileItemBar: {
         borderColor: theme.palette.primary.light,
     },
+    selectedTileItem: {
+        borderColor: theme.palette.secondary.light,
+        '& $tileItemBar': {
+            backgroundColor: theme.palette.secondary.light,
+        }
+    },
 }));
 
 export interface TourItemAction {
@@ -55,6 +62,7 @@ export interface TourItemAction {
 
 export interface TourItemProps extends WithStyles<typeof styles> {
     tour: Tour;
+    isSelected: boolean;
     onItemClick: (event: { origin: TourItem, tour: Tour }) => void;
     getActions: (event: { origin: TourItem, tour: Tour }) => TourItemAction[];
 }
@@ -71,6 +79,7 @@ class TourItem extends React.Component<TourItemProps> {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
+        isSelected: PropTypes.bool,
         tour: PropTypes.shape({
             id: PropTypes.string,
             img: PropTypes.string,
@@ -111,14 +120,19 @@ class TourItem extends React.Component<TourItemProps> {
 
     render() {
         const classes: any = this.props.classes;
-        const { tour, getActions } = this.props;
+        const { tour, getActions, isSelected } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
+
+        const root = classname({
+            [classes.tileItem]: true,
+            [classes.selectedTileItem]: isSelected,
+        })
 
         return (<>
             <GridListTile
                 key={tour.id}
-                className={classes.tileItem}
+                className={root}
                 onClick={this._handleItemClick}>
                 <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />
                 <GridListTileBar

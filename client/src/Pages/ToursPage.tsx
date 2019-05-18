@@ -230,6 +230,7 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
                         <div className={classes.toursWrapper}>
                             {hasTours && <Route render={({ history }) => (
                                 <Tours
+                                    selectedTourId={selectedTour && selectedTour.id}
                                     tours={tours}
                                     onItemClick={this._handleTourItemClick}
                                     getActions={(e) => this._getActionsForTour(e, history)}
