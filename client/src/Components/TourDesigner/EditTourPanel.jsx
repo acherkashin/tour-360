@@ -90,14 +90,14 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
             <Button fullWidth variant="text" color="primary" className={classes.selectImage} onClick={this._handleChangeImageMapClick} >
                 {formatMessage(messages.editTourPanelChangeMapImage)}
             </Button>
-            <FormControl variant="filled" fullWidth disabled={places.length === 0}>
+            <FormControl fullWidth disabled={places.length === 0}>
                 <InputLabel htmlFor="start-place-field">{formatMessage(messages.editTourPanelStartPlace)}</InputLabel>
                 <Select
-                    variant="filled"
                     fullWidth
                     onChange={this._handleStartPlaceChanged}
                     input={<Input name="start-place-field" id="start-place-field" />}
-                    value={startPlaceId}>
+                    value={startPlaceId}
+                >
                     {places.map(place => <MenuItem key={place.id} value={place.id}>{place.name}</MenuItem>)}
                 </Select>
             </FormControl>
