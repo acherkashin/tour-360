@@ -59,6 +59,7 @@ const styles = (theme) => ({
         flexBasis: 400,
         backgroundColor: grey[100],
         borderLeft: `1px solid ${theme.palette.divider}`,
+        overflowY: 'auto',
     },
 });
 

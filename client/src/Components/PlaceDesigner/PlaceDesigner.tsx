@@ -69,6 +69,7 @@ const styles = createStyles(theme => ({
         flexBasis: 400,
         backgroundColor: grey[100],
         borderLeft: `1px solid ${theme.palette.divider}`,
+        overflowY: 'auto',
     },
     widgetArea: {
         position: 'absolute',

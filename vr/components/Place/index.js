@@ -55,13 +55,14 @@ export default class Place extends React.Component {
     render() {
         //https://stackoverflow.com/questions/43437907/vr-view-360-photo-sphere-images-possible-cors-issue?rq=1
         const { place, coordinates } = this.props;
-        const url = `${BACKEND_URL}/${place.image360Name}`;
+        const imageUrl = `${BACKEND_URL}/${place.image360Name}`;
+        const soundUrl = `${BACKEND_URL}/${place.soundName}`;
 
         return (
             <View style={styles.place}>
                 <PanoBackground
-                    url={url}
-                    sound={this.state.currentPlace.sound}
+                    url={imageUrl}
+                    sound={soundUrl}
                 />
                 {coordinates && <CoordinateSystem width={WIDTH} height={HEIGHT} stepX={200} stepY={100} />}
                 {this._renderConnections()}

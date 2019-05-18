@@ -172,6 +172,7 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 onSoundRemoved={this._handleSoundRemoved}
             />
             {showWidgets && <WidgetList
+                className={classes.panelItem}
                 widgets={place.widgets}
                 onClick={this._handleWidgetClick}
                 onRemoveClick={this._handleRemoveWidgetClick}

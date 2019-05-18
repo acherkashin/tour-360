@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { intlShape, injectIntl } from 'react-intl';
 import {
@@ -27,6 +28,7 @@ interface WidgetListProps {
     intl: any;
     classes: any;
     widgets: BaseWidget[];
+    className: string;
     onClick: (e: { origin: any, widget: BaseWidget }) => void;
     onRemoveClick: (e: { origin: any, widget: BaseWidget }) => void;
 }
@@ -38,6 +40,7 @@ class WidgetList extends React.Component<WidgetListProps> {
         onRemoveClick: PropTypes.func.isRequired,
     
         classes: PropTypes.object.isRequired,
+        className: PropTypes.string.isRequired,
         intl: intlShape.isRequired,
     };
 
@@ -52,11 +55,16 @@ class WidgetList extends React.Component<WidgetListProps> {
     }
 
     render() {
-        const { widgets, classes, onClick, onRemoveClick } = this.props;
+        const { widgets, classes, className, onClick, onRemoveClick } = this.props;
         const { messages, formatMessage } = this.props.intl;
         const hasWidgets = widgets && widgets.length > 0;
 
-        return <List className={classes.root} subheader={<ListSubheader>{formatMessage(messages.widgets)}</ListSubheader>}>
+        const root = classnames({
+            [classes.root]: true,
+            [className]: !!className,
+        });
+
+        return <List className={root} subheader={<ListSubheader>{formatMessage(messages.widgets)}</ListSubheader>}>
             {hasWidgets && (widgets || []).map(widget =>
                 <WidgetItem
                     key={widget.id}
