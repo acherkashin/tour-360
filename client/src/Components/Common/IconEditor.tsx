@@ -39,6 +39,10 @@ const styles = createStyles(theme => ({
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
+    },
+    iconHolder: {
+        width: 40,
+        height: 40,
     }
 }));
 
@@ -99,7 +103,9 @@ class IconEditor extends React.Component<IconEditorProps> {
             subheader={<ListSubheader>Map marker</ListSubheader>}
         >
             <ListItem>
-                <img className={classes.icon} src={iconUrl} />
+                <div className={classes.iconHolder}>
+                    <img className={classes.icon} src={iconUrl} />
+                </div>
                 {image && <ListItemText
                     classes={{ primary: classes.imageName }}
                     primary={image.filename}

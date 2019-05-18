@@ -22,13 +22,14 @@ import {
     UploadImageDialog,
     ViewUrlDialog,
     HtmlEditDialog,
+    EditIconDialog,
 } from '../Dialogs';
 import EditPlacePanel from '../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { CoordinateSystem } from '.';
 import { TextWidget, EditTextWidgetPanel, RunVideoEditPanel, RunVideoWidget } from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
-import { RootStore, EditPlace } from "./../../Stores";
+import { RootStore, EditPlace, PlaceEditStore } from "./../../Stores";
 import {
     BaseWidget,
     TextWidget as ITextWidget,
@@ -86,7 +87,9 @@ interface PlaceDesignerState {
     isOpenedConfirmDialog: boolean;
     isOpenedPlaceDescriptionDialog: boolean;
     uploadImageDialogOpened: boolean;
+    isOpenedUploadIconMapDialog: boolean;
     textureIsLoaded: boolean;
+    isOpenedEditIconDialog: boolean;
 }
 
 const PlaceDesigner = inject("rootStore")(observer(
@@ -122,10 +125,12 @@ const PlaceDesigner = inject("rootStore")(observer(
                 isOpenedPlaceDescriptionDialog: false,
                 uploadImageDialogOpened: false,
                 textureIsLoaded: false,
+                isOpenedEditIconDialog: false,
+                isOpenedUploadIconMapDialog: false,
             };
         }
 
-        get placeEditStore() {
+        get placeEditStore(): PlaceEditStore {
             return this.props.rootStore.placeEditStore;
         }
 
@@ -133,15 +138,15 @@ const PlaceDesigner = inject("rootStore")(observer(
             return this.placeEditStore.editingPlace;
         }
 
-        get editingWidget() {
+        get editingWidget(): BaseWidget {
             return this.placeEditStore.editingWidget;
         }
 
-        get showEditWidget() {
+        get showEditWidget(): boolean {
             return Boolean(this.editingWidget);
         }
 
-        get showEditPlacePanel() {
+        get showEditPlacePanel(): boolean {
             return Boolean(this.editingPlace) && !this.showEditWidget;
         }
 
@@ -352,6 +357,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                 isOpenedPreviewDialog,
                 isOpenedConfirmDialog,
                 isOpenedPlaceDescriptionDialog,
+                isOpenedEditIconDialog,
+                isOpenedUploadIconMapDialog,
             } = this.state;
 
             return <Dialog
@@ -396,6 +403,9 @@ const PlaceDesigner = inject("rootStore")(observer(
                             onDescriptionClick={this._handleOpenDescriptionDialog}
                             onWidgetClick={this._handleWidgetItemClick}
                             onRemoveWidgetClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
+                            onUploadMapIconClick={(e) => this.setState({ isOpenedUploadIconMapDialog: true })}
+                            onEditMapIconClick={(e) => this.setState({ isOpenedEditIconDialog: true })}
+                            onClearMapIconClick={(e) => this.placeEditStore.removeMapIcon(e.place.id)}
                         />
                     </div>}
                 </div>
@@ -405,6 +415,17 @@ const PlaceDesigner = inject("rootStore")(observer(
                     isOpened={uploadImageDialogOpened}
                     onFileSelected={this._handleFileSelected}
                     onClose={() => this.setState({ uploadImageDialogOpened: false })}
+                />
+                <UploadImageDialog
+                    title={"Upload icon marker"}
+                    prompt={"Select icon which will be displayed on the tour map"}
+                    isOpened={isOpenedUploadIconMapDialog}
+                    onFileSelected={(e) => {
+                        this.placeEditStore.updateMapIcon(e.file, e.width, e.height).then(() => {
+                            this.setState({ isOpenedUploadIconMapDialog: false });
+                        });
+                    }}
+                    onClose={() => this.setState({ isOpenedUploadIconMapDialog: false })}
                 />
                 <ViewUrlDialog
                     title={formatMessage(messages.tourDesignerPreviewPlace)}
@@ -432,6 +453,19 @@ const PlaceDesigner = inject("rootStore")(observer(
                         this._handleCloseDescriptionDialog();
                     }}
                 />
+                {this.editingPlace && this.editingPlace.mapIcon && this.editingPlace.mapIcon.filename && <EditIconDialog
+                    title={`Edit map marker: ${this.editingPlace.name}`}
+                    isOpened={isOpenedEditIconDialog}
+                    url={this.editingPlace.mapIconUrl}
+                    width={this.editingPlace.mapIcon && this.editingPlace.mapIcon.width}
+                    height={this.editingPlace.mapIcon && this.editingPlace.mapIcon.height}
+                    onClose={e => this.setState({ isOpenedEditIconDialog: false })}
+                    onSaveClick={e => {
+                        this.editingPlace.mapIcon.width = e.width;
+                        this.editingPlace.mapIcon.height = e.height;
+                        this.setState({ isOpenedEditIconDialog: false });
+                    }}
+                />}
             </Dialog>
         }
     }));

@@ -70,7 +70,7 @@ export default class PlaceEditStore {
         return this.saveResult.then(action((result) => {
             const place = result.data.place;
             this.editingPlace.updateFromJson(place);
-            
+
             if (this.editingWidget) {
                 const widget = place.widgets.find(w => w.id = this.editingWidget.id);
 
@@ -81,10 +81,10 @@ export default class PlaceEditStore {
                     (<TextWidget>this.editingWidget).y = textWidget.y;
                     (<TextWidget>this.editingWidget).content = textWidget.content;
                     (<TextWidget>this.editingWidget).padding = textWidget.padding;
-                } else if (this.editingWidget.type === 'run-video') { 
+                } else if (this.editingWidget.type === 'run-video') {
                     const videoWidget: RunVideoWidget = widget;
                     (<RunVideoWidget>this.editingWidget).x = videoWidget.x;
-                    (<RunVideoWidget>this.editingWidget).y = videoWidget.y; 
+                    (<RunVideoWidget>this.editingWidget).y = videoWidget.y;
                     (<RunVideoWidget>this.editingWidget).muted = videoWidget.muted;
                     (<RunVideoWidget>this.editingWidget).name = videoWidget.name;
                     (<RunVideoWidget>this.editingWidget).volume = videoWidget.volume;
@@ -119,10 +119,24 @@ export default class PlaceEditStore {
         return TourEditService.getPanoUrl(this.tourSessionId, this.editingPlace.id, UserStore.getToken(), coordinates);
     }
 
-    updateImage360(file, width, height) {
+    updateImage360(file: File, width: number, height: number): Promise<void> {
         return TourEditService.updateImage360(this.tourSessionId, this.editingPlace.id, file, width, height).then((resp) => {
             const place = resp.data.place;
             this.editingPlace.updateFromJson(place);
+        });
+    }
+
+    updateMapIcon(file: File, width: number, height: number): Promise<void> {
+        return TourEditService.uploadPlaceMapIcon(this.tourSessionId, this.editingPlace.id, file, width, height).then(resp => {
+            const place = resp.data.place;
+            this.editingPlace && this.editingPlace.updateFromJson(place);
+        });
+    }
+
+    removeMapIcon(placeId: string) {
+        return TourEditService.removeMapPlaceIcon(this.tourSessionId, placeId).then(resp => {
+            const { place } = resp.data;
+            this.editingPlace && this.editingPlace.updateFromJson(place);
         });
     }
 

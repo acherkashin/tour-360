@@ -97,6 +97,7 @@ export function saveChanges(req: Request, res: Response) {
     place.description = updateData.description;
     place.widgets = updateData.widgets;
     place.markModified('widgets');
+    place.mapIcon = updateData.mapIcon;
 
     tour.save().then(() => {
         res.json({

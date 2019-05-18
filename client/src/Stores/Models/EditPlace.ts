@@ -1,4 +1,4 @@
-import { decorate, observable, computed } from "mobx";
+import { decorate, observable, computed, action } from "mobx";
 import {
     ConnectionDetailDto,
     PlaceDetailDto,
@@ -64,6 +64,16 @@ class EditPlace {
             this.refreshSound();
         }
 
+        const oldImage = this.mapIcon && this.mapIcon.filename;
+        const newImage = json.mapIcon && json.mapIcon.filename;
+        if (oldImage !== newImage) {
+            this.refreshMapIcon()
+        }
+
+        if(this.image360Name !== json.image360Name) {
+            this.refreshPano();
+        }
+
         return this;
     }
 
@@ -93,6 +103,14 @@ class EditPlace {
     refreshSound() {
         this.soundHash = Date.now();
     }
+
+    refreshMapIcon() {
+        this.mapIconHash = Date.now();
+    }
+
+    refreshPano() {
+        this.image360Hash = Date.now();
+    }
 }
 
 decorate(EditPlace, <any>{
@@ -117,6 +135,8 @@ decorate(EditPlace, <any>{
     mapImage360Url: computed,
     soundUrl: computed,
     mapIconUrl: computed,
+
+    updateFromJson: action,
 });
 
 export default EditPlace;

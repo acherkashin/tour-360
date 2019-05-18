@@ -102,7 +102,7 @@ export default class TourEditStore {
         });
     }
 
-    editConnection(connectionId) {
+    editConnection(connectionId: string) {
         this._clearEditingPlace();
         return TourEditService.getConnection(this.sessionId, connectionId).then(((resp) => {
             runInAction(() => {
