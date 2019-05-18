@@ -154,7 +154,14 @@ const PlaceDesigner = inject("rootStore")(observer(
         componentDidMount() {
             if (!this.editingPlace) {
                 const sessionId = this.props.match.params.sessionId;
-                this.placeEditStore.getFromSession(sessionId);
+                this.placeEditStore.getFromSession(sessionId)
+                    .catch((error) => {
+                        console.error(error);
+                        this.props.rootStore.showError({
+                            title: "Designer cannot be opened",
+                            text: `Session width id ${sessionId} is not found. Please select appropriate place and begin editing`,
+                        });
+                    });
             }
         }
 

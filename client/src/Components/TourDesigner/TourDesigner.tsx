@@ -9,26 +9,28 @@ import {
     IconButton,
     Typography,
     Slide,
+    Theme,
+    StyleRulesCallback,
 } from '@material-ui/core';
 import { intlShape, injectIntl } from 'react-intl';
 import CloseIcon from '@material-ui/icons/Close';
 import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
 import MapEditMode from './MapEditMode';
-import { PlaceholderButton, LoadingButton } from './../';
+import { PlaceholderButton, LoadingButton } from '..';
 import {
     UploadImageDialog,
     ConfirmDialog,
     HtmlEditDialog,
     ViewUrlDialog,
     EditIconDialog,
-} from './../Dialogs';
-import { TourMap } from './';
+} from '../Dialogs';
+import { TourMap } from '.';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 
-const styles = (theme) => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     appBar: {
         position: 'relative',
     },
@@ -72,7 +74,13 @@ const TOUR_MAP = 1;
 const PLACE_360 = 2;
 const PLACE_MAP_ICON = 3;
 
-const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component {
+const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component<any> {
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+
+        intl: intlShape.isRequired,
+    };
+
     constructor(props) {
         super(props);
 
@@ -122,7 +130,14 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     componentDidMount() {
         if (!this.editingTour) {
             const sessionId = this.props.match.params.sessionId;
-            this.tourStore.getFromSession(sessionId);
+            this.tourStore.getFromSession(sessionId)
+                .catch(error => {
+                    console.error(error);
+                    this.props.roootStore.showError({
+                        title: "Designer cannot be opened",
+                        text: `Session = ${sessionId} is not found`,
+                    });
+                })
         }
     }
 
@@ -524,11 +539,5 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         );
     }
 }));
-
-TourDesigner.propTypes = {
-    classes: PropTypes.object.isRequired,
-
-    intl: intlShape.isRequired,
-};
 
 export default withStyles(styles)(injectIntl(TourDesigner));

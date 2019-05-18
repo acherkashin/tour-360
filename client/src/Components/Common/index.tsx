@@ -4,6 +4,7 @@ import WidgetList from './WidgetList';
 import PositionEditor from './PositionEditor';
 import IconEditor from './IconEditor';
 import PanoVideoEditor from './PanoVideoEditor';
+import NotificationMessage from './NotificationMessage';
 
 export {
     PanoVideoEditor,
@@ -12,4 +13,5 @@ export {
     WidgetItem,
     WidgetList,
     IconEditor,
+    NotificationMessage,
 };
