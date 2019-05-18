@@ -8,15 +8,13 @@ import {
     Toolbar,
     IconButton,
     Typography,
-    Fab,
 } from '@material-ui/core';
 import {
     Close as CloseIcon,
-    Add as AddIcon,
 } from '@material-ui/icons';
 import { intlShape, injectIntl } from 'react-intl';
 import { LoadingButton } from '..'
-import { Texture, NoPlacePlaceholder } from '.';
+import { Texture, NoPlacePlaceholder, WidgetBar } from '.';
 import {
     ConfirmDialog,
     UploadImageDialog,
@@ -38,11 +36,6 @@ import {
 
 const styles = createStyles(theme => ({
     root: {},
-    addWidget: {
-        position: 'fixed',
-        bottom: theme.spacing.unit * 3,
-        right: 400 + theme.spacing.unit * 3,
-    },
     appBar: {
         position: 'relative',
     },
@@ -348,11 +341,6 @@ const PlaceDesigner = inject("rootStore")(observer(
             this.placeEditStore.completeEditWidget();
         }
 
-        _addWidget(e) {
-            this.placeEditStore.addWidget('run-video');
-            // this.placeEditStore.addWidget('text');
-        }
-
         render() {
             const { messages, formatMessage } = this.props.intl;
             const isOpened = this.editingPlace != null;
@@ -385,13 +373,16 @@ const PlaceDesigner = inject("rootStore")(observer(
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
+                    {this.editingPlace.mapImage360Url && <WidgetBar
+                        widgets={[{ type: 'text' }, { type: 'run-video' }]}
+                        onWidgetClick={(e) => {
+                            this.placeEditStore.addWidget(e.type);
+                        }}
+                    />}
                     <div className={classes.surfaceWrapper} ref={this.surfaceWrapperRef} onClick={this._handleSurfaceWrapperClick}>
                         {this.editingPlace.mapImage360Url && this._renderSurface()}
                         {!this.editingPlace.mapImage360Url && <NoPlacePlaceholder onUploadClick={this._handleUploadImage} />}
                     </div>
-                    {this.editingPlace.mapImage360Url && <Fab color="secondary" className={classes.addWidget} onClick={(e) => this._addWidget(e)}>
-                        <AddIcon />
-                    </Fab>}
                     {this.showEditWidget && <div className={classes.rightPanel}>
                         {this._renderWidgetEditPanel()}
                     </div>}

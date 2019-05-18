@@ -1,11 +1,12 @@
 import uuidv1 from 'uuidv1';
-import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR, NO_CONTENT } from 'http-status-codes';
 import { cache as _cache } from './tour-edit-controller';
 import { Tour, Place, WidgetType, TextWidget, RunVideoWidget } from './../models/interfaces';
 import { Request, Response } from 'express';
 import {
     addFile,
     generateRunVideoName,
+    removeFile,
 } from '../utils/fileutils';
 import { UploadedFile } from 'express-fileupload';
 
@@ -68,6 +69,7 @@ export function addWidget(req: Request, res: Response) {
     place.widgets.push(widget);
 
     res.json({
+        widgetId: widget.id,
         sessionId,
         tourSessionId,
         place: place.toDetailDto(tour),
@@ -124,13 +126,31 @@ export function updateRunVideo(req: Request, res: Response) {
 
     const newFileName = generateRunVideoName(place, mapImage);
     addFile(newFileName, widget.video).then(() => {
-        widget.video.filename = newFileName;
-        widget.video.contentType = mapImage.mimetype;
+        widget.video = {
+            filename: newFileName,
+            contentType: mapImage.mimetype,
+        };
 
         res.json({ widget });
     }).catch(error => {
         res.status(INTERNAL_SERVER_ERROR).json({ error });
     });
+}
+
+export function removeRunVideo(req: Request, res: Response) {
+    const { sessionId, widgetId } = req.params;
+    let { place } = cache[sessionId];
+    const widget = place.getWidget<RunVideoWidget>(widgetId);
+
+    if (widget && widget.video && widget.video.filename) {
+        removeFile(widget.video.filename).then(() => {
+            widget.video = null;
+        }).catch((error) => {
+            res.status(INTERNAL_SERVER_ERROR).json({ error });
+        });
+    } else {
+        res.status(NO_CONTENT).json({ widget });
+    }
 }
 
 function createWidget(type: WidgetType) {

@@ -33,8 +33,9 @@ export default class PlaceEditStore {
 
     addWidget(type: WidgetType) {
         PlaceEditService.addWidget(this.sessionId, type).then((resp) => {
-            const { place } = resp.data;
-            runInAction(() => this.editingPlace.updateFromJson(place));
+            const { place, widgetId } = resp.data;
+            this.editingPlace.updateFromJson(place);
+            this.editWidget(widgetId);
         });
     }
 

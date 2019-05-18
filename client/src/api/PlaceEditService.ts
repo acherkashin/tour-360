@@ -25,7 +25,7 @@ export function saveChanges(sessionId: string, place: PlaceDetailDto) {
     return client.post<{ sessionId: string, tourSessionId: string, place: PlaceDetailDto }>(`/api/place-edit/${sessionId}/save`, place);
 }
 export function addWidget(sessionId: string, type: string) {
-    return client.post<{ sessionId: string, tourSessionId: string, place: PlaceDetailDto }>(`/api/place-edit/${sessionId}/addWidget`, { type });
+    return client.post<{ sessionId: string, tourSessionId: string, place: PlaceDetailDto, widgetId: string }>(`/api/place-edit/${sessionId}/addWidget`, { type });
 }
 export function getPanoUrl(sessionId: string, placeId: string, token: string) {
     return `${VR_URL}?placeSessionId=${sessionId}&placeId=${placeId}&token=${token}`;

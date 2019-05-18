@@ -8,12 +8,11 @@ import {
     ListItemIcon,
 } from '@material-ui/core';
 import {
-    Title as TitleIcon,
     Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { BaseWidget } from '../../../../backend/src/models/interfaces';
-import { PlayCircleFilledOutlined } from '@material-ui/icons'
+import { getIcon } from './../PlaceDesigner/Widgets/utils';
 
 const styles = theme => ({
     root: {
@@ -45,16 +44,6 @@ class WidgetItem extends React.Component<WidgetItemProps> {
         intl: intlShape.isRequired,
     };
 
-    _getIcon(widget: BaseWidget) {
-        if(widget.type === 'text') {
-            return <TitleIcon/>
-        } else if(widget.type === 'run-video') {
-            return <PlayCircleFilledOutlined/>;
-        }
-
-        throw new Error("Unknown widget type");
-    }
-
     _handleClick() {
         this.props.onClick && this.props.onClick({ origin: this, widget: this.props.widget });
     }
@@ -72,7 +61,7 @@ class WidgetItem extends React.Component<WidgetItemProps> {
                 button
                 onClick={this._handleClick}>
                 <ListItemIcon>
-                    {this._getIcon(widget)}
+                    {getIcon(widget.type)}
                 </ListItemIcon>
                 <ListItemText primary={title} />
                 <IconButton onClick={this._handleRemoveClick}>

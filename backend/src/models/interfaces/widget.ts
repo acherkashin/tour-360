@@ -4,7 +4,7 @@ export type WidgetType = 'text' | 'run-video';
 
 export interface BaseWidget {
     id: string;
-    type: 'text' | 'run-video';
+    type: WidgetType;
     x: number;
     y: number;
 }
