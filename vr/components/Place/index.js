@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, staticAssetURL } from 'react-360';
 import PanoBackground from '../Background/PanoBackground';
-import VideoBackground from '../Background/VideoBackground';
 import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';
 import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';
-import { BACKEND_URL } from './../../config'
+import { BACKEND_URL } from './../../config';
 import { TextWidget, RunVideoWidget } from './../Widgets';
 
 export default class Place extends React.Component {
