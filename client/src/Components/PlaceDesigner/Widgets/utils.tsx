@@ -13,5 +13,8 @@ export function getIcon(widgetType: WidgetType) {
         return <PlayCircleFilledOutlined />;
     }
 
-    throw new Error(`Unknown widget type: ${widgetType}`);
+    throw createError(widgetType);
 }
+
+
+export const createError = (widgetType: WidgetType) => new Error(`Unknown widget type: ${widgetType}`);

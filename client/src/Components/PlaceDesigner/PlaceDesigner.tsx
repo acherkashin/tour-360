@@ -73,7 +73,7 @@ const styles = createStyles(theme => ({
 interface PlaceDesignerProps extends WithStyles<typeof styles> {
     rootStore: RootStore;
     match: { params: { sessionId: string } };
-    intl: any;
+    intl: { formatMessage, messages };
 }
 
 interface PlaceDesignerState {
@@ -147,12 +147,14 @@ const PlaceDesigner = inject("rootStore")(observer(
         componentDidMount() {
             if (!this.editingPlace) {
                 const sessionId = this.props.match.params.sessionId;
+                const { formatMessage, messages } = this.props.intl;
+
                 this.placeEditStore.getFromSession(sessionId)
                     .catch((error) => {
                         console.error(error);
                         this.props.rootStore.showError({
-                            title: "Designer cannot be opened",
-                            text: `Session width id ${sessionId} is not found. Please select appropriate place and begin editing`,
+                            title: formatMessage(messages.noSessionErrorTitle),
+                            text: `${formatMessage(messages.noSessionErrorText1)} ${sessionId} ${formatMessage(messages.noSessionErrorText2)}`,
                         });
                     });
             }
@@ -402,7 +404,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                                 this.placeEditStore.removePlaceSound();
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
-                            onWidgetClick={this._handleWidgetItemClick}
+                            onWidgetClick={this._handleWidgetItemClick.bind(this)}
                             onRemoveWidgetClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                             onUploadMapIconClick={(e) => this.setState({ isOpenedUploadIconMapDialog: true })}
                             onEditMapIconClick={(e) => this.setState({ isOpenedEditIconDialog: true })}
@@ -418,8 +420,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onClose={() => this.setState({ uploadImageDialogOpened: false })}
                 />
                 <UploadImageDialog
-                    title={"Upload icon marker"}
-                    prompt={"Select icon which will be displayed on the tour map"}
+                    title={formatMessage(messages.uploadPlaceIconText)}
+                    prompt={formatMessage(messages.uploadPlaceIconTitle)}
                     isOpened={isOpenedUploadIconMapDialog}
                     onFileSelected={(e) => {
                         this.placeEditStore.updateMapIcon(e.file, e.width, e.height).then(() => {
@@ -455,7 +457,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                     }}
                 />
                 {this.editingPlace && this.editingPlace.mapIcon && this.editingPlace.mapIcon.filename && <EditIconDialog
-                    title={`Edit map marker: ${this.editingPlace.name}`}
+                    title={`${formatMessage(messages.editPlaceIcon)}: ${this.editingPlace.name}`}
                     isOpened={isOpenedEditIconDialog}
                     url={this.editingPlace.mapIconUrl}
                     width={this.editingPlace.mapIcon && this.editingPlace.mapIcon.width}

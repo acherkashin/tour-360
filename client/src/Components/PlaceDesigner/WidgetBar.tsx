@@ -4,7 +4,8 @@ import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/
 import { IconButton } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 import { WidgetType } from '../../../../backend/src/models/interfaces';
-import { getIcon } from './Widgets/utils';
+import { getIcon, createError } from './Widgets/utils';
+import { intlShape, injectIntl } from 'react-intl';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
@@ -30,14 +31,36 @@ export interface WidgetItem {
 }
 
 export interface WidgetBarProps extends WithStyles<typeof styles> {
+    intl: any;
     widgets: WidgetItem[];
     onWidgetClick: (e: { origin: WidgetBar, type: WidgetType }) => void;
 }
 
 class WidgetBar extends React.Component<WidgetBarProps> {
+    static propTypes = {
+        intl: intlShape,
+        widgets: PropTypes.arrayOf(PropTypes.shape({
+            type: PropTypes.string.isRequired,
+        })).isRequired,
+        onWidgetClick: PropTypes.func.isRequired,
+    };
+
+    getDescription(widgetType: WidgetType) {
+        const { messages, formatMessage } = this.props.intl;
+
+        if (widgetType === 'text') {
+            return formatMessage(messages.widgetBarText);
+        } else if (widgetType === 'run-video') {
+            return formatMessage(messages.widgetBarRunVideo);
+        }
+
+        throw createError(widgetType);
+    }
+
     renderItem(item: WidgetItem) {
         return <div
             key={item.type}
+            title={this.getDescription(item.type)}
             className={this.props.classes.item}
             onClick={(e) => this.props.onWidgetClick && this.props.onWidgetClick({ origin: this, type: item.type })}
         >
@@ -54,4 +77,4 @@ class WidgetBar extends React.Component<WidgetBarProps> {
     }
 }
 
-export default withStyles(styles)(WidgetBar);
+export default withStyles(styles)(injectIntl(WidgetBar));

@@ -47,7 +47,7 @@ const styles = createStyles(theme => ({
 }));
 
 interface IconEditorProps extends WithStyles<typeof styles> {
-    intl: any;
+    intl: { formatMessage: any, messages: any };
     className: string;
     image: {
         url: string;
@@ -100,7 +100,7 @@ class IconEditor extends React.Component<IconEditorProps> {
 
         return (<List
             className={root}
-            subheader={<ListSubheader>Map marker</ListSubheader>}
+            subheader={<ListSubheader>{formatMessage(messages.mapIcon)}</ListSubheader>}
         >
             <ListItem>
                 <div className={classes.iconHolder}>
@@ -119,7 +119,7 @@ class IconEditor extends React.Component<IconEditorProps> {
                             </Typography>
                         </React.Fragment>
                     } />}
-                {!image && <ListItemText classes={{ root: classes.noImageText }} primary={'Icon is not selected'} />}
+                {!image && <ListItemText classes={{ root: classes.noImageText }} primary={formatMessage(messages.iconNotSelected)} />}
                 {image && <IconButton onClick={(e) => onEditClick({ origin: this, })}>
                     <EditIcon />
                 </IconButton>}

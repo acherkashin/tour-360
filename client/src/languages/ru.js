@@ -133,6 +133,26 @@ const ru = defineMessages({
         id: 'common.muted',
         defaultMessage: 'Без звука',
     },
+    uploadPlaceIconTitle: {
+        id: 'common.upload-icon-marker-title',
+        defaultMessage: 'Загрузить иконку локации',
+    },
+    uploadPlaceIconText: {
+        id: 'common.upload-icon-marker-text',
+        defaultMessage: 'Выберите иконку, которая будет отображаться на карте тура'
+    },
+    editPlaceIcon: {
+        id: 'common.edit-place-icon',
+        defaultMessage: 'Редактирование иконки локации',
+    },
+    iconNotSelected: {
+        id: 'common.icon-not-selected',
+        defaultMessages: 'Иконка не выбрана',
+    },
+    mapIcon: {
+        id: 'common.map-icon',
+        defaultMessage: 'Иконка карты',
+    },
 
     headerTitle: {
         id: 'header.title',
@@ -188,6 +208,15 @@ const ru = defineMessages({
     placeDesignerUploadPanoPrompt: {
         id: 'place-designer.upload-pano-prompt',
         defaultMessage: 'Загрузите панораму для вашей локации',
+    },
+    
+    widgetBarText: {
+        id: 'widget-bar.text',
+        defaultMessage: 'Текстовый виджет',
+    },
+    widgetBarRunVideo: {
+        id: 'widget-bar.run-video',
+        defaultMessage: 'Виджет запуска фонового видео',
     },
 
     toursPageUploadCoverDialogTitle: {
@@ -396,6 +425,19 @@ const ru = defineMessages({
     mapEditModeAddConnection: {
         id: 'map-edit-mode.add-connection',
         defaultMessage: 'ДОБАВИТЬ СВЯЗЬ',
+    },
+
+    noSessionErrorTitle: {
+        id: 'no-session-error.title',
+        defaultMessage: 'Дизайнер не может быть открыт',
+    },
+    noSessionErrorText1: {
+        id: 'no-session-error.text-1',
+        defaultMessage: `Сессия с идентификатором`,
+    },
+    noSessionErrorText2: {
+        id: 'no-session-error.text-2',
+        defaultMessage: `не найдена. Пожалуйста, выберите подходящую локацию и начните редактирование.`,
     },
 });
 

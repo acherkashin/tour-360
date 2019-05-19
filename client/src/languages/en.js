@@ -140,6 +140,27 @@ const en = defineMessages({
         id: 'common.muted',
         defaultMessage: 'Muted',
     },
+    uploadPlaceIconTitle: {
+        id: 'common.upload-icon-marker-title',
+        defaultMessage: 'Upload place icon',
+    },
+    uploadPlaceIconText: {
+        id: 'common.upload-icon-marker-text',
+        defaultMessage: 'Select icon which will be displayed on the tour map',
+    },
+    editPlaceIcon: {
+        id: 'common.edit-place-icon',
+        defaultMessage: 'Edit place icon',
+    },
+    mapIcon: {
+        id: 'common.map-icon',
+        defaultMessage: 'Map icon',
+    },
+
+    iconNotSelected: {
+        id: 'common.icon-not-selected',
+        defaultMessages: 'Icon is not selected',
+    },
 
     headerTitle: {
         id: 'header.title',
@@ -195,6 +216,15 @@ const en = defineMessages({
     placeDesignerUploadPanoPrompt: {
         id: 'place-designer.upload-pano-prompt',
         defaultMessage: 'Upload pano for your place',
+    },
+
+    widgetBarText: {
+        id: 'widget-bar.text',
+        defaultMessage: 'Text Widget',
+    },
+    widgetBarRunVideo: {
+        id: 'widget-bar.run-video',
+        defaultMessage: "Run background video widget",
     },
 
     toursPageUploadCoverDialogTitle: {
@@ -403,6 +433,19 @@ const en = defineMessages({
     mapEditModeAddConnection: {
         id: 'map-edit-mode.add-connection',
         defaultMessage: 'ADD CONNECTION',
+    },
+
+    noSessionErrorTitle: {
+        id: 'no-session-error.title',
+        defaultMessage: 'Designer cannot be opened',
+    },
+    noSessionErrorText1: {
+        id: 'no-session-error.text-1',
+        defaultMessage: `Session with id`,
+    },
+    noSessionErrorText2: {
+        id: 'no-session-error.text-2',
+        defaultMessage: `is not found. Please select appropriate place and begin editing`,
     },
 });
 
