@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ConnectionList from './ConnectionList';
 import { EditImage } from './../';
 import SoundEditor from './SoundEditor';
-import { WidgetList, IconEditor } from './../Common';
+import { WidgetList, IconEditor, Category } from './../Common';
 import { intlShape, injectIntl } from 'react-intl';
 
 const styles = theme => ({
@@ -141,12 +141,14 @@ const EditPlacePanel = observer(class EditPlacePanel extends React.Component {
                 fullWidth
                 autoFocus
             />
-            <EditImage
-                name={place.name}
-                hasImage={place.hasImage}
-                imageUrl={place.mapImage360Url}
-                onImageChangeClick={this._handleChangeImage360Click}
-            />
+            <Category title={"Pano image"}>
+                <EditImage
+                    name={place.name}
+                    hasImage={place.hasImage}
+                    imageUrl={place.mapImage360Url}
+                    onImageChangeClick={this._handleChangeImage360Click}
+                />
+            </Category>
             <IconEditor
                 image={mapIcon}
                 className={classes.markerEditor}

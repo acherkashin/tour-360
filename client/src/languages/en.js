@@ -156,10 +156,14 @@ const en = defineMessages({
         id: 'common.map-icon',
         defaultMessage: 'Map icon',
     },
+    panoImage: {
+        id: 'common.pano-image',
+        defaultMessage: "Pano image",
+    },
 
     iconNotSelected: {
         id: 'common.icon-not-selected',
-        defaultMessages: 'Icon is not selected',
+        defaultMessage: 'Icon is not selected',
     },
 
     headerTitle: {
@@ -287,7 +291,7 @@ const en = defineMessages({
         id: 'edit-tour-panel.is-public-tour-description',
         defaultMessage: 'Determines can unauthorized users see this tour',
     },
-    
+
     soundEditorChangeSound: {
         id: 'sound-editor.change-sound',
         defaultMessage: 'Change sound',

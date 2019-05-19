@@ -147,11 +147,15 @@ const ru = defineMessages({
     },
     iconNotSelected: {
         id: 'common.icon-not-selected',
-        defaultMessages: 'Иконка не выбрана',
+        defaultMessage: 'Иконка не выбрана',
     },
     mapIcon: {
         id: 'common.map-icon',
         defaultMessage: 'Иконка карты',
+    },
+    panoImage: {
+        id: 'common.pano-image',
+        defaultMessage: "Панорама",
     },
 
     headerTitle: {
