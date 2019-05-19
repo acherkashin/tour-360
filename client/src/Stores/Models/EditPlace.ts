@@ -17,6 +17,7 @@ class EditPlace {
     image360Name: string;
     connections: ConnectionDetailDto[] = [];
     mapIcon: ImageFile;
+    cover: ImageFile;
 
     description: string;
     widgets: BaseWidget[];
@@ -25,6 +26,7 @@ class EditPlace {
     soundHash: number;
     image360Hash: number;
     mapIconHash: number;
+    coverHash: number;
 
     constructor(json) {
         this.id = json.id;
@@ -45,6 +47,9 @@ class EditPlace {
     get mapIconUrl() {
         return this.mapIcon && this.mapIcon.filename ? `/${this.mapIcon.filename}?${this.mapIconHash}` : null;
     }
+    get coverUrl() {
+        return this.cover && this.cover.filename ? `/${this.mapIcon.filename}?${this.coverHash}` : null;
+    }
 
     updateFromJson(json: PlaceDetailDto) {
         this.name = json.name;
@@ -64,13 +69,19 @@ class EditPlace {
             this.refreshSound();
         }
 
-        const oldImage = this.mapIcon && this.mapIcon.filename;
-        const newImage = json.mapIcon && json.mapIcon.filename;
-        if (oldImage !== newImage) {
+        const oldMapIcon = this.mapIcon && this.mapIcon.filename;
+        const newMapIcon = json.mapIcon && json.mapIcon.filename;
+        if (oldMapIcon !== newMapIcon) {
             this.refreshMapIcon()
         }
 
-        if(this.image360Name !== json.image360Name) {
+        const oldCover = this.cover && this.cover.filename;
+        const newCover = json.cover && json.cover.filename;
+        if (oldCover != newCover) {
+            this.refreshCover();
+        }
+
+        if (this.image360Name !== json.image360Name) {
             this.refreshPano();
         }
 
@@ -119,6 +130,10 @@ class EditPlace {
 
     refreshPano() {
         this.image360Hash = Date.now();
+    }
+
+    refreshCover() {
+        this.coverHash = Date.now();
     }
 }
 

@@ -262,6 +262,10 @@ const ru = defineMessages({
         id: 'edit-place-panel.edit-description',
         defaultMessage: 'Изменить описание'
     },
+    editPlacePanelCoverLabel: {
+        id: 'edit-place-panel.',
+        defaultMessage: 'Обложка локации',
+    },
 
     editTourPanelTourName: {
         id: 'edit-tour-panel.tour-name',

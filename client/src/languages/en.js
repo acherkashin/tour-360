@@ -160,7 +160,6 @@ const en = defineMessages({
         id: 'common.pano-image',
         defaultMessage: "Pano image",
     },
-
     iconNotSelected: {
         id: 'common.icon-not-selected',
         defaultMessage: 'Icon is not selected',
@@ -269,6 +268,10 @@ const en = defineMessages({
     editPlacePanelEditDescription: {
         id: 'edit-place-panel.edit-description',
         defaultMessage: 'Edit description',
+    },
+    editPlacePanelCoverLabel: {
+        id: 'edit-place-panel.',
+        defaultMessage: 'Place Cover',
     },
 
     editTourPanelTourName: {

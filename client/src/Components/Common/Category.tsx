@@ -25,6 +25,7 @@ interface CategoryProps extends WithStyles<typeof styles> {
 class Category extends React.Component<CategoryProps> {
     static propTypes = {
         title: PropTypes.string.isRequired,
+        className: PropTypes.string,
         classes: PropTypes.object.isRequired,
     };
 

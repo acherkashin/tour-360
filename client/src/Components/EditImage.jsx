@@ -83,7 +83,7 @@ class EditImage extends React.Component {
 
 EditImage.propTypes = {
     className: PropTypes.string,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     imageUrl: PropTypes.string,
     classes: PropTypes.object.isRequired,
     onImageChangeClick: PropTypes.func.isRequired,

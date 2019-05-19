@@ -58,11 +58,18 @@ export default class PlaceEditStore {
     }
 
     cancelEditing() {
-        return PlaceEditService.cancelChanges(this.sessionId).then(action(() => {
+        const cancel = () => {
             this.editingPlace = null;
             this.isDirty = false;
             this.editingPlaceDisposer && this.editingPlaceDisposer();
-        }))
+        };
+
+        return PlaceEditService.cancelChanges(this.sessionId).then(() => cancel(), () => {
+            cancel();
+            this.rootStore.showError({
+                text: "Error occured during canceling",
+            });
+        });
     }
 
     completeEditing() {

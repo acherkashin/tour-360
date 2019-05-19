@@ -29,6 +29,7 @@ import { TourMap } from '.';
 import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
+import { TourEditStore } from './../../Stores';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     appBar: {
@@ -141,7 +142,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         }
     }
 
-    get tourStore() {
+    get tourStore(): TourEditStore {
         return this.props.rootStore.tourEditStore;
     }
 

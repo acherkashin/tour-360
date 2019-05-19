@@ -8,7 +8,7 @@ import {
 } from ".";
 
 export interface MessageError {
-    title: string;
+    title?: string;
     text: string;
 }
 
