@@ -46,6 +46,8 @@ interface EditPlacePanelProps extends WithStyles<typeof styles> {
     onUploadMapIconClick: (e: { origin: EditPlacePanel, place: EditPlace }) => void;
     onEditMapIconClick: (e: { origin: EditPlacePanel, place: EditPlace }) => void;
     onClearMapIconClick: (e: { origin: EditPlacePanel, place: EditPlace }) => void;
+
+    onChangeCoverClick: (e: { origin: EditPlacePanel, place: EditPlace }) => void;
 }
 
 class EditPlacePanel extends React.Component<EditPlacePanelProps> {
@@ -76,6 +78,8 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
         onUploadMapIconClick: PropTypes.func.isRequired,
         onEditMapIconClick: PropTypes.func.isRequired,
         onClearMapIconClick: PropTypes.func.isRequired,
+
+        onChangeCoverClick: PropTypes.func.isRequired,
 
         intl: intlShape.isRequired,
     }
@@ -152,6 +156,10 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
         this.props.onClearMapIconClick({ origin: this, place: this.props.place });
     }
 
+    _handleChangeCoverClick = (e) => {
+        this.props.onChangeCoverClick({ origin: this, place: this.props.place });
+    }
+
     render() {
         const { classes, place, showConnections, showWidgets } = this.props;
         const { messages, formatMessage } = this.props.intl;
@@ -192,7 +200,7 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
                     name={place.cover && place.cover.filename}
                     hasImage={place.cover && place.cover.filename}
                     imageUrl={place.coverUrl}
-                    onImageChangeClick={(e) => console.log(e)}
+                    onImageChangeClick={this._handleChangeCoverClick}
                 />
             </Category>
             <IconEditor

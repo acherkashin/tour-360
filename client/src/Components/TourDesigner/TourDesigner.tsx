@@ -124,6 +124,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         isOpenedPreviewDialog: false,
         isOpenedPlaceDescriptionDialog: false,
         isOpenedEditIconDialog: false,
+        isOpenedUploadCoverDialog: false,
         mapEditMode: 0,
         placeToDeleteId: null,
     };
@@ -394,6 +395,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             isOpenedPlaceDescriptionDialog,
             isOpenedEditIconDialog,
             mapEditMode,
+            isOpenedUploadCoverDialog,
         } = this.state;
         const { saveLoading, isDirty } = this.tourStore;
         const { messages, formatMessage } = this.props.intl;
@@ -427,6 +429,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             onPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onEditPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onDeletePlaceClick={(e) => this._deletePlaceClick(e.place.id)}
+
                         />
                         <MapEditMode
                             value={mapEditMode}
@@ -466,6 +469,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             onUploadMapIconClick={(e) => this.setState({ uploadImageDialogState: PLACE_MAP_ICON })}
                             onEditMapIconClick={(e) => this.setState({ isOpenedEditIconDialog: true })}
                             onClearMapIconClick={(e) => this.tourStore.removeMapIcon(e.place.id)}
+                            onChangeCoverClick={(e) => this.setState({ isOpenedUploadCoverDialog: true })}
                         />
                     </div>}
                     {this.showEditConnectionPanel && <div className={classes.rightPanel}>
@@ -480,6 +484,17 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                         ></EditConnectionPanel>
                     </div>}
                 </div>
+                <UploadImageDialog
+                    title={formatMessage(messages.placeDesignerUploadCoverTitle)}
+                    prompt={formatMessage(messages.placeDesignerUploadCoverPrompt)}
+                    isOpened={isOpenedUploadCoverDialog}
+                    onFileSelected={(e) => {
+                        this.tourStore.updatePlaceCover(e.file, e.width, e.height).then(() => {
+                            this.setState({ isOpenedUploadCoverDialog: false });
+                        });
+                    }}
+                    onClose={() => this.setState({ isOpenedUploadCoverDialog: false })}
+                />
                 <UploadImageDialog
                     title={formatMessage(messages.tourDesignerUploadNewMap)}
                     prompt={formatMessage(messages.tourDesignerUploadNewMapPrompt)}

@@ -164,7 +164,7 @@ export default class TourEditStore {
             this.editingTour.updateFromJson(result.data.tour);
             this.isDirty = false;
         }));
-        
+
         return this.saveResult;
     }
 
@@ -177,9 +177,20 @@ export default class TourEditStore {
         });
     })
 
-    updateImage360(file, width: number, height: number) {
+    updatePlaceCover(file: File, width: number, height: number) {
+        return TourEditService.updatePlaceCover(this.sessionId, this.editingPlace.id, file, width, height).then((resp) => {
+            const { place } = resp.data;
+
+            runInAction(() => {
+                this.editingTour.updatePlaceFromJson(place);
+                this.editingPlace && this.editingPlace.updateFromJson(place);
+            });
+        });
+    }
+
+    updateImage360(file: File, width: number, height: number) {
         return TourEditService.updateImage360(this.sessionId, this.editingPlace.id, file, width, height).then((resp) => {
-            const place = resp.data.place;
+            const { place } = resp.data;
 
             runInAction(() => {
                 this.editingTour.updatePlaceFromJson(place);

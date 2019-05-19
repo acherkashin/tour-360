@@ -213,6 +213,14 @@ const ru = defineMessages({
         id: 'place-designer.upload-pano-prompt',
         defaultMessage: 'Загрузите панораму для вашей локации',
     },
+    placeDesignerUploadCoverTitle: {
+        id: 'place-designer.upload-cover-title',
+        defaultMessage: "Загрузить обложку",
+    },
+    placeDesignerUploadCoverPrompt: {
+        id: 'place-designer.upload-cover-title',
+        defaultMessage: "Загрузите обложку для вашей локации",
+    },
     
     widgetBarText: {
         id: 'widget-bar.text',

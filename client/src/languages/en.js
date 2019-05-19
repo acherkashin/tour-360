@@ -220,6 +220,14 @@ const en = defineMessages({
         id: 'place-designer.upload-pano-prompt',
         defaultMessage: 'Upload pano for your place',
     },
+    placeDesignerUploadCoverTitle: {
+        id: 'place-designer.upload-cover-title',
+        defaultMessage: "Upload Cover",
+    },
+    placeDesignerUploadCoverPrompt: {
+        id: 'place-designer.upload-cover-title',
+        defaultMessage: "Upload cover for your place",
+    },
 
     widgetBarText: {
         id: 'widget-bar.text',

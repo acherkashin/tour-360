@@ -134,6 +134,13 @@ export default class PlaceEditStore {
         });
     }
 
+    updatePlaceCover(file: File, width: number, height: number) {
+        return TourEditService.updatePlaceCover(this.tourSessionId, this.editingPlace.id, file, width, height).then((resp) => {
+            const { place } = resp.data;
+            this.editingPlace && this.editingPlace.updateFromJson(place);
+        });
+    }
+
     updateMapIcon(file: File, width: number, height: number): Promise<void> {
         return TourEditService.uploadPlaceMapIcon(this.tourSessionId, this.editingPlace.id, file, width, height).then(resp => {
             const place = resp.data.place;

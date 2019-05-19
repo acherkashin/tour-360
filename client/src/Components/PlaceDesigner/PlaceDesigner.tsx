@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import {
     AppBar,
     Dialog,
@@ -34,7 +34,7 @@ import {
     RunVideoWidget as IRunVideoWidget
 } from '../../../../backend/src/models/interfaces';
 
-const styles = createStyles(theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {},
     appBar: {
         position: 'relative',
@@ -68,7 +68,7 @@ const styles = createStyles(theme => ({
         position: 'absolute',
         top: 285,
     }
-}));
+});
 
 interface PlaceDesignerProps extends WithStyles<typeof styles> {
     rootStore: RootStore;
@@ -82,6 +82,7 @@ interface PlaceDesignerState {
     isOpenedPlaceDescriptionDialog: boolean;
     uploadImageDialogOpened: boolean;
     isOpenedUploadIconMapDialog: boolean;
+    isOpenedUploadCoverDialog: boolean;
     textureIsLoaded: boolean;
     isOpenedEditIconDialog: boolean;
 }
@@ -121,6 +122,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 textureIsLoaded: false,
                 isOpenedEditIconDialog: false,
                 isOpenedUploadIconMapDialog: false,
+                isOpenedUploadCoverDialog: false,
             };
         }
 
@@ -350,8 +352,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                 return null;
             }
 
+            const { classes } = this.props;
             const { isDirty, saveLoading } = this.placeEditStore;
-            const classes: any = this.props.classes;
             const {
                 uploadImageDialogOpened,
                 isOpenedPreviewDialog,
@@ -359,6 +361,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 isOpenedPlaceDescriptionDialog,
                 isOpenedEditIconDialog,
                 isOpenedUploadIconMapDialog,
+                isOpenedUploadCoverDialog,
             } = this.state;
 
             return <Dialog
@@ -409,6 +412,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                             onUploadMapIconClick={(e) => this.setState({ isOpenedUploadIconMapDialog: true })}
                             onEditMapIconClick={(e) => this.setState({ isOpenedEditIconDialog: true })}
                             onClearMapIconClick={(e) => this.placeEditStore.removeMapIcon(e.place.id)}
+                            onChangeCoverClick={(e) => this.setState({ isOpenedUploadCoverDialog: true })}
                         />
                     </div>}
                 </div>
@@ -429,6 +433,17 @@ const PlaceDesigner = inject("rootStore")(observer(
                         });
                     }}
                     onClose={() => this.setState({ isOpenedUploadIconMapDialog: false })}
+                />
+                <UploadImageDialog
+                    title={formatMessage(messages.placeDesignerUploadCoverTitle)}
+                    prompt={formatMessage(messages.placeDesignerUploadCoverPrompt)}
+                    isOpened={isOpenedUploadCoverDialog}
+                    onFileSelected={(e) => {
+                        this.placeEditStore.updatePlaceCover(e.file, e.width, e.height).then(() => {
+                            this.setState({ isOpenedUploadCoverDialog: false });
+                        });
+                    }}
+                    onClose={() => this.setState({ isOpenedUploadCoverDialog: false })}
                 />
                 <ViewUrlDialog
                     title={formatMessage(messages.tourDesignerPreviewPlace)}
