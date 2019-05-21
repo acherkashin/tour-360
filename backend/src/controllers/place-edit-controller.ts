@@ -1,7 +1,7 @@
 import uuidv1 from 'uuidv1';
 import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR, NO_CONTENT } from 'http-status-codes';
 import { cache as _cache } from './tour-edit-controller';
-import { Tour, Place, WidgetType, TextWidget, RunVideoWidget } from './../models/interfaces';
+import { Tour, Place, WidgetType, TextWidget, RunVideoWidget, HintWidget } from './../models/interfaces';
 import { Request, Response } from 'express';
 import {
     addFile,
@@ -166,7 +166,7 @@ function createWidget(type: WidgetType) {
             padding: 0,
         };
         return textWidget;
-    } if (type === 'run-video') {
+    } else if (type === 'run-video') {
         const runVideo: RunVideoWidget = {
             id: uuidv1(),
             x: 0,
@@ -178,6 +178,15 @@ function createWidget(type: WidgetType) {
             video: null,
         };
         return runVideo;
+    } else if (type === 'hint') {
+        const hintWidget: HintWidget = {
+            id: uuidv1(),
+            x: 0,
+            y: 0,
+            content: '[Enter your text]',
+            type
+        };
+        return hintWidget;
     } else {
         throw new Error('Unknown widget type');
     }

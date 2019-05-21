@@ -6,6 +6,10 @@ import RunVideoWidget from "./RunVideoWidget/RunVideoWidget";
 import RunVideoShape from "./RunVideoWidget/RunVideoShape";
 import RunVideoEditPanel from './RunVideoWidget/RunVideoEditPanel';
 
+import HintWidget from "./HintWidget/HintWidget";
+import HintWidgetShape from "./HintWidget/HintWidgetShape";
+import HintWidgetEditPanel from './HintWidget/HintWidgetEditPanel';
+
 export {
     TextWidget,
     TextWidgetShape,
@@ -14,4 +18,8 @@ export {
     RunVideoWidget,
     RunVideoShape,
     RunVideoEditPanel,
+
+    HintWidget,
+    HintWidgetShape,
+    HintWidgetEditPanel,
 };

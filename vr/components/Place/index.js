@@ -5,8 +5,8 @@ import PanoBackground from '../Background/PanoBackground';
 import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';
 import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';
-import { BACKEND_URL } from './../../config';
-import { TextWidget, RunVideoWidget } from './../Widgets';
+import { BACKEND_URL } from './../../config'
+import { TextWidget, RunVideoWidget, HintWidget } from './../Widgets';
 
 export default class Place extends React.Component {
     constructor() {
@@ -17,9 +17,6 @@ export default class Place extends React.Component {
         };
 
         this._handlePortalClick = this._handlePortalClick.bind(this);
-    }
-
-    componentDidMount() {
     }
 
     _handlePortalClick(e) {
@@ -42,13 +39,16 @@ export default class Place extends React.Component {
     }
 
     _renderWidget(widget) {
-        if (widget.type === 'text') {
-            return <TextWidget key={widget.id} options={widget} />;
-        } else if (widget.type === 'run-video') {
-            return <RunVideoWidget key={widget.id} widget={widget} />;
+        switch (widget.type) {
+            case 'text':
+                return <TextWidget key={widget.id} options={widget} />
+            case 'run-video': 
+                return <RunVideoWidget key={widget.id} widget={widget} />
+            case 'hint':
+                return <HintWidget key={widget.id} widget={widget} />
+            default:
+                throw new Exception("Unknown widget type");
         }
-
-        throw new Exception("Unknown widget type");
     }
 
     render() {

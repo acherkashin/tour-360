@@ -1,6 +1,6 @@
 import { MediaFile } from './';
 
-export type WidgetType = 'text' | 'run-video';
+export type WidgetType = 'text' | 'run-video' | 'hint';
 
 export interface BaseWidget {
     id: string;
@@ -14,6 +14,10 @@ export interface TextWidget extends BaseWidget {
     color: string;
     backgroundColor: string;
     padding: number;
+}
+
+export interface HintWidget extends BaseWidget {
+    content: string;
 }
 
 export interface RunVideoWidget extends BaseWidget {
