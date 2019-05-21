@@ -16,6 +16,7 @@ export function getIcon(widgetType: WidgetType) {
         case 'hint':
             return <HintIcon />
         default:
-            throw new Error(`Unknown widget type: ${widgetType}`);
+            throw createError(widgetType);
     }
-}
+ 
+export const createError = (widgetType: WidgetType) => new Error(`Unknown widget type: ${widgetType}`);

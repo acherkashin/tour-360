@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, staticAssetURL } from 'react-360';
 import PanoBackground from '../Background/PanoBackground';
-import VideoBackground from '../Background/VideoBackground';
 import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';
 import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';

@@ -10,6 +10,7 @@ import {
     generateTourImageName,
     generatePlaceSoundName,
     generatePlaceMapIconName,
+    generatePlaceCoverName,
 } from '../utils/fileutils';
 import { UploadedFile } from 'express-fileupload';
 
@@ -195,9 +196,30 @@ export function uploadImage360(req: Request, res: Response) {
 
     addFile(image360Name, mapImage).then(() => {
         place.image360.filename = image360Name;
-        place.image360.contentType = (<any>mapImage).mimetype;
+        place.image360.contentType = mapImage.mimetype;
         place.image360.height = parseInt(height);
         place.image360.width = parseInt(width);
+
+        res.json({ place: place.toDetailDto(tour) });
+    }).catch(error => {
+        res.status(INTERNAL_SERVER_ERROR).json({ error });
+    });
+}
+
+export function uploadPlaceCover(req: Request, res: Response) {
+    const { sessionId, placeId } = req.params;
+    const { width, height } = req.body;
+    const cover = <UploadedFile>req.files.cover;
+
+    const tour = cache[sessionId];
+    const place = cache[sessionId].getPlace(placeId);
+    const coverName = generatePlaceCoverName(place, cover);
+
+    addFile(coverName, cover).then(() => {
+        place.cover.filename = coverName;
+        place.cover.contentType = cover.mimetype;
+        place.cover.height = parseInt(height);
+        place.cover.width = parseInt(width);
 
         res.json({ place: place.toDetailDto(tour) });
     }).catch(error => {

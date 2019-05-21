@@ -58,11 +58,18 @@ export default class PlaceEditStore {
     }
 
     cancelEditing() {
-        return PlaceEditService.cancelChanges(this.sessionId).then(action(() => {
+        const cancel = () => {
             this.editingPlace = null;
             this.isDirty = false;
             this.editingPlaceDisposer && this.editingPlaceDisposer();
-        }))
+        };
+
+        return PlaceEditService.cancelChanges(this.sessionId).then(() => cancel(), () => {
+            cancel();
+            this.rootStore.showError({
+                text: "Error occured during canceling",
+            });
+        });
     }
 
     completeEditing() {
@@ -129,6 +136,13 @@ export default class PlaceEditStore {
         return TourEditService.updateImage360(this.tourSessionId, this.editingPlace.id, file, width, height).then((resp) => {
             const place = resp.data.place;
             this.editingPlace.updateFromJson(place);
+        });
+    }
+
+    updatePlaceCover(file: File, width: number, height: number) {
+        return TourEditService.updatePlaceCover(this.tourSessionId, this.editingPlace.id, file, width, height).then((resp) => {
+            const { place } = resp.data;
+            this.editingPlace && this.editingPlace.updateFromJson(place);
         });
     }
 

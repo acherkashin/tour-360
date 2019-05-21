@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import {
     AppBar,
     Dialog,
@@ -42,7 +42,7 @@ import {
     HintWidget as IHintWidget
 } from '../../../../backend/src/models/interfaces';
 
-const styles = createStyles(theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {},
     appBar: {
         position: 'relative',
@@ -76,12 +76,12 @@ const styles = createStyles(theme => ({
         position: 'absolute',
         top: 285,
     }
-}));
+});
 
 interface PlaceDesignerProps extends WithStyles<typeof styles> {
     rootStore: RootStore;
     match: { params: { sessionId: string } };
-    intl: any;
+    intl: { formatMessage, messages };
 }
 
 interface PlaceDesignerState {
@@ -90,6 +90,7 @@ interface PlaceDesignerState {
     isOpenedPlaceDescriptionDialog: boolean;
     uploadImageDialogOpened: boolean;
     isOpenedUploadIconMapDialog: boolean;
+    isOpenedUploadCoverDialog: boolean;
     textureIsLoaded: boolean;
     isOpenedEditIconDialog: boolean;
 }
@@ -129,6 +130,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 textureIsLoaded: false,
                 isOpenedEditIconDialog: false,
                 isOpenedUploadIconMapDialog: false,
+                isOpenedUploadCoverDialog: false,
             };
         }
 
@@ -155,12 +157,14 @@ const PlaceDesigner = inject("rootStore")(observer(
         componentDidMount() {
             if (!this.editingPlace) {
                 const sessionId = this.props.match.params.sessionId;
+                const { formatMessage, messages } = this.props.intl;
+
                 this.placeEditStore.getFromSession(sessionId)
                     .catch((error) => {
                         console.error(error);
                         this.props.rootStore.showError({
-                            title: "Designer cannot be opened",
-                            text: `Session width id ${sessionId} is not found. Please select appropriate place and begin editing`,
+                            title: formatMessage(messages.noSessionErrorTitle),
+                            text: `${formatMessage(messages.noSessionErrorText1)} ${sessionId} ${formatMessage(messages.noSessionErrorText2)}`,
                         });
                     });
             }
@@ -374,8 +378,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                 return null;
             }
 
+            const { classes } = this.props;
             const { isDirty, saveLoading } = this.placeEditStore;
-            const classes: any = this.props.classes;
             const {
                 uploadImageDialogOpened,
                 isOpenedPreviewDialog,
@@ -383,6 +387,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 isOpenedPlaceDescriptionDialog,
                 isOpenedEditIconDialog,
                 isOpenedUploadIconMapDialog,
+                isOpenedUploadCoverDialog,
             } = this.state;
 
             return <Dialog
@@ -428,11 +433,12 @@ const PlaceDesigner = inject("rootStore")(observer(
                                 this.placeEditStore.removePlaceSound();
                             }}
                             onDescriptionClick={this._handleOpenDescriptionDialog}
-                            onWidgetClick={this._handleWidgetItemClick}
+                            onWidgetClick={this._handleWidgetItemClick.bind(this)}
                             onRemoveWidgetClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                             onUploadMapIconClick={(e) => this.setState({ isOpenedUploadIconMapDialog: true })}
                             onEditMapIconClick={(e) => this.setState({ isOpenedEditIconDialog: true })}
                             onClearMapIconClick={(e) => this.placeEditStore.removeMapIcon(e.place.id)}
+                            onChangeCoverClick={(e) => this.setState({ isOpenedUploadCoverDialog: true })}
                         />
                     </div>}
                 </div>
@@ -444,8 +450,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onClose={() => this.setState({ uploadImageDialogOpened: false })}
                 />
                 <UploadImageDialog
-                    title={"Upload icon marker"}
-                    prompt={"Select icon which will be displayed on the tour map"}
+                    title={formatMessage(messages.uploadPlaceIconText)}
+                    prompt={formatMessage(messages.uploadPlaceIconTitle)}
                     isOpened={isOpenedUploadIconMapDialog}
                     onFileSelected={(e) => {
                         this.placeEditStore.updateMapIcon(e.file, e.width, e.height).then(() => {
@@ -453,6 +459,17 @@ const PlaceDesigner = inject("rootStore")(observer(
                         });
                     }}
                     onClose={() => this.setState({ isOpenedUploadIconMapDialog: false })}
+                />
+                <UploadImageDialog
+                    title={formatMessage(messages.placeDesignerUploadCoverTitle)}
+                    prompt={formatMessage(messages.placeDesignerUploadCoverPrompt)}
+                    isOpened={isOpenedUploadCoverDialog}
+                    onFileSelected={(e) => {
+                        this.placeEditStore.updatePlaceCover(e.file, e.width, e.height).then(() => {
+                            this.setState({ isOpenedUploadCoverDialog: false });
+                        });
+                    }}
+                    onClose={() => this.setState({ isOpenedUploadCoverDialog: false })}
                 />
                 <ViewUrlDialog
                     title={formatMessage(messages.tourDesignerPreviewPlace)}
@@ -481,7 +498,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                     }}
                 />
                 {this.editingPlace && this.editingPlace.mapIcon && this.editingPlace.mapIcon.filename && <EditIconDialog
-                    title={`Edit map marker: ${this.editingPlace.name}`}
+                    title={`${formatMessage(messages.editPlaceIcon)}: ${this.editingPlace.name}`}
                     isOpened={isOpenedEditIconDialog}
                     url={this.editingPlace.mapIconUrl}
                     width={this.editingPlace.mapIcon && this.editingPlace.mapIcon.width}

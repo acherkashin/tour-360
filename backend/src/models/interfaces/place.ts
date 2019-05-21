@@ -31,7 +31,8 @@ export interface PlaceDetailDto {
     connections: ConnectionDetailDto[];
     widgets: BaseWidget[];
     description: string;
-    mapIcon: ImageFile;
+    mapIcon?: ImageFile;
+    cover?: ImageFile;
 }
 
 export interface Place extends Document {
@@ -42,6 +43,7 @@ export interface Place extends Document {
     sound?: MediaFile,
     image360?: ImageFile;
     mapIcon?: ImageFile;
+    cover?: ImageFile;
     widgets?: BaseWidget[];
     description?: string;
 

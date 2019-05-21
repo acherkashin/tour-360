@@ -140,6 +140,30 @@ const en = defineMessages({
         id: 'common.muted',
         defaultMessage: 'Muted',
     },
+    uploadPlaceIconTitle: {
+        id: 'common.upload-icon-marker-title',
+        defaultMessage: 'Upload place icon',
+    },
+    uploadPlaceIconText: {
+        id: 'common.upload-icon-marker-text',
+        defaultMessage: 'Select icon which will be displayed on the tour map',
+    },
+    editPlaceIcon: {
+        id: 'common.edit-place-icon',
+        defaultMessage: 'Edit place icon',
+    },
+    mapIcon: {
+        id: 'common.map-icon',
+        defaultMessage: 'Map icon',
+    },
+    panoImage: {
+        id: 'common.pano-image',
+        defaultMessage: "Pano image",
+    },
+    iconNotSelected: {
+        id: 'common.icon-not-selected',
+        defaultMessage: 'Icon is not selected',
+    },
 
     headerTitle: {
         id: 'header.title',
@@ -196,6 +220,23 @@ const en = defineMessages({
         id: 'place-designer.upload-pano-prompt',
         defaultMessage: 'Upload pano for your place',
     },
+    placeDesignerUploadCoverTitle: {
+        id: 'place-designer.upload-cover-title',
+        defaultMessage: "Upload Cover",
+    },
+    placeDesignerUploadCoverPrompt: {
+        id: 'place-designer.upload-cover-title',
+        defaultMessage: "Upload cover for your place",
+    },
+
+    widgetBarText: {
+        id: 'widget-bar.text',
+        defaultMessage: 'Text Widget',
+    },
+    widgetBarRunVideo: {
+        id: 'widget-bar.run-video',
+        defaultMessage: "Run background video widget",
+    },
 
     toursPageUploadCoverDialogTitle: {
         id: 'tours-page.upload-cover-dialog-title',
@@ -236,6 +277,10 @@ const en = defineMessages({
         id: 'edit-place-panel.edit-description',
         defaultMessage: 'Edit description',
     },
+    editPlacePanelCoverLabel: {
+        id: 'edit-place-panel.',
+        defaultMessage: 'Place Cover',
+    },
 
     editTourPanelTourName: {
         id: 'edit-tour-panel.tour-name',
@@ -257,7 +302,7 @@ const en = defineMessages({
         id: 'edit-tour-panel.is-public-tour-description',
         defaultMessage: 'Determines can unauthorized users see this tour',
     },
-    
+
     soundEditorChangeSound: {
         id: 'sound-editor.change-sound',
         defaultMessage: 'Change sound',
@@ -403,6 +448,19 @@ const en = defineMessages({
     mapEditModeAddConnection: {
         id: 'map-edit-mode.add-connection',
         defaultMessage: 'ADD CONNECTION',
+    },
+
+    noSessionErrorTitle: {
+        id: 'no-session-error.title',
+        defaultMessage: 'Designer cannot be opened',
+    },
+    noSessionErrorText1: {
+        id: 'no-session-error.text-1',
+        defaultMessage: `Session with id`,
+    },
+    noSessionErrorText2: {
+        id: 'no-session-error.text-2',
+        defaultMessage: `is not found. Please select appropriate place and begin editing`,
     },
 });
 

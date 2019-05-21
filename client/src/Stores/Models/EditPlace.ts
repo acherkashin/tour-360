@@ -17,6 +17,7 @@ class EditPlace {
     image360Name: string;
     connections: ConnectionDetailDto[] = [];
     mapIcon: ImageFile;
+    cover: ImageFile;
 
     description: string;
     widgets: BaseWidget[];
@@ -25,6 +26,7 @@ class EditPlace {
     soundHash: number;
     image360Hash: number;
     mapIconHash: number;
+    coverHash: number;
 
     constructor(json) {
         this.id = json.id;
@@ -45,33 +47,43 @@ class EditPlace {
     get mapIconUrl() {
         return this.mapIcon && this.mapIcon.filename ? `/${this.mapIcon.filename}?${this.mapIconHash}` : null;
     }
+    get coverUrl() {
+        return this.cover && this.cover.filename ? `/${this.cover.filename}?${this.coverHash}` : null;
+    }
 
     updateFromJson(json: PlaceDetailDto) {
         this.name = json.name;
         this.longitude = json.longitude;
         this.latitude = json.latitude;
-        this.hasImage360 = json.hasImage360;
-        this.image360Width = json.image360Width;
-        this.image360Height = json.image360Height;
-        this.image360Name = json.image360Name;
         this.connections = json.connections;
         this.description = json.description;
         this.widgets = json.widgets;
-        this.mapIcon = json.mapIcon;
 
         if (this.soundName !== json.soundName) {
             this.soundName = json.soundName;
             this.refreshSound();
         }
 
-        const oldImage = this.mapIcon && this.mapIcon.filename;
-        const newImage = json.mapIcon && json.mapIcon.filename;
-        if (oldImage !== newImage) {
+        const oldMapIcon = this.mapIcon && this.mapIcon.filename;
+        const newMapIcon = json.mapIcon && json.mapIcon.filename;
+        if (oldMapIcon !== newMapIcon) {
+            this.mapIcon = json.mapIcon;
             this.refreshMapIcon()
         }
 
-        if(this.image360Name !== json.image360Name) {
+        const oldCover = this.cover && this.cover.filename;
+        const newCover = json.cover && json.cover.filename;
+        if (oldCover != newCover) {
+            this.cover = json.cover;
+            this.refreshCover();
+        }
+
+        if (this.image360Name !== json.image360Name) {
             this.refreshPano();
+            this.hasImage360 = json.hasImage360;
+            this.image360Width = json.image360Width;
+            this.image360Height = json.image360Height;
+            this.image360Name = json.image360Name;
         }
 
         return this;
@@ -119,6 +131,10 @@ class EditPlace {
 
     refreshPano() {
         this.image360Hash = Date.now();
+    }
+
+    refreshCover() {
+        this.coverHash = Date.now();
     }
 }
 

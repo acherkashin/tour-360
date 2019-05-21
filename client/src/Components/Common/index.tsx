@@ -5,8 +5,10 @@ import PositionEditor from './PositionEditor';
 import IconEditor from './IconEditor';
 import PanoVideoEditor from './PanoVideoEditor';
 import NotificationMessage from './NotificationMessage';
+import Category from './Category';
 
 export {
+    Category,
     PanoVideoEditor,
     PositionEditor,
     ColorPicker,

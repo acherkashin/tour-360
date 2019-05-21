@@ -40,6 +40,8 @@ router.route('/tour-edit/:sessionId/place')
 
 router.route('/tour-edit/:sessionId/place/:placeId/uploadImage360')
     .post(verifyToken, verifySession, TourEditController.uploadImage360);
+router.route('/tour-edit/:sessionId/place/:placeId/uploadPlaceCover')
+    .post(verifyToken, verifySession, TourEditController.uploadPlaceCover);
 router.route('/tour-edit/:sessionId/place/:placeId/uploadMapPlaceIcon')
     .post(verifyToken, verifySession, TourEditController.uploadMapPlaceIcon);
 router.route('/tour-edit/:sessionId/place/:placeId/removeMapPlaceIcon')

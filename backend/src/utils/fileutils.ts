@@ -30,6 +30,13 @@ function generatePlaceImage360Name(place: Place, mapImage: UploadedFile): string
     return newFileName;
 }
 
+function generatePlaceCoverName(place: Place, cover: UploadedFile): string {
+    const extension = path.extname(cover.name);
+    const newFileName = `${place.id}-${uuidv1()}-place-cover${extension}`;
+
+    return newFileName;
+}
+
 function generatePlaceMapIconName(place: Place, mapIcon: UploadedFile) {
     const extension = path.extname(mapIcon.name);
     const newFileName = `${place.id}-${uuidv1()}-map-icon${extension}`;
@@ -63,6 +70,7 @@ export {
     removeFile,
     getFilePath,
     generatePlaceImage360Name,
+    generatePlaceCoverName,
     generatePlaceMapIconName,
     generateTourImageName,
     generatePlaceSoundName,

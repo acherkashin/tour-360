@@ -54,22 +54,29 @@ export function uploadMapImage(sessionId: string, file, width: number, height: n
     formData.append('height', String(height));
 
     return client.post(`/api/tour-edit/${sessionId}/uploadMapImage`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
+        headers: { 'Content-Type': 'multipart/form-data' }
     });
 }
 
-export function updateImage360(sessionId: string, placeId: string, file, width: number, height: number) {
+export function updateImage360(sessionId: string, placeId: string, file: File, width: number, height: number) {
     const formData = new FormData();
     formData.append('mapImage', file);
     formData.append('width', String(width));
     formData.append('height', String(height));
 
     return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadImage360`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        }
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+}
+
+export function updatePlaceCover(sessionId: string, placeId: string, file: File, width: number, height: number) {
+    const formData = new FormData();
+    formData.append('cover', file);
+    formData.append('width', String(width));
+    formData.append('height', String(height));
+
+    return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadPlaceCover`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
     });
 }
 
@@ -80,9 +87,7 @@ export function uploadPlaceMapIcon(sessionId: string, placeId: string, file, wid
     formData.append('height', String(height));
 
     return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/uploadMapPlaceIcon`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        }
+        headers: { 'Content-Type': 'multipart/form-data' }
     });
 }
 
@@ -95,9 +100,7 @@ export function uploadPlaceSound(sessionId: string, placeId: string, file) {
     formData.append('sound', file);
 
     return client.post(`/api/tour-edit/${sessionId}/place/${placeId}/sound`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        }
+        headers: { 'Content-Type': 'multipart/form-data' }
     });
 }
 

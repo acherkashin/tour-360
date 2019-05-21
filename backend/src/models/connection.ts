@@ -27,8 +27,8 @@ ConnectionSchema.methods.toClient = function (tour: Tour): ConnectionDto {
     return dto;
 };
 
-ConnectionSchema.methods.startAsDestination = function (tour: Tour) {
-    const start = tour.getPlace(this.startPlaceId).toClient();
+ConnectionSchema.methods.startAsDestination = function (tour: Tour): ConnectionDetailDto {
+    const start = tour.getPlace(this.startPlaceId);
 
     return {
         id: this.id,
@@ -36,13 +36,14 @@ ConnectionSchema.methods.startAsDestination = function (tour: Tour) {
         name: start.name,
         latitude: start.latitude,
         longitude: start.longitude,
-        image360Name: start.image360Name,
+        image360Name: start.image360 && start.image360.filename,
         position: this.endPlacePosition,
+        coverName: start.cover && start.cover.filename,
     };
 };
 
 ConnectionSchema.methods.endAsDestination = function (tour: Tour): ConnectionDetailDto {
-    const end = tour.getPlace(this.endPlaceId).toClient();
+    const end = tour.getPlace(this.endPlaceId)
 
     return {
         id: this.id,
@@ -50,8 +51,9 @@ ConnectionSchema.methods.endAsDestination = function (tour: Tour): ConnectionDet
         name: end.name,
         latitude: end.latitude,
         longitude: end.longitude,
-        image360Name: end.image360Name,
+        image360Name: end.image360 && end.image360.filename,
         position: this.startPlacePosition,
+        coverName: end.cover && end.cover.filename,
     };
 };
 

@@ -1,7 +1,7 @@
 import { Tour } from './tour';
 import { PlaceDto } from './place';
 
-interface ConnectionDto {
+export interface ConnectionDto {
     id: string;
     startPlace: PlaceDto;
     endPlace: PlaceDto;
@@ -9,7 +9,7 @@ interface ConnectionDto {
     endPlacePosition: string;
 }
 
-interface ConnectionDetailDto {
+export interface ConnectionDetailDto {
     id: string;
     placeId: string;
     name: string;
@@ -17,9 +17,10 @@ interface ConnectionDetailDto {
     longitude: number;
     image360Name: string;
     position: number;
+    coverName: string;
 }
 
-interface Connection {
+export interface Connection {
     startPlaceId: string;
     endPlaceId: string;
     startPlacePosition: number;
@@ -30,9 +31,3 @@ interface Connection {
     endAsDestination: (tour: Tour) => ConnectionDetailDto;
     equals: (place1Id: string, place2Id: string) => boolean;
 }
-
-export {
-    Connection,
-    ConnectionDto,
-    ConnectionDetailDto,
-};

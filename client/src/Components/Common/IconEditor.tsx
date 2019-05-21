@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import {
     Clear as ClearIcon,
     Edit as EditIcon,
@@ -18,7 +18,7 @@ import { intlShape, injectIntl } from 'react-intl';
 import grey from '@material-ui/core/colors/grey';
 import classnames from 'classnames';
 
-const styles = createStyles(theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
@@ -44,17 +44,17 @@ const styles = createStyles(theme => ({
         width: 40,
         height: 40,
     }
-}));
+});
 
 interface IconEditorProps extends WithStyles<typeof styles> {
-    intl: any;
-    className: string;
+    intl: { formatMessage: any, messages: any };
     image: {
         url: string;
         filename: string;
         width: number;
         height: number;
     },
+    className: string;
     onUploadClick: (e: { origin: IconEditor, }) => void;
     onClearClick: (e: { origin: IconEditor, }) => void;
     onEditClick: (e: { origin: IconEditor, }) => void;
@@ -83,12 +83,12 @@ class IconEditor extends React.Component<IconEditorProps> {
     render() {
         const {
             image,
+            classes,
             className,
             onEditClick,
             onClearClick,
             onUploadClick,
         } = this.props;
-        const classes: any = this.props.classes;
         const { messages, formatMessage } = this.props.intl;
 
         const root = classnames({
@@ -100,7 +100,7 @@ class IconEditor extends React.Component<IconEditorProps> {
 
         return (<List
             className={root}
-            subheader={<ListSubheader>Map marker</ListSubheader>}
+            subheader={<ListSubheader>{formatMessage(messages.mapIcon)}</ListSubheader>}
         >
             <ListItem>
                 <div className={classes.iconHolder}>
@@ -119,7 +119,7 @@ class IconEditor extends React.Component<IconEditorProps> {
                             </Typography>
                         </React.Fragment>
                     } />}
-                {!image && <ListItemText classes={{ root: classes.noImageText }} primary={'Icon is not selected'} />}
+                {!image && <ListItemText classes={{ root: classes.noImageText }} primary={formatMessage(messages.iconNotSelected)} />}
                 {image && <IconButton onClick={(e) => onEditClick({ origin: this, })}>
                     <EditIcon />
                 </IconButton>}
