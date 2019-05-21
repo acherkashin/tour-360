@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { hash as _hash, compare } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { User } from '../models/index';
 import { createToken } from '../utils/tokenutils';
 import { validateForm, validName, validEmail } from '../utils/validate';
@@ -16,7 +16,7 @@ export function signup(req, res) {
             return res.status(BAD_REQUEST).json({ message: 'Error is occured during registering' });
         }
 
-        _hash(req.body.user.password, 10, (err, hash) => {
+        hash(req.body.user.password, 10, (err, hash) => {
             if (err) {
                 return res.status(INTERNAL_SERVER_ERROR).json({ error: err });
             }

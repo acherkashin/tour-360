@@ -65,7 +65,7 @@ export default class Portal extends React.Component {
         const imageUrl = `${BACKEND_URL}/${connection.coverName}`;
 
         return (
-            <View style={{ transform: [{ translate: [right, 30], }] }}>
+            <View style={[styles.root, { transform: [{ translate: [right, 30], }] }]}>
                 <VrButton
                     style={[styles.box, highlightedBoxStyle]}
                     onEnter={this.handleButtonEnter}
@@ -94,6 +94,9 @@ export default class Portal extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    root: {
+        position: 'absolute',
+    },
     image: {
         borderRadius: 32,
         borderColor: "rgba(255, 255, 255, 1)"

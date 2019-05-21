@@ -15,7 +15,7 @@ const styles = createStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        flexShrink: 1,
+        flexShrink: 0,
         backgroundColor: grey[100],
         borderLeft: `1px solid ${grey[300]}`,
         padding: theme.spacing.unit * 2,

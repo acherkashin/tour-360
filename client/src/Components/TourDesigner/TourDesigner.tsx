@@ -53,6 +53,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
+        flex: 1,
+        overflow: 'hidden',
     },
     rightPanel: {
         display: 'flex',
@@ -283,13 +285,16 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     _handleMapClick(e) {
+        if (this.editingPlace) {
+            this.tourStore.saveEditingPlace(true);
+            return;
+        }
+        if (this.editingConnection) {
+            this.tourStore.saveEditingConnection(true);
+            return;
+        }
+
         if (this.state.mapEditMode === DRAG_MAP) {
-            if (this.editingPlace) {
-                this.tourStore.saveEditingPlace(true);
-            }
-            if (this.editingConnection) {
-                this.tourStore.saveEditingConnection(true);
-            }
         } else if (this.state.mapEditMode === ADD_PLACE) {
             this.tourStore.addPlace({
                 latitude: e.latlng.lat,

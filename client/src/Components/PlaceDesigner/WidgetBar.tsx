@@ -52,6 +52,8 @@ class WidgetBar extends React.Component<WidgetBarProps> {
             return formatMessage(messages.widgetBarText);
         } else if (widgetType === 'run-video') {
             return formatMessage(messages.widgetBarRunVideo);
+        } else if (widgetType === 'hint') {
+            return formatMessage(messages.widgetBarHint);
         }
 
         throw createError(widgetType);

@@ -237,6 +237,10 @@ const en = defineMessages({
         id: 'widget-bar.run-video',
         defaultMessage: "Run background video widget",
     },
+    widgetBarHint: {
+        id: 'widget-bar.run-video',
+        defaultMessage: "Hint",
+    },
 
     toursPageUploadCoverDialogTitle: {
         id: 'tours-page.upload-cover-dialog-title',

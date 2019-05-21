@@ -18,5 +18,6 @@ export function getIcon(widgetType: WidgetType) {
         default:
             throw createError(widgetType);
     }
- 
+}
+
 export const createError = (widgetType: WidgetType) => new Error(`Unknown widget type: ${widgetType}`);

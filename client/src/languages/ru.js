@@ -230,6 +230,10 @@ const ru = defineMessages({
         id: 'widget-bar.run-video',
         defaultMessage: 'Виджет запуска фонового видео',
     },
+    widgetBarHint: {
+        id: 'widget-bar.run-video',
+        defaultMessage: "Подсказка",
+    },
 
     toursPageUploadCoverDialogTitle: {
         id: 'tours-page.upload-cover-dialog-title',
