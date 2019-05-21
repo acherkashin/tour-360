@@ -3,7 +3,7 @@ import { deepObserve, fromPromise, IDisposer } from 'mobx-utils';
 import { PlaceEditService, PlaceService, TourEditService } from './../api/';
 import { UserStore, RootStore } from '.';
 import EditPlace from './Models/EditPlace';
-import { BaseWidget, TextWidget, WidgetType, RunVideoWidget } from '../../../backend/src/models/interfaces';
+import { BaseWidget, TextWidget, WidgetType, RunVideoWidget, HintWidget } from '../../../backend/src/models/interfaces';
 
 export default class PlaceEditStore {
     saveResult: any;
@@ -89,6 +89,11 @@ export default class PlaceEditStore {
                     (<RunVideoWidget>this.editingWidget).muted = videoWidget.muted;
                     (<RunVideoWidget>this.editingWidget).name = videoWidget.name;
                     (<RunVideoWidget>this.editingWidget).volume = videoWidget.volume;
+                } else if (this.editingWidget.type === 'hint') {
+                    const hintWidget: HintWidget = widget;
+                    (<HintWidget>this.editingWidget).x = hintWidget.x;
+                    (<HintWidget>this.editingWidget).y = hintWidget.y;
+                    (<HintWidget>this.editingWidget).content = hintWidget.content;
                 } else {
                     throw new Error('Unknown widget type');
                 }

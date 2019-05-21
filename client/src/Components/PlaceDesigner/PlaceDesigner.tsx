@@ -25,13 +25,21 @@ import {
 import EditPlacePanel from '../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { CoordinateSystem } from '.';
-import { TextWidget, EditTextWidgetPanel, RunVideoEditPanel, RunVideoWidget } from './Widgets';
+import { 
+    TextWidget,
+    EditTextWidgetPanel,
+    RunVideoEditPanel,
+    RunVideoWidget,
+    HintWidget,
+    HintWidgetEditPanel
+} from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
 import { RootStore, EditPlace, PlaceEditStore } from "./../../Stores";
 import {
     BaseWidget,
     TextWidget as ITextWidget,
-    RunVideoWidget as IRunVideoWidget
+    RunVideoWidget as IRunVideoWidget,
+    HintWidget as IHintWidget
 } from '../../../../backend/src/models/interfaces';
 
 const styles = createStyles(theme => ({
@@ -225,7 +233,7 @@ const PlaceDesigner = inject("rootStore")(observer(
         _handleWidgetItemClick(e: { widget: BaseWidget }) {
             if (e.widget != null && e.widget.id) {
                 //TODO: reimplement it to show widget in the center of screen
-                document.getElementById(e.widget.id).scrollIntoView();
+                // document.getElementById(e.widget.id).scrollIntoView();
                 this.placeEditStore.editWidget(e.widget.id);
             }
         }
@@ -260,6 +268,17 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onPanoVideoChanged={e => this.placeEditStore.updateRunVideo(e.widget.id, e.file)}
                     onPanoVideoRemoved={e => console.log(e)}
                 />;
+            } else if (this.editingWidget.type === 'hint') {
+                const widget = this.editingWidget as IHintWidget;
+
+                return <HintWidgetEditPanel
+                    key={widget.id}
+                    widget={widget}
+                    onXChanged={e => widget.x = e.x}
+                    onYChanged={e => widget.y = e.y}
+                    onContentChanged={e => widget.content = e.content}
+                    onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
+                />;
             }
 
             throw new Error("Unknown type of widget");
@@ -277,6 +296,13 @@ const PlaceDesigner = inject("rootStore")(observer(
                 />;
             } else if (widget.type === 'run-video') {
                 return <RunVideoWidget
+                    key={widget.id}
+                    widget={widget}
+                    isSelected={isSelected}
+                    onClick={this._handleWidgetClick}
+                />
+            } else if (widget.type === 'hint') {
+                return <HintWidget
                     key={widget.id}
                     widget={widget}
                     isSelected={isSelected}
@@ -374,7 +400,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 </AppBar>
                 <div className={classes.content}>
                     {this.editingPlace.mapImage360Url && <WidgetBar
-                        widgets={[{ type: 'text' }, { type: 'run-video' }]}
+                        widgets={[{ type: 'text' }, { type: 'run-video' }, { type: 'hint' }]}
                         onWidgetClick={(e) => {
                             this.placeEditStore.addWidget(e.type);
                         }}

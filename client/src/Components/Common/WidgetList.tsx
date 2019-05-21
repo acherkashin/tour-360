@@ -13,7 +13,8 @@ import { WidgetItem } from '.';
 import {
     BaseWidget,
     TextWidget as ITextWidget,
-    RunVideoWidget as IRunVideoWidget
+    RunVideoWidget as IRunVideoWidget,
+    HintWidget as IHintWidget
 } from '../../../../backend/src/models/interfaces';
 
 const styles = theme => ({
@@ -45,12 +46,15 @@ class WidgetList extends React.Component<WidgetListProps> {
     };
 
     _getTitle(widget: BaseWidget) {
-        if (widget.type === 'text') {
-            return (widget as ITextWidget).content;
-        } if (widget.type === 'run-video') {
-            return (widget as IRunVideoWidget).name;
-        } else {
-            throw new Error('Unknown widget type');
+        switch (widget.type) {
+            case 'text':
+                return (widget as ITextWidget).content
+            case 'run-video':
+                return (widget as IRunVideoWidget).name
+            case 'hint':
+                return (widget as IHintWidget).content
+            default:
+                throw new Error('Unknown widget type')
         }
     }
 
