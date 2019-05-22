@@ -309,12 +309,12 @@ const ru = defineMessages({
         defaultMessage: 'Звук экскурсии',
     },
 
-    panoVideoEditorChangeSound: {
-        id: 'panovideo-editor.change-video',
+    panoVideoEditorChangeVideo: {
+        id: 'pano-video-editor.change-video',
         defaultMessage: "Изменить видео"
     },
     panoVideoEditorPlaceVideo: {
-        id: 'sound-editor.tours-sound',
+        id: 'pano-video-editor.place-video',
         defaultMessage: "Видео",
     },
 

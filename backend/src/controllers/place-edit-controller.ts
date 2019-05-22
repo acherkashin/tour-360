@@ -118,20 +118,17 @@ export function saveChanges(req: Request, res: Response) {
 }
 
 export function updateRunVideo(req: Request, res: Response) {
-    const { sessionId, widgetId } = req.params;
+    const { sessionId } = req.params;
     let { place } = cache[sessionId];
-    const mapImage = <UploadedFile>req.files.mapImage;
+    // const mapImage = <UploadedFile>req.files.mapImage;
 
-    const widget = place.getWidget<RunVideoWidget>(widgetId);
+    const { widget, video } = req.body;
 
-    const newFileName = generateRunVideoName(place, mapImage);
-    addFile(newFileName, widget.video).then(() => {
-        widget.video = {
-            filename: newFileName,
-            contentType: mapImage.mimetype,
-        };
+    const newFileName = generateRunVideoName(place, video);
+    addFile(newFileName, video).then(() => {
+        video.filename = newFileName
 
-        res.json({ widget });
+        res.json({ widget, video });
     }).catch(error => {
         res.status(INTERNAL_SERVER_ERROR).json({ error });
     });

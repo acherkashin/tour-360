@@ -316,12 +316,12 @@ const en = defineMessages({
         defaultMessage: "Tour's sound",
     },
 
-    panoVideoEditorChangeSound: {
-        id: 'panovideo-editor.change-video',
+    panoVideoEditorChangeVideo: {
+        id: 'pano-video-editor.change-video',
         defaultMessage: "Change video"
     },
     panoVideoEditorPlaceVideo: {
-        id: 'sound-editor.tours-sound',
+        id: 'pano-video-editor.place-video',
         defaultMessage: "Video",
     },
 
