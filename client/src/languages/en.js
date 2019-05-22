@@ -238,7 +238,7 @@ const en = defineMessages({
         defaultMessage: "Run background video widget",
     },
     widgetBarHint: {
-        id: 'widget-bar.run-video',
+        id: 'widget-bar.hint',
         defaultMessage: "Hint",
     },
 
@@ -437,20 +437,20 @@ const en = defineMessages({
         defaultMessage: 'To Login',
     },
 
-    mapEditModeDragMap: {
-        id: 'map-edit-mode.drag-map',
+    mapEditModeBarDragMap: {
+        id: 'map-edit-mode-bar.drag-map',
         defaultMessage: 'DRAG MAP',
     },
-    mapEditModeAddPlace: {
-        id: 'map-edit-mode.add-place',
+    mapEditModeBarAddPlace: {
+        id: 'map-edit-mode-bar.add-place',
         defaultMessage: 'ADD PLACE',
     },
-    mapEditModeRemovePlace: {
-        id: 'map-edit-mode.remove-place',
+    mapEditModeBarRemovePlace: {
+        id: 'map-edit-mode-bar.remove-place',
         defaultMessage: 'REMOVE PLACE',
     },
-    mapEditModeAddConnection: {
-        id: 'map-edit-mode.add-connection',
+    mapEditModeBarAddConnection: {
+        id: 'map-edit-mode-bar.add-connection',
         defaultMessage: 'ADD CONNECTION',
     },
 

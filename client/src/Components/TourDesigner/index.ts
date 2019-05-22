@@ -4,7 +4,7 @@ import ConnectionList from './ConnectionList';
 import EditConnectionPanel from './EditConnectionPanel';
 import EditPlacePanel from './EditPlacePanel';
 import EditTourPanel from './EditTourPanel';
-import MapEditMode from './MapEditMode';
+import MapEditModeBar from './MapEditModeBar';
 import Place from './Place';
 import PlacePosition from './PlacePosition';
 import SoundEditor from './SoundEditor';
@@ -18,7 +18,7 @@ export {
     EditConnectionPanel,
     EditPlacePanel,
     EditTourPanel,
-    MapEditMode,
+    MapEditModeBar,
     Place,
     PlacePosition,
     SoundEditor,

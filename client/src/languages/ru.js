@@ -231,7 +231,7 @@ const ru = defineMessages({
         defaultMessage: 'Виджет запуска фонового видео',
     },
     widgetBarHint: {
-        id: 'widget-bar.run-video',
+        id: 'widget-bar.hint',
         defaultMessage: "Подсказка",
     },
 
@@ -430,20 +430,20 @@ const ru = defineMessages({
         defaultMessage: 'Перейти к входу',
     },
 
-    mapEditModeDragMap: {
-        id: 'map-edit-mode.drag-map',
+    mapEditModeBarDragMap: {
+        id: 'map-edit-mode-bar.drag-map',
         defaultMessage: 'ДВИГАТЬ КАРТУ',
     },
-    mapEditModeAddPlace: {
-        id: 'map-edit-mode.add-place',
+    mapEditModeBarAddPlace: {
+        id: 'map-edit-mode-bar.add-place',
         defaultMessage: 'ДОБАВИТЬ ЛОКАЦИЮ',
     },
-    mapEditModeRemovePlace: {
-        id: 'map-edit-mode.remove-place',
+    mapEditModeBarRemovePlace: {
+        id: 'map-edit-mode-bar.remove-place',
         defaultMessage: 'УДАЛИТЬ ЛОКАЦИЮ',
     },
-    mapEditModeAddConnection: {
-        id: 'map-edit-mode.add-connection',
+    mapEditModeBarAddConnection: {
+        id: 'map-edit-mode-bar.add-connection',
         defaultMessage: 'ДОБАВИТЬ СВЯЗЬ',
     },
 
