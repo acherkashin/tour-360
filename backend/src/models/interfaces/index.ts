@@ -5,6 +5,7 @@ import { UserDto } from './user';
 import ImageFile from './image';
 import MediaFile from './media';
 import MapType from "./MapType";
+import MapEditModes from "./MapEditModes";
 export * from './widget';
 
 export {
@@ -21,4 +22,5 @@ export {
     UserDto,
     ImageFile,
     MediaFile,
+    MapEditModes
 };

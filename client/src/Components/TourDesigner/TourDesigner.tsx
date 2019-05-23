@@ -29,6 +29,7 @@ import { TourMap } from '.';
 import EditPlacePanel from './EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { TourEditStore } from './../../Stores';
+import { MapEditModes } from '../../../../backend/src/models/interfaces';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     appBar: {
@@ -67,6 +68,18 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
 });
 
+interface IState {
+    uploadImageDialogState: 0 | 1 | 2 | 3;
+    isOpenedConfirmDialog: boolean;
+    isOpenedDeleteDialog: boolean;
+    isOpenedPreviewDialog: boolean;
+    isOpenedPlaceDescriptionDialog: boolean;
+    isOpenedEditIconDialog: boolean;
+    isOpenedUploadCoverDialog: boolean;
+    mapEditMode: MapEditModes;
+    placeToDeleteId: string;
+};
+
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
@@ -76,7 +89,7 @@ const TOUR_MAP = 1;
 const PLACE_360 = 2;
 const PLACE_MAP_ICON = 3;
 
-const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component<any> {
+const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component<any, IState> {
     static propTypes = {
         classes: PropTypes.object.isRequired,
 
