@@ -231,7 +231,7 @@ const ru = defineMessages({
         defaultMessage: 'Виджет запуска фонового видео',
     },
     widgetBarHint: {
-        id: 'widget-bar.run-video',
+        id: 'widget-bar.hint',
         defaultMessage: "Подсказка",
     },
 
@@ -309,12 +309,12 @@ const ru = defineMessages({
         defaultMessage: 'Звук экскурсии',
     },
 
-    panoVideoEditorChangeSound: {
-        id: 'panovideo-editor.change-video',
+    panoVideoEditorChangeVideo: {
+        id: 'pano-video-editor.change-video',
         defaultMessage: "Изменить видео"
     },
     panoVideoEditorPlaceVideo: {
-        id: 'sound-editor.tours-sound',
+        id: 'pano-video-editor.place-video',
         defaultMessage: "Видео",
     },
 
@@ -430,20 +430,20 @@ const ru = defineMessages({
         defaultMessage: 'Перейти к входу',
     },
 
-    mapEditModeDragMap: {
-        id: 'map-edit-mode.drag-map',
+    mapEditModeBarDragMap: {
+        id: 'map-edit-mode-bar.drag-map',
         defaultMessage: 'ДВИГАТЬ КАРТУ',
     },
-    mapEditModeAddPlace: {
-        id: 'map-edit-mode.add-place',
+    mapEditModeBarAddPlace: {
+        id: 'map-edit-mode-bar.add-place',
         defaultMessage: 'ДОБАВИТЬ ЛОКАЦИЮ',
     },
-    mapEditModeRemovePlace: {
-        id: 'map-edit-mode.remove-place',
+    mapEditModeBarRemovePlace: {
+        id: 'map-edit-mode-bar.remove-place',
         defaultMessage: 'УДАЛИТЬ ЛОКАЦИЮ',
     },
-    mapEditModeAddConnection: {
-        id: 'map-edit-mode.add-connection',
+    mapEditModeBarAddConnection: {
+        id: 'map-edit-mode-bar.add-connection',
         defaultMessage: 'ДОБАВИТЬ СВЯЗЬ',
     },
 

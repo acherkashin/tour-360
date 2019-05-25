@@ -58,7 +58,7 @@ function generatePlaceSoundName(place: Place, sound: UploadedFile): string {
     return newFileName;
 }
 
-function generateRunVideoName(place: Place, video: UploadedFile): string {
+function generateRunVideoName(place: Place, video: File): string {
     const extension = path.extname(video.name);
     const newFileName = `${place.id}-${uuidv1()}-run-video${extension}`;
 

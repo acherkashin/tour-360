@@ -69,10 +69,16 @@ class PanoVideoEditor extends React.Component<PanoVideoEditorProps> {
         const { messages, formatMessage } = this.props.intl;
 
         if (!videoUrl) {
-            return <Button className={classNames.changeSound} variant="text" component="label" color="primary" fullWidth>
-                {formatMessage(messages.panoVideoEditorChangeSound)}
-                <input type="file" style={{ display: "none" }} onChange={this._handlePanoVideoChanged} />
-            </Button>;
+            return <Button 
+                        className={classNames.changeSound} 
+                        variant="text" 
+                        component="label" 
+                        color="primary" 
+                        fullWidth
+                    >
+                        {formatMessage(messages.panoVideoEditorChangeVideo)}
+                        <input type="file" style={{ display: "none" }} onChange={this._handlePanoVideoChanged} />
+                    </Button>
         }
 
         const editorClass = classNames.editor || '';

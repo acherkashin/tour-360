@@ -30,13 +30,10 @@ export function addWidget(sessionId: string, type: string) {
 export function getPanoUrl(sessionId: string, placeId: string, token: string) {
     return `${VR_URL}?placeSessionId=${sessionId}&placeId=${placeId}&token=${token}`;
 }
-export function updateRunVideo(sessionId: string, widgetId: string, video: File) {
-    const formData = new FormData();
-    formData.append('video', video);
-
-    return client.post<{ widget: RunVideoWidget }>(`/place-edit/${sessionId}/updateRunVideo/${widgetId}`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        }
+export function updateRunVideo(sessionId: string, widget: RunVideoWidget, video: File) {
+    return client.post<{ widget: RunVideoWidget }>(`/api/place-edit/${sessionId}/updateRunVideo`, { widget, video }, {
+        // headers: {
+        //     'Content-Type': 'multipart/form-data',
+        // }
     });
 }

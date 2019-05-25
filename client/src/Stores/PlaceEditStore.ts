@@ -177,8 +177,8 @@ export default class PlaceEditStore {
         this.editingWidget = null;
     }
 
-    updateRunVideo(widgetId: string, video: File) {
-        return PlaceEditService.updateRunVideo(this.sessionId, widgetId, video).then((resp) => {
+    updateRunVideo(widget: RunVideoWidget, video: File) {
+        return PlaceEditService.updateRunVideo(this.sessionId, widget, video).then((resp) => {
             this.editingPlace.updateWidget(resp.data.widget);
         });
     }

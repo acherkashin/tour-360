@@ -269,7 +269,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onVolumeChanged={e => widget.volume = e.value}
                     onMutedChanged={e => widget.muted = e.value}
                     onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
-                    onPanoVideoChanged={e => this.placeEditStore.updateRunVideo(e.widget.id, e.file)}
+                    onPanoVideoChanged={e => this.placeEditStore.updateRunVideo(e.widget, e.file)}
                     onPanoVideoRemoved={e => console.log(e)}
                 />;
             } else if (this.editingWidget.type === 'hint') {

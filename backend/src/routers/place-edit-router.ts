@@ -14,7 +14,7 @@ router.route('/place-edit/:sessionId/save')
     .post(verifyToken, verifySession, PlaceEditController.saveChanges);
 router.route('/place-edit/:sessionId/addWidget')
     .post(verifyToken, verifySession, PlaceEditController.addWidget);
-router.route('/place-edit/:sessionId/updateRunVideo/:widgetId')
+router.route('/place-edit/:sessionId/updateRunVideo')
     .post(verifyToken, verifySession, PlaceEditController.updateRunVideo);
 
 export default router;

@@ -16,7 +16,7 @@ import { intlShape, injectIntl } from 'react-intl';
 import CloseIcon from '@material-ui/icons/Close';
 import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
-import MapEditMode from './MapEditMode';
+import MapEditModeBar from './MapEditModeBar';
 import { PlaceholderButton, LoadingButton } from '..';
 import {
     UploadImageDialog,
@@ -26,10 +26,10 @@ import {
     EditIconDialog,
 } from '../Dialogs';
 import { TourMap } from '.';
-import { DRAG_MAP, ADD_PLACE, REMOVE_PLACE, ADD_CONNECTION } from './Modes';
 import EditPlacePanel from './EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { TourEditStore } from './../../Stores';
+import { MapEditModes } from '../../../../backend/src/models/interfaces';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     appBar: {
@@ -68,6 +68,18 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
 });
 
+interface IState {
+    uploadImageDialogState: 0 | 1 | 2 | 3;
+    isOpenedConfirmDialog: boolean;
+    isOpenedDeleteDialog: boolean;
+    isOpenedPreviewDialog: boolean;
+    isOpenedPlaceDescriptionDialog: boolean;
+    isOpenedEditIconDialog: boolean;
+    isOpenedUploadCoverDialog: boolean;
+    mapEditMode: MapEditModes;
+    placeToDeleteId: string;
+};
+
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
@@ -77,7 +89,7 @@ const TOUR_MAP = 1;
 const PLACE_360 = 2;
 const PLACE_MAP_ICON = 3;
 
-const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component<any> {
+const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component<any, IState> {
     static propTypes = {
         classes: PropTypes.object.isRequired,
 
@@ -127,7 +139,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         isOpenedPlaceDescriptionDialog: false,
         isOpenedEditIconDialog: false,
         isOpenedUploadCoverDialog: false,
-        mapEditMode: 0,
+        mapEditMode: 'dragMap',
         placeToDeleteId: null,
     };
 
@@ -294,8 +306,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             return;
         }
 
-        if (this.state.mapEditMode === DRAG_MAP) {
-        } else if (this.state.mapEditMode === ADD_PLACE) {
+        if (this.state.mapEditMode === 'addPlace') {
             this.tourStore.addPlace({
                 latitude: e.latlng.lat,
                 longitude: e.latlng.lng,
@@ -304,11 +315,11 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     _handlePlaceClick(e) {
-        if (this.state.mapEditMode === DRAG_MAP) {
+        if (this.state.mapEditMode === 'dragMap') {
             this.tourStore.editPlace(e.place.id);
-        } else if (this.state.mapEditMode === REMOVE_PLACE) {
+        } else if (this.state.mapEditMode === 'removePlace') {
             this.tourStore.removePlace(e.place.id);
-        } else if (this.state.mapEditMode === ADD_CONNECTION) {
+        } else if (this.state.mapEditMode === 'addConnection') {
             this.tourStore.selectPlace(e.place);
         }
     }
@@ -318,14 +329,14 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     _handleConnectionClick(e) {
-        if (this.state.mapEditMode === DRAG_MAP) {
+        if (this.state.mapEditMode === 'dragMap') {
             this.tourStore.editConnection(e.connection.id);
         }
     }
 
     _renderMap() {
         if ((this.editingTour.hasMapImage && this.editingTour.mapType === 2) || this.editingTour.mapType === 1) {
-            const mapStyle = this.state.mapEditMode !== 0 ? { cursor: 'pointer' } : {};
+            const mapStyle = this.state.mapEditMode !== 'dragMap' ? { cursor: 'pointer' } : {};
             const selectedPlaceId = this._getSelectedPlaceId();
 
             return <TourMap
@@ -421,6 +432,10 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                     </Toolbar>
                 </AppBar>
                 <div className={classes.content}>
+                    <MapEditModeBar
+                        mapEditModes={[{ mode: 'dragMap' }, { mode: 'addPlace' }, { mode: 'removePlace' }, { mode: 'addConnection' }]}
+                        onModeChanged={this._handleModeChanged}
+                    />
                     {this._renderMap()}
                     {!this.editingTour.mapType && <Typography className={classes.map}>{formatMessage(messages.tourDesignerMapTypeError)}</Typography>}
                     {this.showEditTourPanel && <div className={classes.rightPanel}>
@@ -436,9 +451,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                             onDeletePlaceClick={(e) => this._deletePlaceClick(e.place.id)}
 
                         />
-                        <MapEditMode
-                            value={mapEditMode}
-                            onModeChanged={this._handleModeChanged} />
                     </div>}
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
                         <EditPlacePanel
