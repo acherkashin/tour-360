@@ -65,6 +65,8 @@ class TourMap extends React.Component {
     }
 
     _handleZoomChanged(e) {
+        this.setState({ currentZoom: e.target._zoom });
+        
         this.props.onZoomChanged && this.props.onZoomChanged({
             origin: this,
             zoom: e.target._zoom,
@@ -124,7 +126,7 @@ class TourMap extends React.Component {
                     place={place}
                     isSelected={isSelected}
                     isStart={isStart}
-                    onClick={this._handlePlaceClick} 
+                    onClick={this._handlePlaceClick}
                     onDragend={this._handlePlaceDragend}
                 />;
             })}

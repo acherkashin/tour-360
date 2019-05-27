@@ -105,7 +105,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handlePlaceNameChanged = this._handlePlaceNameChanged.bind(this);
         this._handleChangePlaceImage360Click = this._handleChangePlaceImage360Click.bind(this);
-        this._handleZoomChanged = this._handleZoomChanged.bind(this);
         this._handleChangeImageMapClick = this._handleChangeImageMapClick.bind(this);
         this._handleFileSelected = this._handleFileSelected.bind(this);
         this._handleModeChanged = this._handleModeChanged.bind(this);
@@ -129,19 +128,19 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
         this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
         this._handleCloseDescriptionDialog = this._handleCloseDescriptionDialog.bind(this);
-    }
 
-    state = {
-        uploadImageDialogState: CLOSED,
-        isOpenedConfirmDialog: false,
-        isOpenedDeleteDialog: false,
-        isOpenedPreviewDialog: false,
-        isOpenedPlaceDescriptionDialog: false,
-        isOpenedEditIconDialog: false,
-        isOpenedUploadCoverDialog: false,
-        mapEditMode: 'dragMap',
-        placeToDeleteId: null,
-    };
+        this.state = {
+            uploadImageDialogState: CLOSED,
+            isOpenedConfirmDialog: false,
+            isOpenedDeleteDialog: false,
+            isOpenedPreviewDialog: false,
+            isOpenedPlaceDescriptionDialog: false,
+            isOpenedEditIconDialog: false,
+            isOpenedUploadCoverDialog: false,
+            mapEditMode: 'dragMap',
+            placeToDeleteId: null,
+        };
+    }
 
     componentDidMount() {
         if (!this.editingTour) {
@@ -264,10 +263,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
         this.setState({ uploadImageDialogState: TOUR_MAP });
     }
 
-    _handleZoomChanged(e) {
-        this.setState({ currentZoom: e.zoom });
-    }
-
     _handleModeChanged(e) {
         this.setState({ mapEditMode: e.mode });
     }
@@ -347,7 +342,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 onConnectionClick={this._handleConnectionClick}
                 onPlaceClick={this._handlePlaceClick}
                 onPlaceDragend={this._handlePlaceDragend}
-                onZoomChanged={this._handleZoomChanged}
             />;
         } else {
             return this._renderNoMapPlaceholder();
