@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import PlaceItem from './PlaceItem';
 import { List, ListSubheader, Typography } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 import classnames from 'classnames';
 import { intlShape, injectIntl } from 'react-intl';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
@@ -15,9 +15,48 @@ const styles = theme => ({
     },
 });
 
-class PlaceList extends React.Component {
+interface PlaceListProps extends WithStyles<typeof styles> {
+    intl: { messages, formatMessage };
+    canDelete: boolean;
+    canClick: boolean;
+    places: any[];
+    className: string;
+    onClick: (e: { origin: typeof PlaceItem, place: any }) => void;
+    onViewClick: (e: { origin: typeof PlaceItem, place: any }) => void;
+    onDeleteClick: (e: { origin: typeof PlaceItem, place: any }) => void;
+    onEditClick: (e: { origin: typeof PlaceItem, place: any }) => void;
+}
+
+class PlaceList extends React.Component<PlaceListProps> {
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        className: PropTypes.string,
+        places: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+        })).isRequired,
+        canClick: PropTypes.bool.isRequired,
+        canDelete: PropTypes.bool.isRequired,
+        onClick: PropTypes.func,
+        onViewClick: PropTypes.func.isRequired,
+        onEditClick: PropTypes.func.isRequired,
+        onDeleteClick: PropTypes.func,
+
+        intl: intlShape.isRequired,
+    };
+
     render() {
-        const { classes, canDelete, places, onClick, onViewClick, onDeleteClick, onEditClick, className, canClick } = this.props;
+        const {
+            classes,
+            className,
+            places,
+            canClick,
+            canDelete,
+            onClick,
+            onViewClick,
+            onDeleteClick,
+            onEditClick,
+        } = this.props;
         const hasPlaces = places && places.length > 0;
         const { messages, formatMessage } = this.props.intl;
 
@@ -43,22 +82,5 @@ class PlaceList extends React.Component {
         );
     }
 }
-
-PlaceList.propTypes = {
-    classes: PropTypes.object.isRequired,
-    className: PropTypes.string,
-    places: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-    })).isRequired,
-    canClick: PropTypes.bool.isRequired,
-    canDelete: PropTypes.bool.isRequired,
-    onClick: PropTypes.func,
-    onViewClick: PropTypes.func.isRequired,
-    onEditClick: PropTypes.func.isRequired,
-    onDeleteClick: PropTypes.func,
-
-    intl: intlShape.isRequired,
-};
 
 export default withStyles(styles)(injectIntl(PlaceList));

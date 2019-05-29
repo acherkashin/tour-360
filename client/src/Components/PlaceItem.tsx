@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import { ListItem, ListItemText, IconButton } from '@material-ui/core';
 import {
     Visibility as VisibilityIcon,
@@ -8,10 +8,20 @@ import {
     Delete as DeleteIcon,
 } from '@material-ui/icons';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
 });
 
-class PlaceItem extends React.Component {
+interface PlaceItemProps extends WithStyles<typeof styles> {
+    onClick: (e: { origin: PlaceItem, place: any }) => void;
+    onViewClick: (e: { origin: PlaceItem, place: any }) => void;
+    onEditClick: (e: { origin: PlaceItem, place: any }) => void;
+    onDeleteClick: (e: { origin: PlaceItem, place: any }) => void;
+    place: any;
+    canDelete: boolean;
+    canClick: boolean;
+}
+
+class PlaceItem extends React.Component<PlaceItemProps> {
     constructor(props) {
         super(props);
 
@@ -20,6 +30,20 @@ class PlaceItem extends React.Component {
         this._handleEditClick = this._handleEditClick.bind(this);
         this._handleDeleteClick = this._handleDeleteClick.bind(this);
     }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        place: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+        }).isRequired,
+        canDelete: PropTypes.bool.isRequired,
+        canClick: PropTypes.bool.isRequired,
+        onClick: PropTypes.func,
+        onViewClick: PropTypes.func.isRequired,
+        onEditClick: PropTypes.func.isRequired,
+        onDeleteClick: PropTypes.func,
+    };
 
     _handleClick(e) {
         e.stopPropagation();
@@ -61,19 +85,5 @@ class PlaceItem extends React.Component {
         </ListItem>;
     }
 }
-
-PlaceItem.propTypes = {
-    classes: PropTypes.object.isRequired,
-    place: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-    }).isRequired,
-    canDelete: PropTypes.bool.isRequired,
-    canClick: PropTypes.bool.isRequired,
-    onClick: PropTypes.func,
-    onViewClick: PropTypes.func.isRequired,
-    onEditClick: PropTypes.func.isRequired,
-    onDeleteClick: PropTypes.func,
-};
 
 export default withStyles(styles)(PlaceItem);

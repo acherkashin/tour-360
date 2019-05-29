@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
-import { Connection, Place, } from './';
+import { Connection, Place, } from '.';
 import grey from '@material-ui/core/colors/grey';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         flex: 1,
         display: 'flex',
@@ -30,7 +30,25 @@ const styles = theme => ({
     value: {}
 });
 
-class TourMap extends React.Component {
+interface TourMapProps extends WithStyles<typeof styles> {
+    tour: any;
+    mapStyle: any;
+    selectedPlaceId: string;
+    onClick: (e: { origin: TourMap, latlng: any }) => void;
+    onMouseMove: (e: { origin: TourMap, latlng: any }) => void;
+    onZoomChanged: (e: { origin: TourMap, zoom: number }) => void;
+    onConnectionClick: (e: { origin: TourMap, connection: any }) => void;
+    onPlaceClick: (e: { origin: TourMap, place: any }) => void;
+    onPlaceDragend: (e: { origin: TourMap, place: any, latitude: number, longitude: number }) => void;
+};
+
+interface TourMapState {
+    currentLat: number;
+    currentLng: number;
+    currentZoom: number;
+}
+
+class TourMap extends React.Component<TourMapProps, TourMapState> {
     constructor(props) {
         super(props);
 
@@ -41,6 +59,23 @@ class TourMap extends React.Component {
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
         this._handlePlaceDragend = this._handlePlaceDragend.bind(this);
     }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        mapStyle: PropTypes.object,
+        selectedPlaceId: PropTypes.string,
+        tour: PropTypes.shape({
+            places: PropTypes.array.isRequired,
+            connections: PropTypes.array.isRequired,
+            mapType: PropTypes.number.isRequired,
+        }).isRequired,
+        onClick: PropTypes.func,
+        onMouseMove: PropTypes.func,
+        onZoomChanged: PropTypes.func,
+        onPlaceClick: PropTypes.func,
+        onPlaceDragend: PropTypes.func,
+        onConnectionClick: PropTypes.func,
+    };
 
     state = {
         currentLat: 0,
@@ -66,7 +101,7 @@ class TourMap extends React.Component {
 
     _handleZoomChanged(e) {
         this.setState({ currentZoom: e.target._zoom });
-        
+
         this.props.onZoomChanged && this.props.onZoomChanged({
             origin: this,
             zoom: e.target._zoom,
@@ -109,11 +144,11 @@ class TourMap extends React.Component {
 
         return <>
             {connections.map(c => {
-                const isSelected = ((this.editingConnection) && c.id === this.editingConnection.id) || false;
+                // const isSelected = ((this.editingConnection) && c.id === this.editingConnection.id) || false;
 
                 return <Connection
                     key={c.id}
-                    isSelected={isSelected}
+                    // isSelected={isSelected}
                     connection={c}
                     onClick={this._handleConnectionClick}
                 />;
@@ -171,6 +206,8 @@ class TourMap extends React.Component {
                 </Map>
             );
         }
+
+        throw new Error("Unknown map type");
     }
 
     _renderStatusBar() {
@@ -181,15 +218,15 @@ class TourMap extends React.Component {
             <div className={classes.statusBar}>
                 <span className={classes.field}>
                     <span className={classes.lable}>X:</span>
-                    <span className={classes.value}>{parseInt(currentLng)}</span>
+                    <span className={classes.value}>{Math.floor(currentLng)}</span>
                 </span>
                 <span className={classes.field}>
                     <span className={classes.lable}>Y:</span>
-                    <span className={classes.value}>{parseInt(currentLat)}</span>
+                    <span className={classes.value}>{Math.floor(currentLat)}</span>
                 </span>
                 <span className={classes.field}>
                     <span className={classes.lable}>Z:</span>
-                    <span className={classes.value}>{parseInt(currentZoom)}</span>
+                    <span className={classes.value}>{Math.floor(currentZoom)}</span>
                 </span>
             </div>
         )
@@ -203,23 +240,6 @@ class TourMap extends React.Component {
             {this._renderStatusBar()}
         </div>;
     }
-}
-
-TourMap.propTypes = {
-    classes: PropTypes.object.isRequired,
-    mapStyle: PropTypes.object,
-    selectedPlaceId: PropTypes.string,
-    tour: PropTypes.shape({
-        places: PropTypes.array.isRequired,
-        connections: PropTypes.array.isRequired,
-        mapType: PropTypes.number.isRequired,
-    }).isRequired,
-    onClick: PropTypes.func,
-    onMouseMove: PropTypes.func,
-    onZoomChanged: PropTypes.func,
-    onPlaceClick: PropTypes.func,
-    onPlaceDragend: PropTypes.func,
-    onConnectionClick: PropTypes.func,
 }
 
 export default withStyles(styles)(TourMap);
