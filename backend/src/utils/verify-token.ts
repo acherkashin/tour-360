@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
-const config = require('./../config.js');
-const HttpStatus = require('http-status-codes');
-const { getTokenFromRequest } = require('./tokenutils');
-const {} = ''
+import jwt from 'jsonwebtoken';
+import * as config from './../config.js';
+import HttpStatus from 'http-status-codes';
+import { getTokenFromRequest } from './tokenutils';
+import { Request, Response } from 'express';
 
-const verifyToken = (req, res, next) => {
+const verifyToken = (req: Request & { userId: string }, res: Response, next) => {
     const token = getTokenFromRequest(req);
 
     if (!token) {

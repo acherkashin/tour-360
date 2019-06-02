@@ -6,10 +6,11 @@ export interface TourDto {
     name: string;
     mapType: MapType;
     hasImage: boolean;
-    filename: string;
-    startPlaceId: string;
+    filename?: string;
+    startPlaceId?: string;
     isPublic: boolean;
-    places: PlaceDto[],
+    places: PlaceDto[];
+    // author: string;
 }
 
 export interface TourDetailDto {

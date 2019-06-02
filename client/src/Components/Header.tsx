@@ -7,6 +7,8 @@ import {
     MenuItem,
     Typography,
     IconButton,
+    Tooltip,
+    Button,
 } from '@material-ui/core';
 import {
     AccountCircle as AccountCircleIcon,
@@ -41,14 +43,16 @@ interface HeaderProps extends WithStyles<typeof styles> {
 
 interface HeaderState {
     anchorEl: HTMLElement;
-    openedProfile: boolean;
-    openedPublicTours: boolean;
+    redirectToProfile: boolean;
+    redirectToPublicTours: boolean;
+    redirectToMyTours: boolean;
 }
 class Header extends React.Component<HeaderProps, HeaderState> {
     state = {
         anchorEl: null,
-        openedProfile: false,
-        openedPublicTours: false,
+        redirectToProfile: false,
+        redirectToPublicTours: false,
+        redirectToMyTours: false,
     };
 
     static propTypes = {
@@ -73,12 +77,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
 
     handleOpenProfile = () => {
-        this.setState({ openedProfile: true });
+        this.setState({ redirectToProfile: true });
     };
 
     render() {
         const { classes, title } = this.props;
-        const { anchorEl, openedProfile, openedPublicTours } = this.state;
+        const { anchorEl, redirectToProfile, redirectToPublicTours, redirectToMyTours } = this.state;
         const { messages, formatMessage } = this.props.intl;
         const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
         const open = Boolean(anchorEl);
@@ -92,9 +96,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         </IconButton> */}
                         <Typography variant="h6" color="inherit" className={classes.grow}>{title}</Typography>
                         <div>
-                            <IconButton className={classes.icon} onClick={() => this.setState({ openedPublicTours: true })}>
+                            <Button className={classes.icon} onClick={() => this.setState({ redirectToPublicTours: true })}>
+                                Public Tours
                                 <MapIcon />
-                            </IconButton>
+                            </Button>
+                            <Button className={classes.icon} onClick={() => this.setState({ redirectToMyTours: true })}>
+                                My Tours
+                                <MapIcon />
+                            </Button>
+                            {/* <IconButton className={classes.icon} >
+                            </IconButton> */}
                             {auth && (
                                 <>
                                     <IconButton
@@ -128,8 +139,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         </div>
                     </Toolbar>
                 </AppBar>
-                {openedProfile && <Redirect to='/profile' />}
-                {openedPublicTours && <Redirect to='/public-tours' />}
+                {redirectToProfile && <Redirect to='/profile' />}
+                {redirectToPublicTours && <Redirect to='/public-tours' />}
+                {redirectToMyTours && <Redirect to='/tours' />}
             </div>
         );
     }

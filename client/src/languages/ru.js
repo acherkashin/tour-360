@@ -467,6 +467,11 @@ const ru = defineMessages({
         id: 'no-session-error.text-2',
         defaultMessage: `не найдена. Пожалуйста, выберите подходящую локацию и начните редактирование.`,
     },
+
+    publicToursPageNoToursLabel: {
+        id: 'id.public-tours-page-no-tours-label',
+        defaultMessage: 'Нет доступных виртуальных экскурсий',
+    }
 });
 
 export default ru;

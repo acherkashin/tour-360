@@ -12,24 +12,13 @@ import { PageWrapper } from "./../Components/Common";
 import { CreateTourDialog, UploadImageDialog } from '../Components/Dialogs';
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
 import { PlaceDesigner } from '../Components/PlaceDesigner';
+import { RootStore, TourStore, TourEditStore } from './../Stores';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     addTour: {
         position: 'absolute',
         bottom: theme.spacing.unit * 2,
         right: theme.spacing.unit * 3,
-    },
-    root: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-    },
-    contentWrapper: {
-        flexGrow: 1,
-        overflow: 'hidden',
-        display: 'flex',
     },
     content: {
         display: 'flex',
@@ -46,7 +35,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 });
 
 interface ToursPageProps extends WithStyles<typeof styles> {
-    rootStore: any;
+    rootStore: RootStore;
     intl: any;
 }
 
@@ -72,16 +61,12 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
             mapTypes: [1, 2],
         } as ToursPageState;
 
-        this.loadAllTours = this.loadAllTours.bind(this);
-
         this._handleOnAddClick = this._handleOnAddClick.bind(this);
         this._handleOnCreateClick = this._handleOnCreateClick.bind(this);
         this._handleNameChanged = this._handleNameChanged.bind(this);
         this._handleTourItemClick = this._handleTourItemClick.bind(this);
         this._handleImageChangeClick = this._handleImageChangeClick.bind(this);
         this._handleFileSelected = this._handleFileSelected.bind(this);
-        this._handleCloseDesigner = this._handleCloseDesigner.bind(this);
-        this._handleSaveChanges = this._handleSaveChanges.bind(this);
         this._handleMapTypeChanged = this._handleMapTypeChanged.bind(this);
         this._handleViewPlace = this._handleViewPlace.bind(this);
         this._handleEditPlace = this._handleEditPlace.bind(this);
@@ -93,20 +78,16 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
         intl: intlShape.isRequired,
     };
 
-    get store() {
+    get store(): TourStore {
         return this.props.rootStore.tourStore;
     }
 
-    get editStore() {
+    get editStore(): TourEditStore {
         return this.props.rootStore.tourEditStore;
     }
 
-    loadAllTours() {
-        this.store.loadTours();
-    }
-
     componentDidMount() {
-        this.loadAllTours();
+        this.store.loadTours();
     }
 
     _handleFileSelected(e) {
@@ -142,14 +123,6 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
     _handleImageChangeClick(event) {
         this.setState({ isOpenedUploadImageDialog: true });
         console.log(event);
-    }
-
-    _handleCloseDesigner(e) {
-        this.store.cancelEditing();
-    }
-
-    _handleSaveChanges() {
-        this.store.saveEditing();
     }
 
     _handleEditPlace(e, history) {
@@ -226,32 +199,30 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
                         onFileSelected={this._handleFileSelected}
                         onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
                     />
-                    <div className={classes.contentWrapper}>
-                        <div className={classes.content}>
-                            <div className={classes.toursWrapper}>
-                                {hasTours && <Route render={({ history }) => (
-                                    <Tours
-                                        selectedTourId={selectedTour && selectedTour.id}
-                                        tours={tours}
-                                        onItemClick={this._handleTourItemClick}
-                                        getActions={(e) => this._getActionsForTour(e, history)}
-                                    />)} />}
-                                {!hasTours && <NoToursPlaceholder onAddClick={this._handleOnAddClick} />}
-                                <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
-                                    <Add />
-                                </Fab>
-                            </div>
-                            {selectedTour && <Route render={({ history }) => (
-                                <ViewTourPanel
-                                    width={`${window.innerWidth * 0.25}px`}
-                                    tour={selectedTour}
-                                    onImageChangeClick={this._handleImageChangeClick}
-                                    onViewPlaceClick={this._handleViewPlace}
-                                    onEditPlaceClick={(e) => this._handleEditPlace(e, history)} />
-                            )} />}
-                            <Route path="/tours/edit-tour/:sessionId" component={TourDesigner} />
-                            <Route path="/tours/edit-place/:sessionId" component={PlaceDesigner} />
+                    <div className={classes.content}>
+                        <div className={classes.toursWrapper}>
+                            {hasTours && <Route render={({ history }) => (
+                                <Tours
+                                    selectedTourId={selectedTour && selectedTour.id}
+                                    tours={tours}
+                                    onItemClick={this._handleTourItemClick}
+                                    getActions={(e) => this._getActionsForTour(e, history)}
+                                />)} />}
+                            {!hasTours && <NoToursPlaceholder onAddClick={this._handleOnAddClick} />}
+                            <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
+                                <Add />
+                            </Fab>
                         </div>
+                        {selectedTour && <Route render={({ history }) => (
+                            <ViewTourPanel
+                                width={`${window.innerWidth * 0.25}px`}
+                                tour={selectedTour}
+                                onImageChangeClick={this._handleImageChangeClick}
+                                onViewPlaceClick={this._handleViewPlace}
+                                onEditPlaceClick={(e) => this._handleEditPlace(e, history)} />
+                        )} />}
+                        <Route path="/tours/edit-tour/:sessionId" component={TourDesigner} />
+                        <Route path="/tours/edit-place/:sessionId" component={PlaceDesigner} />
                     </div>
                 </>
             </PageWrapper>

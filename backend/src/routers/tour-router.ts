@@ -3,6 +3,9 @@ const router = Router();
 import { TourController } from "../controllers";
 import { verifyToken } from '../utils/verify-token';
 
+router.route('/public-tours')
+    .get(TourController.getAllPublic);
+
 router.route('/tour')
     .get(verifyToken, TourController.getAll)
     .post(verifyToken, TourController.create);

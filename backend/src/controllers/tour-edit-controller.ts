@@ -80,8 +80,7 @@ export function uploadMapImage(req: Request, res: Response) {
 
     addFile(newFileName, mapImage).then(() => {
         tour.mapImage.filename = newFileName;
-        //TODO: remove <any>
-        tour.mapImage.contentType = (<any>mapImage).mimetype;
+        tour.mapImage.contentType = mapImage.mimetype;
         tour.mapImage.height = parseInt(height);
         tour.mapImage.width = parseInt(width);
 

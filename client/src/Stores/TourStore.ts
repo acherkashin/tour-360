@@ -68,7 +68,7 @@ export default class TourStore {
     }
 
     //TODO: rename to view360 or viewPlace
-    view(tourId: string, placeId: string) {
+    view(tourId: string, placeId?: string) {
         const tour = this._getById(tourId);
         if (!placeId && tour != null) {
             placeId = tour.startPlaceId;

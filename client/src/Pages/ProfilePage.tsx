@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import {
     TextField,
@@ -14,11 +14,13 @@ import {
 } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { LoadingButton } from '../Components';
+import { PageWrapper } from '../Components/Common';
 import { requireAuth } from '../HOC';
 import { validEmail, validName } from '../utils/validate.js';
 import { intlShape, injectIntl } from 'react-intl';
+import { RootStore } from './../Stores';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         width: '100%',
         height: '100%',
@@ -40,8 +42,28 @@ const styles = theme => ({
     },
 });
 
+interface ProfilePageProps extends WithStyles<typeof styles> {
+    intl: any;
+    rootStore: RootStore;
+}
+
+interface ProfilePageState {
+    email: string;
+    firstName: string;
+    lastName: string;
+    language: string;
+
+    isLastNameValid: boolean;
+    isEmailValid: boolean;
+    isFirstNameValid: boolean;
+
+    emailError: string;
+    firstNameError: string;
+    lastNameError: string;
+}
+
 const ProfilePage = requireAuth(inject("rootStore")(observer(
-    class ProfilePage extends React.Component {
+    class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
         constructor(props) {
             super(props);
 
@@ -68,6 +90,12 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
             this._handleSave = this._handleSave.bind(this);
         }
 
+        static propTypes = {
+            classes: PropTypes.object.isRequired,
+
+            intl: intlShape.isRequired,
+        };
+
         get userStore() {
             return this.props.rootStore.userStore;
         }
@@ -92,6 +120,7 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
 
         _handleSave() {
             this.userStore.editUser({
+                id: undefined,
                 email: this.state.email,
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
@@ -123,76 +152,72 @@ const ProfilePage = requireAuth(inject("rootStore")(observer(
                 lastNameError,
                 language,
             } = this.state;
-            
+
             const { messages, formatMessage } = this.props.intl;
 
             const languages = ['Русский', 'English'];
 
-            return <div className={classes.root}>
-                <div className={classes.panel}>
-                    <Typography align="center" variant="h5" title="Profile">{formatMessage(messages.profilePageTitle)}</Typography>
-                    <TextField
-                        label={formatMessage(messages.email)}
-                        value={email}
-                        inputProps={{ type: 'email' }}
-                        onChange={this._handleEmailChanged}
-                        margin="normal"
-                        error={!isEmailValid}
-                        helperText={emailError}
-                        fullWidth={true}
-                        required
-                        autoFocus
-                    />
-                    <TextField
-                        label={formatMessage(messages.firstName)}
-                        value={firstName}
-                        onChange={this._handleFirstNameChanged}
-                        margin="normal"
-                        error={!isFirstNameValid}
-                        helperText={firstNameError}
-                        fullWidth={true}
-                        required
-                        autoFocus
-                    />
-                    <TextField
-                        label={formatMessage(messages.lastName)}
-                        value={lastName}
-                        onChange={this._handleLastNameChanged}
-                        margin="normal"
-                        error={!isLastNameValid}
-                        helperText={lastNameError}
-                        fullWidth={true}
-                        required
-                        autoFocus
-                    />
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor="name-disabled">{formatMessage(messages.language)}</InputLabel>
-                        <Select
-                            variant="filled"
+            return <PageWrapper title={"Your profile"}>
+                <div className={classes.root}>
+                    <div className={classes.panel}>
+                        <Typography align="center" variant="h5" title="Profile">{formatMessage(messages.profilePageTitle)}</Typography>
+                        <TextField
+                            label={formatMessage(messages.email)}
+                            value={email}
+                            inputProps={{ type: 'email' }}
+                            onChange={this._handleEmailChanged}
+                            margin="normal"
+                            error={!isEmailValid}
+                            helperText={emailError}
                             fullWidth={true}
-                            onChange={this._handleLanguageChanged}
-                            input={<Input name="language" />}
-                            value={language}>
-                            {languages.map(language => <MenuItem key={language} value={language}>{language}</MenuItem>)}
-                        </Select>
-                    </FormControl>
-                    <Link className={classes.registerLink} to="/tours">{formatMessage(messages.profilePageToTours)}</Link>
-                    <LoadingButton
-                        style={{ marginTop: '15px' }}
-                        isLoading={this.userStore.editUserLoading}
-                        disabled={this.userStore.editUserLoading || !isEmailValid || !isFirstNameValid || !isLastNameValid}
-                        onClick={this._handleSave}
-                    >{formatMessage(messages.save)}</LoadingButton>
-                </div>
-            </div >;
+                            required
+                            autoFocus
+                        />
+                        <TextField
+                            label={formatMessage(messages.firstName)}
+                            value={firstName}
+                            onChange={this._handleFirstNameChanged}
+                            margin="normal"
+                            error={!isFirstNameValid}
+                            helperText={firstNameError}
+                            fullWidth={true}
+                            required
+                            autoFocus
+                        />
+                        <TextField
+                            label={formatMessage(messages.lastName)}
+                            value={lastName}
+                            onChange={this._handleLastNameChanged}
+                            margin="normal"
+                            error={!isLastNameValid}
+                            helperText={lastNameError}
+                            fullWidth={true}
+                            required
+                            autoFocus
+                        />
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="name-disabled">{formatMessage(messages.language)}</InputLabel>
+                            <Select
+                                variant="filled"
+                                fullWidth={true}
+                                onChange={this._handleLanguageChanged}
+                                input={<Input name="language" />}
+                                value={language}>
+                                {languages.map(language => <MenuItem key={language} value={language}>{language}</MenuItem>)}
+                            </Select>
+                        </FormControl>
+                        <Link className={classes.registerLink} to="/tours">{formatMessage(messages.profilePageToTours)}</Link>
+                        <LoadingButton
+                            style={{ marginTop: '15px' }}
+                            isLoading={this.userStore.editUserLoading}
+                            disabled={this.userStore.editUserLoading || !isEmailValid || !isFirstNameValid || !isLastNameValid}
+                            onClick={this._handleSave}
+                        >{formatMessage(messages.save)}</LoadingButton>
+                    </div>
+                </div >
+            </PageWrapper>;
         }
     }
 )));
-
-ProfilePage.propTypes = {
-    classes: PropTypes.object.isRequired,
-    
-    intl: intlShape.isRequired,
-}
 
 export default withStyles(styles)(injectIntl(ProfilePage));

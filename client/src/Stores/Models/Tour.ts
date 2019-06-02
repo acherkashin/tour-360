@@ -10,6 +10,7 @@ class Tour {
     hasImage: boolean = false;
     filename: string = '';
     startPlaceId: string;
+    isPublic: boolean;
 
     private imageHash: number = Date.now();
 
@@ -27,6 +28,7 @@ class Tour {
         this.hasImage = json.hasImage;
         this.filename = json.filename;
         this.startPlaceId = json.startPlaceId;
+        this.isPublic = json.isPublic;
     }
 
     refreshCover() {

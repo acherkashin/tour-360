@@ -5,6 +5,7 @@ import {
     TourEditStore,
     ViewTourStore,
     PlaceEditStore,
+    PublicToursStore,
 } from ".";
 
 export interface MessageError {
@@ -18,6 +19,7 @@ export default class RootStore {
     tourEditStore = new TourEditStore(this);
     viewTourStore = new ViewTourStore(this);
     placeEditStore = new PlaceEditStore(this);
+    publicToursStore = new PublicToursStore(this);
 
     error: MessageError;
 

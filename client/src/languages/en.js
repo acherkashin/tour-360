@@ -474,6 +474,11 @@ const en = defineMessages({
         id: 'no-session-error.text-2',
         defaultMessage: `is not found. Please select appropriate place and begin editing`,
     },
+
+    publicToursPageNoToursLabel: {
+        id: 'id.public-tours-page-no-tours-label',
+        defaultMessage: 'No public tours are available',
+    }
 });
 
 export default en;

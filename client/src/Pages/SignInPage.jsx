@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
-import { LoadingButton, Header } from './../Components';
+import { LoadingButton } from './../Components';
 import { PageWrapper } from './../Components/Common';
 import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword } from '../utils/validate.js';

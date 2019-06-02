@@ -3,18 +3,30 @@ import path from 'path';
 import uuidv1 from 'uuidv1';
 import HttpStatus from 'http-status-codes';
 import { addFile, removeFile } from '../utils/fileutils';
+import { Request as _Request, Response } from 'express';
+import { UploadedFile } from 'express-fileupload';
 
-export function getAll(req, res) {
+type Request = _Request & { userId: string };
+
+export function getAllPublic(req: Request, res: Response) {
+    Tour.find({ isPublic: true })
+        .then((tours) => {
+            const dtos = tours.map(tour => tour.toClient());
+            return res.json({ tours: dtos })
+        })
+}
+
+export function getAll(req: Request, res: Response) {
     Tour.find({ createdBy: req.userId })
         .then((tours) => {
-            const result = tours.map(tour => tour.toClient());
-            return res.json({ tours: result });
+            const dtos = tours.map(tour => tour.toClient());
+            return res.json({ tours: dtos });
         }).catch(err => {
             return res.json({ error: err });
         })
 };
 
-export function getById(req, res) {
+export function getById(req: Request, res: Response) {
     const { id } = req.params;
 
     if (id == null) {
@@ -30,13 +42,13 @@ export function getById(req, res) {
         });
 };
 
-export function getPlace(req, res) {
+export function getPlace(req: Request, res: Response) {
     const { id, placeId } = req.params;
 
     if (id == null) {
-        req.status(HttpStatus.BAD_REQUEST).send("id should be provided");
+        res.status(HttpStatus.BAD_REQUEST).send("id should be provided");
     } else if (placeId == null) {
-        req.status(HttpStatus.BAD_REQUEST).send("placeId should be provided");
+        res.status(HttpStatus.BAD_REQUEST).send("placeId should be provided");
     }
 
     Tour.findById(id)
@@ -48,7 +60,7 @@ export function getPlace(req, res) {
         });
 };
 
-export function create(req, res) {
+export function create(req: Request, res: Response) {
     const { name, mapType } = req.body;
 
     if (!name) {
@@ -68,7 +80,7 @@ export function create(req, res) {
     });
 };
 
-export function uploadCover(req, res) {
+export function uploadCover(req: Request, res: Response) {
     const { id } = req.params;
     if (id == null) {
         res.json({ error: "id should be provided" });
@@ -80,7 +92,7 @@ export function uploadCover(req, res) {
 
     let tour = null;
     let newFileName = null;
-    const cover = req.files.cover;
+    const cover = <UploadedFile>req.files.cover;
 
     Tour.findById(id)
         .then((t) => {
@@ -108,7 +120,7 @@ export function uploadCover(req, res) {
         });
 };
 
-export function deleteTour(req, res) {
+export function deleteTour(req: Request, res: Response) {
     const { id } = req.params;
     Tour.findOneAndDelete(id, error => {
         if (error) {

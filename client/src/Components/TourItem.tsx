@@ -11,7 +11,11 @@ import {
     Popover,
     ListItemIcon,
     ListItemText,
+    Tooltip,
 } from '@material-ui/core';
+import {
+    Public as PublicIcon,
+} from '@material-ui/icons';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
@@ -52,6 +56,12 @@ const styles = createStyles((theme: Theme) => ({
             backgroundColor: theme.palette.secondary.light,
         }
     },
+    isPublic: {
+        position: 'absolute',
+        top: 5,
+        right: 5,
+        color: theme.palette.primary.light,
+    }
 }));
 
 export interface TourItemAction {
@@ -134,7 +144,12 @@ class TourItem extends React.Component<TourItemProps> {
                 key={tour.id}
                 className={root}
                 onClick={this._handleItemClick}>
-                <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />
+                <>
+                    {tour.isPublic && <Tooltip title="Tour is Free">
+                        <PublicIcon className={classes.isPublic} />
+                    </Tooltip>}
+                    <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />
+                </>
                 <GridListTileBar
                     className={classes.tileItemBar}
                     title={tour.name}
