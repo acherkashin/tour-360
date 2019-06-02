@@ -6,6 +6,7 @@ import IconEditor from './IconEditor';
 import PanoVideoEditor from './PanoVideoEditor';
 import NotificationMessage from './NotificationMessage';
 import Category from './Category';
+import PageWrapper from './PageWrapper';
 
 export {
     Category,
@@ -16,4 +17,5 @@ export {
     WidgetList,
     IconEditor,
     NotificationMessage,
+    PageWrapper,
 };

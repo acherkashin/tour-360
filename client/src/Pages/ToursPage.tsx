@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import { Fab } from '@material-ui/core';
 import { intlShape, injectIntl } from 'react-intl';
 import { Add, Edit, Delete, Visibility, Map } from '@material-ui/icons';
@@ -8,11 +8,12 @@ import { observer, inject } from 'mobx-react';
 import { Route } from "react-router-dom";
 import { requireAuth } from '../HOC';
 import { Header, Tours, ViewTourPanel, NoToursPlaceholder } from '../Components';
+import { PageWrapper } from "./../Components/Common";
 import { CreateTourDialog, UploadImageDialog } from '../Components/Dialogs';
 import TourDesigner from '../Components/TourDesigner/TourDesigner';
 import { PlaceDesigner } from '../Components/PlaceDesigner';
 
-const styles = createStyles(theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     addTour: {
         position: 'absolute',
         bottom: theme.spacing.unit * 2,
@@ -42,7 +43,7 @@ const styles = createStyles(theme => ({
         padding: '12px',
         flexGrow: 1,
     }
-}));
+});
 
 interface ToursPageProps extends WithStyles<typeof styles> {
     rootStore: any;
@@ -200,59 +201,60 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
     }
 
     render() {
-        const classes: any = this.props.classes;
         const { messages, formatMessage } = this.props.intl;
+        const { classes } = this.props;
         const { isOpenedCreateDialog, isOpenedUploadImageDialog, mapTypes, newTourMapType } = this.state;
         const { selectedTour, tours, hasTours } = this.store;
 
         return (
-            <div className={classes.root}>
-                <Header />
-                <CreateTourDialog
-                    name={this.state.newTourName}
-                    mapTypes={mapTypes}
-                    mapTypeValue={newTourMapType}
-                    isOpened={isOpenedCreateDialog}
-                    onCreateClick={this._handleOnCreateClick}
-                    onNameChanged={this._handleNameChanged}
-                    onMapTypeChanged={this._handleMapTypeChanged}
-                    onClose={() => this.setState({ isOpenedCreateDialog: false })}
-                />
-                <UploadImageDialog
-                    title={formatMessage(messages.toursPageUploadCoverDialogTitle)}
-                    prompt={formatMessage(messages.toursPageUploadCoverDialogPrompt)}
-                    isOpened={isOpenedUploadImageDialog}
-                    onFileSelected={this._handleFileSelected}
-                    onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
-                />
-                <div className={classes.contentWrapper}>
-                    <div className={classes.content}>
-                        <div className={classes.toursWrapper}>
-                            {hasTours && <Route render={({ history }) => (
-                                <Tours
-                                    selectedTourId={selectedTour && selectedTour.id}
-                                    tours={tours}
-                                    onItemClick={this._handleTourItemClick}
-                                    getActions={(e) => this._getActionsForTour(e, history)}
-                                />)} />}
-                            {!hasTours && <NoToursPlaceholder onAddClick={this._handleOnAddClick} />}
-                            <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
-                                <Add />
-                            </Fab>
+            <PageWrapper title={formatMessage(messages.headerTitle)}>
+                <>
+                    <CreateTourDialog
+                        name={this.state.newTourName}
+                        mapTypes={mapTypes}
+                        mapTypeValue={newTourMapType}
+                        isOpened={isOpenedCreateDialog}
+                        onCreateClick={this._handleOnCreateClick}
+                        onNameChanged={this._handleNameChanged}
+                        onMapTypeChanged={this._handleMapTypeChanged}
+                        onClose={() => this.setState({ isOpenedCreateDialog: false })}
+                    />
+                    <UploadImageDialog
+                        title={formatMessage(messages.toursPageUploadCoverDialogTitle)}
+                        prompt={formatMessage(messages.toursPageUploadCoverDialogPrompt)}
+                        isOpened={isOpenedUploadImageDialog}
+                        onFileSelected={this._handleFileSelected}
+                        onClose={() => this.setState({ isOpenedUploadImageDialog: false })}
+                    />
+                    <div className={classes.contentWrapper}>
+                        <div className={classes.content}>
+                            <div className={classes.toursWrapper}>
+                                {hasTours && <Route render={({ history }) => (
+                                    <Tours
+                                        selectedTourId={selectedTour && selectedTour.id}
+                                        tours={tours}
+                                        onItemClick={this._handleTourItemClick}
+                                        getActions={(e) => this._getActionsForTour(e, history)}
+                                    />)} />}
+                                {!hasTours && <NoToursPlaceholder onAddClick={this._handleOnAddClick} />}
+                                <Fab color="secondary" className={classes.addTour} onClick={this._handleOnAddClick} >
+                                    <Add />
+                                </Fab>
+                            </div>
+                            {selectedTour && <Route render={({ history }) => (
+                                <ViewTourPanel
+                                    width={`${window.innerWidth * 0.25}px`}
+                                    tour={selectedTour}
+                                    onImageChangeClick={this._handleImageChangeClick}
+                                    onViewPlaceClick={this._handleViewPlace}
+                                    onEditPlaceClick={(e) => this._handleEditPlace(e, history)} />
+                            )} />}
+                            <Route path="/tours/edit-tour/:sessionId" component={TourDesigner} />
+                            <Route path="/tours/edit-place/:sessionId" component={PlaceDesigner} />
                         </div>
-                        {selectedTour && <Route render={({ history }) => (
-                            <ViewTourPanel
-                                width={`${window.innerWidth * 0.25}px`}
-                                tour={selectedTour}
-                                onImageChangeClick={this._handleImageChangeClick}
-                                onViewPlaceClick={this._handleViewPlace}
-                                onEditPlaceClick={(e) => this._handleEditPlace(e, history)} />
-                        )} />}
-                        <Route path="/tours/edit-tour/:sessionId" component={TourDesigner} />
-                        <Route path="/tours/edit-place/:sessionId" component={PlaceDesigner} />
                     </div>
-                </div>
-            </div>
+                </>
+            </PageWrapper>
         );
     }
 }

@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
 import { LoadingButton } from './../Components';
+import { PageWrapper } from './../Components/Common';
 import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword, validName, validConfirmationPassword } from '../utils/validate.js';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -128,93 +129,100 @@ const SignUpPage = redirectWhenAuth(inject("rootStore")(observer(
             } = this.state;
             const { messages, formatMessage } = this.props.intl;
 
-            return <div className={classes.root}>
-                <div className={classes.panel}>
-                    <Typography variant="h5" align="center" className={classes.title}>{formatMessage(messages.signUpPageTitle)}</Typography>
-                    <div className={classes.profile}>
-                        <hr className={classes.profileHr} />
-                        <img src={require('../imgs/profile-icon.png')} alt="profile" className={classes.profileImg}/>
-                    </div>
-                    <div className={classes.inputsGroup}>
+            return <PageWrapper title={formatMessage(messages.projectName)}>
+                <div style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <div className={classes.panel}>
+                        <Typography variant="h5" align="center" className={classes.title}>{formatMessage(messages.signUpPageTitle)}</Typography>
+                        <div className={classes.profile}>
+                            <hr className={classes.profileHr} />
+                            <img src={require('../imgs/profile-icon.png')} alt="profile" className={classes.profileImg} />
+                        </div>
+                        <div className={classes.inputsGroup}>
+                            <TextField
+                                label={formatMessage(messages.firstName)}
+                                value={firstName}
+                                onChange={this._handleFirstNameChanged}
+                                error={!isFirstNameValid}
+                                helperText={firstNameError}
+                                fullWidth={true}
+                                required
+                                autoFocus
+                                className={classes.firstNameInput}
+                            />
+                            <TextField
+                                label={formatMessage(messages.lastName)}
+                                value={lastName}
+                                onChange={this._handleLastNameChanged}
+                                error={!isLastNameValid}
+                                helperText={lastNameError}
+                                fullWidth={true}
+                                required
+                                className={classes.lastNameInput}
+                            />
+                        </div>
                         <TextField
-                            label={formatMessage(messages.firstName)}
-                            value={firstName}
-                            onChange={this._handleFirstNameChanged}
-                            error={!isFirstNameValid}
-                            helperText={firstNameError}
+                            label={formatMessage(messages.email)}
+                            value={email}
+                            type="email"
+                            onChange={this._handleEmailChanged}
+                            error={!isEmailValid}
+                            helperText={emailError}
                             fullWidth={true}
                             required
-                            autoFocus
-                            className={classes.firstNameInput}
                         />
-                        <TextField
-                            label={formatMessage(messages.lastName)}
-                            value={lastName}
-                            onChange={this._handleLastNameChanged}
-                            error={!isLastNameValid}
-                            helperText={lastNameError}
-                            fullWidth={true}
-                            required
-                            className={classes.lastNameInput}
-                        />
+                        <div className={classes.inputsGroup}>
+                            <TextField
+                                label={formatMessage(messages.password)}
+                                value={password}
+                                type="password"
+                                onChange={this._handlePasswordChanged}
+                                error={!isPasswordValid}
+                                helperText={passwordError}
+                                fullWidth={true}
+                                required
+                                className={classes.passwordInput}
+                            />
+                            <TextField
+                                label={formatMessage(messages.confirmationPassword)}
+                                value={confirmationPassword}
+                                type="password"
+                                onChange={this._handleConfirmationPasswordChanged}
+                                error={!isConfirmationPasswordValid || !isPasswordValid}
+                                helperText={confirmationPasswordError}
+                                fullWidth={true}
+                                required
+                                className={classes.confirmationPasswordInput}
+                            />
+                        </div>
+                        <div className={classes.ReCAPTCHA}>
+                            <ReCAPTCHA
+                                sitekey={SITEKEY}
+                                onChange={this._handleReCAPTCHAChange}
+                            />
+                        </div>
+                        <LoadingButton
+                            style={{ marginTop: '25px' }}
+                            disabled={!isEmailValid || !isPasswordValid || !isConfirmationPasswordValid || !isFirstNameValid || !isLastNameValid}
+                            onClick={this._handleRegisterClick}
+                            size="large"
+                        >{formatMessage(messages.signUpPageButtonTitle)}</LoadingButton>
+                        <hr className={classes.hr} />
+                        <Link to="/sign-in" className={classes.link}>{formatMessage(messages.signUpPageToLogin)}</Link>
                     </div>
-                    <TextField
-                        label={formatMessage(messages.email)}
-                        value={email}
-                        type="email"
-                        onChange={this._handleEmailChanged}
-                        error={!isEmailValid}
-                        helperText={emailError}
-                        fullWidth={true}
-                        required
-                    />
-                    <div className={classes.inputsGroup}>
-                        <TextField
-                            label={formatMessage(messages.password)}
-                            value={password}
-                            type="password"
-                            onChange={this._handlePasswordChanged}
-                            error={!isPasswordValid}
-                            helperText={passwordError}
-                            fullWidth={true}
-                            required
-                            className={classes.passwordInput}
-                        />
-                        <TextField
-                            label={formatMessage(messages.confirmationPassword)}
-                            value={confirmationPassword}
-                            type="password"
-                            onChange={this._handleConfirmationPasswordChanged}
-                            error={!isConfirmationPasswordValid || !isPasswordValid}
-                            helperText={confirmationPasswordError}
-                            fullWidth={true}
-                            required
-                            className={classes.confirmationPasswordInput}
-                        />
-                    </div>
-                    <div className={classes.ReCAPTCHA}>
-                        <ReCAPTCHA
-                            sitekey={SITEKEY}
-                            onChange={this._handleReCAPTCHAChange}
-                        />
-                    </div>
-                    <LoadingButton
-                        style={{ marginTop: '25px' }}
-                        disabled={!isEmailValid || !isPasswordValid || !isConfirmationPasswordValid || !isFirstNameValid || !isLastNameValid}
-                        onClick={this._handleRegisterClick}
-                        size="large"
-                    >{formatMessage(messages.signUpPageButtonTitle)}</LoadingButton>
-                    <hr className={classes.hr}/>
-                    <Link to="/sign-in" className={classes.link}>{formatMessage(messages.signUpPageToLogin)}</Link>
                 </div>
-            </div>;
+            </PageWrapper>;
         }
     }
 )));
 
 SignUpPage.propTypes = {
     classes: PropTypes.object.isRequired,
-    
+
     intl: intlShape.isRequired,
 }
 

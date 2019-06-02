@@ -9,14 +9,16 @@ import {
     IconButton,
 } from '@material-ui/core';
 import {
-    AccountCircle,
+    AccountCircle as AccountCircleIcon,
+    Map as MapIcon,
 } from '@material-ui/icons';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
 import { Redirect } from "react-router";
-import { intlShape, injectIntl } from 'react-intl';
+import { intlShape, injectIntl } from 'react-intl'
+import { RootStore } from './../Stores';
 
-const styles = {
+const styles = createStyles({
     root: {
     },
     grow: {
@@ -26,13 +28,28 @@ const styles = {
         marginLeft: -12,
         marginRight: 20,
     },
-};
+});
+
+interface HeaderProps extends WithStyles<typeof styles> {
+    intl: any;
+    rootStore: RootStore;
+    title: string;
+}
+
+interface HeaderState {
+
+}
 
 const Header = inject("rootStore")(
-    observer(class Header extends React.Component {
+    observer(class Header extends React.Component<HeaderProps, HeaderState> {
         state = {
             anchorEl: null,
             openedProfile: false
+        };
+
+        static propTypes = {
+            classes: PropTypes.object.isRequired,
+            intl: intlShape.isRequired,
         };
 
         get userStore() {
@@ -56,7 +73,7 @@ const Header = inject("rootStore")(
         };
 
         render() {
-            const { classes } = this.props;
+            const { classes, title } = this.props;
             const { anchorEl, openedProfile } = this.state;
             const { messages, formatMessage } = this.props.intl;
             const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
@@ -69,16 +86,19 @@ const Header = inject("rootStore")(
                             {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton> */}
-                            <Typography variant="h6" color="inherit" className={classes.grow}>{formatMessage(messages.headerTitle)}</Typography>
+                            <Typography variant="h6" color="inherit" className={classes.grow}>{title}</Typography>
                             {auth && (
                                 <div>
+                                    <IconButton>
+                                        <MapIcon />
+                                    </IconButton>
                                     <IconButton
                                         aria-owns={open ? 'menu-appbar' : undefined}
                                         aria-haspopup="true"
                                         onClick={this.handleMenu}
                                         color="inherit"
                                     >
-                                        <AccountCircle />
+                                        <AccountCircleIcon />
                                     </IconButton>
                                     <Menu
                                         id="menu-appbar"
@@ -108,9 +128,5 @@ const Header = inject("rootStore")(
     })
 );
 
-Header.propTypes = {
-    classes: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
-};
 
 export default withStyles(styles)(injectIntl(Header));

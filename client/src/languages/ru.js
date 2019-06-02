@@ -1,6 +1,10 @@
 import { defineMessages } from 'react-intl';
 
 const ru = defineMessages({
+    projectName: {
+        id: 'common.projectName',
+        defaultMessage: 'Тур 360',
+    },
     yes: {
         id: 'common.yes',
         defaultMessage: 'Да',

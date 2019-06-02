@@ -8,6 +8,10 @@ import { defineMessages } from 'react-intl';
 // });
 
 const en = defineMessages({
+    projectName: {
+        id: 'common.projectName',
+        defaultMessage: 'Tour 360',
+    },
     yes: {
         id: 'common.yes',
         defaultMessage: 'Yes',

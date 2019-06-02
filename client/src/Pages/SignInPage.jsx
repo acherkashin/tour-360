@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Typography } from '@material-ui/core';
 import { observer, inject } from 'mobx-react';
-import { LoadingButton } from './../Components';
+import { LoadingButton, Header } from './../Components';
+import { PageWrapper } from './../Components/Common';
 import { redirectWhenAuth } from '../HOC';
 import { validEmail, validPassword } from '../utils/validate.js';
 import ReCAPTCHA from "react-google-recaptcha";
-import {SITEKEY} from "../config";
+import { SITEKEY } from "../config";
 import { intlShape, injectIntl } from 'react-intl';
-import styles from '../styles/signInAndUp';
+import signBaseStyles from '../styles/signInAndUp';
 
 const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
     class SignInPage extends React.Component {
@@ -67,71 +68,80 @@ const SignInPage = redirectWhenAuth(inject("rootStore")(observer(
 
         render() {
             const { classes } = this.props;
-            const { 
-                email, 
-                password, 
-                isEmailValid, 
-                isPasswordValid, 
-                emailError, 
-                passwordError 
+            const {
+                email,
+                password,
+                isEmailValid,
+                isPasswordValid,
+                emailError,
+                passwordError
             } = this.state;
             const { messages, formatMessage } = this.props.intl;
 
-            return <div className={classes.root}>
-                <div className={classes.panel}>
-                    <Typography align="center" variant="h5" title="Login" className={classes.title}>{formatMessage(messages.signInPageTitle)}</Typography>
-                    <div className={classes.profile}>
-                        <hr className={classes.profileHr} />
-                        <img src={require('../imgs/profile-icon.png')} alt="profile" className={classes.profileImg}/>
-                    </div>
-                    <TextField
-                        label={formatMessage(messages.email)}
-                        value={email}
-                        inputProps={{ type: 'email' }}
-                        onChange={this._handleEmailChanged}
-                        margin="normal"
-                        error={!isEmailValid}
-                        helperText={emailError}
-                        fullWidth={true}
-                        required
-                        autoFocus
-                    />
-                    <TextField
-                        label={formatMessage(messages.password)}
-                        value={password}
-                        type="password"
-                        onChange={this._handlePasswordChanged}
-                        margin="normal"
-                        error={!isPasswordValid}
-                        helperText={passwordError}
-                        fullWidth={true}
-                        required
-                    />
-                    <div className={classes.ReCAPTCHA}>
-                        <ReCAPTCHA
-                            sitekey={SITEKEY}
-                            onChange={this._handleReCAPTCHAChange}
+            return <PageWrapper
+                title={formatMessage(messages.projectName)}
+            >
+                <div style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <div className={classes.panel}>
+                        <Typography align="center" variant="h5" title="Login" className={classes.title}>{formatMessage(messages.signInPageTitle)}</Typography>
+                        <div className={classes.profile}>
+                            <hr className={classes.profileHr} />
+                            <img src={require('../imgs/profile-icon.png')} alt="profile" className={classes.profileImg} />
+                        </div>
+                        <TextField
+                            label={formatMessage(messages.email)}
+                            value={email}
+                            inputProps={{ type: 'email' }}
+                            onChange={this._handleEmailChanged}
+                            margin="normal"
+                            error={!isEmailValid}
+                            helperText={emailError}
+                            fullWidth={true}
+                            required
+                            autoFocus
                         />
+                        <TextField
+                            label={formatMessage(messages.password)}
+                            value={password}
+                            type="password"
+                            onChange={this._handlePasswordChanged}
+                            margin="normal"
+                            error={!isPasswordValid}
+                            helperText={passwordError}
+                            fullWidth={true}
+                            required
+                        />
+                        <div className={classes.ReCAPTCHA}>
+                            <ReCAPTCHA
+                                sitekey={SITEKEY}
+                                onChange={this._handleReCAPTCHAChange}
+                            />
+                        </div>
+                        {this.userStore.singInRejected && <Typography color="error">{formatMessage(messages.signInPageInvalidData)}</Typography>}
+                        <LoadingButton
+                            style={{ marginTop: '15px' }}
+                            isLoading={this.userStore.signInLoading}
+                            disabled={this.userStore.signInLoading || !isEmailValid || !isPasswordValid}
+                            onClick={this._handleLogin}
+                        >{formatMessage(messages.signInPageButtonTitle)}</LoadingButton>
+                        <hr className={classes.hr} />
+                        <Link className={classes.link} to="/sign-up">{formatMessage(messages.signInPageToRegister)}</Link>
                     </div>
-                    {this.userStore.singInRejected && <Typography color="error">{formatMessage(messages.signInPageInvalidData)}</Typography>}
-                    <LoadingButton
-                        style={{ marginTop: '15px' }}
-                        isLoading={this.userStore.signInLoading}
-                        disabled={this.userStore.signInLoading || !isEmailValid || !isPasswordValid}
-                        onClick={this._handleLogin}
-                    >{formatMessage(messages.signInPageButtonTitle)}</LoadingButton>
-                    <hr className={classes.hr}/>
-                    <Link className={classes.link} to="/sign-up">{formatMessage(messages.signInPageToRegister)}</Link>
                 </div>
-            </div >;
+            </PageWrapper>;
         }
     }
 )));
 
 SignInPage.propTypes = {
     classes: PropTypes.object.isRequired,
-    
+
     intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(injectIntl(SignInPage));
+export default withStyles(signBaseStyles)(injectIntl(SignInPage));
