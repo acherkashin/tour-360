@@ -1,9 +1,13 @@
 import { defineMessages } from 'react-intl';
 
 const ru = defineMessages({
+    publicTours: {
+        id: 'common.publicTour',
+        defaultMessage: 'Публичные экскурсии',
+    },
     projectName: {
         id: 'common.projectName',
-        defaultMessage: 'Тур 360',
+        defaultMessage: 'Экскурсия 360',
     },
     yes: {
         id: 'common.yes',

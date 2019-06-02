@@ -28,6 +28,9 @@ const styles = createStyles({
         marginLeft: -12,
         marginRight: 20,
     },
+    icon: {
+        color: 'white',
+    }
 });
 
 interface HeaderProps extends WithStyles<typeof styles> {
@@ -37,62 +40,65 @@ interface HeaderProps extends WithStyles<typeof styles> {
 }
 
 interface HeaderState {
-
+    anchorEl: HTMLElement;
+    openedProfile: boolean;
+    openedPublicTours: boolean;
 }
+class Header extends React.Component<HeaderProps, HeaderState> {
+    state = {
+        anchorEl: null,
+        openedProfile: false,
+        openedPublicTours: false,
+    };
 
-const Header = inject("rootStore")(
-    observer(class Header extends React.Component<HeaderProps, HeaderState> {
-        state = {
-            anchorEl: null,
-            openedProfile: false
-        };
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        intl: intlShape.isRequired,
+    };
 
-        static propTypes = {
-            classes: PropTypes.object.isRequired,
-            intl: intlShape.isRequired,
-        };
+    get userStore() {
+        return this.props.rootStore.userStore;
+    }
 
-        get userStore() {
-            return this.props.rootStore.userStore;
-        }
+    handleMenu = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
 
-        handleMenu = event => {
-            this.setState({ anchorEl: event.currentTarget });
-        };
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
 
-        handleClose = () => {
-            this.setState({ anchorEl: null });
-        };
+    handleSignOut = () => {
+        this.userStore.signOut();
+    };
 
-        handleSignOut = () => {
-            this.userStore.signOut();
-        };
+    handleOpenProfile = () => {
+        this.setState({ openedProfile: true });
+    };
 
-        handleOpenProfile = () => {
-            this.setState({ openedProfile: true });
-        };
+    render() {
+        const { classes, title } = this.props;
+        const { anchorEl, openedProfile, openedPublicTours } = this.state;
+        const { messages, formatMessage } = this.props.intl;
+        const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
+        const open = Boolean(anchorEl);
 
-        render() {
-            const { classes, title } = this.props;
-            const { anchorEl, openedProfile } = this.state;
-            const { messages, formatMessage } = this.props.intl;
-            const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
-            const open = Boolean(anchorEl);
-
-            return (
-                <div className={classes.root}>
-                    <AppBar position="static">
-                        <Toolbar>
-                            {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+        return (
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Toolbar>
+                        {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton> */}
-                            <Typography variant="h6" color="inherit" className={classes.grow}>{title}</Typography>
+                        <Typography variant="h6" color="inherit" className={classes.grow}>{title}</Typography>
+                        <div>
+                            <IconButton className={classes.icon} onClick={() => this.setState({ openedPublicTours: true })}>
+                                <MapIcon />
+                            </IconButton>
                             {auth && (
-                                <div>
-                                    <IconButton>
-                                        <MapIcon />
-                                    </IconButton>
+                                <>
                                     <IconButton
+                                        className={classes.icon}
                                         aria-owns={open ? 'menu-appbar' : undefined}
                                         aria-haspopup="true"
                                         onClick={this.handleMenu}
@@ -117,16 +123,20 @@ const Header = inject("rootStore")(
                                         <MenuItem onClick={this.handleOpenProfile}>{formatMessage(messages.headerMyAccount)}</MenuItem>
                                         <MenuItem onClick={this.handleSignOut}>{formatMessage(messages.headerSignOut)}</MenuItem>
                                     </Menu>
-                                </div>
+                                </>
                             )}
-                        </Toolbar>
-                    </AppBar>
-                    {openedProfile && <Redirect to='/profile' />}
-                </div>
-            );
-        }
-    })
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                {openedProfile && <Redirect to='/profile' />}
+                {openedPublicTours && <Redirect to='/public-tours' />}
+            </div>
+        );
+    }
+}
+
+export default inject("rootStore")(
+    observer(
+        withStyles(styles)(injectIntl(Header))
+    )
 );
-
-
-export default withStyles(styles)(injectIntl(Header));

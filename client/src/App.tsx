@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import 'leaflet/dist/leaflet.css';
 import withRoot from './withRoot';
-import { SignInPage, SignUpPage, ToursPage, ViewMapPage, ProfilePage } from './Pages';
+import { SignInPage, SignUpPage, ToursPage, ViewMapPage, ProfilePage, PublicToursPage } from './Pages';
 import RootStore from './Stores/RootStore';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { getMessages } from './languages';
@@ -53,6 +53,7 @@ const AppBody = withStyles(styles)(inject("rootStore")(observer(class AppBody ex
                     <Switch>
                         <Route path="/tour/:tourId/view-tour" component={ViewMapPage} />
                         <Route path="/tours" component={ToursPage} />
+                        <Route path="/public-tours" component={PublicToursPage} />
                         <Route path="/sign-in" component={SignInPage} />
                         <Route path="/sign-up" component={SignUpPage} />
                         <Route path="/profile" component={ProfilePage} />
