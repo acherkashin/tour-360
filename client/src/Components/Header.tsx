@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import {
     AppBar,
     Toolbar,
@@ -16,7 +17,7 @@ import {
 } from '@material-ui/icons';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
-import { Redirect } from "react-router";
+import { Redirect, RouteComponentProps } from "react-router";
 import { intlShape, injectIntl } from 'react-intl'
 import { RootStore } from './../Stores';
 
@@ -35,10 +36,10 @@ const styles = createStyles({
     }
 });
 
-interface HeaderProps extends WithStyles<typeof styles> {
-    intl: any;
+interface HeaderProps extends WithStyles<typeof styles>, RouteComponentProps<any> {
     rootStore: RootStore;
     title: string;
+    intl: any;
 }
 
 interface HeaderState {
@@ -46,6 +47,7 @@ interface HeaderState {
     redirectToProfile: boolean;
     redirectToPublicTours: boolean;
     redirectToMyTours: boolean;
+    redirectToLogin: boolean;
 }
 class Header extends React.Component<HeaderProps, HeaderState> {
     state = {
@@ -53,12 +55,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         redirectToProfile: false,
         redirectToPublicTours: false,
         redirectToMyTours: false,
+        redirectToLogin: false,
     };
 
-    static propTypes = {
-        classes: PropTypes.object.isRequired,
-        intl: intlShape.isRequired,
-    };
+    //TODO: remove uncomment
+    // static propTypes = {
+    //     classes: PropTypes.object.isRequired,
+    //     rootStore: PropTypes.object.isRequired,
+    //     title: PropTypes.string.isRequired,
+    //     intl: intlShape.isRequired,
+    //     match: PropTypes.object.isRequired,
+    //     location: PropTypes.object.isRequired,
+    //     history: PropTypes.object.isRequired,
+    //     staticContext: PropTypes.object.isRequired,
+    // };
 
     get userStore() {
         return this.props.rootStore.userStore;
@@ -86,26 +96,25 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         const { messages, formatMessage } = this.props.intl;
         const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
         const open = Boolean(anchorEl);
+        const isPublicTours = this.props.location.pathname === '/public-tours';
+        const isTours = this.props.location.pathname === '/tours';
+        const isSignIn = this.props.location.pathname === '/sign-in'
 
         return (
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                            <MenuIcon />
-                        </IconButton> */}
                         <Typography variant="h6" color="inherit" className={classes.grow}>{title}</Typography>
                         <div>
-                            <Button className={classes.icon} onClick={() => this.setState({ redirectToPublicTours: true })}>
-                                Public Tours
+                            {!isPublicTours && <Button className={classes.icon} onClick={() => this.setState({ redirectToPublicTours: true })}>
+                                {formatMessage(messages.headerPublicTours)}
                                 <MapIcon />
-                            </Button>
-                            <Button className={classes.icon} onClick={() => this.setState({ redirectToMyTours: true })}>
-                                My Tours
+                            </Button>}
+                            {!isTours && auth && <Button className={classes.icon} onClick={() => this.setState({ redirectToMyTours: true })}>
+                                {formatMessage(messages.defaultMessage)}
                                 <MapIcon />
-                            </Button>
-                            {/* <IconButton className={classes.icon} >
-                            </IconButton> */}
+                            </Button>}
+                            {!auth && !isSignIn && <Button className={classes.icon} onClick={() => this.setState({redirectToLogin: true})}>{formatMessage(messages.signInPageButtonTitle)}</Button>}
                             {auth && (
                                 <>
                                     <IconButton
@@ -149,6 +158,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 export default inject("rootStore")(
     observer(
-        withStyles(styles)(injectIntl(Header))
+        withStyles(styles)(injectIntl(withRouter(Header)))
     )
 );

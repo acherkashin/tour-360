@@ -24,6 +24,13 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         color: grey[700],
         fontSize: '24px',
     },
+    toursWrapper: {
+        position: 'relative',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        padding: '12px',
+        flexGrow: 1,
+    }
 });
 
 
@@ -55,14 +62,16 @@ class PublicToursPage extends React.Component<PublicToursPageProps, PublicToursP
         return <PageWrapper
             title={formatMessage(messages.publicTours)}
         >
-            <div className={classes.root}>
-                {hasTours && <Tours
-                    selectedTourId={selectedTour && selectedTour.id}
-                    tours={tours}
-                    onItemClick={this._handleTourItemClick}
-                    getActions={(e) => []}
-                />}
-                {!hasTours && <Typography className={classes.noTours}>No public tours are available</Typography>}
+            <div className={classes.toursWrapper}>
+                <div className={classes.root}>
+                    {hasTours && <Tours
+                        selectedTourId={selectedTour && selectedTour.id}
+                        tours={tours}
+                        onItemClick={this._handleTourItemClick}
+                        getActions={(e) => []}
+                    />}
+                    {!hasTours && <Typography className={classes.noTours}>{formatMessage(messages.publicToursPageNoToursLabel)}</Typography>}
+                </div>
             </div>
         </PageWrapper >;
     }
@@ -70,8 +79,6 @@ class PublicToursPage extends React.Component<PublicToursPageProps, PublicToursP
 
 export default withStyles(styles)(
     injectIntl(
-        requireAuth(
-            inject("rootStore")(observer(PublicToursPage))
-        )
+        inject("rootStore")(observer(PublicToursPage))
     )
 );

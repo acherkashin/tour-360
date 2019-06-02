@@ -185,6 +185,18 @@ const en = defineMessages({
         id: 'header.sign-out',
         defaultMessage: 'Sign out',
     },
+    headerSignIn: {
+        id: 'header.sign-in',
+        defaultMessage: 'Login',
+    },
+    headerMyTours: {
+        id: 'header.my-tours',
+        defaultMessage: 'My Tours',
+    },
+    headerPublicTours: {
+        id: 'header.public-tours',
+        defaultMessage: 'Public Tours',
+    },
 
     createTourDialogTitle: {
         id: 'create-tour-dialog.title',
@@ -478,7 +490,7 @@ const en = defineMessages({
     publicToursPageNoToursLabel: {
         id: 'id.public-tours-page-no-tours-label',
         defaultMessage: 'No public tours are available',
-    }
+    },
 });
 
 export default en;

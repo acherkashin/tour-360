@@ -50,5 +50,8 @@
     "not op_mini all"
   ],
   "proxy": "http://localhost:3001",
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/react-router": "^5.0.1",
+    "@types/react-router-dom": "^4.3.3"
+  }
 }

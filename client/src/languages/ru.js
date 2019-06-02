@@ -178,6 +178,18 @@ const ru = defineMessages({
         id: 'header.sign-out',
         defaultMessage: 'Выйти',
     },
+    headerSignIn: {
+        id: 'header.sign-in',
+        defaultMessage: 'Войти',
+    },
+    headerMyTours: {
+        id: 'header.my-tours',
+        defaultMessage: 'Мои экскурсии',
+    },
+    headerPublicTours: {
+        id: 'header.public-tours',
+        defaultMessage: 'Публичные туры',
+    },
 
     createTourDialogTitle: {
         id: 'create-tour-dialog.title',
