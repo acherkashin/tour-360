@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     slider: {
         padding: '16px 12px',
     },
@@ -14,7 +14,21 @@ const styles = theme => ({
     }
 });
 
-class PlacePosition extends React.Component {
+interface PlacePositionProps extends WithStyles<typeof styles> {
+    id: string;
+    label: string;
+    value: number;
+    onChange: (event: React.ChangeEvent<{}>, value: number) => void;
+}
+
+class PlacePosition extends React.Component<PlacePositionProps> {
+    static propTypes = {
+        id: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+        onChange: PropTypes.func.isRequired,
+    };
+
     render() {
         const { classes } = this.props;
         const { id, label, value, onChange } = this.props;
@@ -34,12 +48,5 @@ class PlacePosition extends React.Component {
         </>;
     }
 }
-
-PlacePosition.propTypes = {
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-};
 
 export default withStyles(styles)(PlacePosition);

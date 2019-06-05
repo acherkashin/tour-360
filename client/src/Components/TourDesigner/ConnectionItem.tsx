@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import {
     ListItem,
     ListItemText,
@@ -15,14 +15,23 @@ import {
 import Typography from '@material-ui/core/Typography';
 import grey from '@material-ui/core/colors/grey';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     coordinateItem: {
         color: grey[700],
         lineHeight: 1,
     },
 });
 
-class ConnectionItem extends React.Component {
+interface ConnectionItemProps extends WithStyles<typeof styles> {
+    intl: any;
+    connection: any;
+    onClick: (e: { origin: ConnectionItem, connection: any }) => void;
+    onViewClick: (e: { origin: ConnectionItem, connection: any }) => void;
+    onRemoveClick: (e: { origin: ConnectionItem, connection: any }) => void;
+    onEditClick: (e: { origin: ConnectionItem, connection: any }) => void;
+}
+
+class ConnectionItem extends React.Component<ConnectionItemProps> {
     constructor(props) {
         super(props);
 
@@ -31,6 +40,22 @@ class ConnectionItem extends React.Component {
         this._handleRemoveClick = this._handleRemoveClick.bind(this);
         this._handleEditClick = this._handleEditClick.bind(this);
     }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        connection: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            latitude: PropTypes.number.isRequired,
+            longitude: PropTypes.number.isRequired,
+        }).isRequired,
+        onClick: PropTypes.func.isRequired,
+        onViewClick: PropTypes.func.isRequired,
+        onRemoveClick: PropTypes.func.isRequired,
+        onEditClick: PropTypes.func.isRequired,
+
+        intl: intlShape.isRequired,
+    };
 
     _handleClick(e) {
         e.stopPropagation();
@@ -91,19 +116,3 @@ class ConnectionItem extends React.Component {
 }
 
 export default withStyles(styles)(injectIntl(ConnectionItem));
-
-ConnectionItem.propTypes = {
-    classes: PropTypes.object.isRequired,
-    connection: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        latitude: PropTypes.number.isRequired,
-        longitude: PropTypes.number.isRequired,
-    }).isRequired,
-    onClick: PropTypes.func.isRequired,
-    onViewClick: PropTypes.func.isRequired,
-    onRemoveClick: PropTypes.func.isRequired,
-    onEditClick: PropTypes.func.isRequired,
-    
-    intl: intlShape.isRequired,
-};

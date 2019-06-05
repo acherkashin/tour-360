@@ -96,7 +96,7 @@ SoundEditor.propTypes = {
 
     onSoundChanged: PropTypes.func.isRequired,
     onSoundRemoved: PropTypes.func.isRequired,
-    
+
     intl: intlShape.isRequired,
 };
 

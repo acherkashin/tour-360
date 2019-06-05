@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import PlacePosition from './PlacePosition';
 import Slider from '@material-ui/lab/Slider';
 import { intlShape, injectIntl } from 'react-intl';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         flex: 1,
         padding: theme.spacing.unit * 2,
@@ -16,13 +16,39 @@ const styles = theme => ({
     },
 });
 
-const EditConnectionPanel = observer(class EditConnectionPanel extends React.Component {
+interface EditConnectionPanelProps extends WithStyles<typeof styles> {
+    intl: any;
+    connection: any;
+    onStartPlacePositionChanged: (e: { origin: EditConnectionPanel, value: number }) => void;
+    onEndPlacePositionChanged: (e: { origin: EditConnectionPanel, value: number }) => void;
+}
+
+class EditConnectionPanel extends React.Component<EditConnectionPanelProps> {
     constructor(props) {
         super(props);
 
         this._handleStartPlacePositionChanged = this._handleStartPlacePositionChanged.bind(this);
         this._handleEndPlacePositionChanged = this._handleEndPlacePositionChanged.bind(this);
     }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        connection: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            startPlacePosition: PropTypes.number.isRequired,
+            endPlacePosition: PropTypes.number.isRequired,
+            startPlace: PropTypes.shape({
+                name: PropTypes.string.isRequired,
+            }).isRequired,
+            endPlace: PropTypes.shape({
+                name: PropTypes.string.isRequired,
+            }).isRequired,
+        }).isRequired,
+        onStartPlacePositionChanged: PropTypes.func.isRequired,
+        onEndPlacePositionChanged: PropTypes.func.isRequired,
+
+        intl: intlShape.isRequired,
+    };
 
     _handleStartPlacePositionChanged(e, value) {
         this.props.onStartPlacePositionChanged({
@@ -74,25 +100,6 @@ const EditConnectionPanel = observer(class EditConnectionPanel extends React.Com
                 onChange={this._handleEndPlacePositionChanged} />
         </div>;
     }
-});
-
-EditConnectionPanel.propTypes = {
-    classes: PropTypes.object.isRequired,
-    connection: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        startPlacePosition: PropTypes.number.isRequired,
-        endPlacePosition: PropTypes.number.isRequired,
-        startPlace: PropTypes.shape({
-            name: PropTypes.string.isRequired,
-        }).isRequired,
-        endPlace: PropTypes.shape({
-            name: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired,
-    onStartPlacePositionChanged: PropTypes.func.isRequired,
-    onEndPlacePositionChanged: PropTypes.func.isRequired,
-
-    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(injectIntl(EditConnectionPanel));
+export default withStyles(styles)(injectIntl(observer(EditConnectionPanel)));
