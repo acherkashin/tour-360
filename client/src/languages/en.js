@@ -488,8 +488,13 @@ const en = defineMessages({
     },
 
     publicToursPageNoToursLabel: {
-        id: 'id.public-tours-page-no-tours-label',
+        id: 'public-tours-page-no-tours-label',
         defaultMessage: 'No public tours are available',
+    },
+
+    tourItemTooltip: {
+        id: 'tour-item.tooltip',
+        defaultMessage: 'Tour is public',
     },
 });
 

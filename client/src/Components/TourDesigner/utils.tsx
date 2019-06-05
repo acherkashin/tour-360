@@ -5,8 +5,9 @@ import {
     CallMade as AddConnection,
     PanTool as DragMapIcon
 } from '@material-ui/icons';
+import { MapEditMode } from './MapEditModeBar';
 
-export function getIcon(mapEditMode) {
+export function getIcon(mapEditMode: MapEditMode) {
     switch (mapEditMode) {
         case 'addPlace':
             return <AddPlaceIcon />

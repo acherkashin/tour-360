@@ -427,7 +427,12 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                 </AppBar>
                 <div className={classes.content}>
                     <MapEditModeBar
-                        mapEditModes={[{ mode: 'dragMap' }, { mode: 'addPlace' }, { mode: 'removePlace' }, { mode: 'addConnection' }]}
+                        mapEditModes={[
+                            { mode: 'dragMap' },
+                            { mode: 'addPlace' },
+                            { mode: 'removePlace' },
+                            { mode: 'addConnection' }
+                        ]}
                         onModeChanged={this._handleModeChanged}
                     />
                     {this._renderMap()}

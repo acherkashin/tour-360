@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import classNames from 'classnames';
 import { intlShape, injectIntl } from 'react-intl';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         background: 'white',
         position: 'relative',
@@ -25,8 +25,25 @@ const styles = theme => ({
     },
 });
 
-class PreviewImage360 extends React.Component {
-    
+interface PreviewImage360Props extends WithStyles<typeof styles> {
+    intl: any;
+    name: string;
+    imageUrl: string;
+    hasImage: boolean;
+    className: string;
+}
+
+class PreviewImage360 extends React.Component<PreviewImage360Props> {
+    static propTypes = {
+        className: PropTypes.string,
+        name: PropTypes.string.isRequired,
+        imageUrl: PropTypes.string,
+        hasImage: PropTypes.bool.isRequired,
+        classes: PropTypes.object.isRequired,
+
+        intl: intlShape.isRequired,
+    };
+
     render() {
         const { name, imageUrl, hasImage, classes, className } = this.props;
         const root = classNames({
@@ -36,23 +53,13 @@ class PreviewImage360 extends React.Component {
         const { messages, formatMessage } = this.props.intl;
 
         return (
-            (hasImage) ? 
+            (hasImage) ?
                 <div className={root}>
-                    <iframe className={classes.cover} title={formatMessage(messages.previewImage360PreviewPlace)} src={imageUrl} alt={name || ''}></iframe>
-                </div> 
-            : <div/>
+                    <iframe className={classes.cover} title={formatMessage(messages.previewImage360PreviewPlace)} src={imageUrl}></iframe>
+                </div>
+                : <div />
         );
     }
 }
-
-PreviewImage360.propTypes = {
-    className: PropTypes.string,
-    name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string,
-    hasImage: PropTypes.bool.isRequired,
-    classes: PropTypes.object.isRequired,
-    
-    intl: intlShape.isRequired,
-};
 
 export default withStyles(styles)(injectIntl(PreviewImage360));

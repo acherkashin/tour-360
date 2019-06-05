@@ -5,6 +5,7 @@ import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import { Connection, Place, } from '.';
 import grey from '@material-ui/core/colors/grey';
+import { TourDetail } from '../../Stores';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
@@ -31,9 +32,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 });
 
 interface TourMapProps extends WithStyles<typeof styles> {
-    tour: any;
+    tour: TourDetail;
     mapStyle: any;
-    selectedPlaceId: string;
+    selectedPlaceId?: string;
+    selectedConnectionId?: string;
     onClick: (e: { origin: TourMap, latlng: any }) => void;
     onMouseMove: (e: { origin: TourMap, latlng: any }) => void;
     onZoomChanged: (e: { origin: TourMap, zoom: number }) => void;
@@ -138,17 +140,17 @@ class TourMap extends React.Component<TourMapProps, TourMapState> {
     }
 
     _renderMapContent() {
-        const { tour, selectedPlaceId } = this.props;
+        const { tour, selectedPlaceId, selectedConnectionId } = this.props;
         const places = tour.places || [];
         const connections = tour.connections || [];
 
         return <>
             {connections.map(c => {
-                // const isSelected = ((this.editingConnection) && c.id === this.editingConnection.id) || false;
+                const isSelected = c.id === selectedConnectionId || false;
 
                 return <Connection
                     key={c.id}
-                    // isSelected={isSelected}
+                    isSelected={isSelected}
                     connection={c}
                     onClick={this._handleConnectionClick}
                 />;

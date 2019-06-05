@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 import { getIcon, createError } from './utils';
 import { injectIntl } from 'react-intl';
 
-const styles = (theme) => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -25,11 +25,27 @@ const styles = (theme) => ({
     }
 });
 
-class MapEditModeBar extends React.Component {
-    getDescription(MapEditMode) {
+export interface MapEditModeBarItem {
+    mode: MapEditMode;
+}
+
+export type MapEditMode = 'addPlace' | 'removePlace' | 'addConnection' | 'dragMap';
+
+interface MapEditModeBarProps extends WithStyles<typeof styles> {
+    intl: any;
+    mapEditModes: MapEditModeBarItem[];
+    onModeChanged: (e: {}) => void;
+}
+
+class MapEditModeBar extends React.Component<MapEditModeBarProps> {
+    static propTypes = {
+        mapEditModes: PropTypes.array.isRequired
+    };
+
+    getDescription(mode: MapEditMode) {
         const { messages, formatMessage } = this.props.intl;
 
-        switch (MapEditMode) {
+        switch (mode) {
             case 'addPlace':
                 return formatMessage(messages.mapEditModeBarAddPlace)
             case 'removePlace':
@@ -38,12 +54,12 @@ class MapEditModeBar extends React.Component {
                 return formatMessage(messages.mapEditModeBarAddConnection)
             case 'dragMap':
                 return formatMessage(messages.mapEditModeBarDragMap)
-            default: 
-                throw createError(MapEditMode)
+            default:
+                throw createError(mode)
         }
     }
 
-    renderItem(item) {
+    renderItem(item: { mode: MapEditMode }) {
         return <div
             key={item.mode}
             title={this.getDescription(item.mode)}
@@ -62,9 +78,5 @@ class MapEditModeBar extends React.Component {
         </div>;
     }
 }
-
-MapEditModeBar.propTypes = {
-    mapEditModes: PropTypes.array.isRequired
-};
 
 export default withStyles(styles)(injectIntl(MapEditModeBar));

@@ -481,9 +481,14 @@ const ru = defineMessages({
     },
 
     publicToursPageNoToursLabel: {
-        id: 'id.public-tours-page-no-tours-label',
+        id: 'public-tours-page-no-tours-label',
         defaultMessage: 'Нет доступных виртуальных экскурсий',
-    }
+    },
+    
+    tourItemTooltip: {
+        id: 'tour-item.tooltip',
+        defaultMessage: 'Публичный тур',
+    },
 });
 
 export default ru;

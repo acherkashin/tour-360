@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
 import {
     FormControlLabel,
@@ -15,15 +15,31 @@ import {
 } from '@material-ui/core';
 import { intlShape, injectIntl } from 'react-intl';
 import { PlaceList } from './../';
+import { TourDetail } from '../../Stores';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         flex: 1,
         padding: theme.spacing.unit * 2,
     }
 });
 
-const EditTourPanel = observer(class EditTourPanel extends React.Component {
+interface EditTourPanelProps extends WithStyles<typeof styles> {
+    tour: TourDetail;
+    startPlaceId: string;
+    onNameChanged: (e: { origin: EditTourPanel, name: string }) => void;
+    onChangeImageMapClick: (e: { origin: EditTourPanel }) => void;
+    onStartPlaceChanged: (e: { origin: EditTourPanel, startPlaceId: string }) => void;
+    onIsPublicChanged: (e: { origin: EditTourPanel, isPublic: boolean }) => void;
+    onViewPlaceClick: (e: { origin: EditTourPanel, place }) => void;
+    onEditPlaceClick: (e: { origin: EditTourPanel, place }) => void;
+    onDeletePlaceClick: (e: { origin: EditTourPanel, place }) => void;
+    onPlaceClick: (e: { origin: EditTourPanel, place }) => void;
+
+    intl: intlShape.isRequired;
+}
+
+class EditTourPanel extends React.Component<EditTourPanelProps> {
     constructor(props) {
         super(props);
 
@@ -35,6 +51,28 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
         this._handleViewPlaceClick = this._handleViewPlaceClick.bind(this);
         this._handleEditPlaceClick = this._handleEditPlaceClick.bind(this);
         this._handleDeletePlaceClick = this._handleDeletePlaceClick.bind(this);
+    }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        tour: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            places: PropTypes.arrayOf(PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                name: PropTypes.string.isRequired,
+            })),
+        }).isRequired,
+        startPlaceId: PropTypes.string,
+        onNameChanged: PropTypes.func.isRequired,
+        onChangeImageMapClick: PropTypes.func.isRequired,
+        onStartPlaceChanged: PropTypes.func.isRequired,
+        onIsPublicChanged: PropTypes.func.isRequired,
+        onViewPlaceClick: PropTypes.func.isRequired,
+        onEditPlaceClick: PropTypes.func.isRequired,
+        onDeletePlaceClick: PropTypes.func.isRequired,
+        onPlaceClick: PropTypes.func.isRequired,
+
+        intl: intlShape.isRequired,
     }
 
     _handleNameChanged(e) {
@@ -123,28 +161,6 @@ const EditTourPanel = observer(class EditTourPanel extends React.Component {
             />
         </div>);
     }
-});
-
-EditTourPanel.propTypes = {
-    classes: PropTypes.object.isRequired,
-    tour: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        places: PropTypes.arrayOf(PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-        })),
-    }).isRequired,
-    startPlaceId: PropTypes.string,
-    onNameChanged: PropTypes.func.isRequired,
-    onChangeImageMapClick: PropTypes.func.isRequired,
-    onStartPlaceChanged: PropTypes.func.isRequired,
-    onIsPublicChanged: PropTypes.func.isRequired,
-    onViewPlaceClick: PropTypes.func.isRequired,
-    onEditPlaceClick: PropTypes.func.isRequired,
-    onDeletePlaceClick: PropTypes.func.isRequired,
-    onPlaceClick: PropTypes.func.isRequired,
-
-    intl: intlShape.isRequired,
 }
 
-export default withStyles(styles)(injectIntl(EditTourPanel));
+export default withStyles(styles)(injectIntl(observer(EditTourPanel)));
