@@ -5,9 +5,9 @@ import {
     ClickAwayListener,
 } from '@material-ui/core';
 import { ChromePicker } from 'react-color';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         display: 'flex',
         flexDirection: 'row',
@@ -31,7 +31,17 @@ const styles = theme => ({
     },
 });
 
-class ColorPicker extends React.Component {
+interface ColorPickerProps extends WithStyles<typeof styles> {
+    color: string;
+    label: string;
+    onChanged: (e: { origin: ColorPicker, color: string }) => void;
+}
+
+interface ColorPickerState {
+    isTextColorPickerActive: boolean;
+}
+
+class ColorPicker extends React.Component<ColorPickerProps, ColorPickerState> {
     constructor(props) {
         super(props);
 
@@ -42,6 +52,13 @@ class ColorPicker extends React.Component {
         this._handleTextColorButtonClick = this._handleTextColorButtonClick.bind(this);
         this._handleChangeTextColor = this._handleChangeTextColor.bind(this);
     }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        color: PropTypes.string,
+        label: PropTypes.string.isRequired,
+        onChanged: PropTypes.func.isRequired,
+    };
 
     _handleChangeTextColor(color) {
         this.props.onChanged({ origin: this, color: color.hex });
@@ -79,13 +96,6 @@ class ColorPicker extends React.Component {
             }
         </div>;
     }
-}
-
-ColorPicker.propTypes = {
-    classes: PropTypes.object.isRequired,
-    color: PropTypes.string,
-    label: PropTypes.string.isRequired,
-    onChanged: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(ColorPicker);

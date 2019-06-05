@@ -14,8 +14,21 @@ import {
 } from '@material-ui/core';
 import { intlShape, injectIntl } from 'react-intl';
 import DialogTitleWithClose from './DialogTItleWithClose';
+import { MapType } from '../../../../backend/src/models/interfaces';
 
-class CreateTourDialog extends React.Component {
+interface CreateTourDialogProps {
+    intl: any;
+    name: string;
+    mapTypes: MapType[];
+    mapTypeValue: MapType;
+    isOpened: boolean;
+    onCreateClick: (e: { origin: CreateTourDialog }) => void;
+    onNameChanged: (e: { origin: CreateTourDialog, name: string }) => void;
+    onClose: (e: { origin: CreateTourDialog }) => void;
+    onMapTypeChanged: (e: { origin: CreateTourDialog, mapType: MapType }) => void;
+}
+
+class CreateTourDialog extends React.Component<CreateTourDialogProps> {
     constructor(props) {
         super(props);
 
@@ -24,6 +37,19 @@ class CreateTourDialog extends React.Component {
         this._handleMapTypeChanged = this._handleMapTypeChanged.bind(this);
         this._handleClose = this._handleClose.bind(this);
     }
+
+    static propTypes = {
+        isOpened: PropTypes.bool.isRequired,
+        onNameChanged: PropTypes.func.isRequired,
+        onCreateClick: PropTypes.func.isRequired,
+        onMapTypeChanged: PropTypes.func.isRequired,
+        onClose: PropTypes.func,
+        name: PropTypes.string,
+        mapTypeValue: PropTypes.number.isRequired,
+        mapTypes: PropTypes.arrayOf(PropTypes.number).isRequired,
+
+        intl: intlShape.isRequired,
+    };
 
     _handleCreateClick() {
         this.props.onCreateClick && this.props.onCreateClick({ origin: this });
@@ -80,7 +106,7 @@ class CreateTourDialog extends React.Component {
                             variant="filled"
                             fullWidth={true}
                             onChange={this._handleMapTypeChanged}
-                            input={<Input name="name"/>}
+                            input={<Input name="name" />}
                             value={mapTypeValue}>
                             {mapTypes.map(type => <MenuItem key={type} value={type}>{this._displayMapType(type)}</MenuItem>)}
                         </Select>
@@ -93,18 +119,5 @@ class CreateTourDialog extends React.Component {
         );
     }
 }
-
-CreateTourDialog.propTypes = {
-    isOpened: PropTypes.bool.isRequired,
-    onNameChanged: PropTypes.func.isRequired,
-    onCreateClick: PropTypes.func.isRequired,
-    onMapTypeChanged: PropTypes.func.isRequired,
-    onClose: PropTypes.func,
-    name: PropTypes.string,
-    mapTypeValue: PropTypes.number.isRequired,
-    mapTypes: PropTypes.arrayOf(PropTypes.number).isRequired,
-
-    intl: intlShape.isRequired,
-};
 
 export default injectIntl(CreateTourDialog);

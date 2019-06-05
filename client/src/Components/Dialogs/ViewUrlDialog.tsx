@@ -6,13 +6,26 @@ import {
 } from '@material-ui/core';
 import DialogTitleWithClose from './DialogTItleWithClose';
 
+interface ViewUrlDialogProps {
+    isOpened: boolean;
+    title: string;
+    url: string;
+    onClose: (e: { origin: ViewUrlDialog }) => void;
+}
 
-class ViewUrlDialog extends React.Component {
+class ViewUrlDialog extends React.Component<ViewUrlDialogProps> {
     constructor(props) {
         super(props);
 
         this._handleClose = this._handleClose.bind(this);
     }
+
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        // url: PropTypes.string.isRequired,
+        isOpened: PropTypes.bool.isRequired,
+        onClose: PropTypes.func,
+    };
 
     _handleClose() {
         this.props.onClose({ origin: this });
@@ -23,7 +36,7 @@ class ViewUrlDialog extends React.Component {
 
         return (
             <Dialog
-            fullScreen
+                fullScreen
                 onClose={this._handleClose}
                 open={isOpened}
                 fullWidth>
@@ -35,12 +48,5 @@ class ViewUrlDialog extends React.Component {
         );
     }
 }
-
-ViewUrlDialog.propTypes = {
-    title: PropTypes.string.isRequired,
-    // url: PropTypes.string.isRequired,
-    isOpened: PropTypes.bool.isRequired,
-    onClose: PropTypes.func,
-};
 
 export default ViewUrlDialog;

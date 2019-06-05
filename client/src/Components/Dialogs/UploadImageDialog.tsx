@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { Dialog, DialogContent, DialogActions, Typography } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import DialogTitleWithClose from './DialogTItleWithClose';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { intlShape, injectIntl } from 'react-intl';
 
-const styles = theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     prompt: {
         paddingTop: theme.spacing.unit * 3,
     },
@@ -41,7 +41,25 @@ const styles = theme => ({
     }
 });
 
-class UploadImageDialog extends React.Component {
+interface UploadImageDialogProps extends WithStyles<typeof styles> {
+    intl: any;
+    name: string;
+    title: string;
+    prompt: string;
+    isOpened: boolean;
+    onFileSelected: (e: { origin: UploadImageDialog, file: File, width: number, height: number }) => void;
+    onUploadClick: (e: { origin: UploadImageDialog, name: string }) => void;
+    onClose: (e: { origin: UploadImageDialog }) => void;
+}
+
+interface UploadImageDialogState {
+    selectedFile: File;
+    selectedFileUrl: string;
+    fileWidth: number;
+    fileHeight: number;
+}
+
+class UploadImageDialog extends React.Component<UploadImageDialogProps, UploadImageDialogState> {
     constructor(props) {
         super(props);
 
@@ -50,6 +68,18 @@ class UploadImageDialog extends React.Component {
         this._handleFileSelected = this._handleFileSelected.bind(this);
         this._handleFileUpload = this._handleFileUpload.bind(this);
     }
+    
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        prompt: PropTypes.string.isRequired,
+        classes: PropTypes.object.isRequired,
+        isOpened: PropTypes.bool,
+        onUploadClick: PropTypes.func,
+        onClose: PropTypes.func,
+        onFileSelected: PropTypes.func.isRequired,
+    
+        intl: intlShape.isRequired,
+    };
 
     state = {
         selectedFile: null,
@@ -59,7 +89,7 @@ class UploadImageDialog extends React.Component {
     };
 
     componentDidMount() {
-        if (this.selectedFileUrl) {
+        if (this.state.selectedFileUrl) {
             window.URL.revokeObjectURL(this.state.selectedFileUrl);
         }
     }
@@ -74,7 +104,7 @@ class UploadImageDialog extends React.Component {
 
             const reader = new FileReader();
             reader.onload = (e) => {
-                const selectedFileUrl = e.target.result;
+                const selectedFileUrl: string = (e.target as any).result;
                 const img = new Image();
                 img.src = selectedFileUrl;
 
@@ -154,17 +184,5 @@ class UploadImageDialog extends React.Component {
         );
     }
 }
-
-UploadImageDialog.propTypes = {
-    title: PropTypes.string.isRequired,
-    prompt: PropTypes.string.isRequired,
-    classes: PropTypes.object.isRequired,
-    isOpened: PropTypes.bool,
-    onUploadClick: PropTypes.func,
-    onClose: PropTypes.func,
-    onFileSelected: PropTypes.func.isRequired,
-
-    intl: intlShape.isRequired,
-};
 
 export default withStyles(styles)(injectIntl(UploadImageDialog));

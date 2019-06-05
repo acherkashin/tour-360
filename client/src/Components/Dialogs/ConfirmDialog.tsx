@@ -10,7 +10,19 @@ import {
 import DialogTitleWithClose from './DialogTItleWithClose';
 import { injectIntl } from 'react-intl';
 
-class ConfirmDialog extends React.Component {
+interface ConfirmDialogProps {
+    cancelButtonText?: string;
+    okButtonText?: string;
+    isOpened: boolean;
+    title: string;
+    contentText: string;
+
+    onOkClick: () => void;
+    onCancelClick: () => void;
+    onClose: (e: { origin: ConfirmDialog }) => void;
+}
+
+class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     constructor(props) {
         super(props);
 
@@ -18,6 +30,17 @@ class ConfirmDialog extends React.Component {
         this._handleOkClick = this._handleOkClick.bind(this);
         this._handleCancelClick = this._handleCancelClick.bind(this);
     }
+
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        contentText: PropTypes.string.isRequired,
+        okButtonText: PropTypes.string,
+        cancelButtonText: PropTypes.string,
+        onOkClick: PropTypes.func.isRequired,
+        onCancelClick: PropTypes.func.isRequired,
+        isOpened: PropTypes.bool.isRequired,
+        onClose: PropTypes.func.isRequired,
+    };
 
     _handleOkClick() {
         this.props.onOkClick();
@@ -52,16 +75,5 @@ class ConfirmDialog extends React.Component {
         );
     }
 }
-
-ConfirmDialog.propTypes = {
-    title: PropTypes.string.isRequired,
-    contentText: PropTypes.string.isRequired,
-    okButtonText: PropTypes.string,
-    cancelButtonText: PropTypes.string,
-    onOkClick: PropTypes.func.isRequired,
-    onCancelClick: PropTypes.func.isRequired,
-    isOpened: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-};
 
 export default injectIntl(ConfirmDialog);
