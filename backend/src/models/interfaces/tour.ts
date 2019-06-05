@@ -40,10 +40,12 @@ export interface Tour extends Document {
     isPublic: boolean;
 
     toClient: () => TourDto;
+    updateTour: (dto: TourDetailDto) => void;
     hasConnection: (strtPlaceId: string, endPlaceId: string) => boolean;
     deleteConnection: (place1Id: string, place2Id: string) => void;
     getConnectionById: (id: string) => Connection;
     getPlace: (id: string) => Place;
+    updatePlace: (dto: PlaceDetailDto) => void;
     deletePlace: (placeId: string) => void;
     toDetailDto: () => TourDetailDto;
 }

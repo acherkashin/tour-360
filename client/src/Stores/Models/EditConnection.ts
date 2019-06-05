@@ -25,11 +25,13 @@ export default class EditConnection {
         this.endPlace = json.endPlace;
     }
 
-    get asJson() {
+    get asJson(): ConnectionDto {
         return {
             id: this.id,
             startPlacePosition: this.startPlacePosition,
             endPlacePosition: this.endPlacePosition,
+            endPlace: this.endPlace,
+            startPlace: this.startPlace,
         };
     }
 }

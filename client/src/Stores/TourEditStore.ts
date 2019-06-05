@@ -8,7 +8,7 @@ import {
     UserStore,
     RootStore,
 } from './';
-import { PlaceDto } from '../../../backend/src/models/interfaces';
+import { PlaceDto, PlaceDetailDto } from '../../../backend/src/models/interfaces';
 
 export default class TourEditStore {
     readonly rootStore: RootStore;
@@ -153,7 +153,10 @@ export default class TourEditStore {
         }))
     }
 
-    completeEditing() {
+    saveChanges() {
+        this.editingPlace && this.editingTour.updatePlaceFromJson(this.editingPlace.asJson);
+        this.editingConnection && this.editingTour.updateConnectionFromJson(this.editingConnection.asJson);
+
         this.saveResult = fromPromise(TourEditService.saveChanges(this.sessionId, {
             name: this.editingTour.name,
             startPlaceId: this.editingTour.startPlaceId,
@@ -168,7 +171,7 @@ export default class TourEditStore {
         return this.saveResult;
     }
 
-    updateImageMap = action((file, width: number, height: number) => {
+    updateImageMap = action((file: File, width: number, height: number) => {
         return TourEditService.uploadMapImage(this.sessionId, file, width, height).then((resp) => {
             runInAction(() => {
                 this.editingTour.updateFromJson(resp.data.tour);
@@ -199,7 +202,7 @@ export default class TourEditStore {
         });
     }
 
-    updateMapIcon(file, width: number, height: number) {
+    updateMapIcon(file: File, width: number, height: number) {
         return TourEditService.uploadPlaceMapIcon(this.sessionId, this.editingPlace.id, file, width, height).then(resp => {
             const place = resp.data.place;
 
@@ -220,7 +223,7 @@ export default class TourEditStore {
         });
     }
 
-    updatePlaceSound(soundFile) {
+    updatePlaceSound(soundFile: File) {
         return TourEditService.uploadPlaceSound(this.sessionId, this.editingPlace.id, soundFile).then((resp) => {
             const place = resp.data.place;
             runInAction(() => {
@@ -288,7 +291,7 @@ export default class TourEditStore {
         this.sessionId = sessionId;
     });
 
-    _updatePlaceOnServer(json, cancel = false) {
+    _updatePlaceOnServer(json: PlaceDetailDto, cancel = false) {
         return TourEditService.updatePlace(this.sessionId, json).then((resp) => {
             const { place } = resp.data;
 

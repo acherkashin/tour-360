@@ -111,10 +111,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                                 <MapIcon />
                             </Button>}
                             {!isTours && auth && <Button className={classes.icon} onClick={() => this.setState({ redirectToMyTours: true })}>
-                                {formatMessage(messages.defaultMessage)}
+                                {formatMessage(messages.headerMyTours)}
                                 <MapIcon />
                             </Button>}
-                            {!auth && !isSignIn && <Button className={classes.icon} onClick={() => this.setState({redirectToLogin: true})}>{formatMessage(messages.signInPageButtonTitle)}</Button>}
+                            {!auth && !isSignIn && <Button className={classes.icon} onClick={() => this.setState({redirectToLogin: true})}>
+                                {formatMessage(messages.signInPageButtonTitle)}
+                            </Button>}
                             {auth && (
                                 <>
                                     <IconButton

@@ -202,7 +202,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
     /* Confirm Save Dialog */
     _handleOkConfirmClick() {
-        this.tourStore.completeEditing().then(() => {
+        this.tourStore.saveChanges().then(() => {
             this.tourStore.cancelEditing();
         }).finally(() => {
             this._handleCloseConfirmDialog();
@@ -276,7 +276,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
     }
 
     _handleSave() {
-        this.tourStore.completeEditing();
+        this.tourStore.saveChanges();
     }
 
     _handleNameChanged(e) {
@@ -544,16 +544,16 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
                     isOpened={isOpenedPreviewDialog}
                     onClose={this._closePreviewDialog}
                 />
-                <HtmlEditDialog
+                {isOpenedPlaceDescriptionDialog && <HtmlEditDialog
+                    isOpened={isOpenedPlaceDescriptionDialog}
                     title={formatMessage(messages.tourDesignerEditPlaceDescription)}
                     htmlContent={this.editingPlace && this.editingPlace.description}
-                    isOpened={isOpenedPlaceDescriptionDialog}
                     onClose={this._handleCloseDescriptionDialog}
                     onSaveClick={(e) => {
                         this.editingPlace.description = e.htmlContent;
                         this._handleCloseDescriptionDialog();
                     }}
-                />
+                />}
                 {this.editingPlace && this.editingPlace.mapIcon && <EditIconDialog
                     title={`${formatMessage(messages.editPlaceIcon)}: ${this.editingPlace.name}`}
                     isOpened={isOpenedEditIconDialog}

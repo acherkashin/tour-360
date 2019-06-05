@@ -14,7 +14,16 @@ import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
 
-class HtmlEditDialog extends React.Component {
+interface HtmlEditDialogProps {
+    intl: any;
+    title: string;
+    isOpened: boolean; 
+    onSaveClick: (e: { origin: HtmlEditDialog, htmlContent: string }) => void;
+    onCancelClick: (e: { origin: HtmlEditDialog }) => void;
+    onClose: (e: { origin: HtmlEditDialog }) => void;
+}
+
+class HtmlEditDialog extends React.Component<HtmlEditDialogProps, any> {
     constructor(props) {
         super(props);
 
@@ -26,6 +35,17 @@ class HtmlEditDialog extends React.Component {
             editorState: this._createFromHtml(props.htmlContent || ""),
         };
     }
+
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        htmlContent: PropTypes.string,
+        okButtonText: PropTypes.string,
+        onSaveClick: PropTypes.func.isRequired,
+        isOpened: PropTypes.bool.isRequired,
+        onClose: PropTypes.func.isRequired,
+    
+        intl: intlShape.isRequired,
+    };
 
     _createFromHtml(htmlContent) {
         const contentBlock = htmlToDraft(htmlContent);
@@ -51,7 +71,7 @@ class HtmlEditDialog extends React.Component {
     }
 
     _handleCancelClick() {
-        this.props.onCancelClick();
+        this.props.onCancelClick({origin: this});
     }
 
     _handleClose() {
@@ -83,16 +103,5 @@ class HtmlEditDialog extends React.Component {
         );
     }
 }
-
-HtmlEditDialog.propTypes = {
-    title: PropTypes.string.isRequired,
-    htmlContent: PropTypes.string,
-    okButtonText: PropTypes.string,
-    onSaveClick: PropTypes.func.isRequired,
-    isOpened: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    
-    intl: intlShape.isRequired,
-};
 
 export default injectIntl(HtmlEditDialog);

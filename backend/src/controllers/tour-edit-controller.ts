@@ -50,9 +50,7 @@ export function saveChanges(req: Request, res: Response) {
     const { startPlaceId, name, isPublic } = req.body;
 
     let tour = cache[sessionId];
-    tour.startPlaceId = startPlaceId;
-    tour.name = name;
-    tour.isPublic = isPublic;
+    tour.updateTour(req.body);
 
     tour.save().then(() => {
         const dto = cache[sessionId].toDetailDto();
@@ -171,16 +169,9 @@ export function updatePlace(req: Request, res: Response) {
     const { sessionId } = req.params;
     const placeUpdate = req.body;
     const tour = cache[sessionId];
-    const place = cache[sessionId].getPlace(placeUpdate.id);
-
-    place.name = placeUpdate.name;
-    place.longitude = placeUpdate.longitude;
-    place.latitude = placeUpdate.latitude;
-    place.description = placeUpdate.description;
-    place.widgets = placeUpdate.widgets;
-    place.markModified('widgets');
-    place.mapIcon = placeUpdate.mapIcon;
-
+    tour.updatePlace(placeUpdate);
+    
+    const place = tour.getPlace(placeUpdate.id);
     res.json({ place: place.toDetailDto(tour) });
 }
 

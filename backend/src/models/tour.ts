@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 import PlaceSchema from './place';
 import Connection from './connection';
 import { Tour, TourDetailDto } from './interfaces/tour';
+import { PlaceDetailDto } from "./interfaces";
 
 const TourSchema = new mongoose.Schema<Tour>({
     name: { type: String, required: true },
@@ -88,6 +89,28 @@ TourSchema.methods.getPlace = function (id: string) {
     const place = this.places[index];
 
     return place;
+};
+
+TourSchema.methods.updateTour = function(dto: TourDetailDto) {
+    this.startPlaceId = dto.startPlaceId;
+    this.name = dto.name;
+    this.isPublic = dto.isPublic;
+    (dto.places || []).forEach((place) => {
+        this.updatePlace(place);
+    });
+
+    //TODO: add updating connections
+};
+
+TourSchema.methods.updatePlace = function(dto: PlaceDetailDto) {
+    const place = this.getPlace(dto.id);
+    place.name = dto.name;
+    place.longitude = dto.longitude;
+    place.latitude = dto.latitude;
+    place.description = dto.description;
+    place.widgets = dto.widgets;
+    place.markModified('widgets');
+    place.mapIcon = dto.mapIcon;
 };
 
 TourSchema.methods.deletePlace = function(placeId: string) {
