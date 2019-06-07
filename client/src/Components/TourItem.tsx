@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classname from 'classnames';
+import { intlShape, injectIntl } from 'react-intl';
 import { observer } from 'mobx-react';
 import {
     GridListTile,
@@ -15,14 +16,14 @@ import {
 } from '@material-ui/core';
 import {
     Public as PublicIcon,
+    MoreVert as MoreVertIcon,
 } from '@material-ui/icons';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TourCover } from '.';
 import { Tour } from './../Stores';
 
-const styles = createStyles((theme: Theme) => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     moreIcon: {
         color: 'white',
     },
@@ -62,7 +63,7 @@ const styles = createStyles((theme: Theme) => ({
         right: 5,
         color: theme.palette.primary.light,
     }
-}));
+});
 
 export interface TourItemAction {
     text: string;
@@ -71,6 +72,7 @@ export interface TourItemAction {
 }
 
 export interface TourItemProps extends WithStyles<typeof styles> {
+    intlShape: { messages, formatMessage };
     tour: Tour;
     isSelected: boolean;
     onItemClick: (event: { origin: TourItem, tour: Tour }) => void;
@@ -129,8 +131,7 @@ class TourItem extends React.Component<TourItemProps> {
     }
 
     render() {
-        const classes: any = this.props.classes;
-        const { tour, getActions, isSelected } = this.props;
+        const { tour, getActions, isSelected, classes } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
@@ -195,4 +196,4 @@ class TourItem extends React.Component<TourItemProps> {
     }
 }
 
-export default withStyles(styles)(observer(TourItem));
+export default injectIntl(withStyles(styles)(observer(TourItem)));

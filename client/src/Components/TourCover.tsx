@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 
-const styles = (theme) => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     cover: {
         width: '100%',
         height: '100%',
@@ -14,7 +14,19 @@ const styles = (theme) => ({
     },
 });
 
-export class TourCover extends PureComponent {
+interface TourCoverProps extends WithStyles<typeof styles> {
+    imageUrl: string;
+    hasImage: boolean;
+    name: string;
+}
+
+export class TourCover extends PureComponent<TourCoverProps>{
+    static propTypes = {
+        imageUrl: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        hasImage: PropTypes.bool.isRequired,
+    };
+
     render() {
         const { classes, imageUrl, hasImage, name } = this.props;
         const className = hasImage ? classes.cover : classes.noCover;
@@ -22,12 +34,5 @@ export class TourCover extends PureComponent {
         return (<img className={className} src={imageUrl} alt={name} />);
     }
 }
-
-TourCover.propTypes = {
-    classes: PropTypes.object.isRequired,
-    imageUrl: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    hasImage: PropTypes.bool.isRequired,
-};
 
 export default withStyles(styles)(TourCover);
