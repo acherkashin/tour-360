@@ -72,7 +72,7 @@ export interface TourItemAction {
 }
 
 export interface TourItemProps extends WithStyles<typeof styles> {
-    intlShape: { messages, formatMessage };
+    intl: { messages, formatMessage };
     tour: Tour;
     isSelected: boolean;
     onItemClick: (event: { origin: TourItem, tour: Tour }) => void;
@@ -132,6 +132,7 @@ class TourItem extends React.Component<TourItemProps> {
 
     render() {
         const { tour, getActions, isSelected, classes } = this.props;
+        const { messages, formatMessage } = this.props.intl;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
@@ -146,7 +147,7 @@ class TourItem extends React.Component<TourItemProps> {
                 className={root}
                 onClick={this._handleItemClick}>
                 <>
-                    {tour.isPublic && <Tooltip title="Tour is Free">
+                    {tour.isPublic && <Tooltip title={formatMessage(messages.tourItemTooltip)}>
                         <PublicIcon className={classes.isPublic} />
                     </Tooltip>}
                     <TourCover hasImage={tour.hasImage} name={tour.name} imageUrl={tour.imageUrl} />

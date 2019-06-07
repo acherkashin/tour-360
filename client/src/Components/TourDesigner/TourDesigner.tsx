@@ -336,6 +336,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
 
             return <TourMap
                 tour={this.editingTour}
+                draggableMarkers={true}
                 mapStyle={mapStyle}
                 selectedPlaceId={selectedPlaceId}
                 onClick={this._handleMapClick}

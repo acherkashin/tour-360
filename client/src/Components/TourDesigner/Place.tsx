@@ -10,6 +10,7 @@ interface PlaceProps {
     onDragend: (e: { origin: Place, place: PlaceDetailDto, latitude: number, longitude: number }) => void;
     isSelected: boolean;
     isStart: boolean;
+    draggable?: boolean;
 }
 
 const defaultIcon = L.icon({
@@ -55,10 +56,11 @@ export default class Place extends Component<PlaceProps, any> {
             longitude: PropTypes.number.isRequired,
         }),
         isSelected: PropTypes.bool.isRequired,
+        draggable: PropTypes.bool,
     };
 
     _getIcon() {
-        if(this.state.icon) {
+        if (this.state.icon) {
             //TODO: add isState and isSelected state for custom icon
             return this.state.icon;
         }
@@ -69,13 +71,13 @@ export default class Place extends Component<PlaceProps, any> {
     }
 
     render() {
-        const { place, onClick, onDragend } = this.props;
+        const { place, onClick, onDragend, draggable } = this.props;
         const radius = 20;
         const icon = this._getIcon();
 
         return (
             <Marker
-                draggable={true}
+                draggable={draggable}
                 icon={icon}
                 key={place.id}
                 position={[place.latitude, place.longitude]}

@@ -32,6 +32,7 @@ const ViewMapPage = requireAuth(inject("rootStore")(observer(
 
             return <TourMap
                 tour={this.tour}
+                draggableMarkers={false}
                 onClick={() => { }}
                 onPlaceClick={() => { }}
                 onConnectionClick={() => { }}

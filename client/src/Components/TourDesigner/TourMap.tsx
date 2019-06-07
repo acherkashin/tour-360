@@ -34,6 +34,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 interface TourMapProps extends WithStyles<typeof styles> {
     tour: TourDetail;
     mapStyle: any;
+    draggableMarkers?: boolean;
     selectedPlaceId?: string;
     selectedConnectionId?: string;
     onClick: (e: { origin: TourMap, latlng: any }) => void;
@@ -66,6 +67,7 @@ class TourMap extends React.Component<TourMapProps, TourMapState> {
         classes: PropTypes.object.isRequired,
         mapStyle: PropTypes.object,
         selectedPlaceId: PropTypes.string,
+        draggableMarkers: PropTypes.bool,
         tour: PropTypes.shape({
             places: PropTypes.array.isRequired,
             connections: PropTypes.array.isRequired,
@@ -140,9 +142,10 @@ class TourMap extends React.Component<TourMapProps, TourMapState> {
     }
 
     _renderMapContent() {
-        const { tour, selectedPlaceId, selectedConnectionId } = this.props;
+        const { tour, selectedPlaceId, selectedConnectionId, draggableMarkers = false } = this.props;
         const places = tour.places || [];
         const connections = tour.connections || [];
+        
 
         return <>
             {connections.map(c => {
@@ -161,6 +164,7 @@ class TourMap extends React.Component<TourMapProps, TourMapState> {
 
                 return <Place key={place.id}
                     place={place}
+                    draggable={draggableMarkers}
                     isSelected={isSelected}
                     isStart={isStart}
                     onClick={this._handlePlaceClick}
