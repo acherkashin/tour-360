@@ -11,6 +11,7 @@ import {
     Slide,
     Theme,
     StyleRulesCallback,
+    WithStyles,
 } from '@material-ui/core';
 import { intlShape, injectIntl } from 'react-intl';
 import CloseIcon from '@material-ui/icons/Close';
@@ -28,8 +29,9 @@ import {
 import { TourMap } from '.';
 import EditPlacePanel from './EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
-import { TourEditStore } from './../../Stores';
+import { TourEditStore, RootStore } from './../../Stores';
 import { MapEditModes } from '../../../../backend/src/models/interfaces';
+import { RouteComponentProps } from "react-router";
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     appBar: {
@@ -68,7 +70,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
 });
 
-interface IState {
+interface TourDesignerProps extends WithStyles<typeof styles>, RouteComponentProps<{ sessionId: string }> {
+    intl: { messages, formatMessage };
+    rootStore: RootStore;
+}
+
+interface TourDesignerState {
     uploadImageDialogState: 0 | 1 | 2 | 3;
     isOpenedConfirmDialog: boolean;
     isOpenedDeleteDialog: boolean;
@@ -89,7 +96,7 @@ const TOUR_MAP = 1;
 const PLACE_360 = 2;
 const PLACE_MAP_ICON = 3;
 
-const TourDesigner = inject("rootStore")(observer(class TourDesigner extends React.Component<any, IState> {
+class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState> {
     static propTypes = {
         classes: PropTypes.object.isRequired,
 
@@ -147,8 +154,7 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             const sessionId = this.props.match.params.sessionId;
             this.tourStore.getFromSession(sessionId)
                 .catch(error => {
-                    console.error(error);
-                    this.props.roootStore.showError({
+                    this.props.rootStore.showError({
                         title: "Designer cannot be opened",
                         text: `Session = ${sessionId} is not found`,
                     });
@@ -571,6 +577,6 @@ const TourDesigner = inject("rootStore")(observer(class TourDesigner extends Rea
             </Dialog>
         );
     }
-}));
+}
 
-export default withStyles(styles)(injectIntl(TourDesigner));
+export default inject("rootStore")(observer(withStyles(styles)(injectIntl(TourDesigner))));
