@@ -579,4 +579,4 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
     }
 }
 
-export default inject("rootStore")(observer(withStyles(styles)(injectIntl(TourDesigner))));
+export default withStyles(styles)(injectIntl(inject("rootStore")(observer(TourDesigner))));

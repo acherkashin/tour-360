@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, WithStyles, createStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import {
     Clear as ClearIcon,
     Edit as EditIcon,
@@ -17,6 +17,7 @@ import {
 import { intlShape, injectIntl } from 'react-intl';
 import grey from '@material-ui/core/colors/grey';
 import classnames from 'classnames';
+import PlaceListIcon from './../Common/Lists/Place/PlaceListIcon';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
@@ -28,10 +29,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         color: grey[700],
         lineHeight: 1,
     },
-    icon: {
-        maxWidth: 40,
-        maxHeight: 40,
-    },
     noImageText: {
         textAlign: 'center',
     },
@@ -40,10 +37,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden',
     },
-    iconHolder: {
-        width: 40,
-        height: 40,
-    }
 });
 
 interface IconEditorProps extends WithStyles<typeof styles> {
@@ -103,9 +96,7 @@ class IconEditor extends React.Component<IconEditorProps> {
             subheader={<ListSubheader>{formatMessage(messages.mapIcon)}</ListSubheader>}
         >
             <ListItem>
-                <div className={classes.iconHolder}>
-                    <img className={classes.icon} src={iconUrl} />
-                </div>
+                <PlaceListIcon iconUrl={iconUrl} />
                 {image && <ListItemText
                     classes={{ primary: classes.imageName }}
                     primary={image.filename}

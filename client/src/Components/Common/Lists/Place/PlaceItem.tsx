@@ -6,10 +6,26 @@ import {
     Visibility as VisibilityIcon,
     Edit as EditIcon,
     Delete as DeleteIcon,
+    ThreeSixty as ThreeSixtyIcon,
 } from '@material-ui/icons';
+import PlaceListIcon from './PlaceListIcon';
 import { PlaceDto } from '../../../../../../backend/src/models/interfaces';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
+    root: {
+        '&:hover': {
+            '& $icon': {
+                display: 'none',
+            },
+            '& $openPano': {
+                display: 'block',
+            },
+        }
+    },
+    icon: {},
+    openPano: {
+        display: 'none',
+    }
 });
 
 interface PlaceItemProps extends WithStyles<typeof styles> {
@@ -17,7 +33,7 @@ interface PlaceItemProps extends WithStyles<typeof styles> {
     onViewClick: (e: { origin: PlaceItem, place: PlaceDto }) => void;
     onEditClick: (e: { origin: PlaceItem, place: PlaceDto }) => void;
     onDeleteClick: (e: { origin: PlaceItem, place: PlaceDto }) => void;
-    place: any;
+    place: PlaceDto;
     canDelete: boolean;
     canClick: boolean;
 }
@@ -67,14 +83,17 @@ class PlaceItem extends React.Component<PlaceItemProps> {
     }
 
     render() {
-        const { place, canDelete, canClick } = this.props;
+        const { place, canDelete, canClick, classes } = this.props;
+        const iconUrl = place.mapIcon && place.mapIcon.filename && `/${place.mapIcon.filename}`;
 
         return <ListItem
+            className={classes.root}
             button={canClick}
             onClick={this._handleClick}
         >
-            <IconButton onClick={this._handleViewClick}>
-                <VisibilityIcon />
+            <PlaceListIcon classNames={{ root: classes.icon }} iconUrl={iconUrl} />
+            <IconButton className={classes.openPano} onClick={this._handleViewClick}>
+                <ThreeSixtyIcon />
             </IconButton>
             <ListItemText primary={place.name} />
             <IconButton onClick={this._handleEditClick}>

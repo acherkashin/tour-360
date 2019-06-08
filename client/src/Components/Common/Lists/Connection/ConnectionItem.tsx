@@ -14,6 +14,7 @@ import {
 } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import grey from '@material-ui/core/colors/grey';
+import { ConnectionDetailDto } from '../../../../../../backend/src/models/interfaces';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     coordinateItem: {
@@ -24,11 +25,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 
 interface ConnectionItemProps extends WithStyles<typeof styles> {
     intl: any;
-    connection: any;
-    onClick: (e: { origin: ConnectionItem, connection: any }) => void;
-    onViewClick: (e: { origin: ConnectionItem, connection: any }) => void;
-    onRemoveClick: (e: { origin: ConnectionItem, connection: any }) => void;
-    onEditClick: (e: { origin: ConnectionItem, connection: any }) => void;
+    connection: ConnectionDetailDto;
+    onClick: (e: { origin: ConnectionItem, connection: ConnectionDetailDto }) => void;
+    onViewClick: (e: { origin: ConnectionItem, connection: ConnectionDetailDto }) => void;
+    onRemoveClick: (e: { origin: ConnectionItem, connection: ConnectionDetailDto }) => void;
+    onEditClick: (e: { origin: ConnectionItem, connection: ConnectionDetailDto }) => void;
 }
 
 class ConnectionItem extends React.Component<ConnectionItemProps> {
@@ -96,10 +97,10 @@ class ConnectionItem extends React.Component<ConnectionItemProps> {
                     secondary={
                         <React.Fragment>
                             <Typography component="span" variant="caption" className={classes.coordinateItem}>
-                                {formatMessage(messages.latitude)}: {connection.latitude}
+                                {formatMessage(messages.latitude)}: {connection.latitude.toFixed(0)}
                             </Typography>
                             <Typography component="span" variant="caption" className={classes.coordinateItem}>
-                                {formatMessage(messages.longitude)}: {connection.longitude}
+                                {formatMessage(messages.longitude)}: {connection.longitude.toFixed(0)}
                             </Typography>
                         </React.Fragment>
                     }

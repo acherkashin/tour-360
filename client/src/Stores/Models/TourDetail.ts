@@ -43,6 +43,11 @@ class TourDetail {
         return place;
     }
 
+    getConnectionsByPlaceId(placeId: string) {
+        const connections = (this.connections || []).filter(item => item.startPlace.id === placeId || item.endPlace.id === placeId);
+        return connections;
+    }
+
     updateFromJson(json: TourDetailDto) {
         this.name = json.name;
         this.filename = json.filename;
@@ -64,9 +69,27 @@ class TourDetail {
             place.longitude = json.longitude;
             place.latitude = json.latitude;
             place.name = json.name;
+
+            this.updateConnectionsFromPlace(json);
         }
 
         return place;
+    }
+
+    updateConnectionsFromPlace(json: PlaceDetailDto) {
+        const connections = this.getConnectionsByPlaceId(json.id);
+
+        if (connections && connections.length > 0) {
+            (connections || []).forEach((item) => {
+                if (item.startPlace.id === json.id) {
+                    item.startPlace.longitude = json.longitude;
+                    item.startPlace.latitude = json.latitude;
+                } else if (item.endPlace.id === json.id) {
+                    item.endPlace.longitude = json.longitude;
+                    item.endPlace.latitude = json.latitude;
+                }
+            });
+        }
     }
 
     updateConnectionFromJson(json: ConnectionDto) {
