@@ -1,28 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Toolbar } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 import { getIcon, createError } from './utils';
 import { injectIntl } from 'react-intl';
 
+import ToolBar, { ToolbarItem } from './../Common/Toolbar';
+
 const styles: StyleRulesCallback = (theme: Theme) => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        backgroundColor: grey[100],
-        borderRight: `1px solid ${theme.palette.divider}`,
-    },
-    item: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 50,
-        height: 50,
-        padding: 5,
-        border: `1px solid ${grey[300]}`,
-    }
 });
 
 export interface MapEditModeBarItem {
@@ -33,13 +19,15 @@ export type MapEditMode = 'addPlace' | 'removePlace' | 'addConnection' | 'dragMa
 
 interface MapEditModeBarProps extends WithStyles<typeof styles> {
     intl: any;
-    mapEditModes: MapEditModeBarItem[];
-    onModeChanged: (e: {}) => void;
+    selectedMode: MapEditMode;
+    onModeChanged: (e: { origin: MapEditModeBar, mode: MapEditMode }) => void;
 }
+
+const modes: MapEditMode[] = ['dragMap', 'addPlace', 'removePlace', 'addConnection'];
 
 class MapEditModeBar extends React.Component<MapEditModeBarProps> {
     static propTypes = {
-        mapEditModes: PropTypes.array.isRequired
+        selectedMode: PropTypes.oneOf(modes).isRequired,
     };
 
     getDescription(mode: MapEditMode) {
@@ -59,23 +47,18 @@ class MapEditModeBar extends React.Component<MapEditModeBarProps> {
         }
     }
 
-    renderItem(item: { mode: MapEditMode }) {
-        return <div
-            key={item.mode}
-            title={this.getDescription(item.mode)}
-            className={this.props.classes.item}
-            onClick={(e) => this.props.onModeChanged && this.props.onModeChanged({ origin: this, mode: item.mode })}
-        >
-            <IconButton>{getIcon(item.mode)}</IconButton>
-        </div>;
-    }
-
     render() {
-        const { classes, mapEditModes } = this.props;
+        const items = modes.map(item => ({
+            id: item,
+            title: this.getDescription(item),
+            icon: getIcon(item),
+            isSelected: item === this.props.selectedMode,
+        } as ToolbarItem));
 
-        return <div className={classes.root}>
-            {mapEditModes.map((widget) => this.renderItem(widget))}
-        </div>;
+        return <ToolBar
+            items={items}
+            onItemClick={(e) => this.props.onModeChanged({ origin: this, mode: e.item.id as MapEditMode })}
+        />;
     }
 }
 

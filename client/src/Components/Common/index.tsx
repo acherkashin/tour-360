@@ -7,6 +7,7 @@ import PanoVideoEditor from './PanoVideoEditor';
 import NotificationMessage from './NotificationMessage';
 import Category from './Category';
 import PageWrapper from './PageWrapper';
+import ToolBar from './Toolbar';
 
 export {
     Category,
@@ -18,4 +19,5 @@ export {
     IconEditor,
     NotificationMessage,
     PageWrapper,
+    ToolBar,
 };

@@ -434,12 +434,7 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
                 </AppBar>
                 <div className={classes.content}>
                     <MapEditModeBar
-                        mapEditModes={[
-                            { mode: 'dragMap' },
-                            { mode: 'addPlace' },
-                            { mode: 'removePlace' },
-                            { mode: 'addConnection' }
-                        ]}
+                        selectedMode={mapEditMode}
                         onModeChanged={this._handleModeChanged}
                     />
                     {this._renderMap()}
@@ -455,7 +450,6 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
                             onPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onEditPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onDeletePlaceClick={(e) => this._deletePlaceClick(e.place.id)}
-
                         />
                     </div>}
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>

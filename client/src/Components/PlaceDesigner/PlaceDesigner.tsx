@@ -25,7 +25,7 @@ import {
 import EditPlacePanel from '../TourDesigner/EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { CoordinateSystem } from '.';
-import { 
+import {
     TextWidget,
     EditTextWidgetPanel,
     RunVideoEditPanel,
@@ -39,7 +39,8 @@ import {
     BaseWidget,
     TextWidget as ITextWidget,
     RunVideoWidget as IRunVideoWidget,
-    HintWidget as IHintWidget
+    HintWidget as IHintWidget,
+    WidgetType
 } from '../../../../backend/src/models/interfaces';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
@@ -85,6 +86,7 @@ interface PlaceDesignerProps extends WithStyles<typeof styles> {
 }
 
 interface PlaceDesignerState {
+    selectedWidget: WidgetType;
     isOpenedPreviewDialog: boolean;
     isOpenedConfirmDialog: boolean;
     isOpenedPlaceDescriptionDialog: boolean;
@@ -123,6 +125,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleCloseDescriptionDialog = this._handleCloseDescriptionDialog.bind(this);
 
             this.state = {
+                selectedWidget: 'text',
                 isOpenedPreviewDialog: false,
                 isOpenedConfirmDialog: false,
                 isOpenedPlaceDescriptionDialog: false,
@@ -405,8 +408,9 @@ const PlaceDesigner = inject("rootStore")(observer(
                 </AppBar>
                 <div className={classes.content}>
                     {this.editingPlace.mapImage360Url && <WidgetBar
-                        widgets={[{ type: 'text' }, { type: 'run-video' }, { type: 'hint' }]}
+                        selectedWidget={this.state.selectedWidget}
                         onWidgetClick={(e) => {
+                            this.setState({ selectedWidget: e.type })
                             this.placeEditStore.addWidget(e.type);
                         }}
                     />}
