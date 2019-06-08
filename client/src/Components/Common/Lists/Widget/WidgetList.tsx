@@ -9,13 +9,13 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
-import { WidgetItem } from '.';
+import { WidgetItem } from '../..';
 import {
     BaseWidget,
     TextWidget as ITextWidget,
     RunVideoWidget as IRunVideoWidget,
     HintWidget as IHintWidget
-} from '../../../../backend/src/models/interfaces';
+} from '../../../../../../backend/src/models/interfaces';
 
 const styles = theme => ({
     root: {

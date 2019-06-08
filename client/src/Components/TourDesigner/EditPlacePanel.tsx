@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { TextField, Button, Theme, StyleRulesCallback } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import ConnectionList from './ConnectionList';
+import ConnectionList from '../Common/Lists/Connection/ConnectionList';
 import { EditImage } from './../';
 import { EditPlace } from './../../Stores'
 import SoundEditor from './SoundEditor';

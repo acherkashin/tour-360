@@ -7,7 +7,7 @@ import NoToursPlaceholder from './NoToursPlaceholder';
 import PlaceholderButton from './PlaceholderButton';
 import EditImage from './EditImage';
 import LoadingButton from './LoadingButton';
-import PlaceList from './PlaceList';
+import PlaceList from './Common/Lists/Place/PlaceList';
 
 export {
     Header,

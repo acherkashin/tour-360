@@ -7,15 +7,16 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon,
 } from '@material-ui/icons';
+import { PlaceDto } from '../../../../../../backend/src/models/interfaces';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
 });
 
 interface PlaceItemProps extends WithStyles<typeof styles> {
-    onClick: (e: { origin: PlaceItem, place: any }) => void;
-    onViewClick: (e: { origin: PlaceItem, place: any }) => void;
-    onEditClick: (e: { origin: PlaceItem, place: any }) => void;
-    onDeleteClick: (e: { origin: PlaceItem, place: any }) => void;
+    onClick: (e: { origin: PlaceItem, place: PlaceDto }) => void;
+    onViewClick: (e: { origin: PlaceItem, place: PlaceDto }) => void;
+    onEditClick: (e: { origin: PlaceItem, place: PlaceDto }) => void;
+    onDeleteClick: (e: { origin: PlaceItem, place: PlaceDto }) => void;
     place: any;
     canDelete: boolean;
     canClick: boolean;

@@ -16,6 +16,7 @@ export interface PlaceDto {
     image360Width: number;
     image360Height: number;
     image360Name: string;
+    mapIcon?: ImageFile;
 }
 
 export interface PlaceDetailDto {

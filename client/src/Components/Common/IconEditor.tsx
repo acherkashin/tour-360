@@ -119,13 +119,13 @@ class IconEditor extends React.Component<IconEditorProps> {
                             </Typography>
                         </React.Fragment>
                     } />}
-                {!image && <ListItemText classes={{ root: classes.noImageText }} primary={formatMessage(messages.iconNotSelected)} />}
                 {image && <IconButton onClick={(e) => onEditClick({ origin: this, })}>
                     <EditIcon />
                 </IconButton>}
                 {image && <IconButton onClick={(e) => onClearClick({ origin: this, })}>
                     <ClearIcon />
                 </IconButton>}
+                {!image && <ListItemText classes={{ root: classes.noImageText }} primary={formatMessage(messages.iconNotSelected)} />}
                 {!image && <IconButton onClick={(e) => onUploadClick({ origin: this, })}>
                     <UploadIcon />
                 </IconButton>}

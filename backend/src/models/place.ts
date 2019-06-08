@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Place, Tour, TourDetailDto, PlaceDetailDto } from "./interfaces";
+import { Place, Tour, TourDetailDto, PlaceDetailDto, PlaceDto } from "./interfaces";
 // const Widget = new mongoose.Schema({
 //     type: { type: String, required: true },
 // });
@@ -37,7 +37,7 @@ PlaceSchema.methods.getWidget = function (widgetId) {
 };
 
 PlaceSchema.methods.toClient = function () {
-    const dto = {
+    const dto: PlaceDto = {
         id: this.id,
         name: this.name,
         latitude: this.latitude,
@@ -46,6 +46,7 @@ PlaceSchema.methods.toClient = function () {
         image360Width: this.image360 && this.image360.width,
         image360Height: this.image360 && this.image360.height,
         image360Name: this.image360 && this.image360.filename,
+        mapIcon: this.mapIcon,
     };
 
     return dto;
@@ -55,7 +56,7 @@ PlaceSchema.methods.toDetailDto = function (tour: Tour): PlaceDetailDto {
     const starts = (tour.connections || []).filter(c => c.startPlaceId === this.id).map(c => c.endAsDestination(tour));
     const ends = (tour.connections || []).filter(c => c.endPlaceId === this.id).map(c => c.startAsDestination(tour));
 
-    const dto = {
+    const dto: PlaceDetailDto = {
         id: this.id,
         name: this.name,
         latitude: this.latitude,
