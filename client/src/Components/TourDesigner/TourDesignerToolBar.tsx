@@ -1,36 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
-import { IconButton, Toolbar } from '@material-ui/core';
-import { grey } from '@material-ui/core/colors';
 import { getIcon, createError } from './utils';
 import { injectIntl } from 'react-intl';
 
-import ToolBar, { ToolbarItem } from './../Common/Toolbar';
+import ToolBar, { ToolbarItem } from '../Common/Toolbar';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
 });
 
 export interface MapEditModeBarItem {
-    mode: MapEditMode;
+    mode: ToolDesignerToolBarItemType;
 }
 
-export type MapEditMode = 'addPlace' | 'removePlace' | 'addConnection' | 'dragMap';
+export type ToolDesignerToolBarItemType = 'addPlace' | 'removePlace' | 'addConnection' | 'dragMap';
 
-interface MapEditModeBarProps extends WithStyles<typeof styles> {
+interface TourDesignerToolBarProps extends WithStyles<typeof styles> {
     intl: any;
-    selectedMode: MapEditMode;
-    onModeChanged: (e: { origin: MapEditModeBar, mode: MapEditMode }) => void;
+    selectedMode: ToolDesignerToolBarItemType;
+    onModeChanged: (e: { origin: TourDesignerToolBar, mode: ToolDesignerToolBarItemType }) => void;
 }
 
-const modes: MapEditMode[] = ['dragMap', 'addPlace', 'removePlace', 'addConnection'];
+const modes: ToolDesignerToolBarItemType[] = ['dragMap', 'addPlace', 'removePlace', 'addConnection'];
 
-class MapEditModeBar extends React.Component<MapEditModeBarProps> {
+class TourDesignerToolBar extends React.Component<TourDesignerToolBarProps> {
     static propTypes = {
         selectedMode: PropTypes.oneOf(modes).isRequired,
     };
 
-    getDescription(mode: MapEditMode) {
+    getDescription(mode: ToolDesignerToolBarItemType) {
         const { messages, formatMessage } = this.props.intl;
 
         switch (mode) {
@@ -57,9 +55,9 @@ class MapEditModeBar extends React.Component<MapEditModeBarProps> {
 
         return <ToolBar
             items={items}
-            onItemClick={(e) => this.props.onModeChanged({ origin: this, mode: e.item.id as MapEditMode })}
+            onItemClick={(e) => this.props.onModeChanged({ origin: this, mode: e.item.id as ToolDesignerToolBarItemType })}
         />;
     }
 }
 
-export default withStyles(styles)(injectIntl(MapEditModeBar));
+export default withStyles(styles)(injectIntl(TourDesignerToolBar));

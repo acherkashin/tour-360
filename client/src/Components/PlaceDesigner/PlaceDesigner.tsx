@@ -12,7 +12,7 @@ import {
 import {
     Close as CloseIcon,
 } from '@material-ui/icons';
-import { intlShape, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { LoadingButton } from '..'
 import { Texture, NoPlacePlaceholder, WidgetBar } from '.';
 import {
@@ -40,8 +40,8 @@ import {
     TextWidget as ITextWidget,
     RunVideoWidget as IRunVideoWidget,
     HintWidget as IHintWidget,
-    WidgetType
 } from '../../../../backend/src/models/interfaces';
+import { PlaceDesignerToolBarItemType } from './PlaceDesignerToolBar';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {},
@@ -86,7 +86,7 @@ interface PlaceDesignerProps extends WithStyles<typeof styles> {
 }
 
 interface PlaceDesignerState {
-    selectedWidget: WidgetType;
+    selectedMode: PlaceDesignerToolBarItemType;
     isOpenedPreviewDialog: boolean;
     isOpenedConfirmDialog: boolean;
     isOpenedPlaceDescriptionDialog: boolean;
@@ -125,7 +125,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleCloseDescriptionDialog = this._handleCloseDescriptionDialog.bind(this);
 
             this.state = {
-                selectedWidget: 'text',
+                selectedMode: 'selection',
                 isOpenedPreviewDialog: false,
                 isOpenedConfirmDialog: false,
                 isOpenedPlaceDescriptionDialog: false,
@@ -340,10 +340,21 @@ const PlaceDesigner = inject("rootStore")(observer(
                         height={HEIGHT}
                         stepX={200}
                         stepY={100}
+                        onClick={this._handleCoordinateSystemClick}
                     />
                     {this.editingPlace.widgets && this.editingPlace.widgets.map((item) => this._renderWidget(item))}
                 </div>}
             </>;
+        }
+
+        _handleCoordinateSystemClick = (e: { x: number, y: number }) => {
+            console.log(e);
+            
+            if (this.state.selectedMode === 'selection') {
+                return;
+            }
+
+            this.placeEditStore.addWidget(this.state.selectedMode);
         }
 
         _handleTextureLoaded() {
@@ -408,11 +419,8 @@ const PlaceDesigner = inject("rootStore")(observer(
                 </AppBar>
                 <div className={classes.content}>
                     {this.editingPlace.mapImage360Url && <WidgetBar
-                        selectedWidget={this.state.selectedWidget}
-                        onWidgetClick={(e) => {
-                            this.setState({ selectedWidget: e.type })
-                            this.placeEditStore.addWidget(e.type);
-                        }}
+                        selectedWidget={this.state.selectedMode}
+                        onWidgetClick={(e) => this.setState({ selectedMode: e.type })}
                     />}
                     <div className={classes.surfaceWrapper} ref={this.surfaceWrapperRef} onClick={this._handleSurfaceWrapperClick}>
                         {this.editingPlace.mapImage360Url && this._renderSurface()}

@@ -17,7 +17,7 @@ import { intlShape, injectIntl } from 'react-intl';
 import CloseIcon from '@material-ui/icons/Close';
 import EditTourPanel from './EditTourPanel';
 import EditConnectionPanel from './EditConnectionPanel';
-import MapEditModeBar from './MapEditModeBar';
+import MapEditModeBar from './TourDesignerToolBar';
 import { PlaceholderButton, LoadingButton } from '..';
 import {
     UploadImageDialog,

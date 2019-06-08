@@ -5,9 +5,9 @@ import {
     CallMade as AddConnection,
     PanTool as DragMapIcon
 } from '@material-ui/icons';
-import { MapEditMode } from './MapEditModeBar';
+import { ToolDesignerToolBarItemType } from './TourDesignerToolBar';
 
-export function getIcon(mapEditMode: MapEditMode) {
+export function getIcon(mapEditMode: ToolDesignerToolBarItemType) {
     switch (mapEditMode) {
         case 'addPlace':
             return <AddPlaceIcon />

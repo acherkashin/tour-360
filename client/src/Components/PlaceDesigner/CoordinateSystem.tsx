@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import { WIDTH, HEIGHT, getScreenX, getScreenY } from './utils';
 
 const MAIN_AXIS_WEIGHT = 3;
 
-const styles = (theme) => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         width: WIDTH,
         height: HEIGHT,
@@ -43,16 +43,28 @@ const styles = (theme) => ({
     },
     label: {
         position: 'absolute',
-        layoutOrigin: [-0.5, 0.5],
+        // layoutOrigin: [-0.5, 0.5],
     }
 });
 
-class CoordinateSystem extends React.Component {
-    constructor(props) {
-        super(props);
+interface CoordinateSystemProps extends WithStyles<typeof styles> {
+    className?: string;
+    onClick: (e: {
+        origin: CoordinateSystem,
+        x: number,
+        y: number,
+    }) => void;
+    width?: number;
+    height?: number;
+    stepX?: number;
+    stepY?: number;
+}
 
-        this._handleClick = this._handleClick.bind(this);
-    }
+class CoordinateSystem extends React.Component<CoordinateSystemProps> {
+    static propTypes = {
+        className: PropTypes.string,
+        onClick: PropTypes.func,
+    };
 
     getPositionsX() {
         const {
@@ -86,9 +98,13 @@ class CoordinateSystem extends React.Component {
         return positions;
     }
 
-    _handleClick() {
-        this.props.onClick && this.props.onClick({ origin: this });
-    }
+    _handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        this.props.onClick && this.props.onClick({
+            origin: this,
+            x: e.pageX,
+            y: e.pageY,
+        });
+    };
 
     render() {
         const positionsX = this.getPositionsX();
@@ -102,7 +118,7 @@ class CoordinateSystem extends React.Component {
         });
 
         return (
-            <div className={root} onClick={() => onClick && onClick()}>
+            <div className={root} onClick={this._handleClick}>
                 <div className={`${classes.axis} ${classes.axisX}`} style={{ top: getScreenY(0) }} />
                 {positionsX.map((left) => <div key={`x_${left}`} className={`${classes.axis} ${classes.lineX}`} style={{ left: getScreenX(left) }} />)}
                 {positionsX.map((left) => <span key={`label_x_${left}`} className={classes.label} style={{ left: getScreenX(left) + 5, top: getScreenY(0) + 5 }}>{left}</span>)}
@@ -113,12 +129,5 @@ class CoordinateSystem extends React.Component {
         );
     }
 }
-
-CoordinateSystem.propTypes = {
-    classes: PropTypes.object.isRequired,
-    className: PropTypes.string,
-
-    onClick: PropTypes.func,
-};
 
 export default withStyles(styles)(CoordinateSystem);

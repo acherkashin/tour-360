@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import equirectToCubemapFaces from 'equirect-cubemap-faces-js';
 import { CircularProgress } from '@material-ui/core';
 
 const CUBE_SIZE = 1170;
 
-const styles = theme => ({
+const styles = (theme: Theme) => ({
     root: {
     },
     rootLoading: {
@@ -22,16 +22,30 @@ const styles = theme => ({
     },
 });
 
-function loadImage(src) {
+function loadImage(src: string) {
     return new Promise((resolve, reject) => {
-        var i = new Image();
+        const i = new Image();
         i.onload = () => resolve(i);
         i.onerror = reject;
         i.src = src;
     });
 }
 
-class Texture extends React.Component {
+interface TextureProps extends WithStyles<typeof styles> {
+    imageUrl: string;
+    onLoading: (e: { origin: Texture }) => void;
+    onLoaded: (e: { origin: Texture, }) => void;
+    onClick: (e: {
+        origin: Texture,
+        x: number,
+        y: number,
+    }) => void;
+}
+
+class Texture extends React.Component<TextureProps, { isLoaded: boolean }> {
+    rootRef = React.createRef<HTMLDivElement>();
+    canvasRef = React.createRef<HTMLCanvasElement>();
+
     constructor(props) {
         super(props);
 
@@ -39,11 +53,17 @@ class Texture extends React.Component {
             isLoaded: false,
         };
 
-        this.rootRef = React.createRef();
-        this.canvasRef = React.createRef();
-
         this._handleClick = this._handleClick.bind(this);
     }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        imageUrl: PropTypes.string.isRequired,
+
+        onLoading: PropTypes.func,
+        onLoaded: PropTypes.func,
+        onClick: PropTypes.func,
+    };
 
     _updateImage() {
         const { imageUrl, onLoaded, onLoading } = this.props;
@@ -97,8 +117,12 @@ class Texture extends React.Component {
         }
     }
 
-    _handleClick() {
-        this.props.onClick && this.props.onClick({ origin: this });
+    _handleClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        this.props.onClick && this.props.onClick({
+            origin: this,
+            x: e.pageX,
+            y: e.pageY,
+        });
     }
 
     render() {
@@ -115,15 +139,6 @@ class Texture extends React.Component {
             </div>;
         }
     }
-}
-
-Texture.propTypes = {
-    classes: PropTypes.object.isRequired,
-    imageUrl: PropTypes.string.isRequired,
-
-    onLoading: PropTypes.func,
-    onLoaded: PropTypes.func,
-    onClick: PropTypes.func,
 }
 
 export default withStyles(styles)(Texture);
