@@ -328,34 +328,39 @@ const PlaceDesigner = inject("rootStore")(observer(
             const classes: any = this.props.classes;
             const { textureIsLoaded } = this.state;
 
-            return <>
-                <Texture
-                    onClick={() => this.placeEditStore.completeEditWidget()}
-                    imageUrl={this.editingPlace && this.editingPlace.mapImage360Url}
-                    onLoaded={this._handleTextureLoaded}
-                    onLoading={this._hanldeTextureLoading} />
+            return <Texture
+                onClick={this._handleTextureClick}
+                imageUrl={this.editingPlace && this.editingPlace.mapImage360Url}
+                onLoaded={this._handleTextureLoaded}
+                onLoading={this._hanldeTextureLoading}>
                 {textureIsLoaded && <div className={classes.widgetArea}>
                     <CoordinateSystem
                         width={WIDTH}
                         height={HEIGHT}
                         stepX={200}
                         stepY={100}
-                        onClick={this._handleCoordinateSystemClick}
                     />
                     {this.editingPlace.widgets && this.editingPlace.widgets.map((item) => this._renderWidget(item))}
                 </div>}
-            </>;
+            </Texture>;
         }
 
-        _handleCoordinateSystemClick = (e: { x: number, y: number }) => {
+        _handleTextureClick = (e) => {
             console.log(e);
-            
+
+            this.placeEditStore.completeEditWidget();
+
             if (this.state.selectedMode === 'selection') {
                 return;
             }
 
-            this.placeEditStore.addWidget(this.state.selectedMode);
-        }
+            this.placeEditStore.addWidget({
+                id: undefined,
+                x: e.x,
+                y: e.y,
+                type: this.state.selectedMode,
+            });
+        };
 
         _handleTextureLoaded() {
             this.setState({ textureIsLoaded: true });

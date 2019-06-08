@@ -15,3 +15,11 @@ export function getScreenX(x: number) {
 export function getScreenY(y: number) {
     return - y + HEIGHT / 2;
 }
+
+export function getX(screenX: number) {
+    return screenX - WIDTH / 2;
+}
+
+export function getY(screenY: number) {
+    return 1170 / 2 - screenY;
+}

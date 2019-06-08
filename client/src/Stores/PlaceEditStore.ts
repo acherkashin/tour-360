@@ -31,8 +31,8 @@ export default class PlaceEditStore {
         return this.saveResult && this.saveResult.state === "pending";
     }
 
-    addWidget(type: WidgetType) {
-        PlaceEditService.addWidget(this.sessionId, type).then((resp) => {
+    addWidget(widget: BaseWidget) {
+        PlaceEditService.addWidget(this.sessionId, widget).then((resp) => {
             const { place, widgetId } = resp.data;
             this.editingPlace.updateFromJson(place);
             this.editWidget(widgetId);

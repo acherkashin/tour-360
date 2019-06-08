@@ -61,11 +61,11 @@ export function startEditing(req, res) {
 
 export function addWidget(req: Request, res: Response) {
     const { sessionId } = req.params;
-    const { type } = req.body;
+    const { type, x, y } = req.body;
     let { place, tourSessionId } = cache[sessionId];
     const tour = _cache[tourSessionId];
 
-    const widget = createWidget(type);
+    const widget = createWidget(type, x, y);
     place.widgets.push(widget);
 
     res.json({
@@ -150,12 +150,12 @@ export function removeRunVideo(req: Request, res: Response) {
     }
 }
 
-function createWidget(type: WidgetType) {
+function createWidget(type: WidgetType, x: number, y: number) {
     if (type === 'text') {
         const textWidget: TextWidget = {
             id: uuidv1(),
-            x: 0,
-            y: 0,
+            x,
+            y,
             content: '[Enter your text]',
             type,
             color: '#000000',
@@ -166,8 +166,8 @@ function createWidget(type: WidgetType) {
     } else if (type === 'run-video') {
         const runVideo: RunVideoWidget = {
             id: uuidv1(),
-            x: 0,
-            y: 0,
+            x,
+            y,
             name: 'Video Widget',
             muted: false,
             type,
@@ -178,8 +178,8 @@ function createWidget(type: WidgetType) {
     } else if (type === 'hint') {
         const hintWidget: HintWidget = {
             id: uuidv1(),
-            x: 0,
-            y: 0,
+            x,
+            y,
             content: '[Enter your text]',
             type
         };

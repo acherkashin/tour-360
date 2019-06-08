@@ -49,11 +49,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 
 interface CoordinateSystemProps extends WithStyles<typeof styles> {
     className?: string;
-    onClick: (e: {
-        origin: CoordinateSystem,
-        x: number,
-        y: number,
-    }) => void;
     width?: number;
     height?: number;
     stepX?: number;
@@ -63,7 +58,6 @@ interface CoordinateSystemProps extends WithStyles<typeof styles> {
 class CoordinateSystem extends React.Component<CoordinateSystemProps> {
     static propTypes = {
         className: PropTypes.string,
-        onClick: PropTypes.func,
     };
 
     getPositionsX() {
@@ -98,19 +92,11 @@ class CoordinateSystem extends React.Component<CoordinateSystemProps> {
         return positions;
     }
 
-    _handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        this.props.onClick && this.props.onClick({
-            origin: this,
-            x: e.pageX,
-            y: e.pageY,
-        });
-    };
-
     render() {
         const positionsX = this.getPositionsX();
         const positionsY = this.getPositionsY();
 
-        const { classes, className, onClick } = this.props;
+        const { classes, className } = this.props;
 
         const root = classNames({
             [className]: !!className,
@@ -118,7 +104,7 @@ class CoordinateSystem extends React.Component<CoordinateSystemProps> {
         });
 
         return (
-            <div className={root} onClick={this._handleClick}>
+            <div className={root}>
                 <div className={`${classes.axis} ${classes.axisX}`} style={{ top: getScreenY(0) }} />
                 {positionsX.map((left) => <div key={`x_${left}`} className={`${classes.axis} ${classes.lineX}`} style={{ left: getScreenX(left) }} />)}
                 {positionsX.map((left) => <span key={`label_x_${left}`} className={classes.label} style={{ left: getScreenX(left) + 5, top: getScreenY(0) + 5 }}>{left}</span>)}

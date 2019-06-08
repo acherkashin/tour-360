@@ -4,6 +4,7 @@ import { VR_URL } from '../config';
 import {
     PlaceDetailDto,
     RunVideoWidget,
+    BaseWidget,
 } from "./../../../backend/src/models/interfaces";
 
 export function beginEditing(tourId: string, placeId: string) {
@@ -24,8 +25,13 @@ export function cancelChanges(sessionId: string) {
 export function saveChanges(sessionId: string, place: PlaceDetailDto) {
     return client.post<{ sessionId: string, tourSessionId: string, place: PlaceDetailDto }>(`/api/place-edit/${sessionId}/save`, place);
 }
-export function addWidget(sessionId: string, type: string) {
-    return client.post<{ sessionId: string, tourSessionId: string, place: PlaceDetailDto, widgetId: string }>(`/api/place-edit/${sessionId}/addWidget`, { type });
+export function addWidget(sessionId: string, widget: BaseWidget) {
+    return client.post<{
+        sessionId: string,
+        tourSessionId: string,
+        place: PlaceDetailDto,
+        widgetId: string
+    }>(`/api/place-edit/${sessionId}/addWidget`, widget);
 }
 export function getPanoUrl(sessionId: string, placeId: string, token: string) {
     return `${VR_URL}?placeSessionId=${sessionId}&placeId=${placeId}&token=${token}`;

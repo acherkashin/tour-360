@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import equirectToCubemapFaces from 'equirect-cubemap-faces-js';
 import { CircularProgress } from '@material-ui/core';
-
+import { getX, getY } from './utils';
 const CUBE_SIZE = 1170;
 
 const styles = (theme: Theme) => ({
@@ -29,6 +29,14 @@ function loadImage(src: string) {
         i.onerror = reject;
         i.src = src;
     });
+}
+
+function getMousePos(canvas: HTMLElement, e: { clientX: number, clientY: number }) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
 }
 
 interface TextureProps extends WithStyles<typeof styles> {
@@ -118,11 +126,9 @@ class Texture extends React.Component<TextureProps, { isLoaded: boolean }> {
     }
 
     _handleClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        this.props.onClick && this.props.onClick({
-            origin: this,
-            x: e.pageX,
-            y: e.pageY,
-        });
+        const { x, y } = getMousePos(this.rootRef.current, e);
+
+        this.props.onClick && this.props.onClick({ origin: this, x: getX(x), y: getY(y) });
     }
 
     render() {
@@ -132,6 +138,7 @@ class Texture extends React.Component<TextureProps, { isLoaded: boolean }> {
         if (isLoaded) {
             return <div className={classes.root} ref={this.rootRef} style={{ width: CUBE_SIZE * 4, height: CUBE_SIZE }} onClick={this._handleClick}>
                 <canvas width={CUBE_SIZE * 4} height={CUBE_SIZE} ref={this.canvasRef} className={classes.canvas}></canvas>
+                {this.props.children}
             </div>;
         } else {
             return <div className={classes.rootLoading}>
