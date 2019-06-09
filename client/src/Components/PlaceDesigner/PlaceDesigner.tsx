@@ -346,8 +346,6 @@ const PlaceDesigner = inject("rootStore")(observer(
         }
 
         _handleTextureClick = (e) => {
-            console.log(e);
-
             this.placeEditStore.completeEditWidget();
 
             if (this.state.selectedMode === 'selection') {

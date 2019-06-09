@@ -30,7 +30,7 @@ const styles = createStyles({
 interface RunVideoWidgetProps extends WithStyles<typeof styles> {
     isSelected: boolean;
     widget: RunVideoWidgetModel;
-    onClick: ({ origin: RunVideoWidget, widget: RunVideoWidgetModel }) => void;
+    onClick: (e: { origin: RunVideoWidget, widget: RunVideoWidgetModel }) => void;
 }
 
 class RunVideoWidget extends React.Component<RunVideoWidgetProps> {
