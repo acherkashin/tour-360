@@ -150,7 +150,7 @@ export default class TourEditStore {
             this._clearEditingPlace();
             this.isDirty = false;
             this.editingTourDisposer && this.editingTourDisposer();
-        }))
+        }));
     }
 
     saveChanges() {

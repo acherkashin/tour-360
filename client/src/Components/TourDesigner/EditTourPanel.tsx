@@ -161,7 +161,7 @@ class EditTourPanel extends React.Component<EditTourPanelProps> {
                 title={formatMessage(messages.editTourPanelIsPublicDescription)}
             />
             <TextField
-                label={formatMessage(messages.editTourPanelTourName)}
+                label={formatMessage(messages.editTourPanelDescription)}
                 multiline
                 rows={4}
                 rowsMax={6}

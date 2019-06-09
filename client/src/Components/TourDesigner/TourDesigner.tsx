@@ -149,6 +149,7 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
             this.tourStore.getFromSession(sessionId)
                 .catch(error => {
                     this.props.rootStore.showError({
+                        //TODO: move to en.js
                         title: "Designer cannot be opened",
                         text: `Session = ${sessionId} is not found`,
                     });
@@ -258,7 +259,15 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
         if (this.tourStore.isDirty) {
             this.setState({ isOpenedConfirmDialog: true });
         } else {
-            this.tourStore.cancelEditing();
+            this.tourStore.cancelEditing().catch((error) => {
+                console.error(error);
+                this.props.rootStore.showError({
+                    //TODO: move to ru.js
+                    text: 'Произошла ошибка во время закрытия дизайнера',
+                });
+            }).finally(() => {
+                this.tourStore.editingPlace = null;
+            });
         }
     }
 

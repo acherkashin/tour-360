@@ -5,10 +5,14 @@ import { observer, inject } from 'mobx-react';
 import { TourMap } from "../Components/TourDesigner";
 import { InfoPanel } from "../Components";
 import { requireAuth } from '../HOC';
-import { RootStore } from '../Stores';
+import { RootStore, UserStore } from '../Stores';
 import { RouteComponentProps } from 'react-router';
-import { IconButton } from '@material-ui/core';
-import { ThreeSixty } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@material-ui/core';
+import {
+    ThreeSixty as ThreeSixtyIcon,
+    Code as CodeIcon,
+} from '@material-ui/icons';
+import { PlaceService } from '../api';
 
 const styles = (theme: Theme) => ({
     root: {
@@ -28,6 +32,14 @@ const styles = (theme: Theme) => ({
 
 interface ViewMapPageProps extends WithStyles<typeof styles>, RouteComponentProps<{ tourId: string }> {
     rootStore: RootStore;
+}
+
+function getCurrentUrl(): string {
+    const url = window.location.href;
+    const arr = url.split("/");
+    const result = arr[0] + "//" + arr[2]
+
+    return result;
 }
 
 class ViewMapPage extends React.Component<ViewMapPageProps> {
@@ -73,11 +85,18 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
                     this.store.clearSelectedPlace();
                 }}
             />
-            {!this.selectedPlace && <InfoPanel 
+            {!this.selectedPlace && <InfoPanel
                 classNames={{ root: classes.infoPanel }}
                 imageUrl={this.tour.imageUrl}
                 title={this.tour.name}
                 description={this.tour.description}
+                titleChildren={
+                    <Tooltip title={"Скопируйте код для добавления карты на ваш сайт"}>
+                        <IconButton onClick={() => navigator.clipboard.writeText(`<iframe src="${getCurrentUrl()}/tour/${this.tour.id}/view-tour"></iframe>`)}>
+                            <CodeIcon />
+                        </IconButton>
+                    </Tooltip>
+                }
             />}
             {this.selectedPlace && <InfoPanel
                 classNames={{ root: classes.infoPanel }}
@@ -85,9 +104,16 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
                 title={this.selectedPlace.name}
                 description={this.selectedPlace.description}
                 titleChildren={
-                    <IconButton onClick={() => this.tour.viewPlacePano(this.selectedPlace.id)}>
-                        <ThreeSixty />
-                    </IconButton>
+                    <div>
+                        <Tooltip title={"Скопируйте код для добавления панорамы на ваш сайт"}>
+                            <IconButton onClick={() => navigator.clipboard.writeText(`<iframe src="${PlaceService.getPanoUrl(this.tour.id, this.selectedPlace.id, UserStore.getToken())}"></iframe>`)}>
+                                <CodeIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <IconButton onClick={() => this.tour.viewPlacePano(this.selectedPlace.id)}>
+                            <ThreeSixtyIcon />
+                        </IconButton>
+                    </div>
                 }
             />}
         </div>;
