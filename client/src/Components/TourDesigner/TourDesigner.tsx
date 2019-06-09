@@ -196,10 +196,6 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
         this.editingTour.isPublic = e.isPublic;
     }
 
-    _handleViewImage360Click() {
-
-    }
-
     /* Confirm Save Dialog */
     _handleOkConfirmClick() {
         this.tourStore.saveChanges().then(() => {

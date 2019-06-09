@@ -42,6 +42,20 @@ export default class PublicToursStore {
 
         return tour;
     }
+
+    viewMap(tourId: string) {
+        window.open(`/tour/${tourId}/view-tour`);
+    }
+
+    viewPlacePano(tourId: string, placeId?: string) {
+        const tour = this._getById(tourId);
+        tour.viewPlacePano(placeId);
+    }
+
+    _getById(id) {
+        const tour = this.tours.find(t => t.id === id);
+        return tour;
+    }
 }
 
 decorate(PublicToursStore, {

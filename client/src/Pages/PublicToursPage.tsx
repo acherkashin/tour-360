@@ -1,12 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core'
 import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import { injectIntl } from 'react-intl';
 import { observer, inject } from 'mobx-react';
-import { requireAuth } from '../HOC';
 import { PageWrapper } from './../Components/Common';
 import { Tours } from './../Components';
+import {
+    Visibility as VisibilityIcon,
+    Map as MapIcon,
+} from '@material-ui/icons';
 import { PublicToursStore, RootStore, Tour } from './../Stores';
 import { grey } from "@material-ui/core/colors";
 
@@ -54,6 +56,30 @@ class PublicToursPage extends React.Component<PublicToursPageProps, PublicToursP
         this.tourStore.selectTour(e.tour.id);
     }
 
+    _getActions = (e: { tour: Tour }) => {
+        const { messages, formatMessage } = this.props.intl;
+
+        const actions = [{
+            icon: <MapIcon />,
+            text: formatMessage(messages.toursPageTourMap),
+            action: (e) => {
+                this.tourStore.viewMap(e.tour.id);
+            }
+        }];
+
+        if (e.tour.startPlaceId) {
+            actions.push({
+                icon: <VisibilityIcon />,
+                text: formatMessage(messages.view),
+                action: (e) => {
+                    this.tourStore.viewPlacePano(e.tour.id);
+                }
+            });
+        }
+
+        return actions;
+    }
+
     render() {
         const { formatMessage, messages } = this.props.intl;
         const { selectedTour, tours, hasTours } = this.tourStore;
@@ -68,7 +94,7 @@ class PublicToursPage extends React.Component<PublicToursPageProps, PublicToursP
                         selectedTourId={selectedTour && selectedTour.id}
                         tours={tours}
                         onItemClick={this._handleTourItemClick}
-                        getActions={(e) => []}
+                        getActions={this._getActions}
                     />}
                     {!hasTours && <Typography className={classes.noTours}>{formatMessage(messages.publicToursPageNoToursLabel)}</Typography>}
                 </div>

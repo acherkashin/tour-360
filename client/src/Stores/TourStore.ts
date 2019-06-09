@@ -54,7 +54,7 @@ export default class TourStore {
         });
     }
 
-    updateCover = action((id, file) => {
+    updateCover = action((id: string, file: File) => {
         return TourService.uploadCover(id, file).then((resp) => {
             runInAction(() => {
                 this.loadTours();
@@ -63,18 +63,13 @@ export default class TourStore {
         });
     });
 
-    viewMap(tourId) {
+    viewMap(tourId: string) {
         window.open(`/tour/${tourId}/view-tour`);
     }
 
-    //TODO: rename to view360 or viewPlace
-    view(tourId: string, placeId?: string) {
+    viewPlacePano(tourId: string, placeId?: string) {
         const tour = this._getById(tourId);
-        if (!placeId && tour != null) {
-            placeId = tour.startPlaceId;
-        }
-        const url = PlaceService.getPanoUrl(tourId, placeId, UserStore.getToken());
-        window.open(url);
+        tour.viewPlacePano(placeId);
     }
 
     _getById(id) {

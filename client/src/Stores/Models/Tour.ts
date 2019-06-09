@@ -2,6 +2,8 @@ import { decorate, observable, computed, action } from "mobx";
 import {
     TourDto,
 } from "./../../../../backend/src/models/interfaces";
+import { PlaceService } from "../../api";
+import { UserStore } from "..";
 
 class Tour {
     readonly id: string;
@@ -33,6 +35,15 @@ class Tour {
         this.isPublic = json.isPublic;
         this.authorId = json.authorId;
         this.authorFullName = json.authorFullName;
+    }
+
+    viewPlacePano(placeId?: string) {
+        if (!placeId) {
+            placeId = this.startPlaceId;
+        }
+
+        const url = PlaceService.getPanoUrl(this.id, placeId, UserStore.getToken());
+        window.open(url);
     }
 
     refreshCover() {

@@ -88,9 +88,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         const { messages, formatMessage } = this.props.intl;
         const auth = this.userStore.siggnedIn;
         const open = Boolean(anchorEl);
-        const isPublicTours = this.props.location.pathname === '/public-tours';
-        const isTours = this.props.location.pathname === '/tours';
-        const isSignIn = this.props.location.pathname === '/sign-in'
+        const isPublicTours = this.props.location.pathname.startsWith('/public-tours');
+        const isTours = this.props.location.pathname.startsWith('/tours');
+        const isSignIn = this.props.location.pathname.startsWith('/sign-in');
 
         return (
             <div className={classes.root}>

@@ -132,7 +132,7 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
     }
 
     _handleViewPlace(e) {
-        this.store.view(e.tour.id, e.place.id);
+        this.store.viewPlacePano(e.tour.id, e.place.id);
     }
 
     _getActionsForTour(e, history) {
@@ -165,7 +165,7 @@ class ToursPage extends React.Component<ToursPageProps, ToursPageState> {
                 icon: <Visibility />,
                 text: formatMessage(messages.view),
                 action: (e) => {
-                    this.store.view(e.tour.id);
+                    this.store.viewPlacePano(e.tour.id);
                 }
             });
         }

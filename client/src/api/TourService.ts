@@ -5,9 +5,8 @@ import {
 } from "./../../../backend/src/models/interfaces";
 
 export function getAllPublic() {
-    return client.get<{ tours: TourDto[] }>("/api/tour");
+    return client.get<{ tours: TourDto[] }>("/api/public-tours");
 }
-
 export function getAll() {
     return client.get<{ tours: TourDto[] }>("/api/tour");
 }
