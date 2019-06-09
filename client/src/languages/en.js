@@ -8,6 +8,14 @@ import { defineMessages } from 'react-intl';
 // });
 
 const en = defineMessages({
+    copyPlaceCode: {
+        id: 'common.copyPlaceCode',
+        defaultMessage: 'Copy code to add pano on your site',
+    },
+    copyTourCode: {
+        id: 'common.copyTourCode',
+        defaultMessage: 'Copy code to add map on your site',
+    },
     yourTour: {
         id: 'common.yourTour',
         defaultMessage: 'Your Tour',

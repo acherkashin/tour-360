@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
-import { TourMap } from "../Components/TourDesigner";
-import { InfoPanel } from "../Components";
-import { requireAuth } from '../HOC';
-import { RootStore, UserStore } from '../Stores';
 import { RouteComponentProps } from 'react-router';
 import { IconButton, Tooltip } from '@material-ui/core';
+import { intlShape, injectIntl } from 'react-intl';
 import {
     ThreeSixty as ThreeSixtyIcon,
     Code as CodeIcon,
 } from '@material-ui/icons';
+import { TourMap } from "../Components/TourDesigner";
+import { InfoPanel } from "../Components";
+import { requireAuth } from '../HOC';
+import { RootStore, UserStore } from '../Stores';
 import { PlaceService } from '../api';
 
 const styles = (theme: Theme) => ({
@@ -31,6 +32,7 @@ const styles = (theme: Theme) => ({
 });
 
 interface ViewMapPageProps extends WithStyles<typeof styles>, RouteComponentProps<{ tourId: string }> {
+    intl: any;
     rootStore: RootStore;
 }
 
@@ -70,6 +72,7 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
         }
 
         const { classes } = this.props;
+        const { formatMessage, messages } = this.props.intl;
 
         return <div className={classes.root}>
             <TourMap
@@ -91,7 +94,7 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
                 title={this.tour.name}
                 description={this.tour.description}
                 titleChildren={
-                    <Tooltip title={"Скопируйте код для добавления карты на ваш сайт"}>
+                    <Tooltip title={formatMessage(messages.copyPlaceCode)}>
                         <IconButton onClick={() => navigator.clipboard.writeText(`<iframe src="${getCurrentUrl()}/tour/${this.tour.id}/view-tour"></iframe>`)}>
                             <CodeIcon />
                         </IconButton>
@@ -105,7 +108,7 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
                 description={this.selectedPlace.description}
                 titleChildren={
                     <div>
-                        <Tooltip title={"Скопируйте код для добавления панорамы на ваш сайт"}>
+                        <Tooltip title={formatMessage(messages.copyTourCode)}>
                             <IconButton onClick={() => navigator.clipboard.writeText(`<iframe src="${PlaceService.getPanoUrl(this.tour.id, this.selectedPlace.id, UserStore.getToken())}"></iframe>`)}>
                                 <CodeIcon />
                             </IconButton>
@@ -120,4 +123,4 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
     }
 }
 
-export default withStyles(styles)(requireAuth(inject("rootStore")(observer(ViewMapPage))));
+export default injectIntl(withStyles(styles)(requireAuth(inject("rootStore")(observer(ViewMapPage)))));

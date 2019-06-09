@@ -1,6 +1,14 @@
 import { defineMessages } from 'react-intl';
 
 const ru = defineMessages({
+    copyPlaceCode: {
+        id: 'common.copyPlaceCode',
+        defaultMessage: 'Скопируйте код для добавления панорамы на ваш сайт',
+    },
+    copyTourCode: {
+        id: 'common.copyTourCode',
+        defaultMessage: 'Скопируйте код для добавления карты на ваш сайт',
+    },
     yourTour: {
         id: 'common.yourTour',
         defaultMessage: 'Ваш тур',
