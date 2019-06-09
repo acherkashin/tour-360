@@ -1,6 +1,10 @@
 import { defineMessages } from 'react-intl';
 
 const ru = defineMessages({
+    yourTour: {
+        id: 'common.yourTour',
+        defaultMessage: 'Ваш тур',
+    },
     publicTours: {
         id: 'common.publicTour',
         defaultMessage: 'Публичные экскурсии',
@@ -287,7 +291,7 @@ const ru = defineMessages({
         defaultMessage: 'Название локации'
     },
     editPlacePanelDescription: {
-        id: 'edit-place-panel.place-name',
+        id: 'edit-place-panel.description',
         defaultMessage: 'Описание',
     },
     editPlacePanelChangePano: {

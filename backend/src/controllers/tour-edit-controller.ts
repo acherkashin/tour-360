@@ -33,6 +33,7 @@ export function startEditing(req: Request, res: Response) {
     const { id } = req.params;
 
     Tour.findById(id)
+        .populate('createdBy')
         .then(tour => {
             const sessionId = uuidv1();
             cache[sessionId] = tour;
@@ -169,7 +170,7 @@ export function updatePlace(req: Request, res: Response) {
     const placeUpdate = req.body;
     const tour = cache[sessionId];
     tour.updatePlace(placeUpdate);
-    
+
     const place = tour.getPlace(placeUpdate.id);
     res.json({ place: place.toDetailDto(tour) });
 }

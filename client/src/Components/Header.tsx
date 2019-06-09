@@ -86,7 +86,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         const { classes, title } = this.props;
         const { anchorEl, redirectToProfile, redirectToPublicTours, redirectToMyTours } = this.state;
         const { messages, formatMessage } = this.props.intl;
-        const auth = Boolean(this.userStore.siggnedIn && this.userStore.currentUser);
+        const auth = this.userStore.siggnedIn;
         const open = Boolean(anchorEl);
         const isPublicTours = this.props.location.pathname === '/public-tours';
         const isTours = this.props.location.pathname === '/tours';
@@ -150,8 +150,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
 }
 
-export default inject("rootStore")(
-    observer(
-        withStyles(styles)(injectIntl(withRouter(Header)))
-    )
-);
+export default withStyles(styles)(injectIntl(withRouter(inject("rootStore")(
+    observer(Header)))
+));

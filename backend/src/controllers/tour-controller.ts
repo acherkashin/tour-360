@@ -10,6 +10,7 @@ type Request = _Request & { userId: string };
 
 export function getAllPublic(req: Request, res: Response) {
     Tour.find({ isPublic: true })
+        .populate('createdBy')
         .then((tours) => {
             const dtos = tours.map(tour => tour.toClient());
             return res.json({ tours: dtos })
@@ -18,6 +19,7 @@ export function getAllPublic(req: Request, res: Response) {
 
 export function getAll(req: Request, res: Response) {
     Tour.find({ createdBy: req.userId })
+        .populate('createdBy')
         .then((tours) => {
             const dtos = tours.map(tour => tour.toClient());
             return res.json({ tours: dtos });
@@ -34,6 +36,7 @@ export function getById(req: Request, res: Response) {
     }
 
     Tour.findById(id)
+        .populate('createdBy')
         .then(tour => {
             return res.json({ tour: tour.toDetailDto() });
         })
@@ -52,6 +55,7 @@ export function getPlace(req: Request, res: Response) {
     }
 
     Tour.findById(id)
+        .populate('createdBy')
         .then(tour => {
             const index = tour.places.findIndex((value) => value.id === placeId);
             const place = tour.places[index].toDetailDto(tour);
@@ -95,6 +99,7 @@ export function uploadCover(req: Request, res: Response) {
     const cover = <UploadedFile>req.files.cover;
 
     Tour.findById(id)
+        .populate('createdBy')
         .then((t) => {
             tour = t;
             const removePromise = t.cover && t.cover.filename != null ? removeFile(t.cover.filename) : Promise.resolve();
@@ -112,7 +117,8 @@ export function uploadCover(req: Request, res: Response) {
                         contentType: cover.mimetype,
                     }
                 }
-            }, { new: true });
+            }, { new: true })
+                .populate('createdBy');
         }).then((tour) => {
             return res.json({ tour: tour.toDetailDto() });
         }).catch((error) => {

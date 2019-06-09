@@ -11,6 +11,8 @@ class Tour {
     filename: string = '';
     startPlaceId: string;
     isPublic: boolean;
+    authorId: string;
+    authorFullName: string;
 
     private imageHash: number = Date.now();
 
@@ -29,6 +31,8 @@ class Tour {
         this.filename = json.filename;
         this.startPlaceId = json.startPlaceId;
         this.isPublic = json.isPublic;
+        this.authorId = json.authorId;
+        this.authorFullName = json.authorFullName;
     }
 
     refreshCover() {

@@ -25,6 +25,10 @@ const UserSchema = new Schema<User>({
     tours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
+UserSchema.virtual('fullname').get(function () {
+    return `${this.firstName} ${this.lastName}`;
+});
+
 UserSchema.methods.toClient = function () {
     return {
         id: this.id,

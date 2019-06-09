@@ -21,7 +21,7 @@ import {
 import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { TourCover } from '.';
-import { Tour } from './../Stores';
+import { Tour, UserStore } from './../Stores';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     moreIcon: {
@@ -139,7 +139,9 @@ class TourItem extends React.Component<TourItemProps> {
         const root = classname({
             [classes.tileItem]: true,
             [classes.selectedTileItem]: isSelected,
-        })
+        });
+
+        const isYourTour = UserStore.getCurrentUser() && UserStore.getCurrentUser().id === tour.authorId;// tour tour.authorFullName
 
         return (<>
             <GridListTile
@@ -155,6 +157,7 @@ class TourItem extends React.Component<TourItemProps> {
                 <GridListTileBar
                     className={classes.tileItemBar}
                     title={tour.name}
+                    subtitle={isYourTour ? formatMessage(messages.yourTour) : tour.authorFullName}
                     actionIcon={
                         <IconButton className={classes.moreIcon}
                             aria-owns={open ? 'simple-popper' : undefined}

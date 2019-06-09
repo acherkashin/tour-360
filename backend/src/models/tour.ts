@@ -47,6 +47,8 @@ TourSchema.methods.toClient = function () {
         isPublic: this.isPublic,
         places: (this.places || []).map(place => place.toClient()),
         description: this.description,
+        authorId: this.createdBy.id,
+        authorFullName: this.createdBy.fullname,
     };
 };
 

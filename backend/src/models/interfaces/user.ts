@@ -4,6 +4,7 @@ interface UserDto {
     firstName: string;
     lastName: string;
     language: string;
+    fullname?: string;
 }
 
 export {

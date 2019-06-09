@@ -1,7 +1,6 @@
-import { extendObservable, action, observable, decorate, computed, runInAction } from 'mobx';
-import { TourService, PlaceService } from '../api';
+import { action, observable, decorate, computed, runInAction } from 'mobx';
+import { TourService } from '../api';
 import { Tour, TourDetail, RootStore } from '.';
-import UserStore from './UserStore';
 import {
     TourDto,
 } from "./../../../backend/src/models/interfaces";
@@ -10,7 +9,7 @@ export default class PublicToursStore {
     selectedTour: TourDetail | null;
     tours: Tour[] = [];
 
-    constructor(rootStore: RootStore) {}
+    constructor(rootStore: RootStore) { }
 
     get hasTours() {
         return (this.tours || []).length > 0;
@@ -18,7 +17,9 @@ export default class PublicToursStore {
 
     selectTour(id: string) {
         TourService.getById(id).then((resp) => {
-            this.selectedTour = new TourDetail(resp.data.tour);
+            runInAction(() => {
+                this.selectedTour = new TourDetail(resp.data.tour);
+            });
         });
     }
 
@@ -30,7 +31,7 @@ export default class PublicToursStore {
         });
     };
 
-    updateTourItemFromServer = action((json: TourDto) => {
+    updateTourItemFromServer(json: TourDto) {
         let tour = this.tours.find(tour => tour.id === json.id);
         if (!tour) {
             tour = new Tour(this, json.id);
@@ -40,5 +41,11 @@ export default class PublicToursStore {
         tour.updateFromJson(json);
 
         return tour;
-    });
+    }
 }
+
+decorate(PublicToursStore, {
+    tours: observable,
+    hasTours: computed,
+    updateTourItemFromServer: action,
+});

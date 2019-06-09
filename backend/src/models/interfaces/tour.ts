@@ -11,7 +11,8 @@ export interface TourDto {
     isPublic: boolean;
     places: PlaceDto[];
     description?: string;
-    // author: string;
+    authorId?: string;
+    authorFullName?: string;
 }
 
 export interface TourDetailDto {

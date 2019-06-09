@@ -96,7 +96,7 @@ export default class UserStore {
         localStorage.removeItem('id_token');
     }
 
-    static getCurrentUser() {
+    static getCurrentUser(): { id: string } {
         // Using jwt-decode npm package to decode the token
         return decode(this.getToken());
     }
