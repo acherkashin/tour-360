@@ -29,16 +29,15 @@ interface LoadingButtonProps extends WithStyles<typeof styles> {
 }
 
 class LoadingButton extends React.Component<LoadingButtonProps> {
-    // static propTypes = {
-        // classes: PropTypes.object.isRequired,
-        // style: PropTypes.object,
-        // color: PropTypes.string,
-        // disabled: PropTypes.bool,
-        // isLoading: PropTypes.bool,
-        // children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
-        // onClick: PropTypes.func.isRequired,
-        // size: PropTypes.string,
-    // };
+    static propTypes = {
+        style: PropTypes.object,
+        color: PropTypes.string,
+        disabled: PropTypes.bool,
+        isLoading: PropTypes.bool,
+        children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
+        onClick: PropTypes.func.isRequired,
+        size: PropTypes.string,
+    };
 
     render() {
         const {

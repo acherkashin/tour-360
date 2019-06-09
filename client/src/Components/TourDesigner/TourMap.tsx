@@ -6,6 +6,7 @@ import L from 'leaflet';
 import { Connection, Place, } from '.';
 import grey from '@material-ui/core/colors/grey';
 import { TourDetail } from '../../Stores';
+import { PlaceDetailDto } from '../../../../backend/src/models/interfaces';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
@@ -31,21 +32,21 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     value: {}
 });
 
-interface TourMapProps extends WithStyles<typeof styles> {
+export interface TourMapProps extends WithStyles<typeof styles> {
     tour: TourDetail;
     mapStyle: any;
     draggableMarkers?: boolean;
     selectedPlaceId?: string;
     selectedConnectionId?: string;
-    onClick: (e: { origin: TourMap, latlng: any }) => void;
-    onMouseMove: (e: { origin: TourMap, latlng: any }) => void;
+    onClick: (e: { origin: TourMap, latitude: number, longitude: number }) => void;
+    onMouseMove: (e: { origin: TourMap, latitude: number, longitude: number }) => void;
     onZoomChanged: (e: { origin: TourMap, zoom: number }) => void;
     onConnectionClick: (e: { origin: TourMap, connection: any }) => void;
-    onPlaceClick: (e: { origin: TourMap, place: any }) => void;
-    onPlaceDragend: (e: { origin: TourMap, place: any, latitude: number, longitude: number }) => void;
+    onPlaceClick: (e: { origin: TourMap, place: PlaceDetailDto }) => void;
+    onPlaceDragend: (e: { origin: TourMap, place: PlaceDetailDto, latitude: number, longitude: number }) => void;
 };
 
-interface TourMapState {
+export interface TourMapState {
     currentLat: number;
     currentLng: number;
     currentZoom: number;
@@ -90,7 +91,8 @@ class TourMap extends React.Component<TourMapProps, TourMapState> {
     _handleMapClick(e) {
         this.props.onClick && this.props.onClick({
             origin: this,
-            latlng: e.latlng,
+            latitude: e.latlng.lat,
+            longitude: e.latlng.lng,
         });
     }
 
@@ -99,7 +101,8 @@ class TourMap extends React.Component<TourMapProps, TourMapState> {
 
         this.props.onMouseMove && this.props.onMouseMove({
             origin: this,
-            latlng: e.latlng,
+            latitude: e.latlng.lat,
+            longitude: e.latlng.lng,
         });
     }
 
@@ -145,7 +148,7 @@ class TourMap extends React.Component<TourMapProps, TourMapState> {
         const { tour, selectedPlaceId, selectedConnectionId, draggableMarkers = false } = this.props;
         const places = tour.places || [];
         const connections = tour.connections || [];
-        
+
 
         return <>
             {connections.map(c => {

@@ -58,17 +58,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         redirectToLogin: false,
     };
 
-    //TODO: remove uncomment
-    // static propTypes = {
-    //     classes: PropTypes.object.isRequired,
-    //     rootStore: PropTypes.object.isRequired,
-    //     title: PropTypes.string.isRequired,
-    //     intl: intlShape.isRequired,
-    //     match: PropTypes.object.isRequired,
-    //     location: PropTypes.object.isRequired,
-    //     history: PropTypes.object.isRequired,
-    //     staticContext: PropTypes.object.isRequired,
-    // };
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+    };
 
     get userStore() {
         return this.props.rootStore.userStore;
@@ -114,7 +106,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                                 {formatMessage(messages.headerMyTours)}
                                 <MapIcon />
                             </Button>}
-                            {!auth && !isSignIn && <Button className={classes.icon} onClick={() => this.setState({redirectToLogin: true})}>
+                            {!auth && !isSignIn && <Button className={classes.icon} onClick={() => this.setState({ redirectToLogin: true })}>
                                 {formatMessage(messages.signInPageButtonTitle)}
                             </Button>}
                             {auth && (

@@ -309,8 +309,8 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
 
         if (this.state.mapEditMode === 'addPlace') {
             this.tourStore.addPlace({
-                latitude: e.latlng.lat,
-                longitude: e.latlng.lng,
+                latitude: e.latitude,
+                longitude: e.longitude,
             });
         }
     }
