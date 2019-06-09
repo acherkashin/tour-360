@@ -80,7 +80,6 @@ interface TourDesignerState {
     isOpenedConfirmDialog: boolean;
     isOpenedDeleteDialog: boolean;
     isOpenedPreviewDialog: boolean;
-    isOpenedPlaceDescriptionDialog: boolean;
     isOpenedEditIconDialog: boolean;
     isOpenedUploadCoverDialog: boolean;
     mapEditMode: MapEditModes;
@@ -117,7 +116,6 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
         this._handleModeChanged = this._handleModeChanged.bind(this);
         this._handlePlaceClick = this._handlePlaceClick.bind(this);
         this._handlePlaceDragend = this._handlePlaceDragend.bind(this);
-        this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
         this._handleConnectionClick = this._handleConnectionClick.bind(this);
         this._handleStartPlaceChanged = this._handleStartPlaceChanged.bind(this);
         this._handleIsPublicChanged = this._handleIsPublicChanged.bind(this);
@@ -133,15 +131,11 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
         this._handlePreviewPlaceClick = this._handlePreviewPlaceClick.bind(this);
         this._closePreviewDialog = this._closePreviewDialog.bind(this);
 
-        this._handleOpenDescriptionDialog = this._handleOpenDescriptionDialog.bind(this);
-        this._handleCloseDescriptionDialog = this._handleCloseDescriptionDialog.bind(this);
-
         this.state = {
             uploadImageDialogState: CLOSED,
             isOpenedConfirmDialog: false,
             isOpenedDeleteDialog: false,
             isOpenedPreviewDialog: false,
-            isOpenedPlaceDescriptionDialog: false,
             isOpenedEditIconDialog: false,
             isOpenedUploadCoverDialog: false,
             mapEditMode: 'dragMap',
@@ -203,7 +197,7 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
     }
 
     _handleViewImage360Click() {
-        this.tourStore.viewPlaceImage360(this.editingPlace.id);
+
     }
 
     /* Confirm Save Dialog */
@@ -254,15 +248,6 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
 
     _closePreviewDialog() {
         this.setState({ isOpenedPreviewDialog: false });
-    }
-
-    /* Description Dialog */
-    _handleOpenDescriptionDialog() {
-        this.setState({ isOpenedPlaceDescriptionDialog: true });
-    }
-
-    _handleCloseDescriptionDialog() {
-        this.setState({ isOpenedPlaceDescriptionDialog: false });
     }
 
     _handleChangeImageMapClick(e) {
@@ -409,7 +394,6 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
             isOpenedConfirmDialog,
             isOpenedDeleteDialog,
             isOpenedPreviewDialog,
-            isOpenedPlaceDescriptionDialog,
             isOpenedEditIconDialog,
             mapEditMode,
             isOpenedUploadCoverDialog,
@@ -446,10 +430,11 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
                             onChangeImageMapClick={this._handleChangeImageMapClick}
                             onStartPlaceChanged={this._handleStartPlaceChanged}
                             onIsPublicChanged={this._handleIsPublicChanged}
-                            onViewPlaceClick={this._handleViewImage360Click}
+                            onViewPlaceClick={(e) => this.tourStore.viewPlaceImage360(e.place.id)}
                             onPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onEditPlaceClick={(e) => this.tourStore.editPlace(e.place.id)}
                             onDeletePlaceClick={(e) => this._deletePlaceClick(e.place.id)}
+                            onDescriptionChanged={(e) => this.editingTour.description = e.value}
                         />
                     </div>}
                     {this.showEditPlacePanel && <div className={classes.rightPanel}>
@@ -459,7 +444,7 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
                             place={this.editingPlace}
                             onNameChanged={this._handlePlaceNameChanged}
                             onChangeImage360Click={this._handleChangePlaceImage360Click}
-                            onViewImage360Click={this._handleViewImage360Click}
+                            onViewImage360Click={(e) => this.tourStore.viewPlaceImage360(e.place.id)}
                             onPreviewClick={this._handlePreviewPlaceClick}
                             onDeleteClick={this._handleDeletePlaceClick}
                             onConnectionClick={(e) => {
@@ -482,7 +467,7 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
                             onSoundRemoved={(e) => {
                                 this.tourStore.removePlaceSound(e.place.id);
                             }}
-                            onDescriptionClick={this._handleOpenDescriptionDialog}
+                            onDescriptionChanged={(e) => this.editingPlace.description = e.value}
                             onUploadMapIconClick={(e) => this.setState({ uploadImageDialogState: PLACE_MAP_ICON })}
                             onEditMapIconClick={(e) => this.setState({ isOpenedEditIconDialog: true })}
                             onClearMapIconClick={(e) => this.tourStore.removeMapIcon(e.place.id)}
@@ -545,16 +530,6 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
                     isOpened={isOpenedPreviewDialog}
                     onClose={this._closePreviewDialog}
                 />
-                {isOpenedPlaceDescriptionDialog && <HtmlEditDialog
-                    isOpened={isOpenedPlaceDescriptionDialog}
-                    title={formatMessage(messages.tourDesignerEditPlaceDescription)}
-                    htmlContent={this.editingPlace && this.editingPlace.description}
-                    onClose={this._handleCloseDescriptionDialog}
-                    onSaveClick={(e) => {
-                        this.editingPlace.description = e.htmlContent;
-                        this._handleCloseDescriptionDialog();
-                    }}
-                />}
                 {this.editingPlace && this.editingPlace.mapIcon && <EditIconDialog
                     title={`${formatMessage(messages.editPlaceIcon)}: ${this.editingPlace.name}`}
                     isOpened={isOpenedEditIconDialog}

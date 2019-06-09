@@ -293,13 +293,13 @@ const en = defineMessages({
         id: 'edit-place-panel.place-name',
         defaultMessage: 'Place name',
     },
+    editPlacePanelDescription: {
+        id: 'edit-place-panel.description',
+        defaultMessage: 'Description',
+    },
     editPlacePanelChangePano: {
         id: 'edit-place-panel.change-pano',
         defaultMessage: 'Change Image 360',
-    },
-    editPlacePanelEditDescription: {
-        id: 'edit-place-panel.edit-description',
-        defaultMessage: 'Edit description',
     },
     editPlacePanelCoverLabel: {
         id: 'edit-place-panel.',
@@ -309,6 +309,10 @@ const en = defineMessages({
     editTourPanelTourName: {
         id: 'edit-tour-panel.tour-name',
         defaultMessage: 'Tour name',
+    },
+    editTourPanelDescription: {
+        id: 'edit-tour-panel.description',
+        defaultMessage: 'Description',
     },
     editTourPanelChangeMapImage: {
         id: 'edit-tour-panel.change-map-image',

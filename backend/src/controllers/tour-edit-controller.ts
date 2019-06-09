@@ -47,7 +47,6 @@ export function startEditing(req: Request, res: Response) {
 
 export function saveChanges(req: Request, res: Response) {
     const { sessionId } = req.params;
-    const { startPlaceId, name, isPublic } = req.body;
 
     let tour = cache[sessionId];
     tour.updateTour(req.body);

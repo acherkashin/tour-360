@@ -25,6 +25,7 @@ class TourDetail {
     imageHash: number;
     coverImageHash: number;
     cover: ImageFile;
+    description: string;
 
     constructor(json: TourDetailDto) {
         this.id = json.id;
@@ -67,6 +68,7 @@ class TourDetail {
         this.startPlaceId = json.startPlaceId;
         this.isPublic = json.isPublic;
         this.cover = json.cover;
+        this.description = json.description;
     }
 
     updatePlaceFromJson(json: PlaceDetailDto) {
@@ -141,6 +143,7 @@ decorate(TourDetail, {
     isPublic: observable,
     imageHash: observable,
     cover: observable,
+    description: observable,
 
     updateFromJson: action,
     updateConnectionFromJson: action,

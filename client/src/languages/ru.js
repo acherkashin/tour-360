@@ -286,13 +286,13 @@ const ru = defineMessages({
         id: 'edit-place-panel.place-name',
         defaultMessage: 'Название локации'
     },
+    editPlacePanelDescription: {
+        id: 'edit-place-panel.place-name',
+        defaultMessage: 'Описание',
+    },
     editPlacePanelChangePano: {
         id: 'edit-place-panel.change-pano',
         defaultMessage: 'Изменить панораму'
-    },
-    editPlacePanelEditDescription: {
-        id: 'edit-place-panel.edit-description',
-        defaultMessage: 'Изменить описание'
     },
     editPlacePanelCoverLabel: {
         id: 'edit-place-panel.',
@@ -302,6 +302,10 @@ const ru = defineMessages({
     editTourPanelTourName: {
         id: 'edit-tour-panel.tour-name',
         defaultMessage: 'Название экскурсии',
+    },
+    editTourPanelDescription: {
+        id: 'edit-tour-panel.description',
+        defaultMessage: 'Описание',
     },
     editTourPanelChangeMapImage: {
         id: 'edit-tour-panel.change-map-image',

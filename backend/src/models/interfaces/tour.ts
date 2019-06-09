@@ -10,6 +10,7 @@ export interface TourDto {
     startPlaceId?: string;
     isPublic: boolean;
     places: PlaceDto[];
+    description?: string;
     // author: string;
 }
 
@@ -26,6 +27,7 @@ export interface TourDetailDto {
     startPlaceId: string;
     isPublic: boolean;
     cover: ImageFile;
+    description?: string;
 }
 
 export interface Tour extends Document {
@@ -38,14 +40,15 @@ export interface Tour extends Document {
     connections: Connection[];
     createdBy: any;
     isPublic: boolean;
+    description?: string;
 
-    toClient: () => TourDto;
-    updateTour: (dto: TourDetailDto) => void;
-    hasConnection: (strtPlaceId: string, endPlaceId: string) => boolean;
-    deleteConnection: (place1Id: string, place2Id: string) => void;
-    getConnectionById: (id: string) => Connection;
-    getPlace: (id: string) => Place;
-    updatePlace: (dto: PlaceDetailDto) => void;
-    deletePlace: (placeId: string) => void;
-    toDetailDto: () => TourDetailDto;
+    toClient: (this: Tour) => TourDto;
+    updateTour: (this: Tour, dto: TourDetailDto) => void;
+    hasConnection: (this: Tour, strtPlaceId: string, endPlaceId: string) => boolean;
+    deleteConnection: (this: Tour, place1Id: string, place2Id: string) => void;
+    getConnectionById: (this: Tour, id: string) => Connection;
+    getPlace: (this: Tour, id: string) => Place;
+    updatePlace: (this: Tour, dto: PlaceDetailDto) => void;
+    deletePlace: (this: Tour, placeId: string) => void;
+    toDetailDto: (this: Tour) => TourDetailDto;
 }

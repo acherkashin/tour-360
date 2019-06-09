@@ -21,6 +21,7 @@ export interface ConnectionDetailDto {
 }
 
 export interface Connection {
+    id: string;
     startPlaceId: string;
     endPlaceId: string;
     startPlacePosition: number;

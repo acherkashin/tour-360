@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose";
 const Schema = mongoose.Schema;
 import PlaceSchema from './place';
 import Connection from './connection';
-import { Tour, TourDetailDto } from './interfaces/tour';
+import { Tour, TourDetailDto, TourDto } from './interfaces/tour';
 import { PlaceDetailDto } from "./interfaces";
 
 const TourSchema = new mongoose.Schema<Tour>({
@@ -25,6 +25,7 @@ const TourSchema = new mongoose.Schema<Tour>({
     connections: [Connection],
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     isPublic: { type: Boolean, default: false, required: true },
+    description: { type: String, default: '' },
 });
 
 TourSchema.index({ createdBy: 1, name: 1 }, { unique: true });
@@ -45,6 +46,7 @@ TourSchema.methods.toClient = function () {
         startPlaceId,
         isPublic: this.isPublic,
         places: (this.places || []).map(place => place.toClient()),
+        description: this.description,
     };
 };
 
@@ -65,6 +67,7 @@ TourSchema.methods.toDetailDto = function () {
 
         startPlaceId: this.startPlaceId,
         isPublic: this.isPublic,
+        description: this.description,
     };
 
     return dto;
@@ -95,6 +98,8 @@ TourSchema.methods.updateTour = function(dto: TourDetailDto) {
     this.startPlaceId = dto.startPlaceId;
     this.name = dto.name;
     this.isPublic = dto.isPublic;
+    this.description = dto.description;
+    
     (dto.places || []).forEach((place) => {
         this.updatePlace(place);
     });

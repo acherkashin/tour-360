@@ -31,7 +31,7 @@ interface EditPlacePanelProps extends WithStyles<typeof styles> {
     onViewImage360Click: (e: { origin: EditPlacePanel, place: EditPlace }) => void;
     onPreviewClick: (e: { origin: EditPlacePanel, place: EditPlace }) => void;
     onDeleteClick?: (e: { origin: EditPlacePanel, place: EditPlace }) => void;
-    onDescriptionClick: (e: { origin: EditPlacePanel }) => void;
+    onDescriptionChanged: (e: { origin: EditPlacePanel, value: string }) => void;
 
     showConnections: boolean;
     onConnectionClick?: (e: { origin: EditPlacePanel, connection: any }) => void;
@@ -63,7 +63,7 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
         onViewImage360Click: PropTypes.func.isRequired,
         onPreviewClick: PropTypes.func.isRequired,
         onDeleteClick: PropTypes.func,
-        onDescriptionClick: PropTypes.func.isRequired,
+        onDescriptionChanged: PropTypes.func.isRequired,
 
         showConnections: PropTypes.bool.isRequired,
         onConnectionClick: PropTypes.func,
@@ -133,7 +133,7 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
     }
 
     _handleDescriptionChanged = (e) => {
-        this.props.onDescriptionClick({ origin: this });
+        this.props.onDescriptionChanged({ origin: this, value: e.target.value });
     }
 
     _handleWidgetClick = (e) => {
@@ -183,6 +183,17 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
                 margin="normal"
                 fullWidth
                 autoFocus
+            />
+            <TextField
+                label={formatMessage(messages.editPlacePanelDescription)}
+                multiline
+                rows={4}
+                rowsMax={6}
+                value={place.description}
+                onChange={this._handleDescriptionChanged}
+                className={classes.description}
+                variant="outlined"
+                fullWidth
             />
             <Category title={formatMessage(messages.panoImage)}>
                 <EditImage
@@ -245,9 +256,6 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
             {this._canDelete && <Button fullWidth variant="text" color="primary" onClick={this._handleDeleteClick}>
                 {formatMessage(messages.delete)}
             </Button>}
-            <Button fullWidth variant="text" color="primary" onClick={this._handleDescriptionChanged}>
-                {formatMessage(messages.editPlacePanelEditDescription)}
-            </Button>
         </div>;
     }
 };

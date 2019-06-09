@@ -73,6 +73,12 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
                     this.store.clearSelectedPlace();
                 }}
             />
+            {!this.selectedPlace && <InfoPanel 
+                classNames={{ root: classes.infoPanel }}
+                imageUrl={this.tour.imageUrl}
+                title={this.tour.name}
+                description={this.tour.description}
+            />}
             {this.selectedPlace && <InfoPanel
                 classNames={{ root: classes.infoPanel }}
                 imageUrl={this.selectedPlace.coverUrl}

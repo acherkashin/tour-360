@@ -21,6 +21,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         flex: 1,
         padding: theme.spacing.unit * 2,
+    },
+    description: {
+        backgroundColor: 'white',
+        marginBottom: theme.spacing.unit,
     }
 });
 
@@ -35,6 +39,7 @@ interface EditTourPanelProps extends WithStyles<typeof styles> {
     onEditPlaceClick: (e: { origin: EditTourPanel, place }) => void;
     onDeletePlaceClick: (e: { origin: EditTourPanel, place }) => void;
     onPlaceClick: (e: { origin: EditTourPanel, place }) => void;
+    onDescriptionChanged: (e: { origin: EditTourPanel, value: string }) => void;
 
     intl: intlShape.isRequired;
 }
@@ -71,6 +76,7 @@ class EditTourPanel extends React.Component<EditTourPanelProps> {
         onEditPlaceClick: PropTypes.func.isRequired,
         onDeletePlaceClick: PropTypes.func.isRequired,
         onPlaceClick: PropTypes.func.isRequired,
+        onDescriptionChanged: PropTypes.func.isRequired,
 
         intl: intlShape.isRequired,
     }
@@ -109,6 +115,10 @@ class EditTourPanel extends React.Component<EditTourPanelProps> {
     _handleDeletePlaceClick(e) {
         this.props.onDeletePlaceClick({ origin: this, place: e.place });
     }
+
+    _handleChangeDescription = (e) => {
+        this.props.onDescriptionChanged({ origin: this, value: e.target.value });
+    };
 
     render() {
         const { classes, tour } = this.props;
@@ -149,6 +159,17 @@ class EditTourPanel extends React.Component<EditTourPanelProps> {
                 }
                 label={formatMessage(messages.editTourPanelIsPublic)}
                 title={formatMessage(messages.editTourPanelIsPublicDescription)}
+            />
+            <TextField
+                label={formatMessage(messages.editTourPanelTourName)}
+                multiline
+                rows={4}
+                rowsMax={6}
+                value={tour.description}
+                onChange={this._handleChangeDescription}
+                className={classes.description}
+                variant="outlined"
+                fullWidth
             />
             <PlaceList
                 places={places}

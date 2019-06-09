@@ -161,6 +161,7 @@ export default class TourEditStore {
             name: this.editingTour.name,
             startPlaceId: this.editingTour.startPlaceId,
             isPublic: this.editingTour.isPublic,
+            description: this.editingTour.description,
         }));
 
         this.saveResult.then(action((result) => {
