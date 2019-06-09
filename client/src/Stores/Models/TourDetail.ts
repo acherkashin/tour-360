@@ -6,6 +6,8 @@ import {
     MapType,
     TourDetailDto,
 } from "./../../../../backend/src/models/interfaces";
+import { PlaceService } from "../../api";
+import { UserStore } from "..";
 
 class TourDetail {
     readonly id: string;
@@ -36,6 +38,11 @@ class TourDetail {
 
     get imageUrl() {
         return this.cover && this.cover.filename ? `/${this.cover.filename}?${this.coverImageHash}` : null;
+    }
+
+    viewPlacePano(placeId?: string) {
+        const url = PlaceService.getPanoUrl(this.id, placeId, UserStore.getToken());
+        window.open(url);
     }
 
     getPlace(placeId: string): PlaceDetailDto {

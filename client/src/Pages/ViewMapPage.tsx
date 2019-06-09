@@ -7,6 +7,8 @@ import { InfoPanel } from "../Components";
 import { requireAuth } from '../HOC';
 import { RootStore } from '../Stores';
 import { RouteComponentProps } from 'react-router';
+import { IconButton } from '@material-ui/core';
+import { ThreeSixty } from '@material-ui/icons';
 
 const styles = (theme: Theme) => ({
     root: {
@@ -76,6 +78,11 @@ class ViewMapPage extends React.Component<ViewMapPageProps> {
                 imageUrl={this.selectedPlace.coverUrl}
                 title={this.selectedPlace.name}
                 description={this.selectedPlace.description}
+                titleChildren={
+                    <IconButton onClick={() => this.tour.viewPlacePano(this.selectedPlace.id)}>
+                        <ThreeSixty />
+                    </IconButton>
+                }
             />}
         </div>;
     }

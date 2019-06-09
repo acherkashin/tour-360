@@ -14,19 +14,24 @@ const styles = (theme: Theme) => ({
         width: '100%',
     },
     titleWrapper: {
-
+        display: 'flex',
+        flexDirection: 'row' as 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: theme.spacing.unit,
+        marginBottom: 0,
     },
     title: {
-        padding: theme.spacing.unit,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap' as 'nowrap',
     },
     descriptionWrapper: {
+        margin: theme.spacing.unit,
+        marginTop: 0,
         overflow: 'auto',
     },
     description: {
-        padding: theme.spacing.unit,
         color: grey[700],
     }
 });
@@ -38,6 +43,7 @@ interface InfoPanelProps extends WithStyles<typeof styles> {
     imageUrl?: string;
     title: string;
     description?: string;
+    titleChildren?: React.ReactElement;
 }
 
 class InfoPanel extends React.Component<InfoPanelProps> {
@@ -48,6 +54,7 @@ class InfoPanel extends React.Component<InfoPanelProps> {
         imageUrl: PropTypes.string,
         title: PropTypes.string.isRequired,
         description: PropTypes.string,
+        titleChildren: PropTypes.object,
     };
 
     constructor(props) {
@@ -61,6 +68,7 @@ class InfoPanel extends React.Component<InfoPanelProps> {
             imageUrl,
             description,
             classNames = {},
+            titleChildren,
         } = this.props;
 
         const root = classnames({
@@ -70,9 +78,9 @@ class InfoPanel extends React.Component<InfoPanelProps> {
 
         return <Paper className={root}>
             <img src={imageUrl} className={classes.cover} />
-            <div className={classes.titleWrapper}></div>
             <div className={classes.titleWrapper}>
-                <Typography variant="h4" align='center'>{title}</Typography>
+                <Typography variant="h4" align='left'>{title}</Typography>
+                {titleChildren && titleChildren}
             </div>
             <div className={classes.descriptionWrapper}>
                 <Typography variant="body1" className={classes.description}>{description}</Typography>
