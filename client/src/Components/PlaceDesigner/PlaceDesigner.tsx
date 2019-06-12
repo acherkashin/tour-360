@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
 import {
@@ -31,7 +30,9 @@ import {
     RunVideoEditPanel,
     RunVideoWidget,
     HintWidget,
-    HintWidgetEditPanel
+    HintWidgetEditPanel,
+    ImageWidget,
+    ImageWidgetEditPanel
 } from './Widgets';
 import { HEIGHT, WIDTH } from './utils';
 import { RootStore, EditPlace, PlaceEditStore } from "./../../Stores";
@@ -40,8 +41,10 @@ import {
     TextWidget as ITextWidget,
     RunVideoWidget as IRunVideoWidget,
     HintWidget as IHintWidget,
+    ImageWidget as IImageWidget
 } from '../../../../backend/src/models/interfaces';
 import { PlaceDesignerToolBarItemType } from './PlaceDesignerToolBar';
+import { createError } from './Widgets/utils';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {},
@@ -113,7 +116,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this._handleCancelConfigrmClick = this._handleCancelConfigrmClick.bind(this);
             this._handleViewImage360Click = this._handleViewImage360Click.bind(this);
             this._handleTextureLoaded = this._handleTextureLoaded.bind(this);
-            this._hanldeTextureLoading = this._hanldeTextureLoading.bind(this);
+            this._handleTextureLoading = this._handleTextureLoading.bind(this);
             this._handleWidgetClick = this._handleWidgetClick.bind(this);
             this._handleSurfaceWrapperClick = this._handleSurfaceWrapperClick.bind(this);
             this._handleOkConfirmClick = this._handleOkConfirmClick.bind(this);
@@ -286,6 +289,20 @@ const PlaceDesigner = inject("rootStore")(observer(
                     onContentChanged={e => widget.content = e.content}
                     onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
                 />;
+            } else if (this.editingWidget.type === 'image') {
+                const widget = this.editingWidget as IImageWidget;
+
+                return <ImageWidgetEditPanel
+                    key={widget.id}
+                    widget={widget}
+                    onXChanged={e => widget.x = e.value}
+                    onYChanged={e => widget.y = e.value}
+                    onWidthChanged={e => widget.width = e.value}
+                    onHeightChanged={e => widget.height = e.value}
+                    onImageSelected={e => this.placeEditStore.updateImageWidget(e.widget.id, e.file)}
+                    onImageRemoved={e => this.placeEditStore.removeImageFromImageWidget(e.widget.id)}
+                    onDeleteClick={e => this.placeEditStore.deleteWidget(e.widget.id)}
+                />;
             }
 
             throw new Error("Unknown type of widget");
@@ -294,30 +311,39 @@ const PlaceDesigner = inject("rootStore")(observer(
         _renderWidget(widget: BaseWidget) {
             const isSelected = Boolean(this.editingWidget && this.editingWidget.id === widget.id);
 
-            if (widget.type === 'text') {
-                return <TextWidget
-                    key={widget.id}
-                    widget={widget}
-                    isSelected={isSelected}
-                    onClick={this._handleWidgetClick}
-                />;
-            } else if (widget.type === 'run-video') {
-                return <RunVideoWidget
-                    key={widget.id}
-                    widget={widget}
-                    isSelected={isSelected}
-                    onClick={this._handleWidgetClick}
-                />
-            } else if (widget.type === 'hint') {
-                return <HintWidget
-                    key={widget.id}
-                    widget={widget}
-                    isSelected={isSelected}
-                    onClick={this._handleWidgetClick}
-                />
+            switch (widget.type) {
+                case 'text':
+                    return <TextWidget
+                        key={widget.id}
+                        widget={widget}
+                        isSelected={isSelected}
+                        onClick={this._handleWidgetClick}
+                    />;
+                case 'run-video':
+                    return <RunVideoWidget
+                        key={widget.id}
+                        widget={widget}
+                        isSelected={isSelected}
+                        onClick={this._handleWidgetClick}
+                    />
+                case 'hint':
+                    return <HintWidget
+                        key={widget.id}
+                        widget={widget}
+                        isSelected={isSelected}
+                        onClick={this._handleWidgetClick}
+                    />
+                case 'image':
+                    return <ImageWidget
+                        key={widget.id}
+                        widget={widget}
+                        isSelected={isSelected}
+                        onClick={this._handleWidgetClick}
+                    />
+                default:
+                    throw createError(widget.type)
             }
 
-            throw new Error("Unknown type of widget");
         }
 
         _handleWidgetClick(event) {
@@ -332,7 +358,7 @@ const PlaceDesigner = inject("rootStore")(observer(
                 onClick={this._handleTextureClick}
                 imageUrl={this.editingPlace && this.editingPlace.mapImage360Url}
                 onLoaded={this._handleTextureLoaded}
-                onLoading={this._hanldeTextureLoading}>
+                onLoading={this._handleTextureLoading}>
                 {textureIsLoaded && <div className={classes.widgetArea}>
                     <CoordinateSystem
                         width={WIDTH}
@@ -364,7 +390,7 @@ const PlaceDesigner = inject("rootStore")(observer(
             this.setState({ textureIsLoaded: true });
         }
 
-        _hanldeTextureLoading() {
+        _handleTextureLoading() {
             this.setState({ textureIsLoaded: false });
         }
 

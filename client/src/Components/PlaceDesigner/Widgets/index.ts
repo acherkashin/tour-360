@@ -10,6 +10,10 @@ import HintWidget from "./HintWidget/HintWidget";
 import HintWidgetShape from "./HintWidget/HintWidgetShape";
 import HintWidgetEditPanel from './HintWidget/HintWidgetEditPanel';
 
+import ImageWidget from "./ImageWidget/ImageWidget";
+import ImageWidgetShape from "./ImageWidget/ImageWidgetShape";
+import ImageWidgetEditPanel from './ImageWidget/ImageWidgetEditPanel';
+
 export {
     TextWidget,
     TextWidgetShape,
@@ -22,4 +26,8 @@ export {
     HintWidget,
     HintWidgetShape,
     HintWidgetEditPanel,
+    
+    ImageWidget,
+    ImageWidgetShape,
+    ImageWidgetEditPanel,
 };

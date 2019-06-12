@@ -6,7 +6,7 @@ import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';
 import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';
 import { BACKEND_URL } from './../../config'
-import { TextWidget, RunVideoWidget, HintWidget } from './../Widgets';
+import { TextWidget, RunVideoWidget, HintWidget, ImageWidget } from './../Widgets';
 
 export default class Place extends React.Component {
     constructor() {
@@ -46,6 +46,8 @@ export default class Place extends React.Component {
                 return <RunVideoWidget key={widget.id} widget={widget} />
             case 'hint':
                 return <HintWidget key={widget.id} widget={widget} />
+            case 'image':
+                return <ImageWidget key={widget.id} widget={widget} />
             default:
                 throw new Exception("Unknown widget type");
         }

@@ -3,6 +3,7 @@ import {
     Title as TitleIcon,
     Delete as DeleteIcon,
     Help as HintIcon,
+    Image as ImageIcon,
     PlayCircleFilledOutlined,
 } from '@material-ui/icons';
 import { WidgetType } from '../../../../../backend/src/models/interfaces';
@@ -15,6 +16,8 @@ export function getIcon(widgetType: WidgetType) {
             return <PlayCircleFilledOutlined />
         case 'hint':
             return <HintIcon />
+        case 'image':
+            return <ImageIcon />
         default:
             throw createError(widgetType);
     }

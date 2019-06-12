@@ -254,6 +254,10 @@ const ru = defineMessages({
         defaultMessage: "Загрузите обложку для вашей локации",
     },
     
+    widgetBarSelectionMode: {
+        id: 'widget-bar.selectionMode',
+        defaultMessage: 'Выделение',
+    },
     widgetBarText: {
         id: 'widget-bar.text',
         defaultMessage: 'Текстовый виджет',
@@ -265,6 +269,10 @@ const ru = defineMessages({
     widgetBarHint: {
         id: 'widget-bar.hint',
         defaultMessage: "Подсказка",
+    },
+    widgetBarImage: {
+        id: 'widget-bar.image',
+        defaultMessage: "Изображение",
     },
 
     toursPageUploadCoverDialogTitle: {

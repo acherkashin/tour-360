@@ -14,7 +14,8 @@ import {
     BaseWidget,
     TextWidget as ITextWidget,
     RunVideoWidget as IRunVideoWidget,
-    HintWidget as IHintWidget
+    HintWidget as IHintWidget,
+    ImageWidget as IImageWidget
 } from '../../../../../../backend/src/models/interfaces';
 
 const styles = theme => ({
@@ -53,6 +54,8 @@ class WidgetList extends React.Component<WidgetListProps> {
                 return (widget as IRunVideoWidget).name
             case 'hint':
                 return (widget as IHintWidget).content
+            case 'image':
+                return (widget as IImageWidget).name
             default:
                 throw new Error('Unknown widget type')
         }

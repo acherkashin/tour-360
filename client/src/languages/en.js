@@ -261,6 +261,10 @@ const en = defineMessages({
         defaultMessage: "Upload cover for your place",
     },
 
+    widgetBarSelectionMode: {
+        id: 'widget-bar.selectionMode',
+        defaultMessage: 'Selection',
+    },
     widgetBarText: {
         id: 'widget-bar.text',
         defaultMessage: 'Text Widget',
@@ -272,6 +276,10 @@ const en = defineMessages({
     widgetBarHint: {
         id: 'widget-bar.hint',
         defaultMessage: "Hint",
+    },
+    widgetBarImage: {
+        id: 'widget-bar.image',
+        defaultMessage: "Image",
     },
 
     toursPageUploadCoverDialogTitle: {

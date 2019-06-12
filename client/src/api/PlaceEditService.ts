@@ -5,6 +5,7 @@ import {
     PlaceDetailDto,
     RunVideoWidget,
     BaseWidget,
+    ImageWidget,
 } from "./../../../backend/src/models/interfaces";
 
 export function beginEditing(tourId: string, placeId: string) {
@@ -42,4 +43,17 @@ export function updateRunVideo(sessionId: string, widget: RunVideoWidget, video:
         //     'Content-Type': 'multipart/form-data',
         // }
     });
+}
+export function updateImageWidget(sessionId: string, widgetID: string, image: File) {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    return client.post<{ widget: ImageWidget }>(`/api/place-edit/${sessionId}/imageWidget/${widgetID}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    });
+}
+export function removeImageFromImageWidget(sessionId: string, widgetID: string) {
+    return client.delete(`/api/place-edit/${sessionId}/imageWidget/${widgetID}`);
 }

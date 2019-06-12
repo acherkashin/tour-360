@@ -16,5 +16,8 @@ router.route('/place-edit/:sessionId/addWidget')
     .post(verifyToken, verifySession, PlaceEditController.addWidget);
 router.route('/place-edit/:sessionId/updateRunVideo')
     .post(verifyToken, verifySession, PlaceEditController.updateRunVideo);
+router.route('/place-edit/:sessionId/imageWidget/:widgetID')
+    .post(verifyToken, verifySession, PlaceEditController.updateImageWidget)
+    .delete(verifyToken, verifySession, PlaceEditController.removeImageFromImageWidget);
 
 export default router;

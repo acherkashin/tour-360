@@ -10,7 +10,7 @@ import {
     FormControlLabel,
 } from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import {
     PositionEditor,
     PanoVideoEditor,
@@ -18,7 +18,7 @@ import {
 import RunVideoShape from "./RunVideoShape";
 import { RunVideoWidget } from "../../../../../../backend/src/models/interfaces";
 
-const styles = createStyles(theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         padding: theme.spacing.unit * 2,
     },
@@ -32,7 +32,7 @@ const styles = createStyles(theme => ({
     sliderContainer: {
         overflow: 'hidden',
     }
-}));
+});
 
 interface RunVideoEditPanelProps extends WithStyles<typeof styles> {
     //TODO: install typings for react-intl
@@ -63,8 +63,7 @@ class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
     };
 
     render() {
-        const classes: any = this.props.classes;
-        const { widget } = this.props;
+        const { widget, classes } = this.props;
         const { messages, formatMessage } = this.props.intl;
         const volume = Math.trunc(widget.volume * 100);
 

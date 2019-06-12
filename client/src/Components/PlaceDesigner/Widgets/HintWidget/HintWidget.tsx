@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import { getScreenCoordinates } from '../../utils';
 import HintWidgetShape from "./HintWidgetShape";
 import { HintWidget as HintWidgetModel } from "../../../../../../backend/src/models/interfaces";
 
-const styles = createStyles({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         width: 32,
         height: 32,

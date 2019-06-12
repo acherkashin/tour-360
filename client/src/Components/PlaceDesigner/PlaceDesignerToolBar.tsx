@@ -13,7 +13,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 });
 
 export type PlaceDesignerToolBarItemType = WidgetType | 'selection';
-const types: PlaceDesignerToolBarItemType[] = ['selection', 'text', 'run-video', 'hint']
+const types: PlaceDesignerToolBarItemType[] = ['selection', 'text', 'run-video', 'hint', 'image']
 export const WidgetTypeShape = PropTypes.oneOf(types);
 
 export interface PlaceDesignerToolBarProps extends WithStyles<typeof styles> {
@@ -32,18 +32,21 @@ class PlaceDesignerToolBar extends React.Component<PlaceDesignerToolBarProps> {
     getDescription(widgetType: PlaceDesignerToolBarItemType) {
         const { messages, formatMessage } = this.props.intl;
 
-        if (widgetType == 'selection') {
-            return "Режим выделения";
-            // return formatMessage(messages.);
-        } else if (widgetType === 'text') {
-            return formatMessage(messages.widgetBarText);
-        } else if (widgetType === 'run-video') {
-            return formatMessage(messages.widgetBarRunVideo);
-        } else if (widgetType === 'hint') {
-            return formatMessage(messages.widgetBarHint);
+        switch (widgetType) {
+            case 'selection':
+                return formatMessage(messages.widgetBarSelectionMode);
+            case 'text':
+                return formatMessage(messages.widgetBarText);
+            case 'run-video':
+                return formatMessage(messages.widgetBarRunVideo);
+            case 'hint':
+                return formatMessage(messages.widgetBarHint);
+            case 'image':
+                return formatMessage(messages.widgetBarImage)
+            default:
+                throw createError(widgetType);
         }
 
-        throw createError(widgetType);
     }
 
     getIcon(PlaceDesignerToolBarItemType: PlaceDesignerToolBarItemType) {

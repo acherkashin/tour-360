@@ -1,5 +1,9 @@
 import {
     BaseWidget,
+    TextWidget,
+    RunVideoWidget,
+    HintWidget,
+    ImageWidget,
     ConnectionDetailDto,
     Tour,
     ImageFile,
@@ -30,7 +34,7 @@ export interface PlaceDetailDto {
     image360Name: string;
     soundName: string;
     connections: ConnectionDetailDto[];
-    widgets: BaseWidget[];
+    widgets: any[];
     description: string;
     mapIcon?: ImageFile;
     cover?: ImageFile;
