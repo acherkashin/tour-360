@@ -37,6 +37,8 @@ const styles = createStyles({
 });
 
 interface HeaderProps extends WithStyles<typeof styles>, RouteComponentProps<any> {
+    //TODO: to fix heroku build
+    location: any;
     rootStore: RootStore;
     title: string;
     intl: any;

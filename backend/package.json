@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "prebuild": "npm install -g typescript",
     "build": "tsc",
     "prestart": "npm run build",
     "dev:start": "npm-run-all build start",
