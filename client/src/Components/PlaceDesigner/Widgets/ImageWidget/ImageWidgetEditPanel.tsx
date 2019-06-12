@@ -6,7 +6,7 @@ import {
     Button,
     TextField,
 } from '@material-ui/core';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import {
     PositionEditor,
     Category
@@ -16,7 +16,7 @@ import { ImageWidget } from "../../../../../../backend/src/models/interfaces";
 import { UploadImageDialog } from '../../../Dialogs';
 import EditImage from '../../../EditImage';
 
-const styles = createStyles(theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         padding: theme.spacing.unit * 2,
     },
@@ -30,7 +30,7 @@ const styles = createStyles(theme => ({
     sliderContainer: {
         overflow: 'hidden',
     }
-}));
+});
 
 interface ImageWidgetEditPanelProps extends WithStyles<typeof styles> {
     intl: any;
@@ -41,7 +41,7 @@ interface ImageWidgetEditPanelProps extends WithStyles<typeof styles> {
     onWidthChanged: (e: { origin: ImageWidgetEditPanel, widget: ImageWidget, value: number }) => void;
     onHeightChanged: (e: { origin: ImageWidgetEditPanel, widget: ImageWidget, value: number }) => void;
     onDeleteClick: (e: { origin: ImageWidgetEditPanel, widget: ImageWidget }) => void;
-    onImageSelected: (e: { origin: ImageWidgetEditPanel, widget: ImageWidget, file: File }) => any;
+    onImageSelected: (e: { origin: ImageWidgetEditPanel, widget: ImageWidget, file: File }) => Promise<void>;
     onImageRemoveClick: (e: { origin: ImageWidgetEditPanel, widget: ImageWidget }) => void;
 }
 interface ImageWidgetEditPanelState {
@@ -70,8 +70,7 @@ class ImageWidgetEditPanel extends React.Component<ImageWidgetEditPanelProps, Im
     }
 
     render() {
-        const classes: any = this.props.classes;
-        const { widget } = this.props;
+        const { widget, classes } = this.props;
         const { messages, formatMessage } = this.props.intl;
 
         return <div className={classes.root}>

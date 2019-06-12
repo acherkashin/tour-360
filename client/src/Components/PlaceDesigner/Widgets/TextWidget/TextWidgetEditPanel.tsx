@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { intlShape, injectIntl } from 'react-intl';
 import { TextField, Button } from '@material-ui/core';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import TextWidgetShape from './TextWidgetShape';
 import { HEIGHT, WIDTH } from '../../utils';
 import { ColorPicker } from '../../../Common';
 import { TextWidget as TextWidgetModel } from "../../../../../../backend/src/models/interfaces";
 
-const styles = createStyles(theme => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         padding: theme.spacing.unit * 2,
     },
-}));
+});
 
 interface TextWidgetEditPanelProps extends WithStyles<typeof styles> {
     widget: TextWidgetModel,
@@ -114,8 +114,7 @@ class TextWidgetEditPanel extends React.Component<TextWidgetEditPanelProps> {
     }
 
     render() {
-        const classes: any = this.props.classes;
-        const { widget } = this.props;
+        const { widget, classes } = this.props;
         const { messages, formatMessage } = this.props.intl;
 
         return <div className={classes.root}>

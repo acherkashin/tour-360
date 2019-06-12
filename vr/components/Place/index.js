@@ -6,7 +6,7 @@ import { CoordinateSystem, Portal, Label } from "./../index";
 import agro from './../../static-places/agro';
 import { WIDTH, HEIGHT } from './../../utils/CoordinateUtils';
 import { BACKEND_URL } from './../../config'
-import { TextWidget, /* RunVideoWidget, */ HintWidget, ImageWidget } from './../Widgets';
+import { TextWidget, RunVideoWidget, HintWidget, ImageWidget } from './../Widgets';
 
 export default class Place extends React.Component {
     constructor() {
@@ -42,8 +42,8 @@ export default class Place extends React.Component {
         switch (widget.type) {
             case 'text':
                 return <TextWidget key={widget.id} options={widget} />
-            // case 'run-video': 
-            //     return <RunVideoWidget key={widget.id} widget={widget} />
+            case 'run-video': 
+                return <RunVideoWidget key={widget.id} widget={widget} />
             case 'hint':
                 return <HintWidget key={widget.id} widget={widget} />
             case 'image':

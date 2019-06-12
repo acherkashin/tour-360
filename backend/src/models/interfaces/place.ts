@@ -49,7 +49,7 @@ export interface Place extends Document {
     image360?: ImageFile;
     mapIcon?: ImageFile;
     cover?: ImageFile;
-    widgets?: any[];
+    widgets?: BaseWidget[];
     description?: string;
 
     toClient: () => PlaceDto;

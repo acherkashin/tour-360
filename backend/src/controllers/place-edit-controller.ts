@@ -171,7 +171,7 @@ export function updateImageWidget(req: Request, res: Response) {
     imageCopy.filename = newFileName;
 
     addFile(newFileName, image).then(() => {
-        const widget = place.widgets.find(item => item.id === widgetID);
+        const widget = place.widgets.find(item => item.id === widgetID) as ImageWidget;
         widget.image = imageCopy;
 
         res.json({ widget, imageCopy });

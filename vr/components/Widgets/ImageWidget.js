@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, staticAssetURL, Image, VrButton } from "react-3
 import VideoBackground from "../Background/VideoBackground";
 import LabelButton from "./../Label/LabelButton";
 import BackgroundManager from "./../Background/BackgroundManager";
+import { BACKEND_URL } from '../../config';
 
 const styles = StyleSheet.create({
     root: {
@@ -12,6 +13,11 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'black',
+    },
+    vrButton: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
     }
 });
 
@@ -37,7 +43,7 @@ export default class ImageWidget extends React.Component {
         if (!fullScreen) {
             this.sizes = {
                 height: 600,
-                width: 600 * (widget.width / widget.width), //Proportional increase
+                width: 600 * (widget.width / widget.height), //Proportional increase
             }
         } else {
             this.sizes = {
@@ -54,17 +60,13 @@ export default class ImageWidget extends React.Component {
             {widget.image ? 
                 <View>
                     <Image 
-                        source={{uri: `http://localhost:3001/${widget.image.filename}`}}
+                        source={{uri: `${BACKEND_URL}/${widget.image.filename}`}}
                         style={this.sizes}
                         onClick={this._handleImageClick}
                     />
                     <VrButton
                         onClick={this._handleImageClick}
-                        style={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                        }}
+                        style={styles.vrButton}
                     />
                 </View> : null}
         </View>

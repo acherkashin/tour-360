@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import { Image as ImageIcon } from '@material-ui/icons'
 import { getScreenCoordinates } from '../../utils';
 import ImageWidgetShape from "./ImageWidgetShape";
 import { ImageWidget as ImageWidgetModel } from "../../../../../../backend/src/models/interfaces";
 
 const size = 30;
-const styles = createStyles({
+const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         position: 'absolute',
         cursor: 'pointer',

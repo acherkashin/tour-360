@@ -34,8 +34,7 @@ class PlaceDesignerToolBar extends React.Component<PlaceDesignerToolBarProps> {
 
         switch (widgetType) {
             case 'selection':
-                return "Режим выделения";
-                // return formatMessage(messages.);
+                return formatMessage(messages.widgetBarSelectionMode);
             case 'text':
                 return formatMessage(messages.widgetBarText);
             case 'run-video':
@@ -43,7 +42,7 @@ class PlaceDesignerToolBar extends React.Component<PlaceDesignerToolBarProps> {
             case 'hint':
                 return formatMessage(messages.widgetBarHint);
             case 'image':
-                return "Image"
+                return formatMessage(messages.widgetBarImage)
             default:
                 throw createError(widgetType);
         }
