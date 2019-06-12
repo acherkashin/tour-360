@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"node ./client/server.js\"  \"node ./backend/dist/index.js\" \"node ./vr/server.js\"",
-    "prebuild": "concurrently \"cd client && npm i\" \"cd vr && npm i\" \"cd backend && npm i\"",
-    "build": "concurrently \"cd backend/ && npm run build\" \"cd client/ && npm run build\" \"cd vr/ && npm run bundle\" ",
+    "startall": "concurrently \"node ./client/server.js\"  \"node ./backend/dist/index.js\" \"node ./vr/server.js\"",
+    "prebuildall": "concurrently \"cd client && npm i\" \"cd vr && npm i\" \"cd backend && npm i\"",
+    "buildall": "concurrently \"cd backend/ && npm run build\" \"cd client/ && npm run build\" \"cd vr/ && npm run bundle\" ",
+
+    "start": "node ./backend/dist/index.js",
+    "build": "cd backend/ && npm run build",
+    
     "frontend": "concurrently \"cd client && npm start\" \"cd vr && npm run start\"",
     "dev": "concurrently \"cd backend && npm run dev\" \"npm run frontend\" \"start mongod\"",
     "log": "heroku logs -a tour-360 --tail"

@@ -28,4 +28,4 @@ app.use(express.static(__dirname + '/../public'));
 
 app.use("/api", TourRouter, TourEditRouter, UserRouter, PlaceEditRouter);
 
-app.listen(config.API_PORT, () => console.log(`LISTENING ON PORT ${config.API_PORT}`));
+app.listen(config.API_PORT, () => console.log(`BACKEND LISTENING ON PORT ${config.API_PORT}`));

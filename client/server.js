@@ -12,4 +12,4 @@ app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(port, () => console.log(`LISTENING ON PORT ${port}`));
+app.listen(port, () => console.log(`CLIENT - LISTENING ON PORT ${port}`));
