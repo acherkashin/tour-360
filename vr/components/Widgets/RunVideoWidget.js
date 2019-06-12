@@ -30,7 +30,7 @@ export default class RunVideoWidget extends React.Component {
                     BackgroundManager.pushVideoBackground({
                         muted: widget.muted,
                         volume: widget.volume,
-                        url: staticAssetURL('video/room.mp4'),
+                        url: staticAssetURL('video/360_0087.mp4'),
                     });
                 }}
             />
