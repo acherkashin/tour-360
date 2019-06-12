@@ -5,6 +5,7 @@ import {
     BaseWidget,
     ImageFile,
 } from "./../../../../backend/src/models/interfaces";
+import { BACKEND_URL } from "../../config";
 
 class EditPlace {
     readonly id: string;
@@ -39,16 +40,16 @@ class EditPlace {
         // return this.hasImage360 ? this.store.getPlaceImage360Url(this.id) : null;
     }
     get mapImage360Url() {
-        return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
+        return this.hasImage360 ? `${BACKEND_URL}${this.image360Name}?${this.image360Hash}` : null;
     }
     get soundUrl() {
-        return this.soundName ? `/${this.soundName}?${this.soundHash}` : null;
+        return this.soundName ? `${BACKEND_URL}${this.soundName}?${this.soundHash}` : null;
     }
     get mapIconUrl() {
-        return this.mapIcon && this.mapIcon.filename ? `/${this.mapIcon.filename}?${this.mapIconHash}` : null;
+        return this.mapIcon && this.mapIcon.filename ? `${BACKEND_URL}${this.mapIcon.filename}?${this.mapIconHash}` : null;
     }
     get coverUrl() {
-        return this.cover && this.cover.filename ? `/${this.cover.filename}?${this.coverHash}` : null;
+        return this.cover && this.cover.filename ? `${BACKEND_URL}${this.cover.filename}?${this.coverHash}` : null;
     }
 
     updateFromJson(json: PlaceDetailDto) {

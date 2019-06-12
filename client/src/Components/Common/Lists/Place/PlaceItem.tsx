@@ -10,6 +10,7 @@ import {
 } from '@material-ui/icons';
 import PlaceListIcon from './PlaceListIcon';
 import { PlaceDto } from '../../../../../../backend/src/models/interfaces';
+import { BACKEND_URL } from '../../../../config';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
@@ -84,7 +85,7 @@ class PlaceItem extends React.Component<PlaceItemProps> {
 
     render() {
         const { place, canDelete, canClick, classes } = this.props;
-        const iconUrl = place.mapIcon && place.mapIcon.filename && `/${place.mapIcon.filename}`;
+        const iconUrl = place.mapIcon && place.mapIcon.filename && `${BACKEND_URL}${place.mapIcon.filename}`;
 
         return <ListItem
             className={classes.root}

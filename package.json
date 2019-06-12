@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd backend/ && node server.js",
-    "build": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+    "start": "concurrently \"node ./client/server.js\"  \"node ./backend/dist/index.js\" \"node ./vr/server.js\"",
+    "prebuild": "concurrently \"cd client && npm i\" \"cd vr && npm i\" \"cd backend && npm i\"",
+    "build": "concurrently \"cd backend/ && npm run build\" \"cd client/ && npm run build\" \"cd vr/ && npm run bundle\" ",
     "frontend": "concurrently \"cd client && npm start\" \"cd vr && npm run start\"",
     "dev": "concurrently \"cd backend && npm run dev\" \"npm run frontend\" \"start mongod\"",
     "log": "heroku logs -a tour-360 --tail"

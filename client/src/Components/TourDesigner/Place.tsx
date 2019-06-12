@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Tooltip, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import { PlaceDetailDto } from '../../../../backend/src/models/interfaces';
+import { BACKEND_URL } from '../../config';
 
 interface PlaceProps {
     place: PlaceDetailDto;
@@ -38,7 +39,7 @@ export default class Place extends Component<PlaceProps, any> {
         const place = props.place;
         if (place.mapIcon && place.mapIcon.filename) {
             this.state.icon = L.icon({
-                iconUrl: `/${place.mapIcon.filename}`,
+                iconUrl: `${BACKEND_URL}${place.mapIcon.filename}`,
                 iconSize: [place.mapIcon.width, place.mapIcon.height],
             })
         }

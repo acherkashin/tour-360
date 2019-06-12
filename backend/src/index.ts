@@ -16,11 +16,14 @@ let db = mongoose.connection;
 db.once("open", () => console.log("connected to the database"));
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
+app.use(bodyParser.json({ limit: '50mb' }));
 //TODO: figure out with typing here
 app.use(<any>logger("dev"));
 app.use(fileUpload());
+app.get('/ping', function (req, res) {
+    return res.send('pong');
+});
 app.use(express.static(__dirname + '/../public'));
 
 app.use("/api", TourRouter, TourEditRouter, UserRouter, PlaceEditRouter);

@@ -4,6 +4,7 @@ import {
 } from "./../../../../backend/src/models/interfaces";
 import { PlaceService } from "../../api";
 import { UserStore } from "..";
+import { BACKEND_URL } from "../../config";
 
 class Tour {
     readonly id: string;
@@ -24,7 +25,7 @@ class Tour {
     }
 
     get imageUrl() {
-        return this.hasImage ? `/${this.filename}?${this.imageHash}` : `/src/no-image.png`;
+        return this.hasImage ? `${BACKEND_URL}${this.filename}?${this.imageHash}` : `/src/no-image.png`;
     }
 
     updateFromJson(json: TourDto) {

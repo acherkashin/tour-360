@@ -17,6 +17,7 @@ import {
 } from './../../../Common';
 import RunVideoShape from "./RunVideoShape";
 import { RunVideoWidget } from "../../../../../../backend/src/models/interfaces";
+import { BACKEND_URL } from '../../../../config';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
@@ -118,7 +119,7 @@ class RunVideoEditPanel extends React.Component<RunVideoEditPanelProps> {
                 <Typography variant="caption" align="right">{volume}</Typography>
             </div>
             <PanoVideoEditor
-                url={widget.video ? `/${widget.video.filename}` : null}
+                url={widget.video ? `${BACKEND_URL}${widget.video.filename}` : null}
                 filename={widget.video && widget.video.filename}
                 onPanoVideoChanged={(e) => this.props.onPanoVideoChanged({
                     origin: this,

@@ -15,6 +15,7 @@ import ImageWidgetShape from "./ImageWidgetShape";
 import { ImageWidget } from "../../../../../../backend/src/models/interfaces";
 import { UploadImageDialog } from '../../../Dialogs';
 import EditImage from '../../../EditImage';
+import { BACKEND_URL } from '../../../../config';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
@@ -141,7 +142,7 @@ class ImageWidgetEditPanel extends React.Component<ImageWidgetEditPanelProps, Im
                 <EditImage
                     name={widget.image && widget.image.filename}
                     hasImage={!!widget.image}
-                    imageUrl={widget.image ? `/${widget.image.filename}` : null}
+                    imageUrl={widget.image ? `${BACKEND_URL}${widget.image.filename}` : null}
                     onImageChangeClick={() => this.setState({ uploadImageDialogOpened: true })}
                 />
             </Category>

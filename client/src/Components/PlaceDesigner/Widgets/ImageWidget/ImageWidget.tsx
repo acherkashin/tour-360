@@ -7,6 +7,7 @@ import { Image as ImageIcon } from '@material-ui/icons'
 import { getScreenCoordinates } from '../../utils';
 import ImageWidgetShape from "./ImageWidgetShape";
 import { ImageWidget as ImageWidgetModel } from "../../../../../../backend/src/models/interfaces";
+import { BACKEND_URL } from '../../../../config';
 
 const size = 30;
 const styles: StyleRulesCallback = (theme: Theme) => ({
@@ -77,7 +78,7 @@ class ImageWidget extends React.Component<ImageWidgetProps> {
                 height: widget.image ? widget.height : size,
             }}>
             {widget.image ? <img 
-                src={`/${widget.image.filename}`} 
+                src={`${BACKEND_URL}${widget.image.filename}`} 
                 alt="image"
                 className={classes.img}
             /> : <ImageIcon />}

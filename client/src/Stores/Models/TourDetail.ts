@@ -8,6 +8,7 @@ import {
 } from "./../../../../backend/src/models/interfaces";
 import { PlaceService } from "../../api";
 import { UserStore } from "..";
+import { BACKEND_URL } from "../../config";
 
 class TourDetail {
     readonly id: string;
@@ -34,11 +35,11 @@ class TourDetail {
     }
 
     get mapImageUrl() {
-        return this.hasMapImage ? `/${this.filename}?${this.imageHash}` : null;
+        return this.hasMapImage ? `${BACKEND_URL}${this.filename}?${this.imageHash}` : null;
     }
 
     get imageUrl() {
-        return this.cover && this.cover.filename ? `/${this.cover.filename}?${this.coverImageHash}` : null;
+        return this.cover && this.cover.filename ? `${BACKEND_URL}${this.cover.filename}?${this.coverImageHash}` : null;
     }
 
     viewPlacePano(placeId?: string) {

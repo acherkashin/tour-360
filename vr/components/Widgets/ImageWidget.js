@@ -38,7 +38,7 @@ export default class ImageWidget extends React.Component {
     _handleImageClick = () => {
         const { fullScreen } = this.state;
         const { widget } = this.props;
-        this.setState({fullScreen: !fullScreen});
+        this.setState({ fullScreen: !fullScreen });
 
         if (!fullScreen) {
             this.sizes = {
@@ -57,10 +57,10 @@ export default class ImageWidget extends React.Component {
         const { widget } = this.props;
 
         return <View style={[styles.root, { transform: [{ translate: [widget.x, this.state.fullScreen ? 300 : widget.y], }] }]}>
-            {widget.image ? 
+            {widget.image ?
                 <View>
-                    <Image 
-                        source={{uri: `${BACKEND_URL}/${widget.image.filename}`}}
+                    <Image
+                        source={{ uri: `${BACKEND_URL}/${widget.image.filename}` }}
                         style={this.sizes}
                         onClick={this._handleImageClick}
                     />

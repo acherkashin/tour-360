@@ -1,4 +1,5 @@
 import { extendObservable } from "mobx";
+import { BACKEND_URL } from "../../config";
 
 export default class PlaceDesignerModel {
     readonly id: string;
@@ -21,7 +22,7 @@ export default class PlaceDesignerModel {
             image360Width: 0,
             image360Height: 0,
             get mapImage360Url() {
-                return this.hasImage360 ? `/${this.image360Name}?${this.image360Hash}` : null;
+                return this.hasImage360 ? `${BACKEND_URL}${this.image360Name}?${this.image360Hash}` : null;
             },
         });
 
