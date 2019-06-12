@@ -67,8 +67,8 @@ export function cancelChanges(req: Request, res: Response) {
     res.json({});
 }
 
+// TODO: check extensions for images
 export function uploadMapImage(req: Request, res: Response) {
-    //TODO: check extensions for images
     const { sessionId } = req.params;
     const { width, height } = req.body;
     const mapImage = <UploadedFile>req.files.mapImage;
