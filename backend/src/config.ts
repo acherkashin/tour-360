@@ -1,4 +1,4 @@
-export const API_PORT = 3001;
+export const API_PORT = process.env.PORT || 3001;
 export const SECRET_KEY = 'secret';
 export const RECAPTCHA_SECRET_KEY = '6LfNRZ8UAAAAAIfaNq79ei94kAauuLqHkW3kpfaJ';
 
