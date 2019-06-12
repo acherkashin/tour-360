@@ -5,6 +5,6 @@ export default PropTypes.shape({
     type: PropTypes.string.isRequired,
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
-    muted: PropTypes.bool.isRequired,
-    volume: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
 });

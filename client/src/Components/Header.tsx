@@ -84,7 +84,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     render() {
         const { classes, title } = this.props;
-        const { anchorEl, redirectToProfile, redirectToPublicTours, redirectToMyTours } = this.state;
+        const { anchorEl, redirectToProfile, redirectToPublicTours, redirectToMyTours, redirectToLogin } = this.state;
         const { messages, formatMessage } = this.props.intl;
         const auth = this.userStore.siggnedIn;
         const open = Boolean(anchorEl);
@@ -145,6 +145,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 {redirectToProfile && <Redirect to='/profile' />}
                 {redirectToPublicTours && <Redirect to='/public-tours' />}
                 {redirectToMyTours && <Redirect to='/tours' />}
+                {redirectToLogin && <Redirect to='/sign-in' />}
             </div>
         );
     }

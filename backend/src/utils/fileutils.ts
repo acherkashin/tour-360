@@ -58,9 +58,9 @@ function generatePlaceSoundName(place: Place, sound: UploadedFile): string {
     return newFileName;
 }
 
-function generateRunVideoName(place: Place, video: File): string {
-    const extension = path.extname(video.name);
-    const newFileName = `${place.id}-${uuidv1()}-run-video${extension}`;
+function generateMediaFileName(place: Place, mediaFile: any): string {
+    const extension = path.extname(mediaFile.name);
+    const newFileName = `${place.id}-${uuidv1()}-media-file${extension}`;
 
     return newFileName;
 }
@@ -74,5 +74,5 @@ export {
     generatePlaceMapIconName,
     generateTourImageName,
     generatePlaceSoundName,
-    generateRunVideoName,
+    generateMediaFileName,
 }

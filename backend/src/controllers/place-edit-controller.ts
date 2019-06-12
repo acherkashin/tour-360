@@ -1,11 +1,19 @@
 import uuidv1 from 'uuidv1';
 import { NOT_FOUND, OK, INTERNAL_SERVER_ERROR, NO_CONTENT } from 'http-status-codes';
 import { cache as _cache } from './tour-edit-controller';
-import { Tour, Place, WidgetType, TextWidget, RunVideoWidget, HintWidget } from './../models/interfaces';
+import { 
+    Tour,
+    Place,
+    WidgetType,
+    TextWidget,
+    RunVideoWidget,
+    HintWidget,
+    ImageWidget
+} from './../models/interfaces';
 import { Request, Response } from 'express';
 import {
     addFile,
-    generateRunVideoName,
+    generateMediaFileName,
     removeFile,
 } from '../utils/fileutils';
 import { UploadedFile } from 'express-fileupload';
@@ -124,7 +132,7 @@ export function updateRunVideo(req: Request, res: Response) {
 
     const { widget, video } = req.body;
 
-    const newFileName = generateRunVideoName(place, video);
+    const newFileName = generateMediaFileName(place, video);
     addFile(newFileName, video).then(() => {
         video.filename = newFileName
 
@@ -150,9 +158,47 @@ export function removeRunVideo(req: Request, res: Response) {
     }
 }
 
+export function updateImageWidget(req: Request, res: Response) {
+    const { sessionId, widgetID } = req.params;
+    let { place } = cache[sessionId];
+    const { image } = req.files;
+    
+    const newFileName = generateMediaFileName(place, image);
+
+    // It's necessary because type 'UploadedFile' doesn't have property 'filename'
+    // Typescript is pain :/
+    var imageCopy = JSON.parse(JSON.stringify(image));
+    imageCopy.filename = newFileName;
+
+    addFile(newFileName, image).then(() => {
+        const widget = place.widgets.find(item => item.id === widgetID);
+        widget.image = imageCopy;
+
+        res.json({ widget, imageCopy });
+    }).catch(error => {
+        res.status(INTERNAL_SERVER_ERROR).json({ error });
+    });
+}
+
+export function removeImageFromImageWidget(req: Request, res: Response) {
+    const { sessionId, widgetId } = req.params;
+    let { place } = cache[sessionId];
+    const widget = place.getWidget<ImageWidget>(widgetId);
+
+    if (widget && widget.image && widget.image.filename) {
+        removeFile(widget.image.filename).then(() => {
+            widget.image = null;
+        }).catch((error) => {
+            res.status(INTERNAL_SERVER_ERROR).json({ error });
+        });
+    } else {
+        res.status(NO_CONTENT).json({ widget });
+    }
+}
+
 function createWidget(type: WidgetType, x: number, y: number) {
     if (type === 'text') {
-        const textWidget: TextWidget = {
+        const widget: TextWidget = {
             id: uuidv1(),
             x,
             y,
@@ -162,9 +208,9 @@ function createWidget(type: WidgetType, x: number, y: number) {
             backgroundColor: '#ffffff',
             padding: 0,
         };
-        return textWidget;
+        return widget;
     } else if (type === 'run-video') {
-        const runVideo: RunVideoWidget = {
+        const widget: RunVideoWidget = {
             id: uuidv1(),
             x,
             y,
@@ -174,16 +220,28 @@ function createWidget(type: WidgetType, x: number, y: number) {
             volume: 0.5,
             video: null,
         };
-        return runVideo;
+        return widget;
     } else if (type === 'hint') {
-        const hintWidget: HintWidget = {
+        const widget: HintWidget = {
             id: uuidv1(),
             x,
             y,
             content: '[Enter your text]',
             type
         };
-        return hintWidget;
+        return widget;
+    } else if (type === 'image') {
+        const widget: ImageWidget = {
+            id: uuidv1(),
+            x,
+            y,
+            width: 100,
+            height: 100,
+            type,
+            image: null,
+            name: 'Image Widget'
+        };
+        return widget;
     } else {
         throw new Error('Unknown widget type');
     }

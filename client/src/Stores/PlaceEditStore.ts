@@ -3,7 +3,13 @@ import { deepObserve, fromPromise, IDisposer } from 'mobx-utils';
 import { PlaceEditService, PlaceService, TourEditService } from './../api/';
 import { UserStore, RootStore } from '.';
 import EditPlace from './Models/EditPlace';
-import { BaseWidget, TextWidget, WidgetType, RunVideoWidget, HintWidget } from '../../../backend/src/models/interfaces';
+import { 
+    BaseWidget, 
+    TextWidget,
+    RunVideoWidget, 
+    HintWidget,
+    ImageWidget
+} from '../../../backend/src/models/interfaces';
 
 export default class PlaceEditStore {
     saveResult: any;
@@ -101,6 +107,12 @@ export default class PlaceEditStore {
                     (<HintWidget>this.editingWidget).x = hintWidget.x;
                     (<HintWidget>this.editingWidget).y = hintWidget.y;
                     (<HintWidget>this.editingWidget).content = hintWidget.content;
+                } else if (this.editingWidget.type === 'image') {
+                    const imageWidget: ImageWidget = widget;
+                    (<ImageWidget>this.editingWidget).x = imageWidget.x;
+                    (<ImageWidget>this.editingWidget).y = imageWidget.y;
+                    (<ImageWidget>this.editingWidget).image = imageWidget.image;
+                    (<ImageWidget>this.editingWidget).name = imageWidget.name;
                 } else {
                     throw new Error('Unknown widget type');
                 }
@@ -179,6 +191,16 @@ export default class PlaceEditStore {
 
     updateRunVideo(widget: RunVideoWidget, video: File) {
         return PlaceEditService.updateRunVideo(this.sessionId, widget, video).then((resp) => {
+            this.editingPlace.updateWidget(resp.data.widget);
+        });
+    }
+    updateImageWidget(widgetID: string, image: File) {
+        return PlaceEditService.updateImageWidget(this.sessionId, widgetID, image).then((resp) => {
+            this.editingPlace.updateWidget(resp.data.widget);
+        });
+    }
+    removeImageFromImageWidget(widgetID: string) {
+        return PlaceEditService.removeImageFromImageWidget(this.sessionId, widgetID).then((resp) => {
             this.editingPlace.updateWidget(resp.data.widget);
         });
     }

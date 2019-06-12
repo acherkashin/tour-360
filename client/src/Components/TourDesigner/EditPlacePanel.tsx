@@ -19,6 +19,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     panelItem: {
         marginTop: theme.spacing.unit,
     },
+    descriptionRoot: {
+        marginTop: 0,
+        backgroundColor: 'white'
+    },
 });
 
 interface EditPlacePanelProps extends WithStyles<typeof styles> {
@@ -191,8 +195,9 @@ class EditPlacePanel extends React.Component<EditPlacePanelProps> {
                 rowsMax={6}
                 value={place.description}
                 onChange={this._handleDescriptionChanged}
-                className={classes.description}
+                className={classes.descriptionRoot}
                 variant="outlined"
+                margin="normal"
                 fullWidth
             />
             <Category title={formatMessage(messages.panoImage)}>

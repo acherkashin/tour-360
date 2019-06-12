@@ -1,6 +1,6 @@
 import { MediaFile } from './';
 
-export type WidgetType = 'text' | 'run-video' | 'hint';
+export type WidgetType = 'text' | 'run-video' | 'hint' | 'image';
 
 export interface BaseWidget {
     id: string;
@@ -25,4 +25,11 @@ export interface RunVideoWidget extends BaseWidget {
     muted: boolean;
     volume: number;
     video?: MediaFile;
+}
+
+export interface ImageWidget extends BaseWidget {
+    name: string;
+    image?: MediaFile;
+    width: number;
+    height: number;
 }
