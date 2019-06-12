@@ -19,15 +19,15 @@
     "react-360-web": "~1.1.0",
     "react-native": "~0.55.4",
     "three": "^0.87.0",
-    "webvr-polyfill": "^0.10.10"
-  },
-  "devDependencies": {
+    "webvr-polyfill": "^0.10.10",
     "babel-jest": "^19.0.0",
     "babel-preset-react-native": "^1.9.1",
     "jest": "^19.0.2",
     "react-devtools": "^2.5.2",
     "react-test-renderer": "16.0.0",
     "xopen": "1.0.0"
+  },
+  "devDependencies": {
   },
   "jest": {
     "preset": "react-360"
