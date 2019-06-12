@@ -31,7 +31,9 @@ const styles = (theme: Theme) => ({
     },
 });
 
-interface ViewMapPageProps extends WithStyles<typeof styles>, RouteComponentProps<{ tourId: string }> {
+interface ViewMapPageProps extends WithStyles<typeof styles> {
+    //TODO: to fix heroku build
+    match: any;
     intl: any;
     rootStore: RootStore;
 }

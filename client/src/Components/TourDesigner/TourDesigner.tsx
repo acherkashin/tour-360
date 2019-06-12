@@ -70,7 +70,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
 });
 
-interface TourDesignerProps extends WithStyles<typeof styles>, RouteComponentProps<{ sessionId: string }> {
+interface TourDesignerProps extends WithStyles<typeof styles> {
+    //TODO: to fix heroku build
+    match: { params: { sessionId: string } };
     intl: { messages, formatMessage };
     rootStore: RootStore;
 }
