@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Place, Tour, TourDetailDto, PlaceDetailDto, PlaceDto } from "./interfaces";
+import { Place, Tour, TourDetailDto, PlaceDetailDto, PlaceDto, BaseWidget } from "./interfaces";
 // const Widget = new mongoose.Schema({
 //     type: { type: String, required: true },
 // });
@@ -31,12 +31,12 @@ const PlaceSchema = new mongoose.Schema<Place>({
     widgets: [Object],
 });
 
-PlaceSchema.methods.getWidget = function (widgetId) {
+PlaceSchema.methods.getWidget = function (widgetId: string) {
     const widget = (this.widgets || []).find(widget => widget.id === widgetId);
     return widget;
 };
 
-PlaceSchema.methods.toClient = function () {
+PlaceSchema.methods.toClient = function (this: Place) {
     const dto: PlaceDto = {
         id: this.id,
         name: this.name,
@@ -52,7 +52,7 @@ PlaceSchema.methods.toClient = function () {
     return dto;
 };
 
-PlaceSchema.methods.toDetailDto = function (tour: Tour): PlaceDetailDto {
+PlaceSchema.methods.toDetailDto = function (this: Place, tour: Tour): PlaceDetailDto {
     const starts = (tour.connections || []).filter(c => c.startPlaceId === this.id).map(c => c.endAsDestination(tour));
     const ends = (tour.connections || []).filter(c => c.endPlaceId === this.id).map(c => c.startAsDestination(tour));
 

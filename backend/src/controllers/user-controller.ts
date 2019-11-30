@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { hash, compare } from 'bcrypt';
-import { User } from '../models/index';
+import { UserRepository } from './../repositories/user-repository';
+import { UserModel } from '../models/index';
 import { createToken } from '../utils/tokenutils';
 import { validateForm, validName, validEmail } from '../utils/validate';
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED } from 'http-status-codes';
@@ -11,46 +12,39 @@ import { RECAPTCHA_SECRET_KEY } from '../config';
 const googleRecaptcha = new GoogleRecaptcha({ secret: RECAPTCHA_SECRET_KEY });
 
 export function signup(req, res) {
-    User.findOne({ email: req.body.user.email }).then((user) => {
-        if (user) {
+    UserModel.findOne({ email: req.body.user.email }).then((existedUser) => {
+        if (existedUser) {
             return res.status(BAD_REQUEST).json({ message: 'Error is occured during registering' });
         }
 
-        hash(req.body.user.password, 10, (err, hash) => {
-            if (err) {
-                return res.status(INTERNAL_SERVER_ERROR).json({ error: err });
+        const validation = validateForm({
+            email: req.body.user.email,
+            firstName: req.body.user.firstName,
+            lastName: req.body.user.lastName,
+            password: hash
+        });
+
+        if (!validation.isValid) {
+            return res.status(BAD_REQUEST).json({ error: validation.error });
+        }
+
+        googleRecaptcha.verify({ response: req.body.ReCAPTCHAValue }, (error) => {
+            if (error) {
+                return res.status(BAD_REQUEST).json({ message: 'You are not human' });
             }
-            const validation = validateForm({
+
+            new UserRepository().createUser({
                 email: req.body.user.email,
                 firstName: req.body.user.firstName,
                 lastName: req.body.user.lastName,
-                password: hash
-            });
-            if (!validation.isValid) {
-                return res.status(BAD_REQUEST).json({ error: validation.error });
-            };
-
-            const user = new User({
-                _id: new Types.ObjectId(),
-                email: req.body.user.email,
-                firstName: req.body.user.firstName,
-                lastName: req.body.user.lastName,
-                password: hash
-            });
-
-            googleRecaptcha.verify({ response: req.body.ReCAPTCHAValue }, (error) => {
-                if (error) {
-                    return res.status(BAD_REQUEST).json({ message: 'You are not human' });
-                };
-
-                user.save().then((result) => {
-                    return res.status(OK).json({ user: user.toClient() });
-                }).catch(error => {
-                    return res.status(INTERNAL_SERVER_ERROR).json({ error });
-                });
+                password: req.body.user.password,
+            }).then((newUser) => {
+                return res.status(OK).json({ user: newUser.toClient() });
+            }).catch(error => {
+                return res.status(INTERNAL_SERVER_ERROR).json({ error });
             });
         });
-    })
+    });
 }
 
 export function signin(req, res) {
@@ -59,7 +53,7 @@ export function signin(req, res) {
             return res.status(BAD_REQUEST).json({ error: 'You are not human' });
         }
 
-        User.findOne({ email: req.body.email })
+        UserModel.findOne({ email: req.body.email })
             .then((user) => {
                 if (!user) {
                     return res.state(BAD_REQUEST).json({ error: 'Error occured during login' });
@@ -86,7 +80,7 @@ export function signin(req, res) {
 }
 
 export function editUser(req, res) {
-    User.findOne({ _id: req.userId })
+    UserModel.findOne({ _id: req.userId })
         .then((user) => {
             if (user) {
                 const { email, firstName, lastName, language } = req.body;
@@ -129,7 +123,7 @@ export function getUserById(req, res) {
         res.status(BAD_REQUEST).json({ error: 'id should be provided' });
     }
 
-    User.findById(id)
+    UserModel.findById(id)
         .then(user => {
             return res.json({ user: user.toClient() });
         })

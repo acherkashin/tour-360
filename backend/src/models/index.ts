@@ -1,7 +1,8 @@
 import Tour from './tour';
-import User from './user';
+import { UserModel, User } from './user';
 
 export {
     Tour,
     User,
+    UserModel
 };

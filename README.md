@@ -18,4 +18,4 @@ It is a tool to create 360 pano tours.
 
 ## Rules
 
-- Run `npm-cz` to commit your changes.
+- Run `git-cz` to commit your changes.

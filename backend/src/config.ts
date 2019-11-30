@@ -7,3 +7,9 @@ export const RECAPTCHA_SECRET_KEY = '6LfNRZ8UAAAAAIfaNq79ei94kAauuLqHkW3kpfaJ';
 
 // dev
 export const MONGO_URL = 'mongodb://localhost:27017/test';
+export const defaultAdminConfig = {
+    email: "admin@tour.com",
+    password: "password",
+    firstName: "Admin",
+    lastName: "Admin",
+};

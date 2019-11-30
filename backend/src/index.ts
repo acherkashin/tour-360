@@ -1,21 +1,22 @@
 
-import mongoose from 'mongoose';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 import fileUpload from 'express-fileupload';
+import { DataBase } from "./models/database"
 import * as config from './config';
 const app = express();
 app.use(cors());
 
 import { TourRouter, TourEditRouter, UserRouter, PlaceEditRouter } from "./routers";
 
-mongoose.connect(config.MONGO_URL, { useNewUrlParser: true });
 console.log(config.MONGO_URL);
-let db = mongoose.connection;
-db.once("open", () => console.log("connected to the database"));
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
+
+
+const database = new DataBase({
+    url: config.MONGO_URL,
+}).init();
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 app.use(bodyParser.json({ limit: '50mb' }));

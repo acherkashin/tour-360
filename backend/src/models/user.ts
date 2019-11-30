@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 import languages from './languages';
 import { UserDto } from "./interfaces/user";
 
-interface User extends Document {
+export interface User extends Document {
     readonly id: string;
     email: string;
     password: string;
@@ -39,4 +39,4 @@ UserSchema.methods.toClient = function () {
     };
 };
 
-export default mongoose.model<User>('User', UserSchema);
+export const UserModel = mongoose.model<User>('User', UserSchema);
