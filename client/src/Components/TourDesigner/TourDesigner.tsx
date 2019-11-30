@@ -27,6 +27,7 @@ import {
     EditIconDialog,
 } from '../Dialogs';
 import { TourMap } from '.';
+import { PlaceTreeDesigner } from "./PlaceTreeDesigner";
 import EditPlacePanel from './EditPlacePanel';
 import { grey } from '@material-ui/core/colors';
 import { TourEditStore, RootStore } from './../../Stores';
@@ -68,6 +69,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         borderLeft: `1px solid ${theme.palette.divider}`,
         overflowY: 'auto',
     },
+    surface: {
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+    }
 });
 
 interface TourDesignerProps extends WithStyles<typeof styles> {
@@ -332,16 +338,19 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
             const mapStyle = this.state.mapEditMode !== 'dragMap' ? { cursor: 'pointer' } : {};
             const selectedPlaceId = this._getSelectedPlaceId();
 
-            return <TourMap
-                tour={this.editingTour}
-                draggableMarkers={true}
-                mapStyle={mapStyle}
-                selectedPlaceId={selectedPlaceId}
-                onClick={this._handleMapClick}
-                onConnectionClick={this._handleConnectionClick}
-                onPlaceClick={this._handlePlaceClick}
-                onPlaceDragend={this._handlePlaceDragend}
-            />;
+            return <div className={this.props.classes.surface}>
+                {selectedPlaceId && <PlaceTreeDesigner />}
+                <TourMap
+                    tour={this.editingTour}
+                    draggableMarkers={true}
+                    mapStyle={mapStyle}
+                    selectedPlaceId={selectedPlaceId}
+                    onClick={this._handleMapClick}
+                    onConnectionClick={this._handleConnectionClick}
+                    onPlaceClick={this._handlePlaceClick}
+                    onPlaceDragend={this._handlePlaceDragend}
+                />
+            </div>;
         } else {
             return this._renderNoMapPlaceholder();
         }
@@ -352,7 +361,11 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
         const { messages, formatMessage } = this.props.intl;
 
         return (<div className={classes.noImageMap}>
-            <Typography className={classes.noImageMapPlaceholder}>{formatMessage(messages.tourDesignerNoImageMapPlaceholderFirstPart)} <PlaceholderButton onClick={this._handleChangeImageMapClick} text={formatMessage(messages.here)} /> {formatMessage(messages.tourDesignerNoImageMapPlaceholderSecondPart)}</Typography>
+            <Typography className={classes.noImageMapPlaceholder}>
+                {formatMessage(messages.tourDesignerNoImageMapPlaceholderFirstPart)}
+                <PlaceholderButton onClick={this._handleChangeImageMapClick} text={formatMessage(messages.here)} />
+                {formatMessage(messages.tourDesignerNoImageMapPlaceholderSecondPart)}
+            </Typography>
         </div>);
     }
 
