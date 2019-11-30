@@ -1,88 +1,128 @@
 import React from "react";
 import * as THREE from "three";
 
-export const PlaceTreeDesigner = () => {
-    const { useRef, useEffect, useState } = React
-    const mount = useRef(null)
-    const [isAnimating, setAnimating] = useState(true)
-    const controls = useRef(null)
+export interface PlaceTreeDesigner {
+    readonly placeUrl: string;
+}
+
+// https://github.com/mrdoob/three.js/blob/master/examples/webgl_panorama_equirectangular.html
+export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
+    const { useRef, useEffect } = React
+    const mount = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        let width = mount.current.clientWidth
-        let height = mount.current.clientHeight
-        let frameId
+        var camera, scene, renderer;
+        var isUserInteracting = false,
+            onMouseDownMouseX = 0, onMouseDownMouseY = 0,
+            lon = 0, onMouseDownLon = 0,
+            lat = 0, onMouseDownLat = 0,
+            phi = 0, theta = 0;
 
-        const scene = new THREE.Scene()
-        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
-        const renderer = new THREE.WebGLRenderer({ antialias: true })
-        const geometry = new THREE.BoxGeometry(1, 1, 1)
-        const material = new THREE.MeshBasicMaterial({ color: 0xff00ff })
-        const cube = new THREE.Mesh(geometry, material)
 
-        camera.position.z = 4
-        scene.add(cube)
-        renderer.setClearColor('#000000')
-        renderer.setSize(width, height)
+        function init() {
+            var mesh;
+            const container = mount.current;
+            const [width, height] = [container.clientWidth, container.clientHeight];
+            camera = new THREE.PerspectiveCamera(75, width / height, 1, 1100);
+            camera.target = new THREE.Vector3(0, 0, 0);
+            scene = new THREE.Scene();
+            var geometry = new THREE.SphereBufferGeometry(500, 60, 40);
+            // invert the geometry on the x-axis so that all of the faces point inward
+            geometry.scale(- 1, 1, 1);
+            var texture = new THREE.TextureLoader().load(props.placeUrl);
+            var material = new THREE.MeshBasicMaterial({ map: texture });
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+            document.addEventListener('mousedown', onPointerStart, false);
+            document.addEventListener('mousemove', onPointerMove, false);
+            document.addEventListener('mouseup', onPointerUp, false);
+            document.addEventListener('wheel', onDocumentMouseWheel, false);
+            document.addEventListener('touchstart', onPointerStart, false);
+            document.addEventListener('touchmove', onPointerMove, false);
+            document.addEventListener('touchend', onPointerUp, false);
+            //
+            document.addEventListener('dragover', function (event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'copy';
+            }, false);
 
-        const renderScene = () => {
-            renderer.render(scene, camera)
+            //TODO: do it when url is changed
+            // document.addEventListener('drop', function (event) {
+            //     event.preventDefault();
+            //     var reader = new FileReader();
+            //     reader.addEventListener('load', function (event) {
+            //         material.map.image.src = event.target.result;
+            //         material.map.needsUpdate = true;
+            //     }, false);
+            //     reader.readAsDataURL(event.dataTransfer.files[0]);
+            //     // document.body.style.opacity = 1;
+            // }, false);
+            //
+            // window.addEventListener('resize', onWindowResize, false);
         }
-
-        const handleResize = () => {
-            width = mount.current.clientWidth
-            height = mount.current.clientHeight
-            renderer.setSize(width, height)
-            camera.aspect = width / height
-            camera.updateProjectionMatrix()
-            renderScene()
+        // function onWindowResize() {
+        //     camera.aspect = window.innerWidth / window.innerHeight;
+        //     camera.updateProjectionMatrix();
+        //     renderer.setSize(window.innerWidth, window.innerHeight);
+        // }
+        function onPointerStart(event) {
+            isUserInteracting = true;
+            var clientX = event.clientX || event.touches[0].clientX;
+            var clientY = event.clientY || event.touches[0].clientY;
+            onMouseDownMouseX = clientX;
+            onMouseDownMouseY = clientY;
+            onMouseDownLon = lon;
+            onMouseDownLat = lat;
         }
-
-        const animate = () => {
-            cube.rotation.x += 0.01
-            cube.rotation.y += 0.01
-
-            renderScene()
-            frameId = window.requestAnimationFrame(animate)
-        }
-
-        const start = () => {
-            if (!frameId) {
-                frameId = requestAnimationFrame(animate)
+        function onPointerMove(event) {
+            if (isUserInteracting === true) {
+                var clientX = event.clientX || event.touches[0].clientX;
+                var clientY = event.clientY || event.touches[0].clientY;
+                lon = (onMouseDownMouseX - clientX) * 0.1 + onMouseDownLon;
+                lat = (clientY - onMouseDownMouseY) * 0.1 + onMouseDownLat;
             }
         }
-
-        const stop = () => {
-            cancelAnimationFrame(frameId)
-            frameId = null
+        function onPointerUp() {
+            isUserInteracting = false;
+        }
+        function onDocumentMouseWheel(event) {
+            var fov = camera.fov + event.deltaY * 0.05;
+            camera.fov = THREE.Math.clamp(fov, 10, 75);
+            camera.updateProjectionMatrix();
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            update();
+        }
+        function update() {
+            if (isUserInteracting === false) {
+                lon += 0.1;
+            }
+            lat = Math.max(- 85, Math.min(85, lat));
+            phi = THREE.Math.degToRad(90 - lat);
+            theta = THREE.Math.degToRad(lon);
+            camera.target.x = 500 * Math.sin(phi) * Math.cos(theta);
+            camera.target.y = 500 * Math.cos(phi);
+            camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
+            camera.lookAt(camera.target);
+            /*
+            // distortion
+            camera.position.copy( camera.target ).negate();
+            */
+            renderer.render(scene, camera);
         }
 
-        mount.current.appendChild(renderer.domElement)
-        window.addEventListener('resize', handleResize)
-        start()
+        init();
+        animate();
+    }, [props.placeUrl])
 
-        controls.current = { start, stop }
-
-        return () => {
-            stop()
-            window.removeEventListener('resize', handleResize)
-            mount.current.removeChild(renderer.domElement)
-
-            scene.remove(cube)
-            geometry.dispose()
-            material.dispose()
-        }
-    }, [])
-
-    useEffect(() => {
-        if (isAnimating) {
-            controls.current.start()
-        } else {
-            controls.current.stop()
-        }
-    }, [isAnimating])
 
     return <div style={{
         height: 300,
         width: '100%',
-    }} ref={mount} onClick={() => setAnimating(!isAnimating)} />
+    }} ref={mount} onClick={() => { }} />
 }

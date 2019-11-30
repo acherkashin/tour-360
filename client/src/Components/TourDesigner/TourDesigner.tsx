@@ -339,7 +339,7 @@ class TourDesigner extends React.Component<TourDesignerProps, TourDesignerState>
             const selectedPlaceId = this._getSelectedPlaceId();
 
             return <div className={this.props.classes.surface}>
-                {selectedPlaceId && <PlaceTreeDesigner />}
+                {selectedPlaceId && <PlaceTreeDesigner placeUrl={this.editingPlace.mapImage360Url}/>}
                 <TourMap
                     tour={this.editingTour}
                     draggableMarkers={true}
