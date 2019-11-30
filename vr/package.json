@@ -27,8 +27,7 @@
     "react-test-renderer": "16.0.0",
     "xopen": "1.0.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "jest": {
     "preset": "react-360"
   }

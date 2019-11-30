@@ -12,6 +12,7 @@ app.use(cors());
 import { TourRouter, TourEditRouter, UserRouter, PlaceEditRouter } from "./routers";
 
 mongoose.connect(config.MONGO_URL, { useNewUrlParser: true });
+console.log(config.MONGO_URL);
 let db = mongoose.connection;
 db.once("open", () => console.log("connected to the database"));
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
