@@ -10,21 +10,53 @@ export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
     const { useRef, useEffect } = React
     const mount = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        var camera, scene, renderer;
-        var isUserInteracting = false,
-            onMouseDownMouseX = 0, onMouseDownMouseY = 0,
-            lon = 0, onMouseDownLon = 0,
-            lat = 0, onMouseDownLat = 0,
-            phi = 0, theta = 0;
+    let camera: THREE.PerspectiveCamera;
+    let scene: THREE.Scene;
+    let renderer: THREE.WebGLRenderer;
+    var isUserInteracting = false,
+        onMouseDownMouseX = 0, onMouseDownMouseY = 0,
+        lon = 0, onMouseDownLon = 0,
+        lat = 0, onMouseDownLat = 0,
+        phi = 0, theta = 0;
 
+
+    function onPointerStart(event) {
+        isUserInteracting = true;
+        var clientX = event.clientX || event.touches[0].clientX;
+        var clientY = event.clientY || event.touches[0].clientY;
+        onMouseDownMouseX = clientX;
+        onMouseDownMouseY = clientY;
+        onMouseDownLon = lon;
+        onMouseDownLat = lat;
+    }
+
+    function onPointerMove(event) {
+        if (isUserInteracting === true) {
+            var clientX = event.clientX || event.touches[0].clientX;
+            var clientY = event.clientY || event.touches[0].clientY;
+            lon = (onMouseDownMouseX - clientX) * 0.1 + onMouseDownLon;
+            lat = (clientY - onMouseDownMouseY) * 0.1 + onMouseDownLat;
+        }
+    }
+
+    function onPointerUp() {
+        isUserInteracting = false;
+    }
+
+    function onMouseWheel(event) {
+        var fov = camera.fov + event.deltaY * 0.05;
+        camera.fov = THREE.Math.clamp(fov, 10, 75);
+        camera.updateProjectionMatrix();
+    }
+
+    useEffect(() => {
 
         function init() {
             var mesh;
             const container = mount.current;
             const [width, height] = [container.clientWidth, container.clientHeight];
             camera = new THREE.PerspectiveCamera(75, width / height, 1, 1100);
-            camera.target = new THREE.Vector3(0, 0, 0);
+            camera.lookAt(new THREE.Vector3(0, 0, 0))
             scene = new THREE.Scene();
             var geometry = new THREE.SphereBufferGeometry(500, 60, 40);
             // invert the geometry on the x-axis so that all of the faces point inward
@@ -37,31 +69,12 @@ export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(width, height);
             container.appendChild(renderer.domElement);
-            document.addEventListener('mousedown', onPointerStart, false);
-            document.addEventListener('mousemove', onPointerMove, false);
-            document.addEventListener('mouseup', onPointerUp, false);
-            document.addEventListener('wheel', onDocumentMouseWheel, false);
-            document.addEventListener('touchstart', onPointerStart, false);
-            document.addEventListener('touchmove', onPointerMove, false);
-            document.addEventListener('touchend', onPointerUp, false);
-            //
+
             document.addEventListener('dragover', function (event) {
                 event.preventDefault();
                 event.dataTransfer.dropEffect = 'copy';
             }, false);
 
-            //TODO: do it when url is changed
-            // document.addEventListener('drop', function (event) {
-            //     event.preventDefault();
-            //     var reader = new FileReader();
-            //     reader.addEventListener('load', function (event) {
-            //         material.map.image.src = event.target.result;
-            //         material.map.needsUpdate = true;
-            //     }, false);
-            //     reader.readAsDataURL(event.dataTransfer.files[0]);
-            //     // document.body.style.opacity = 1;
-            // }, false);
-            //
             // window.addEventListener('resize', onWindowResize, false);
         }
         // function onWindowResize() {
@@ -69,31 +82,7 @@ export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
         //     camera.updateProjectionMatrix();
         //     renderer.setSize(window.innerWidth, window.innerHeight);
         // }
-        function onPointerStart(event) {
-            isUserInteracting = true;
-            var clientX = event.clientX || event.touches[0].clientX;
-            var clientY = event.clientY || event.touches[0].clientY;
-            onMouseDownMouseX = clientX;
-            onMouseDownMouseY = clientY;
-            onMouseDownLon = lon;
-            onMouseDownLat = lat;
-        }
-        function onPointerMove(event) {
-            if (isUserInteracting === true) {
-                var clientX = event.clientX || event.touches[0].clientX;
-                var clientY = event.clientY || event.touches[0].clientY;
-                lon = (onMouseDownMouseX - clientX) * 0.1 + onMouseDownLon;
-                lat = (clientY - onMouseDownMouseY) * 0.1 + onMouseDownLat;
-            }
-        }
-        function onPointerUp() {
-            isUserInteracting = false;
-        }
-        function onDocumentMouseWheel(event) {
-            var fov = camera.fov + event.deltaY * 0.05;
-            camera.fov = THREE.Math.clamp(fov, 10, 75);
-            camera.updateProjectionMatrix();
-        }
+
         function animate() {
             requestAnimationFrame(animate);
             update();
@@ -105,10 +94,14 @@ export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
             lat = Math.max(- 85, Math.min(85, lat));
             phi = THREE.Math.degToRad(90 - lat);
             theta = THREE.Math.degToRad(lon);
-            camera.target.x = 500 * Math.sin(phi) * Math.cos(theta);
-            camera.target.y = 500 * Math.cos(phi);
-            camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
-            camera.lookAt(camera.target);
+
+            const newPosition = new THREE.Vector3(
+                500 * Math.sin(phi) * Math.cos(theta),
+                500 * Math.cos(phi),
+                500 * Math.sin(phi) * Math.sin(theta),
+            );
+
+            camera.lookAt(newPosition);
             /*
             // distortion
             camera.position.copy( camera.target ).negate();
@@ -118,11 +111,30 @@ export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
 
         init();
         animate();
-    }, [props.placeUrl])
+    }, []);
 
+    useEffect(() => {
+        // event.preventDefault();
+        //     var reader = new FileReader();
+        //     reader.addEventListener('load', function (event) {
+        //         material.map.image.src = event.target.result;
+        //         material.map.needsUpdate = true;
+        //     }, false);
+        //     reader.readAsDataURL(event.dataTransfer.files[0]);
+        //     // document.body.style.opacity = 1;
+    }, [props.placeUrl]);
 
     return <div style={{
         height: 300,
         width: '100%',
-    }} ref={mount} onClick={() => { }} />
+    }} ref={mount}
+        onClick={() => { }}
+        onMouseDown={onPointerStart}
+        onMouseMove={onPointerMove}
+        onMouseUp={onPointerUp}
+        onWheel={onMouseWheel}
+        onTouchStart={onPointerStart}
+        onTouchMove={onPointerMove}
+        onTouchEnd={onPointerUp}
+    />
 }
