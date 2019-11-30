@@ -39,6 +39,13 @@ export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
         }
     }
 
+    function getContainerSize() {
+        return {
+            width: mount.current.clientWidth,
+            height: mount.current.clientHeight,
+        };
+    }
+
     function onPointerUp() {
         isUserInteracting = false;
     }
@@ -49,39 +56,46 @@ export const PlaceTreeDesigner = (props: PlaceTreeDesigner) => {
         camera.updateProjectionMatrix();
     }
 
+    // function onContainerResize() {
+    //     const size = getContainerSize();
+
+    //     camera.aspect = size.width / size.height;
+    //     camera.updateProjectionMatrix();
+    //     renderer.setSize(size.width, size.height);
+    // }
+
     useEffect(() => {
+        const container = mount.current;
 
         function init() {
-            var mesh;
-            const container = mount.current;
-            const [width, height] = [container.clientWidth, container.clientHeight];
-            camera = new THREE.PerspectiveCamera(75, width / height, 1, 1100);
+            const size = getContainerSize();
+            camera = new THREE.PerspectiveCamera(75, size.width / size.height, 1, 1100);
             camera.lookAt(new THREE.Vector3(0, 0, 0))
             scene = new THREE.Scene();
-            var geometry = new THREE.SphereBufferGeometry(500, 60, 40);
+            const geometry = new THREE.SphereBufferGeometry(500, 60, 40);
             // invert the geometry on the x-axis so that all of the faces point inward
             geometry.scale(- 1, 1, 1);
-            var texture = new THREE.TextureLoader().load(props.placeUrl);
-            var material = new THREE.MeshBasicMaterial({ map: texture });
-            mesh = new THREE.Mesh(geometry, material);
+            const texture = new THREE.TextureLoader().load(props.placeUrl);
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            const mesh = new THREE.Mesh(geometry, material);
             scene.add(mesh);
             renderer = new THREE.WebGLRenderer();
             renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(width, height);
+            renderer.setSize(size.width, size.height);
             container.appendChild(renderer.domElement);
 
-            document.addEventListener('dragover', function (event) {
-                event.preventDefault();
-                event.dataTransfer.dropEffect = 'copy';
-            }, false);
+            // document.addEventListener('dragover', function (event) {
+            //     event.preventDefault();
+            //     event.dataTransfer.dropEffect = 'copy';
+            // }, false);
 
-            // window.addEventListener('resize', onWindowResize, false);
+            // const ro = new (window as any).ResizeObserver(() => {
+            //     onContainerResize();
+            // });
+            // ro.observe(document);
+
+            // window.addEventListener('resize', () => onContainerResize());
         }
-        // function onWindowResize() {
-        //     camera.aspect = window.innerWidth / window.innerHeight;
-        //     camera.updateProjectionMatrix();
-        //     renderer.setSize(window.innerWidth, window.innerHeight);
-        // }
 
         function animate() {
             requestAnimationFrame(animate);
