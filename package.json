@@ -23,6 +23,7 @@
   "devDependencies": {
     "cz-customizable": "^5.4.0"
   },
+  "proxy": "http://localhost:3001",
   "config": {
     "commitizen": {
       "path": "node_modules/cz-customizable"

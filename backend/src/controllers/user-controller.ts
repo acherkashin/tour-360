@@ -1,5 +1,4 @@
-import { Types } from 'mongoose';
-import { hash, compare } from 'bcrypt';
+import { compare } from 'bcrypt';
 import { UserRepository } from './../repositories/user-repository';
 import { UserModel } from '../models/index';
 import { createToken } from '../utils/tokenutils';
@@ -7,7 +6,6 @@ import { validateForm, validName, validEmail } from '../utils/validate';
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED } from 'http-status-codes';
 import GoogleRecaptcha from 'google-recaptcha';
 import { RECAPTCHA_SECRET_KEY } from '../config';
-// import {  } from './../models/interfaces/user';
 
 const googleRecaptcha = new GoogleRecaptcha({ secret: RECAPTCHA_SECRET_KEY });
 
@@ -21,7 +19,7 @@ export function signup(req, res) {
             email: req.body.user.email,
             firstName: req.body.user.firstName,
             lastName: req.body.user.lastName,
-            password: hash
+            password: req.body.user.password,
         });
 
         if (!validation.isValid) {
