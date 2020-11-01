@@ -1,10 +1,26 @@
 version: "3.8"
 
 services: 
+  backend:
+    container_name: backend
+    image: "node:12"
+    user: "node"
+    working_dir: "/home/node/app"
+    environment:
+      - NODE_ENV=development
+    volumes: 
+      - ./backend:/home/node/app
+    ports:
+      - 3001:3001
+    command: "npm run dev"
+    depends_on: 
+      - mongo
+
   mongo:
+    container_name: mongo
     image: mongo:3.6
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - mongo-data:/data/db
 
