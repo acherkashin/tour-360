@@ -1,8 +1,26 @@
 version: "3.8"
 
 services: 
+  fontend:
+    container_name: fontend-tour-360
+    image: "node:12"
+    user: "node"
+    working_dir: "/home/node/app"
+    environment:
+      - NODE_ENV=development
+    volumes: 
+      - ./client:/home/node/app
+      # client side should not import types from backend
+      - ./backend:/home/node/backend
+    ports:
+      - 3000:3000
+    # need to run "npm install" as well
+    command: "npm start"
+    depends_on: 
+      - backend
+
   backend:
-    container_name: backend
+    container_name: backend-tour-360
     image: "node:12"
     user: "node"
     working_dir: "/home/node/app"
@@ -12,6 +30,7 @@ services:
       - ./backend:/home/node/app
     ports:
       - 3001:3001
+    # need to run "npm install" as well
     command: "npm run dev"
     depends_on: 
       - mongo
